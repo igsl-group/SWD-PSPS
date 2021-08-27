@@ -1,0 +1,742 @@
+﻿@*this page is copied from the psps prototype which contain examples of PSP READ html. Logics are not completed *@
+@model Psps.Web.ViewModels.PspRead.PspEventViewModel
+@using Psps.Resources;
+@{
+    ViewBag.Title = Labels.Psp_Module;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="pspReadForm" class="form-horizontal" role="form">
+    <div class="tab-content">
+
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a href="#info" data-toggle="tab">PSP Info</a>
+            </li>
+            <li>
+                <a href="#events" data-toggle="tab">PSP Events(Approved:10; Cancelled:0; Remaining:0)</a>
+            </li>
+            <li>
+                <a href="#approvalHistory" data-toggle="tab">Approval History</a>
+            </li>
+            <li>
+                <a href="#workProcesses" data-toggle="tab">Work Processes</a>
+            </li>
+            <li>
+                <a href="#accountRecords" data-toggle="tab">Account Records</a>
+            </li>
+            <li>
+                <a href="#complaint" data-toggle="tab">Complaint&nbsp;<span class="badge">2</span></a>
+            </li>
+            <li>
+                <a href="#attachment" data-toggle="tab">Attachment</a>
+            </li>
+            <li>
+                <a href="#documents" data-toggle="tab">Documents</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-pane active" id="events">
+        <div class="row">
+            <div class="col-xs-12 no-padding-left no-padding-right">
+                <table id="eventsGridTable"></table>
+                <div id="eventsGridPager"></div>
+                <input id="eventsFile" type="file" class="hide" />
+            </div>
+        </div>
+        <div class="vspace-6"></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="pull-right">
+                    <button id="btn-recommend" type="button" class="btn btn-primary btn-sm">
+                        <span class="icon-thumbs-up"></span>&nbsp;Recommend to Approve</button>
+                </div>
+            </div>
+        </div>
+        <div class="vspace-6"></div>
+        <div class="hr dotted"></div>
+        <div class="remarks bigger-120">
+            <div class="row">
+                <div class="col-xs-12">
+                    <strong>Remarks:</strong>
+                </div>
+            </div>
+            <div class="vspace-6"></div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <strong>
+                        <em>[Import Excel]</em>
+                    </strong>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul>
+                        <li>New Application: All imported event(s) will be removed and replaced with the new event(s) from uploaded MS Excel file.</li>
+                        <li>All event(s) already approved: This function / button will be disabled.</li>
+                        <li>Partial event(s) approved: Approved events will not be changed while the remaining not-approved events will be replaced by the events uploaded after approval</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="importPspEveXlsFileForm" class="form-horizontal">
+    <div id="importPspEveXlsFileModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Import Excel File</h4>
+                </div>
+                <fieldset>
+
+                    <div data-valmsg-summary="true" id="errorMsgDiv" class="alert alert-block alert-warning validation-summary-errors">
+                        <div><strong>Please fix the following errors.</strong></div>
+                        <div id="errorMsg" style="padding-left: 20px"></div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ImportFile, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.FileFor(m => m.ImportFile, htmlAttributes: new { @id = "importPspEventXlsFile", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="modal-footer">
+                    <button type="button" id="btnImport" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.PspRead_ImportXlsFile</button>
+                    <button type="button" id="attBtnCancel" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <script type="text/javascript">
+
+        var listPspEventUrl = '@Url.RouteUrl("ListPspEventsByPspMasterId", new { pspMasterId = 2 })';
+        var insertPspEventsByImportXls = '@Url.RouteUrl("InsertPspEventsByImportXls", new { pspMasterId = 2 })';
+
+        $(function () {
+            $('#info :input, #accountRecords :input').prop('readonly', true);
+            $('#info .glyphicon-search').closest('button').prop('disabled', true);
+
+            $('#tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                if ('#events' === e.target.hash)
+                    initEventsGrid();
+
+                //if ('#approvalHistory' === e.target.hash)
+                //    initApprovalHistoryGrid();
+
+                //if ('#workProcesses' === e.target.hash)
+                //    initWorkProcessesGrid();
+
+                //if ('#complaint' === e.target.hash)
+                //    initComplaintGrid();
+
+                //if ('#attachment' === e.target.hash)
+                //    initAttachmentGrid();
+
+                //if ('#documents' === e.target.hash)
+                //    initDocumentsGrid();
+            });
+
+            $("#btn-recommend").on("click", function (e) {
+                var $prompt = bootbox.prompt("? of remaining 10 event(s)", function (result) {
+                    if (result === null) { } else { }
+                });
+                style_bootbox_footer_button($prompt);
+            });
+
+        });
+
+        $('#btnImport').click(function () {
+            var $form = $("#importPspEveXlsFileForm");
+            if ($form.valid()) {
+                var actionUrl = insertPspEventsByImportXls;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+
+                         $('#importPspEventXlsFile').val('');
+                         $('#errorMsgDiv').addClass('hide');
+                         $('#errorMsg').html('');
+                         $("#eventsGridTable").trigger("reloadGrid", [{ current: true }]);
+
+                         notifSuccess(response.message);
+                     },
+                     function (response) {
+                         $('#errorMsgDiv').removeClass('hide');
+                         $('#errorMsg').html(convertStringToHtml(response.message));
+                     }
+                );
+                $('#importPspEveXlsFileModal').modal('hide');
+
+            }
+        });
+
+        var hasEventsGridInited = false;
+
+        function initEventsGrid() {
+            if (hasEventsGridInited)
+            { return; }
+            hasEventsGridInited = true;
+
+            var actionUrl = listPspEventUrl;
+            var $grid_selector = $("#eventsGridTable");
+            var pager_selector = "#eventsGridPager";
+
+            $grid_selector.jqGrid({
+                pager: pager_selector,
+                //data: dataPspEvents,
+                rownumbers: false,
+                headertitles: true,
+                multiselect: true,
+                sortname: 'pspEventId',
+                sortorder: 'asc',
+                url: actionUrl,
+                datatype: "json",
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.PspEventId)',
+                    '@Html.DisplayNameFor(m => m.BatchNum)',
+                    '@Html.DisplayNameFor(m => m.EventDate)',
+                    '@Html.DisplayNameFor(m => m.Time)',
+                    '@Html.DisplayNameFor(m => m.District)',
+                    '@Html.DisplayNameFor(m => m.ChiLocation)',
+                    '@Html.DisplayNameFor(m => m.MethodOfCollection)',
+                    '@Html.DisplayNameFor(m => m.EventStatus)',
+                    '@Html.DisplayNameFor(m => m.Remarks)',
+                    '@Labels.Action'],
+                colModel: [{
+                    name: 'pspEventId',
+                    sorttype: 'int',
+                    width: 3
+                }, {
+                    name: 'batchNum',
+                    width: 3
+                }, {
+                    name: 'eventStartDate',
+                    sorttype: 'date',
+                    template: dateTemplate,
+                    width: 5
+                }, {
+                    name: 'time',
+                    width: 6
+                }, {
+                    name: 'district',
+                    width: 4
+                }, {
+                    name: 'chiLocation',
+                    width: 10
+                }, {
+                    name: 'collectionMethod',
+                    width: 10
+                }, {
+                    name: 'pspApprovalStatus',
+                    width: 6
+                }, {
+                    name: 'remarks',
+                    width: 10,
+                    classes: 'ellipsis'
+                }, {
+                    name: 'rowAction',
+                    index: '',
+                    width: 3,
+                    sortable: false,
+                    search: false,
+                    resize: false,
+                    formatter: 'actions',
+                    formatoptions: {
+                        keys: true,
+                        delOptions: {
+                            recreateForm: true,
+                            beforeShowForm: beforeDeleteCallback
+                        },
+                        editbutton: false
+                        //editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}
+                    }
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    return false;
+                }
+            });
+
+            //navButtons
+            $grid_selector.jqGrid('navGrid', pager_selector, { //navbar options
+                search: true,
+                del: true,
+                refresh: true
+            }, {}, {}, {
+                //delete record form
+                recreateForm: true,
+                beforeShowForm: beforeDeleteCallback
+            }, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-upload-alt",
+                onClickButton: onImportEvent,
+                position: "first",
+                title: "Import Event(s)",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: onNewEvent,
+                position: "first",
+                title: "New Event",
+                cursor: "pointer"
+            });
+
+            $(window).on('resize', function () {
+                $grid_selector.setGridWidth($('#events').outerWidth());
+            }).trigger('resize');
+
+            function onNewEvent(data) { };
+
+            function onImportEvent(data) {
+
+                //$('#importPspEventXlsFile').val('');
+                //$('#errorMsgDiv').addClass('hide');
+                //$('#importPspEveXlsFileModal').modal({
+                //    backdrop: 'static',
+                //    show: true
+                //});
+                $('#importPspEventXlsFile').val('');
+                $('#errorMsgDiv').addClass('hide');
+                $('#importPspEveXlsFileModal').modal({
+                    backdrop: 'static',
+                    show: true
+                });
+
+            };
+        };
+
+        var hasApprovalHistoryGridInited = false;
+
+        function initApprovalHistoryGrid() {
+            if (hasApprovalHistoryGridInited)
+                return;
+            hasApprovalHistoryGridInited = true;
+
+            var $grid_selector = $("#approvalHistory-grid-table");
+            var pager_selector = "#approvalHistory-grid-pager";
+
+            $grid_selector.jqGrid({
+                pager: pager_selector,
+                data: dataPspApprovalHistory,
+                datatype: "local",
+                colNames: ['Approval Type', 'Approval Date', 'Permit No.', 'Related Batch No.', 'Period', 'No. of Event(s) Approved', 'Date of Rejection Letter', 'Date of Representation Received & Replied', 'Remarks'],
+                colModel: [{
+                    name: 'approvalType',
+                    width: 10
+                }, {
+                    name: 'approvalDate',
+                    sorttype: 'date',
+                    datefmt: 'd-m-y',
+                    width: 8
+                }, {
+                    name: 'permitNo',
+                    width: 8
+                }, {
+                    name: 'relatedBatchNo',
+                    width: 6
+                }, {
+                    name: 'period',
+                    width: 13
+                }, {
+                    name: 'eventsApproved',
+                    sorttype: 'int',
+                    width: 6
+                }, {
+                    name: 'rejectionLetterDate',
+                    sorttype: 'date',
+                    datefmt: 'd-m-y',
+                    width: 8
+                }, {
+                    name: 'representationReceivedRepliedDate',
+                    sorttype: 'date',
+                    datefmt: 'd-m-y',
+                    width: 9
+                }, {
+                    name: 'remarks',
+                    width: 30
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    return false;
+                }
+            });
+
+            //navButtons
+            $grid_selector.jqGrid('navGrid', pager_selector, { //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            });
+
+            $(window).on('resize', function () {
+                $grid_selector.setGridWidth($('#approvalHistory').outerWidth());
+            }).trigger('resize');
+
+            function onNewNameChange(data) { };
+        };
+
+        var hasWorkProcessesGridInited = false;
+
+        function initWorkProcessesGrid() {
+            if (hasWorkProcessesGridInited)
+                return;
+            hasWorkProcessesGridInited = true;
+
+            var $grid_selector = $("#workProcesses-grid-table");
+            var pager_selector = "#workProcesses-grid-pager";
+
+            $grid_selector.jqGrid({
+                pager: pager_selector,
+                data: dataPspWorkProcesses,
+                datatype: "local",
+                colNames: ['Stage / Sub-stage Code', 'Stage / Sub-stage', 'Progress Note', 'Recorded By', 'Action'],
+                colModel: [{
+                    name: 'stage',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'stageDesc',
+                    width: 10
+                }, {
+                    name: 'note',
+                    width: 70
+                }, {
+                    name: 'recordedBy',
+                    width: 10
+                }, {
+                    name: 'rowAction',
+                    width: 7,
+                    sortable: false,
+                    search: false,
+                    resize: false,
+                    formatter: 'actions',
+                    formatoptions: {
+                        keys: true,
+                        delOptions: {
+                            recreateForm: true,
+                            beforeShowForm: beforeDeleteCallback
+                        },
+                        editbutton: false
+                        //editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}
+                    }
+                }],
+                loadComplete: function () {
+                    var table = this;
+                    setTimeout(function () {
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+
+                    var iCol = getColumnIndexByName($grid_selector, 'rowAction');
+                    $(this).find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            $("<div>", {
+                                title: "Edit",
+                                mouseover: function () {
+                                    $(this).addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $(this).removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $grid_selector.jqGrid('getRowData', rowId);
+                                    onEditRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-edit red"></span>')
+                                .prependTo($(this).children("div"));
+                        });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    //var data = $grid_selector.jqGrid('getRowData', rowId);
+                    //onEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $grid_selector.jqGrid('navGrid', pager_selector, { //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: onNewRecord,
+                position: "first",
+                title: "New Progress Note",
+                cursor: "pointer"
+            });
+
+            $(window).on('resize', function () {
+                $grid_selector.setGridWidth($('#workProcesses').outerWidth());
+            }).trigger('resize');
+
+            function onNewRecord(data) {
+                $('#workProcesses-edit-modal').modal('show');
+            };
+
+            function onEditRecord(data) {
+                $('#workProcesses-edit-modal').modal('show');
+                $('#stage').select2('val', data.stage);
+                $('#progress-note').val(data.note);
+            };
+        };
+
+        var hasComplaintGridInited = false;
+
+        function initComplaintGrid() {
+            if (hasComplaintGridInited)
+                return;
+            hasComplaintGridInited = true;
+
+            var $grid_selector = $("#complaint-grid-table");
+            var pager_selector = "#complaint-grid-pager";
+
+            $grid_selector.jqGrid({
+                pager: pager_selector,
+                data: dataPspComplaint,
+                datatype: "local",
+                colNames: ['Complaint No.', 'Date of Complaint Received', 'Warning Letter Issued', 'Date of Warning Letter Issued'],
+                colModel: [{
+                    name: 'complaintNo',
+                    width: 10
+                }, {
+                    name: 'complaintReceivedDate',
+                    width: 10,
+                    sorttype: 'date',
+                    datefmt: 'd/m/y',
+                    searchoptions: {
+                        dataInit: datePick,
+                        sopt: ['eq', 'le', 'ge']
+                    }
+                }, {
+                    name: 'warningLetterIssued',
+                    width: 10,
+                    formatter: yNFormatter,
+                    unformat: unformatYN
+                }, {
+                    name: 'warningLetterIssuedDate',
+                    width: 10,
+                    sorttype: 'date',
+                    datefmt: 'd/m/y',
+                    searchoptions: {
+                        dataInit: datePick,
+                        sopt: ['eq', 'le', 'ge']
+                    }
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    return false;
+                }
+            });
+
+            //navButtons
+            $grid_selector.jqGrid('navGrid', pager_selector, { //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            });
+
+            $(window).on('resize', function () {
+                $grid_selector.setGridWidth($('#complaint').outerWidth());
+            }).trigger('resize');
+        };
+
+        var attachmentGridInited = false;
+
+        function initAttachmentGrid() {
+            if (attachmentGridInited)
+                return;
+            attachmentGridInited = true;
+
+            var $attachmentGrid = $("#attachment-grid-table");
+            var attachment_pager_selector = "#attachment-grid-pager";
+
+            $attachmentGrid.jqGrid({
+                pager: attachment_pager_selector,
+                data: dataPspAttachment,
+                datatype: "local",
+                colNames: ['Title', 'Description', 'Upload By', 'Upload Date', 'Action'],
+                colModel: [{
+                    name: 'title'
+                }, {
+                    name: 'description'
+                }, {
+                    name: 'uploadedBy'
+                }, {
+                    name: 'uploadDate',
+                    index: 'uploadDate',
+                    sorttype: 'date',
+                    datefmt: "d/m/Y H:i:s",
+                }, {
+                    name: 'rowAction',
+                    index: '',
+                    width: 70,
+                    fixed: true,
+                    sortable: false,
+                    search: false,
+                    resize: false,
+                    formatter: 'actions',
+                    formatoptions: {
+                        keys: true,
+                        delOptions: {
+                            recreateForm: true,
+                            beforeShowForm: beforeDeleteCallback
+                        },
+                        editbutton: false
+                        //editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}
+                    }
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) { }
+            });
+
+            //navButtons
+            $attachmentGrid.jqGrid('navGrid', attachment_pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', attachment_pager_selector, {
+                caption: "",
+                buttonicon: "icon-upload-alt",
+                onClickButton: onUploadAttachment,
+                position: "first",
+                title: "Upload Attachment",
+                cursor: "pointer"
+            });
+
+            function onUploadAttachment() {
+                $('#attachment-file').trigger('click');
+            }
+
+            $(window).on('resize', function () {
+                $attachmentGrid.setGridWidth($('#attachment').outerWidth());
+            }).trigger('resize');
+        };
+
+        var documentsGridInited = false;
+
+        function initDocumentsGrid() {
+            if (documentsGridInited)
+                return;
+            documentsGridInited = true;
+
+            var $grid_selector = $("#documents-grid-table");
+
+            $grid_selector.jqGrid({
+                data: dataPspDocuments,
+                datatype: "local",
+                colNames: ['Type', 'Document Name', 'Document No.', 'Latest Version', 'Action'],
+                colModel: [{
+                    name: 'type',
+                    width: 10
+                }, {
+                    name: 'documentName',
+                    width: 70
+                }, {
+                    name: 'documentNo',
+                    width: 10
+                }, {
+                    name: 'version',
+                    width: 10
+                }, {
+                    name: 'rowAction',
+                    index: '',
+                    width: 70,
+                    fixed: true,
+                    sortable: false,
+                    search: false,
+                    resize: false,
+                    formatter: 'actions',
+                    formatoptions: {
+                        keys: true,
+                        delbutton: false,
+                        editbutton: false
+                        //editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}
+                    }
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: function () {
+                    var table = this;
+                    setTimeout(function () {
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+
+                    var iCol = getColumnIndexByName($grid_selector, 'rowAction');
+                    $(this).find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            $("<div>", {
+                                title: "Print",
+                                mouseover: function () {
+                                    $(this).addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $(this).addClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $grid_selector.jqGrid('getRowData', rowId);
+                                    //onEditRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-print red"></span>')
+                                .prependTo($(this).children("div"));
+                        });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) { }
+            });
+
+            $(window).on('resize', function () {
+                $grid_selector.setGridWidth($('#documents').outerWidth());
+            }).trigger('resize');
+        };
+    </script>
+}

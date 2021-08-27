@@ -1,0 +1,270 @@
+﻿@model Psps.Web.ViewModels.FlagDay.FlagDayAttachmentViewModel
+
+<div class="tab-pane" id="attachment">
+    @Html.HiddenFor(m => m.FdAttachmentId, htmlAttributes: new { @id = "fdAttachmentId" })
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="attachmentGridTable"></table>
+                <div id="attachmentGridPager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var listFdAttachmentUrl = '@Url.RouteUrl("ListFdAttachment", new { fdMasterId = -1 })';
+    var downloadFdAttachment = '@Url.RouteUrl("DownloadFdAttachment", new { fdAttachmentId = -1 })';
+    var deleteFdAttachment = '@Url.RouteUrl("DeleteFdAttachment", new { fdAttachmentId = -1 })';
+    var getFdAttachmentDetailUrl = '@Url.RouteUrl("GetFdAttachmentDetail", new { fdAttachmentId = -1 })';
+@*    var updateFdAttachmentUrl = '@Url.RouteUrl("UpdateFdAttachment")';
+    var createFdAttachmentUrl = '@Url.RouteUrl("CreateFdAttachment", new { fdMasterId = -1 })';*@
+    $(function () {
+        
+        $('#attBtnCancel').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    $('#attachmentModal').modal('hide');
+                    clearForm('#attachmentForm');
+                    $('attachmentForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                }
+            });
+        });
+
+        $('#attBtnClose').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    $('#attachmentModal').modal('hide');
+                    clearForm('#attachmentForm');
+                    $('attachmentForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                }
+            });
+        });
+
+        $('#attBtnUpdate').click(function () {
+            $("#attFdMasterId").val(currFdMasterId);
+            var $form = $("#attachmentForm");
+            if ($form.valid()) {
+                var actionUrl = updateFdAttachmentUrl.replace("-1", $('#fdAttachmentId').val());
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         initAttachmentGrid();
+                         $('#attachmentModal').modal('hide');
+                         //calRelevantRecordsAmount();
+                         //calRelevantRecordsAmount();
+                         notifSuccess(response.message);
+                     }
+                );
+            }
+        });
+        $('#attBtnCreate').click(function () {
+            $("#attFdMasterId").val(currFdMasterId);
+            var $form = $("#attachmentForm");
+            if ($form.valid()) {
+                var actionUrl = createFdAttachmentUrl.replace("-1", currFdMasterId);
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         initAttachmentGrid();
+                         //calRelevantRecordsAmount();
+                         //calRelevantRecordsAmount();
+                         $('#attachmentModal').modal('hide');
+                         calRelevantRecordsAmount();
+                         notifSuccess(response.message);
+                     }
+                );
+            }
+        });
+    });
+
+    function initAttachmentGrid() {
+
+        var actionUrl = listFdAttachmentUrl.replace("-1", $("#fdMasterId").val());
+        var $attachmentGrid = $("#attachmentGridTable");
+        var attachmentPagerSelector = "#attachmentGridPager";
+
+        if ($attachmentGrid.isJqGrid()) {
+            $attachmentGrid.resetJqGrid(actionUrl);
+            return;
+        }
+
+        $attachmentGrid.jqGrid({
+            url: actionUrl,
+            rownumbers: true,
+            pager: attachmentPagerSelector,
+            sortname: 'fileName',
+            sortorder: 'asc',
+            datatype: "json",
+            colNames: [
+                'fdAttachmentId',
+                'File Description',
+                'File Name',
+                'Uploaded By',
+                'Uploaded Date',
+                'Action'],
+            colModel: [{
+                name: 'fdAttachmentId',
+                width: 400,
+                hidden: true
+            }, {
+                name: 'fileDescription',
+                sorttype: 'text',
+                width: 400
+            }, {
+                name: 'fileName',
+                sorttype: 'text',
+                width: 350
+            }, {
+                name: 'createdById',
+                sorttype: 'text',
+                width: 100
+            }, {
+                name: 'createdOn',
+                template: dateTemplate,
+                width: 100
+            }, {
+                name: 'rowAction',
+                width: 80,
+                template: rowActionTemplate,
+                delbutton: false
+            }],
+
+            loadComplete: function () {
+                var $grid = $(this);
+                setTimeout(function () {
+                    updateActionIcons(this);
+                    updatePagerIcons(this);
+                    enableTooltips(this);
+                }, 0);
+
+                var iCol = getColumnIndexByName($grid, 'rowAction');
+                $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                    .each(function () {
+                        var $this = $(this);
+
+                        //delete document button
+                        $("<div>", {
+                            title: "Delete",
+                            mouseover: function () {
+                                $this.addClass('ui-state-hover');
+                            },
+                            mouseout: function () {
+                                $this.removeClass('ui-state-hover');
+                            },
+                            click: function (e) {
+                                var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                var data = $grid.jqGrid('getRowData', rowId);
+                                doDeleteRecord(data);
+                            }
+                        }).css({
+                            "margin-right": "5px",
+                            float: "left",
+                            cursor: "pointer"
+                        }).addClass("ui-pg-div ui-inline-custom")
+                            .append('<span class="ui-icon icon-trash red"></span>')
+                            .prependTo($this.children("div"));
+
+                        //download document button
+                        $("<div>", {
+                            title: "Download",
+                            mouseover: function () {
+                                $this.addClass('ui-state-hover');
+                            },
+                            mouseout: function () {
+                                $this.removeClass('ui-state-hover');
+                            },
+                            click: function (e) {
+                                var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                var data = $grid.jqGrid('getRowData', rowId);
+                                doDownloadRecord(data);
+                            }
+                        }).css({
+                            "margin-right": "5px",
+                            float: "left",
+                            cursor: "pointer"
+                        }).addClass("ui-pg-div ui-inline-custom")
+                            .append('<span class="ui-icon icon-download-alt red"></span>')
+                            .prependTo($this.children("div"));
+                    });
+            },
+            ondblClickRow: function (rowId, iRow, iCol, e) {
+                var data = $attachmentGrid.jqGrid('getRowData', rowId);
+                doEditRecord(data);
+            }
+        });
+
+        //navButtons
+        $attachmentGrid.jqGrid('navGrid', attachmentPagerSelector, { //navbar options
+            search: true,
+            refresh: true,
+        }, {}, {}, {}, {
+            //search form
+            recreateForm: true,
+            afterShowSearch: defaultSearchFormAfterShowSearch,
+            afterRedraw: defaultSearchFormAfterRedraw
+        }, {}).jqGrid('navButtonAdd', attachmentPagerSelector, {
+            caption: "",
+            buttonicon: "icon-plus",
+            onClickButton: doNewRecord,
+            position: "first",
+            title: "New Record",
+            cursor: "pointer"
+        });
+        function doShowModal() {
+            //$('#attachmentForm').removeClass('hide');
+            $('#attachmentModal').modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            });
+        };
+
+        function doEditRecord(data) {
+            clearForm('#attachmentForm');
+            //$('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+            ajaxGet(getFdAttachmentDetailUrl.replace('-1', data.fdAttachmentId),
+                    function (response) {
+                        $('#attBtnUpdate').removeClass('hide');
+                        $('#attBtnCreate').addClass('hide');
+                        $('#fileName').val(response.data.flagDayAttachmentViewModel.fileName);
+                        $('#fileDescription').val(response.data.flagDayAttachmentViewModel.fileDescription);
+                        $('#fdAttachmentId').val(data.fdAttachmentId);
+                        $('#attRowVersion').val(response.data.flagDayAttachmentViewModel.RowVersion);
+                    }
+                );
+            doShowModal();
+        };
+
+        function doDownloadRecord(data) {
+            var actionUrl = downloadFdAttachment.replace('-1', data.fdAttachmentId);
+            window.location = actionUrl;
+        };
+
+        function doNewRecord() {
+            clearForm('#attachmentForm');
+            //$('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+            $('#attBtnCreate').removeClass('hide');
+            $('#attBtnUpdate').addClass('hide');
+            $('#attachmentDocument').val('');
+            doShowModal();
+        };
+
+        function doDeleteRecord(data) {
+            var actionUrl = deleteFdAttachment.replace('-1', data.fdAttachmentId);
+            confirmDelete(function (result) {
+                if (result) {
+                    ajaxPost(actionUrl,
+                         function (response) {
+                             $("#attachmentGridTable").trigger("reloadGrid", [{ current: true }]);
+                             calRelevantRecordsAmount();
+                             notifSuccess(response.message);
+                         },
+                         function (response) {
+                             notifError(response.message);
+                         }
+                    )
+                }
+            });
+
+        };
+    };
+</script>

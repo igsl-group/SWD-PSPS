@@ -1,0 +1,247 @@
+﻿@model Psps.Web.ViewModels.Complaint.ComplaintPoliceCaseViewModel
+@using Psps.Resources;
+
+<form action="" id="policeCaseForm" name="policeCaseForm" class="form-horizontal">
+    <div id="edit-policeCase-modal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="btnClosePoliceCase" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Case Investigated by Police Details</h4>
+                </div>
+                @Html.TextBoxFor(m => m.ComplaintPoliceCaseId, true, htmlAttributes: new { @id = "complaintPoliceCaseId", @class = "form-control", @style = "display:none" })
+                @Html.TextBoxFor(m => m.ComplaintMasterId, true, htmlAttributes: new { @id = "policeCaseComplaintMasterId", @class = "form-control", @style = "display:none" })
+                <fieldset></fieldset>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseCaseInvestigateRefNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PoliceCaseCaseInvestigateRefNum, true, htmlAttributes: new { @id = "policeCaseCaseInvestigateRefNum", @class = "form-control", @disabled = "disabled", @maxlength = 50 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseReferralDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PoliceCaseReferralDate, true, htmlAttributes: new { @id = "policeCaseReferralDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.PoliceCaseMemoDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PoliceCaseMemoDate, true, htmlAttributes: new { @id = "policeCaseMemoDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseConcernOrgRef, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(model => model.PoliceCaseConcernOrgRef, true, rows: 4, htmlAttributes: new { @id = "policeCaseConcernOrgName", @class = "form-control", @maxlength = 300 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseCorrespondenceEnclosureNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                        </div>
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.PoliceCaseCorrespondenceEnclosureNum, true, htmlAttributes: new { @id = "policeCaseCorrespondenceEnclosureNum", @class = "form-control", @maxlength = 50, @style = "width: 100px;", @placeholder = "E" })
+                                @Html.TextBoxFor(m => m.PoliceCaseCorrespondencePartNum, true, htmlAttributes: new { @id = "policeCaseCorrespondencePartNum", @class = "form-control", @maxlength = 20, @style = "width: 100px;", @placeholder = "File" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseInvestigationResult, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                @Html.DropDownListFor(m => m.PoliceCaseInvestigationResult, true, new SelectList(Model.PoliceCaseInvestigationResults, "Key", "Value", Model.PoliceCaseInvestigationResult), htmlAttributes: new { @id = "policeCaseInvestigationResult", @class = "form-control", @data_provide = "select2", @style = "width: 250px;" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCasePoliceRefNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PoliceCasePoliceRefNum, true, htmlAttributes: new { @id = "policeCasePoliceRefNum", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseCaseNature, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.PoliceCaseCaseNatureHtml, true, rows: 4, htmlAttributes: new { @id = "policeCaseCaseNatureHtml", @class = "form-control wysiwyg-editor", @owner = "policeCaseCaseNature" })
+                            @Html.HiddenFor(m => m.PoliceCaseCaseNature, htmlAttributes: new { @id = "policeCaseCaseNature", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseResultDetail, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.PoliceCaseResultDetailHtml, true, rows: 4, htmlAttributes: new { @id = "policeCaseResultDetailHtml", @class = "form-control wysiwyg-editor", @owner = "policeCaseResultDetail" })
+                            @Html.HiddenFor(m => m.PoliceCaseResultDetail, htmlAttributes: new { @id = "policeCaseResultDetail", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseEnclosureNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.PoliceCaseEnclosureNum, true, htmlAttributes: new { @id = "policeCaseEnclosureNum", @class = "form-control", @maxlength = 50, @style = "width: 100px;", @placeholder = "E" })
+                                @Html.TextBoxFor(m => m.PoliceCasePartNum, true, htmlAttributes: new { @id = "policeCasePartNum", @class = "form-control", @maxlength = 20, @style = "width: 100px;", @placeholder = "File" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseFundRaisingDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PoliceCaseFundRaisingDate, true, htmlAttributes: new { @id = "policeCaseFundRaisingDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.PoliceCaseFundRaisingTime, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PoliceCaseFundRaisingTime, true, htmlAttributes: new { @id = "policeCaseFundRaisingTime", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseFundRaisingLocation, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.PoliceCaseFundRaisingLocation, true, htmlAttributes: new { @id = "policeCaseFundRaisingLocation", @class = "form-control", @maxlength = 256 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseConvictedPersonName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.PoliceCaseConvictedPersonName, true, htmlAttributes: new { @id = "policeCaseConvictedPersonName", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseConvictedPersonPosition, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.PoliceCaseConvictedPersonPosition, true, htmlAttributes: new { @id = "policeCaseConvictedPersonPosition", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseOffenceDetail, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.PoliceCaseOffenceDetailHtml, true, rows: 4, htmlAttributes: new { @id = "policeCaseOffenceDetailHtml", @class = "form-control wysiwyg-editor", @owner = "policeCaseOffenceDetail" })
+                            @Html.HiddenFor(m => m.PoliceCaseOffenceDetail, htmlAttributes: new { @id = "policeCaseOffenceDetail", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseSentenceDetail, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.PoliceCaseSentenceDetailHtml, true, rows: 4, htmlAttributes: new { @id = "policeCaseSentenceDetailHtml", @class = "form-control wysiwyg-editor", @owner = "policeCaseSentenceDetail" })
+                            @Html.HiddenFor(m => m.PoliceCaseSentenceDetail, htmlAttributes: new { @id = "policeCaseSentenceDetail", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseCourtRefNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.PoliceCaseCourtRefNum, true, htmlAttributes: new { @id = "policeCaseCourtRefNum", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PoliceCaseCourtHearingDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PoliceCaseCourtHearingDate, true, htmlAttributes: new { @id = "policeCaseCourtHearingDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Remark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.RemarkHtml, true, rows: 4, htmlAttributes: new { @id = "remarkHtml", @class = "form-control wysiwyg-editor", @owner = "remark" })
+                            @Html.HiddenFor(m => m.Remark, htmlAttributes: new { @id = "remark", @maxlength = 4000 })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSpellCheckPoliceCase" class="btn btn-primary btn-sm">
+                        <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                    <button type="button" id="btnSavePoliceCase" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Save</button>
+                    <button type="button" id="btnUpdatePoliceCase" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="btnDeletePoliceCase" class="btn btn-sm btn-primary">
+                        <span class="icon-trash"></span>&nbsp;@Labels.Delete</button>
+                    <button type="button" id="btnCancelPoliceCase" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var createPoliceCaseUrl = '@Url.RouteUrl("CreatePoliceCase")';
+    var updatePoliceCaseUrl = '@Url.RouteUrl("UpdatePoliceCase")';
+    var deletePoliceCaseUrl = '@Url.RouteUrl("DeletePoliceCase")';
+
+    $(function () {
+        initEditPoliceCaseForm();
+
+        $('#btnSavePoliceCase').click(function () {
+            var $form = $("#policeCaseForm");
+            if ($form.valid()) {
+                var actionUrl = createPoliceCaseUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#edit-policeCase-modal').modal('hide');
+                         $("#policeCase-grid-table").trigger("reloadGrid", [{ current: true }]);
+                         calRelevantRecordsAmount();
+                         notifSuccess(response.message);
+                         initEditPoliceCaseForm();
+                     }
+                );
+            }
+        });
+
+        $('#btnUpdatePoliceCase').click(function () {
+            var $form = $("#policeCaseForm");
+            if ($form.valid()) {
+                var actionUrl = updatePoliceCaseUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#edit-policeCase-modal').modal('hide');
+                         $("#policeCase-grid-table").trigger("reloadGrid", [{ current: true }]);
+                         notifSuccess(response.message);
+                         initEditPoliceCaseForm();
+                     }
+                );
+            }
+        });
+
+        $('#btnDeletePoliceCase').click(function () {
+            var $form = $("#policeCaseForm");
+            confirmDelete(function (result) {
+                if (result) {
+                    var actionUrl = deletePoliceCaseUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#edit-policeCase-modal').modal('hide');
+                             $("#policeCase-grid-table").trigger("reloadGrid", [{ current: true }]);
+                             calRelevantRecordsAmount();
+                             notifSuccess(response.message);
+                             initEditPoliceCaseForm();
+                         }
+                    );
+                }
+            });
+        });
+
+        $('#btnClosePoliceCase').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    initEditPoliceCaseForm();
+                    $('#edit-policeCase-modal').modal('hide');
+                }
+            });
+        });
+
+        $('#btnCancelPoliceCase').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    initEditPoliceCaseForm();
+                    $('#edit-policeCase-modal').modal('hide');
+                }
+            });
+        });
+
+    });
+
+    function initEditPoliceCaseForm() {
+        $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+        clearForm('#policeCaseForm');
+        $("#btnUpdatePoliceCase").show();
+        $("#btnUpdatePoliceCase").hide();
+    }
+</script>

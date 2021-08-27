@@ -1,0 +1,173 @@
+﻿@model Psps.Web.ViewModels.Complaint.ComplaintResultViewModel
+<div class="tab-pane" id="complaintResultTab">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="complaintResultGridTable"></table>
+                <div id="complaintResultGridPager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var listComplaintResultUrl = '@Url.RouteUrl("ListCompaintResult", new { complaintMasterId = -1 })';
+    var getComplaintResultUrl = '@Url.RouteUrl("GetComplaintResult", new { complaintResultId = -1 })';
+    var updateComplaintResultUrl = '@Url.RouteUrl("UpdateComplaintResult", new { complaintMasterId = -1 })';
+    var createComplaintResultUrl = '@Url.RouteUrl("CreateComplaintResult")';
+    var deleteComplaintResultUrl = '@Url.RouteUrl("DeleteComplaintResult", new { complaintResultId = -1 })';
+    var exportComplaintResultUrl = '@Url.RouteUrl("ExportComplaintResult", new { complaintMasterId = -1 })';
+
+    function initComplaintResultGrid() {
+        var actionUrl = listComplaintResultUrl.replace("-1", $("#complaintMasterId").val());
+        var $grid = $("#complaintResultGridTable");
+        var pager_selector = "#complaintResultGridPager";
+
+        if ($grid.isJqGrid()) {
+            $grid.reloadJqGrid();
+            return;
+        }
+
+        $grid.jqGrid({
+            pager: pager_selector,
+            url: actionUrl,
+            datatype: 'json',
+            sortname: 'complaintResultId',
+            sortorder: 'asc',
+            colNames: ['complaintResultId', 'complaintMasterId', 'Non Compliance Nature', 'Other Non ComplianceNature', 'Result',
+                       'Result Remark'],
+            colModel: [{
+                name: 'complaintResultId',
+                index: 'complaintResultId',
+                hidden : true,
+                search: false,
+            }, {
+                name: 'complaintMasterId',
+                index: 'complaintMasterId',
+                hidden : true,
+                search: false,
+            }, {
+                name: 'nonComplianceNature',
+                index: 'nonComplianceNature',
+                classes: 'wrappedJqGridCell',
+                searchoptions: {
+                    sopt: ['eq', 'ne'],
+                    value: @Html.Raw(Json.Encode(@Model.NonComplianceNatures)),
+                },
+                width: 350,
+            }, {
+                name: 'otherNonComplianceNature',
+                index: 'otherNonComplianceNature',
+                width: 200,
+            }, {
+                name: 'result',
+                index: 'result',
+                searchoptions: {
+                    sopt: ['eq', 'ne'],
+                    value: @Html.Raw(Json.Encode(@Model.Results)),
+                },
+                width: 200,
+            }, {
+                name: 'resultRemark',
+                index: 'resultRemark',
+                classes: 'wrappedJqGridCell',
+                width: 600,
+            }],
+            loadComplete: defaultGridLoadComplete,
+            ondblClickRow: function (rowId, iRow, iCol, e) {
+                var data = $grid.jqGrid('getRowData', rowId);
+                var actionUrl = getComplaintResultUrl.replace("-1", data.complaintResultId);
+                ajaxGet(actionUrl,
+                    function (response) {
+                        onEditRecord(response.data);
+                    }
+                );
+            }
+        });
+
+        //onSelectRow: function (rowId) {
+        //	$otherDepartmentEnquiryGrid.setGridParam('editurl', 'organisation-edit?' + rowId);
+        //}
+        //navButtons
+        $grid.jqGrid('navGrid', pager_selector, {
+            //navbar options
+            //search: true,
+            refresh: true,
+        }, {}, {}, {}, {
+            //search form
+            recreateForm: true,
+            afterShowSearch: defaultSearchFormAfterShowSearch,
+            afterRedraw: defaultSearchFormAfterRedraw
+        }, {}).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-download-alt",
+            onClickButton: onExportRecord,
+            position: "first",
+            title: "Export Data",
+            cursor: "pointer"
+        }).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-plus",
+            onClickButton: onNewRecord,
+            position: "first",
+            title: "New Record",
+            cursor: "pointer"
+        });
+
+        function onEditRecord(data) {
+            $("#cmResultRowVersion").val(data.rowVersion);
+            $("#cpResultComMasterId").val(data.complaintMasterId);
+            $("#complaintResultId").val(data.complaintResultId);
+            $('#nonComplianceNature').select2('val',data.nonComplianceNature);
+            $('#otherNonComplianceNature').val(data.otherNonComplianceNature);
+            $('#complaintResultddl').select2('val',data.result);
+            $("#resultRemarkHtml").summernote('code', data.resultRemarkHtml);
+            $('#complaintResultmodal').modal({
+                backdrop: 'static', show: true,
+                keyboard: false
+            })
+            if ( $("#nonComplianceNature option:selected").text().toLowerCase().indexOf("others") == -1)
+                $("#otherNonComplianceNature").attr("disabled", true);
+            else
+                $("#otherNonComplianceNature").removeAttr("disabled");
+
+            $('#btnAddComplaintResult').hide();
+            $('#btnUpdateComplaintResult').show();
+            $('#btnDeleteComplaintResult').show();
+        };
+
+        function onExportRecord() {
+            var grid = $('#complaintResultGridTable');
+            var data = grid.jqGrid('getRowData');
+
+            if (data.length == 0) {
+                notifSuccess("No Record Found");
+                return;
+            }
+            var actionUrl = exportComplaintResultUrl.replace("-1", $("#complaintMasterId").val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        };
+
+        function onNewRecord() {
+            $('#complaintResultmodal').modal({
+                backdrop: 'static', show: true,
+                keyboard: false
+            })
+            clearForm('#complaintResultForm');
+            $("#cpResultComMasterId").val($("#complaintMasterId").val());
+            if ( $("#nonComplianceNature option:selected").text().toLowerCase().indexOf("others") == -1)
+                $("#otherNonComplianceNature").attr("disabled", true);
+            else
+                $("#otherNonComplianceNature").removeAttr("disabled");
+
+            $('#complaintResultForm').find('.wysiwyg-editor').each(function () { $(this).summernote('reset'); });
+            $('#btnAddComplaintResult').show();
+            $('#btnUpdateComplaintResult').hide();
+            $('#btnDeleteComplaintResult').hide();
+        };
+    };
+</script>

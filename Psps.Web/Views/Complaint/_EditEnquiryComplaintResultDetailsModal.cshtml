@@ -1,0 +1,150 @@
+﻿@model Psps.Web.ViewModels.Complaint.ComplaintResultViewModel
+@using Psps.Resources;
+<form id="complaintResultForm" name="complaintResultForm" class="form-horizontal">
+    @Html.BootstrapValidationSummary()
+    @Html.HiddenFor(m => m.ComplaintResultId, htmlAttributes: new { @id = "complaintResultId" })
+    @Html.HiddenFor(m => m.ComplaintMasterId, htmlAttributes: new { @id = "cpResultComMasterId" })
+    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "cmResultRowVersion" })
+    <div id="complaintResultmodal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="btnComplaintResultClose" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Complaint Result Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NonComplianceNature, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+
+                                @Html.DropDownListFor(m => m.NonComplianceNature, new MultiSelectList(Model.NonComplianceNatures, "Key", "Value", Model.NonComplianceNature),
+                                htmlAttributes: new { @id = "nonComplianceNature", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.OtherNonComplianceNature, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.OtherNonComplianceNature, true, htmlAttributes: new { @id = "otherNonComplianceNature", @class = "form-control", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Result, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.DropDownListFor(m => m.Result, new SelectList(Model.Results, "Key", "Value", Model.Result),
+                                        htmlAttributes: new { @id = "complaintResultddl", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ResultRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.ResultRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "resultRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "resultRemark" })
+                                @Html.HiddenFor(model => model.ResultRemark, htmlAttributes: new { @id = "resultRemark", @maxlength = 4000 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnAddComplaintResult" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button type="button" id="btnUpdateComplaintResult" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="btnDeleteComplaintResult" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Delete</button>
+                    <button type="button" id="btnCancelComplaintResult" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+
+    $(function () {
+        $("#nonComplianceNature").change(function () {
+            var nonComplianceNature = $("#nonComplianceNature option:selected").text();
+            if (nonComplianceNature.toLowerCase().indexOf("others") != -1) {
+                $("#otherNonComplianceNature").removeAttr("disabled");
+            } else {
+                $("#otherNonComplianceNature").val("");
+                $("#otherNonComplianceNature").attr("disabled", true);
+            }
+        });
+    });
+
+    $('#btnUpdateComplaintResult').click(function () {
+        var $form = $("#complaintResultForm");
+        if ($form.valid()) {
+            var actionUrl = updateComplaintResultUrl;
+            $form.ajaxPostForm(actionUrl,
+                 function (response) {
+                     $("#complaintResultGridTable").reloadJqGrid();
+                     $('#complaintResultmodal').modal('hide');
+                     notifSuccess(response.message);
+                     initEditComplaintResultForm();
+                 }
+            );
+        }
+    });
+
+    $('#btnDeleteComplaintResult').click(function () {
+        var $form = $("#complaintResultForm");
+        confirmDelete(function (result) {
+            if (result) {
+                var actionUrl = deleteComplaintResultUrl.replace("-1", $('#complaintResultId').val());
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $("#complaintResultGridTable").reloadJqGrid();
+                         $('#complaintResultmodal').modal('hide');
+                         calRelevantRecordsAmount();
+                         notifSuccess(response.message);
+                         initEditComplaintResultForm();
+                     }
+                );
+            }
+        });
+    });
+
+    $('#btnAddComplaintResult').click(function () {
+        var $form = $("#complaintResultForm");
+        if ($form.valid()) {
+            var actionUrl = createComplaintResultUrl;
+            $form.ajaxPostForm(actionUrl,
+                 function (response) {
+                     $('#complaintResultmodal').modal('hide');
+                     $("#complaintResultGridTable").reloadJqGrid();
+                     calRelevantRecordsAmount();
+                     notifSuccess(response.message);
+                     initEditComplaintResultForm();
+                 }
+            );
+        }
+    });
+
+    $('#btnCancelComplaintResult').click(function () {
+        confirm("Unsaved change will be discarded. Click OK to proceed. Click Cancel to resume editing.", function (result) {
+            if (result) {
+                $('#complaintResultmodal').modal('hide');
+            }
+        });
+    });
+
+    $('#btnComplaintResultClose').click(function () {
+        confirm("Unsaved change will be discarded. Click OK to proceed. Click Cancel to resume editing.", function (result) {
+            if (result) {
+                $('#complaintResultmodal').modal('hide');
+            }
+        });
+    });
+
+    function initEditComplaintResultForm() {
+        $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+        clearForm('#complaintResultForm');
+ //       $('#complaintResultForm').find('.wysiwyg-editor').each(function () { $(this).summernote('reset'); });
+//        $("#resultRemarkHtml").summernote('code', '');
+        $("#btnAddComplaintResult").show();
+        $("#btnUpdateComplaintResult").hide();
+        $("#btnDeleteComplaintResult").hide();
+
+    }
+</script>

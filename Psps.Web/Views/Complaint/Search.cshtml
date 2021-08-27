@@ -1,0 +1,1487 @@
+﻿@model Psps.Web.ViewModels.Complaint.EnquiryComplaintSearchViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Enquiry_And_Complaint;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-inline .inline {
+        vertical-align: middle;
+    }
+</style>
+<form id="searchForm" class="form-horizontal" role="form">
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+    <div class="tab-pane active">
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.OrgRef, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                <table>
+                    <tr>
+                        <td>
+                        ORG<td>
+                        <td>
+                            @Html.TextBoxFor(m => m.OrgRef, true, htmlAttributes: new { @id = "searchOrgRef", @class = "form-control", @maxlength = 4, @style = "width: 100px;" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            @Html.LabelFor(m => m.OrgName, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.TextBoxFor(model => model.OrgName, true, htmlAttributes: new { @id = "searchOrgName", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.OrgStatusId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.OrgStatusId, true, new SelectList(Model.OrgStatus, "Key", "Value", Model.OrgStatusId), htmlAttributes: new { @id = "searchOrgStatus", @class = "form-control", @data_provide = "select2", @style = "width: 310px;" })
+            </div>
+            @Html.LabelFor(m => m.SubventedIndicatorId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.SubventedIndicatorId, true, new SelectList(Model.SubventedIndicators, "Key", "Value", Model.SubventedIndicatorId), htmlAttributes: new { @id = "searchSubventedIndicators", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.RegistrationTypeId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-9">
+                <div class="input-group">
+                    @Html.DropDownListFor(m => m.RegistrationTypeId, true, new SelectList(Model.RegistrationTypes, "Key", "Value", Model.RegistrationTypeId), htmlAttributes: new { @id = "searchRegistrationTypes", @class = "form-control", @data_provide = "select2", @style = "width: 310px;" })
+                    @Html.TextBoxFor(model => model.RegistrationOtherName, true, htmlAttributes: new { @id = "searchRegistrationOtherName", @class = "form-control", @style = "width: 310px;", @disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.SearchRecordTypeId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-3">
+                @Html.DropDownListFor(m => m.SearchRecordTypeId, true, new SelectList(Model.RecordTypes, "Key", "Value", Model.SearchRecordTypeId), htmlAttributes: new { @id = "searchRecordTypes", @class = "form-control", @data_provide = "select2", @style = "width: 310px;" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintRefNo, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.PrefixComplaintRefNo, true, htmlAttributes: new { @id = "searchPrefixComplaintRefNo", @class = "form-control", @style = "width: 50px" })
+                    <input id="CritComplaintRefNoMid" class="form-control jqgrid-colmodel" value="C" type="text" maxlength="1" style="width: 20px" data-jqgrid-colmodel-name="ComplaintRefNoMid" data-jqgrid-op="cn" disabled>
+                    @Html.TextBoxFor(model => model.SuffixComplaintRefNo, true, htmlAttributes: new { @id = "searchSuffixComplaintRefNo", @class = "form-control", @style = "width: 80px" })
+                </div>
+            </div>
+            @Html.LabelFor(m => m.ComplaintDate, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                <div class="form-inline inline">
+                    @Html.TextBoxFor(m => m.ComplaintDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchComplaintDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                    <label class="control-label">to  </label>
+                    @Html.TextBoxFor(m => m.FirstComplaintDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchFirstComplaintDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.SearchComplaintSourceId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-9">
+                <div class="input-group">
+                    @Html.DropDownListFor(m => m.SearchComplaintSourceId, true, new SelectList(Model.ComplaintSources, "Key", "Value", Model.SearchComplaintSourceId), htmlAttributes: new { @id = "searchComplaintSources", @class = "form-control", @data_provide = "select2", @style = "width: 310px;" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.SearchActivityConcernId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-9">
+                <div class="input-group">
+                    @Html.DropDownListFor(m => m.SearchActivityConcernId, true, new SelectList(Model.ActivityConcerns, "Key", "Value", Model.SearchActivityConcernId), htmlAttributes: new { @id = "searchActivityConcerns", @class = "form-control", @data_provide = "select2", @style = "width: 310px;" })
+                    @Html.TextBoxFor(model => model.OtherActivityConcern, true, htmlAttributes: new { @id = "searchOtherActivityConcern", @class = "form-control", @style = "width: 300px", @disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FundRaisingLocation, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-9">
+                @Html.TextBoxFor(model => model.FundRaisingLocation, true, htmlAttributes: new { @id = "searchFundRaisingLocation", @class = "form-control", @maxlength = 100 })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.NonComplianceNatureId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-9">
+                @Html.DropDownListFor(m => m.NonComplianceNatureId, true, new SelectList(Model.NonComplianceNatures, "Key", "Value", Model.NonComplianceNatureId), htmlAttributes: new { @id = "searchNonComplianceNatures", @multiple = "multiple", @class = "form-control", @data_provide = "select2" })
+                @Html.TextBoxFor(model => model.OtherNonComplianceNature, true, htmlAttributes: new { @id = "searchNonComplianceNatureOther", @class = "form-control", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.SearchProcessStatusId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-9">
+                <div class="input-group">
+                    @Html.DropDownListFor(m => m.SearchProcessStatusId, true, new SelectList(Model.ProcessStatus, "Key", "Value", Model.SearchProcessStatusId), htmlAttributes: new { @id = "searchProcessStatus", @class = "form-control", @data_provide = "select2", @style = "width: 310px;" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.IsFollowUp, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                <div class="form-inline inline">
+                    @Html.EditorFor(model => model.IsFollowUp, new { htmlAttributes = new { @id = "searchIsFollowUp", @class = "form-control" } })
+                </div>
+                <div class="form-inline inline">
+                    @Html.LabelFor(m => m.FromDate, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.FromDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchFromDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                    <label class="control-label">to  </label>
+                    @Html.TextBoxFor(m => m.ToDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchToDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-2">&nbsp;</div>
+            <div class="col-xs-8" style="height: 34px;">
+                @Html.EditorFor(model => model.FollowUpIndicator, new { htmlAttributes = new { @id = "searchFollowUpIndicator", @class = "form-control" } })
+                @Html.LabelFor(m => m.FollowUpIndicator, new { @class = "control-label", @style = "padding-right: 20px;" })
+                @Html.EditorFor(model => model.ReportPoliceIndicator, new { htmlAttributes = new { @id = "searchReportPoliceIndicator", @class = "form-control" } })
+                @Html.LabelFor(m => m.ReportPoliceIndicator, new { @class = "control-label", @style = "padding-right: 20px;" })
+                @Html.EditorFor(model => model.OthersFollowUpIndicator, new { htmlAttributes = new { @id = "searchOthersFollowUpIndicator", @class = "form-control" } })
+                @Html.LabelFor(m => m.OthersFollowUpIndicator, new { @class = "control-label", @style = "padding-right: 20px;" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintResultId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.ComplaintResultId, true, new SelectList(Model.ComplaintResults, "Key", "Value", Model.ComplaintResultId), htmlAttributes: new { @id = "complaintResultId", @class = "form-control", @data_provide = "select2" })
+            </div>
+            @Html.LabelFor(m => m.PoliceCaseIndicator, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.PoliceCaseIndicator, true, new SelectList(Model.YesNos, "Key", "Value", Model.PoliceCaseIndicator), htmlAttributes: new { @id = "policeCaseIndicator", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.WithholdingIndicator, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.WithholdingIndicator, true, new SelectList(Model.YesNos, "Key", "Value", Model.WithholdingIndicator), htmlAttributes: new { @id = "withholdingIndicator", @class = "form-control", @data_provide = "select2" })
+            </div>
+            @Html.LabelFor(m => m.OrgRefIndicator, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.OrgRefIndicator, true, new SelectList(Model.YesNos, "Key", "Value", Model.OrgRefIndicator), htmlAttributes: new { @id = "orgRefIndicator", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.PspPermitNum, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-9">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.PspPermitNum, true, htmlAttributes: new { @id = "searchPspPermitNum", @class = "form-control", @style = "width: 100px" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FdPermitNum, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-9">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.FdPermitNum, true, htmlAttributes: new { @id = "searchFdPermitNum", @class = "form-control", @style = "width: 100px" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="pull-right">
+                    <button id="btnSearch" type="button" class="btn btn-primary btn-sm">
+                        <span class="icon-search"></span>&nbsp;@Labels.Search</button>
+                    <button type="button" id="btnClear" class="btn btn-sm btn-default">
+                        <span class="icon-eraser"></span>&nbsp;@Labels.Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="vspace-6"></div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="grid-stretch-container">
+                    <table id="complaint-grid-table" class="searchGrid"></table>
+                    <div id="complaint-grid-pager"></div>
+                </div>
+            </div>
+        </div>
+
+        <fieldset>
+        </fieldset>
+    </div>
+</form>
+
+<form id="enquiryComplaintSearchEditForm" class="form-horizontal">
+    <div id="enquiryComplaintSearchEditModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="btnClose" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Complaint Details</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset></fieldset>
+
+                    <div class="form-group">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.OrgRef, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(model => model.OrgRef, true, htmlAttributes: new { @id = "editOrgRef", @class = "form-control", @maxlength = 8, @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.RecordTypeId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.DropDownListFor(m => m.RecordTypeId, true, new SelectList(Model.RecordTypes, "Key", "Value", Model.RecordTypeId), htmlAttributes: new { @id = "recordTypes", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ComplaintSourceId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.DropDownListFor(m => m.ComplaintSourceId, true, new SelectList(Model.ComplaintSources, "Key", "Value", Model.ComplaintSourceId), htmlAttributes: new { @id = "complaintSources", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ComplaintSourceRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(model => model.ComplaintSourceRemark, true, htmlAttributes: new { @id = "complaintSourceRemark", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(m => m.ActivityConcernId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.DropDownListFor(m => m.ActivityConcernId, true, new SelectList(Model.ActivityConcerns, "Key", "Value", Model.ActivityConcernId), htmlAttributes: new { @id = "activityConcerns", @class = "form-control", @data_provide = "select2" })
+                                @Html.TextBoxFor(model => model.OtherActivityConcern, true, htmlAttributes: new { @id = "otherActivityConcern", @class = "form-control", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ComplaintDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.ComplaintDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "complaintDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                            @Html.LabelFor(m => m.FirstComplaintDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FirstComplaintDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "firstComplaintDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SwdUnit, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.SwdUnit, true, htmlAttributes: new { @id = "swdUnit", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ReplyDueDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.ReplyDueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "replyDueDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                            @Html.LabelFor(m => m.LfpsReceiveDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.LfpsReceiveDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "lfpsReceiveDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FundRaisingDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FundRaisingDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "fundRaisingDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                            @Html.LabelFor(m => m.FundRaisingTime, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FundRaisingTime, true, htmlAttributes: new { @id = "fundRaisingTime", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FundRaisingLocation, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FundRaisingLocation, true, htmlAttributes: new { @id = "fundRaisingLocation", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FundRaiserInvolve, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.FundRaiserInvolve, true, htmlAttributes: new { @id = "fundRaiserInvolve", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.CollectionMethod, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.DropDownListFor(m => m.CollectionMethod, true, new SelectList(Model.CollectionMethods, "Key", "Value", Model.CollectionMethod), htmlAttributes: new { @id = "collectionMethod", @class = "form-control", @data_provide = "select2" })
+                                @Html.TextBoxFor(m => m.OtherCollectionMethod, true, htmlAttributes: new { @id = "otherCollectionMethod", @class = "form-control", @style = "width: 250px", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ConcernedOrgId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.ConcernedOrgRef, true, htmlAttributes: new { @id = "concernedOrgRef", @class = "form-control", @maxlength = 8 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ConcernedOrgName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.ConcernedOrgName, true, rows: 4, htmlAttributes: new { @id = "concernedOrgName", @class = "form-control", @maxlength = 1000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ComplainantName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.ComplainantName, true, rows: 4, htmlAttributes: new { @id = "complainantName", @class = "form-control", @maxlength = 400 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PspPermitNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.PspApprovalHistoryId, true, htmlAttributes: new { @id = "pspApprovalHistoryId", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FdPermitNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FdEventId, true, htmlAttributes: new { @id = "fdEventId", @class = "form-control" })
+                                @*<div class="input-group">
+                                    @Html.TextBoxFor(m => m.FdPermitNum, true, htmlAttributes: new { @id = "fdPermitNum", @class = "form-control", @style = "width: 100px", @disabled = "disabled" })
+                                    <span class="input-group-btn pull-left">
+                                        <button type="button" id="btnFdPermitNumModal" class="btn btn-sm">
+                                            <i class="icon-search"></i>
+                                        </button>
+                                    </span>
+                                </div>*@
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DcLcContent, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">                                
+                                @Html.TextAreaFor(model => model.DcLcContentHtml, true, rows: 4, htmlAttributes: new { @id = "dcLcContentHtml", @class = "form-control wysiwyg-editor", @owner = "dcLcContent" })
+                                @Html.HiddenFor(model => model.DcLcContent, htmlAttributes: new { @id = "dcLcContent", @maxlength = 4000 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ComplaintEnclosureNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-5">
+                                @Html.TextBoxFor(m => m.ComplaintEnclosureNum, true, htmlAttributes: new { @id = "complaintEnclosureNum", @class = "form-control", @placeholder = "Encl. No.", @maxlength = 50 })
+                            </div>
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.ComplaintPartNum, true, htmlAttributes: new { @id = "ComplaintPartNum", @class = "form-control", @placeholder = "Part No.", @maxlength = 20 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ProcessStatusId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.DropDownListFor(m => m.ProcessStatusId, true, new SelectList(Model.ProcessStatus, "Key", "Value", Model.ProcessStatusId), htmlAttributes: new { @id = "processStatus", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ComplaintResultRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">                                
+                                @Html.TextAreaFor(model => model.ComplaintResultRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "complaintResultRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "complaintResultRemark" })
+                                @Html.HiddenFor(model => model.ComplaintResultRemark, htmlAttributes: new { @id = "complaintResultRemark", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.WithholdingListIndicator, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.EditorFor(model => model.WithholdingListIndicator, new { htmlAttributes = new { @id = "withholdingListIndicator" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.WithholdingBeginDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.WithholdingBeginDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "withholdingBeginDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                            @Html.LabelFor(m => m.WithholdingEndDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.WithholdingEndDate, true, htmlAttributes: new { @id = "withholdingEndDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ActionFileEnclosureNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-5">
+                                @Html.TextBoxFor(m => m.ActionFileEnclosureNum, true, htmlAttributes: new { @id = "actionFileEnclosureNum", @class = "form-control", @placeholder = "Encl. No.", @maxlength = 50 })
+                            </div>
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.ActionFilePartNum, true, htmlAttributes: new { @id = "actionFilePartNum", @class = "form-control", @placeholder = "Part No.", @maxlength = 20 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.RelatedComplaintRef, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.RelatedComplaintMasterId, true, htmlAttributes: new { @id = "relatedComplaintMasterId", @class = "form-control", @maxlength = 12 })
+                                @*<div class="input-group">
+                                    @Html.TextBoxFor(m => m.RelatedComplaintMasterId, true, htmlAttributes: new { @id = "relatedComplaintMasterId", @class = "form-control", @maxlength = 12 })
+                                    <span class="input-group-addon" style="padding: 0 0; border-width: 0px;">
+                                        <button type="button" id="btnComplaintCaseModal" class="btn btn-sm" data-toggle="modal" data-target="#complaintCase-modal">
+                                            <i class="icon-search"></i>
+                                        </button>
+                                    </span>
+                                </div>*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.WithholdingRemarkId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-4">
+                                @Html.DropDownListFor(m => m.WithholdingRemarkId, true, new SelectList(Model.WithholdingRemarks, "Key", "Value", Model.WithholdingRemarkId), htmlAttributes: new { @id = "withholdingRemarkId", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.OtherWithholdingRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">                                
+                                @Html.TextAreaFor(model => model.OtherWithholdingRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "otherWithholdingRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "otherWithholdingRemark" })
+                                @Html.HiddenFor(model => model.OtherWithholdingRemark, htmlAttributes: new { @id = "otherWithholdingRemark", @maxlength = 4000 })
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                            <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                        <button type="button" id="btnCreate" class="btn btn-sm btn-primary">
+                            <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                        <button type="button" id="btnCancel" class="btn btn-sm btn-default">
+                            <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@*<form class="form-horizontal">
+    <div id="orgId-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnCloseOrgIdModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search Organisation</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="orgId-grid-table"></table>
+                                <div id="orgId-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelOrgIdModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>*@
+
+@*<form class="form-horizontal">
+    <div id="pspPermitNum-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnClosePspPermitNumModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search PSP Permit Number</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="pspPermitNum-grid-table"></table>
+                                <div id="pspPermitNum-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelPspPermitNumModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>*@
+@*<form class="form-horizontal">
+    <div id="fdPermitNum-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnCloseFdPermitNumModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search FD Permit Number</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="fdPermitNum-grid-table"></table>
+                                <div id="fdPermitNum-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelFdPermitNumModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>*@
+<form class="form-horizontal">
+    <div id="complaintCase-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnCloseComplaintCaseModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search Related Enquiry / Complaint Case</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="complaintCase-grid-table"></table>
+                                <div id="complaintCase-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelComplaintCaseModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var searchEnquiryComplaintUrl = '@Url.RouteUrl("SearchEnquiryComplaint")';
+        var createEnquiryComplaintUrl = '@Url.RouteUrl("CreateEnquiryComplaint")';
+
+        var enquiryComplaintListOrgMasterUrl = '@Url.RouteUrl("EnquiryComplaintListOrgMaster")';
+        var enquiryComplaintListPspApprovalHistoryUrl = '@Url.RouteUrl("EnquiryComplaintListPspApprovalHistory")';
+        var enquiryComplaintListFdApprovalHistoryUrl = '@Url.RouteUrl("EnquiryComplaintListFdApprovalHistory")';
+        var enquiryComplaintListComplaintCaseUrl = '@Url.RouteUrl("EnquiryComplaintListComplaintCase")';
+
+        var exportSearchEnquiryComplaintUrl = '@Url.RouteUrl("ExportSearchEnquiryComplaint")';
+        var editEnquiryComplaintUrl = '@Url.RouteUrl("EditEnquiryComplaint", new { complaintId = -1 })';
+
+        var searchOrganisationUrl = '@Url.RouteUrl("SearchOrganisation")';
+        var getOrganisationUrl = '@Url.RouteUrl("GetOrganisation", new { orgRef = "orgRef" })';
+
+        var searchPspPermitNumUrl = '@Url.RouteUrl("SearchComplaintListPspApprovalHistory")';
+        var getPspApprovalHistoryUrl = '@Url.RouteUrl("GetComplaintListPspApprovalHistory", new { pspApprovalHistoryId = -1 })';
+
+        var searchFdPermitNumUrl = '@Url.RouteUrl("SearchComplaintListFdApprovalHistory")';
+        var getFdEventUrl = '@Url.RouteUrl("GetFdEventFromGrid", new { fdEventId = -1 })';
+
+        var searchComplaintRefUrl = '@Url.RouteUrl("SearchComplaintRef")';
+        var getComplaintRefUrl = '@Url.RouteUrl("GetComplaintRef", new { complaintMasterId = "complaintMasterId" })';
+
+        var pageSize = 10;
+
+        $(function () {
+
+            // Remove the * of Complaint Date for search box
+            removeRequired('#searchComplaintDate');
+
+            initEditForm();
+            initComplaintGrid();
+            //initOrgIdGrid();
+            //initPspPermitNumGrid();
+            //initFdPermitNumGrid();
+            initComplaintCaseGrid();
+
+            $('#pspApprovalHistoryId').initPspPermitSearchBox(searchPspPermitNumUrl, getPspApprovalHistoryUrl ,pageSize, $("#concernedOrgRef"));
+            $('#fdEventId').initFdPermitSearchBox(searchFdPermitNumUrl, getFdEventUrl ,pageSize, $("#concernedOrgRef"));
+            $('#concernedOrgRef').initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+            $('#relatedComplaintMasterId').initComplaintRefSearchBox(searchComplaintRefUrl, getComplaintRefUrl, pageSize, "ADD");
+
+            $('#btnSearch').on('click', function () {
+                var $form = $('#searchForm');
+                var $grid = $('#complaint-grid-table');
+                
+                resetPostData($form, $grid);
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, queryStringToJson($form.serialize()))
+                if (clearFilter)
+                    $.extend(postData, { filters: "" });
+
+                $grid.jqGrid('setGridParam', {
+                    //url: searchEnquiryComplaintUrl + "?1=1&" + $('#searchForm').serialize(),
+                    url: searchEnquiryComplaintUrl,
+                    datatype: 'json',
+                    postData: postData,
+                    search: !clearFilter,
+                    mtype: "POST"
+                });
+                $grid.trigger("reloadGrid", [{ page: 1 }]);
+            });
+
+            $('#btnCreate').click(function () {
+                var $form = $("#enquiryComplaintSearchEditForm");
+
+                if ($form.valid()) {
+                    var actionUrl = createEnquiryComplaintUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             notifSuccess(response.message);
+                             var actionUrl = editEnquiryComplaintUrl.replace("-1", response.data);
+                             window.location = actionUrl;
+                         }
+                    );
+                }
+
+                $('#enquiryComplaintSearchEditModal').animate({ scrollTop: 0 }, 'slow');
+            });
+
+            $('#btnClear').click(function () {
+                clearSearchForm();
+            });
+
+            $('#btnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#enquiryComplaintSearchEditModal').modal('hide');
+                        initEditForm();
+                    }
+                });
+            });
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#enquiryComplaintSearchEditModal').modal('hide');
+                        initEditForm();
+                    }
+                });
+            });
+
+            $('#btnComplaintCaseModal').click(function () {
+                var actionUrl = enquiryComplaintListComplaintCaseUrl;
+                var $grid = $('#complaintCase-grid-table');
+                $grid.jqGrid('clearGridData');
+                $grid.jqGrid('setGridParam', { search: false });
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, { filters: "" });
+                $grid.jqGrid('setGridParam', {
+                    url: actionUrl,
+                    datatype: 'json',
+                });
+                $grid.trigger("reloadGrid", [{ page: 1 }]);
+            });
+
+            $('#btnCloseComplaintCaseModal').click(function () {
+                $('#complaintCase-modal').modal('hide');
+            });
+
+            $('#btnCancelComplaintCaseModal').click(function () {
+                $('#complaintCase-modal').modal('hide');
+            });
+
+            initSearchForm();
+            initUILogic();
+        });
+        function initUILogic(){
+            $("#collectionMethod").change(function () {
+                var collectionMethod = $("#collectionMethod option:selected").text();
+                if (collectionMethod.toLowerCase() == "others") {
+                    $("#otherCollectionMethod").removeAttr("disabled");
+                } else {
+                    $("#otherCollectionMethod").val("");
+                    $("#otherCollectionMethod").attr("disabled", true);
+                }
+            });
+
+            $("#searchIsFollowUp").next('input[type=checkbox]').bind("click", function () {
+                var isFollowUp = $("#searchIsFollowUp").val();
+                if(isFollowUp=="true"){
+                    $("#searchFollowUpIndicator").next('input[type=checkbox]').attr("disabled", false);
+                    $("#searchReportPoliceIndicator").next('input[type=checkbox]').attr("disabled", false);
+                    $("#searchOthersFollowUpIndicator").next('input[type=checkbox]').attr("disabled", false);
+                    $("#searchFromDate").attr("disabled", false);
+                    $("#searchToDate").attr("disabled", false);
+                }else{
+                    $("#searchFollowUpIndicator").next('input[type=checkbox]').attr("disabled", true);
+                    $('#searchFollowUpIndicator').checkboxVal(false);
+                    $("#searchReportPoliceIndicator").next('input[type=checkbox]').attr("disabled", true);
+                    $('#searchReportPoliceIndicator').checkboxVal(false);
+                    $("#searchOthersFollowUpIndicator").next('input[type=checkbox]').attr("disabled", true);
+                    $('#searchOthersFollowUpIndicator').checkboxVal(false);
+                    $("#searchFromDate").attr("disabled", true);
+                    $("#searchToDate").attr("disabled", true);
+                }
+            });
+
+            $("#searchRegistrationTypes").change(function () {
+                var searchRegistrationType = $("#searchRegistrationTypes option:selected").text();
+                if (!searchRegistrationType.toLowerCase().indexOf("other")) {
+                    $("#searchRegistrationOtherName").removeAttr("disabled");
+                } else {
+                    $("#searchRegistrationOtherName").val("");
+                    $("#searchRegistrationOtherName").attr("disabled", true);
+                }
+            });
+
+            $("#searchActivityConcerns").change(function () {
+                var searchActivityConcern = $("#searchActivityConcerns option:selected").text();
+                if (searchActivityConcern == "Others") {
+                    $("#searchOtherActivityConcern").removeAttr("disabled");
+                } else {
+                    $("#searchOtherActivityConcern").val("");
+                    $("#searchOtherActivityConcern").attr("disabled", true);
+                }
+            });
+
+            $("#searchNonComplianceNatures").change(function () {
+                var searchNonComplianceNature = $("#searchNonComplianceNatures option:selected").text();
+                if (searchNonComplianceNature == "Others") {
+                    $("#searchNonComplianceNatureOther").removeAttr("disabled");
+                } else {
+                    $("#searchNonComplianceNatureOther").val("");
+                    $("#searchNonComplianceNatureOther").attr("disabled", true);
+                }
+            });
+
+            $("#activityConcerns").change(function () {
+                var activityConcern = $("#activityConcerns option:selected").text();
+                if (activityConcern == "Others") {
+                    $("#otherActivityConcern").removeAttr("disabled");
+                } else {
+                    $("#otherActivityConcern").val("");
+                    $("#otherActivityConcern").attr("disabled", true);
+                }
+            });
+
+            $("#nonComplianceNatures").change(function () {
+                var nonComplianceNature = $("#nonComplianceNatures option:selected").text();
+                if (nonComplianceNature.toLowerCase().indexOf("others")!=-1) {
+                    $("#otherNonComplianceNature").removeAttr("disabled");
+                } else {
+                    $("#otherNonComplianceNature").val("");
+                    $("#otherNonComplianceNature").attr("disabled", true);
+                }
+            });
+
+            $("#searchNonComplianceNatures").change(function () {
+                var searchNonComplianceNature = $("#searchNonComplianceNatures option:selected").text();
+                if (searchNonComplianceNature.toLowerCase().indexOf("others")!=-1) {
+                    $("#searchNonComplianceNatureOther").removeAttr("disabled");
+                } else {
+                    $("#searchNonComplianceNatureOther").val("");
+                    $("#searchNonComplianceNatureOther").attr("disabled", true);
+                }
+            });
+
+        }
+
+        function initComplaintGrid() {
+            var $complaintGrid = $("#complaint-grid-table");
+            var pager_selector = "#complaint-grid-pager";
+
+            $complaintGrid.jqGrid({
+                pager: pager_selector,
+                sortname: 'complaintDate desc, orgRef',
+                sortorder: 'asc',
+                url: searchEnquiryComplaintUrl,
+                mtype: 'post',
+                datatype: "local",
+                colNames: ['Org. Ref.',
+                    'Eng & Chi Org. Names',
+                    'Eng Organisation Name',
+                    'Chi Organisation Name',
+                    'Org. Status',
+                    'Subvented',
+                    'Registration 1',
+                    'Registration 2',
+                    'Record Type',
+                    'Enquiry / Complaint Ref. No.',
+                    'Source',
+                    '@Labels.EditEnquiryComplaint_ComplainantName',
+                    'Activity Concerned',
+                    'Date of Enquiry / Complaint',
+                    '@Labels.EditEnquiryComplaint_FundRaisingDate',
+                    'Location of Fund-raising',
+                    'Nature of Non-compliance',
+                    'Processing Status' ,
+                    'Follow-up Action Taken',                    
+                    '@Labels.EnquiryComplaint_FollowUpIndicator',                    
+                    '@Labels.EnquiryComplaint_OthersFollowUpIndicator',
+                    '@Labels.EnquiryComplaint_ReportPoliceIndicator',
+                    '@Labels.EnquiryComplaint_PoliceCaseIndicator',
+                    'Permit No.',
+                    'Due Date',
+                    'Withholding',
+                    'Withholding Start Date',
+                    'Withholding End Date',
+                    'Investigated by Police',
+                    '(PSP)Permit No. Concerned',
+                    '(FD)Permit No. Concerned',
+                    'No. of Telephone Record',
+                    'Result of the Complaint',
+                    'No. of Enquiry from Other Department / Authorities',
+                    '@Labels.EditEnquiryComplaint_ComplaintResultRemark',
+                    '@Labels.EditEnquiryComplaint_DcLcContent',
+                    '@Labels.EditEnquiryComplaint_WithholdingRemark',
+                    '@Labels.EditEnquiryComplaint_OtherWithholdingRemark',
+                    'ComplaintMasterId',
+                    '@Labels.EnquiryComplaint_OrgRefIndicator',],
+                colModel: [{
+                    name: 'orgRef',
+                    width: '10',
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'engChiOrgName',
+                    index: 'cmOrgNameSorting',
+                    search: false,
+                    width: '10'
+                },{
+                    name: 'engOrgName',
+                    hidden:true,
+                    searchoptions : {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'chiOrgName',
+                    hidden:true,                    
+                    searchoptions : {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'orgStatusId',
+                    index: 'disableIndicator',
+                    width: '10',
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.OrgStatus))
+                        },
+                    align: 'center'
+                }, {
+                    name: 'subventedIndicator',
+                    width: '10',
+                    classes: 'wrappedJqGridCell',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return (cellvalue != null ? (cellvalue ? "Yes" : "No") : "");
+                    },
+                    unformat: jqGridUnformatYesNo,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: "true:Yes;false:No"
+                    },
+                    align: 'center'
+                },{
+                    name: 'registrationType1',
+                    stype: 'select',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.RegistrationTypes))
+                        }
+                },{
+                    name: 'registrationType2',
+                    stype: 'select',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.RegistrationTypes))
+                        }
+                }, {
+                    name: 'complaintRecordType',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.RecordTypes))
+                        },
+                    width: '9',
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintRef',
+                    width: 10,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintSource',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintSources))
+                        },
+                    width: '8',
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complainantName',
+                    index: 'complainantName',
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'activityConcern',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ActivityConcerns))
+                        },
+                    width: '10',
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintDate',
+                    template: dateTemplate,
+                    width: '10',
+                }, {
+                    name : 'fundRaisingDate',
+                    template: dateTemplate,
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    }
+                }, {
+                    name:  'fundRaisingLocation',
+                    index: 'fundRaisingLocation',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                    },
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'nonComplianceNatureId',
+                    index: 'complaintResult>NonComplianceNature',
+                    stype: 'select',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['cn','eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.NonComplianceNatures))
+                        },
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'processStatus',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ProcessStatus))
+                        },
+                    width: '10',
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'followUpAction',
+                    width: '10'
+                }, {
+                    name: 'followUpIndicator',           
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    },
+                    template: yesNoTemplate,
+                }, {
+                    name: 'otherFollowUpIndicator',
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    },
+                    template: yesNoTemplate,
+                }, {
+                    name: 'reportPoliceIndicator',         
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    },
+                    template: yesNoTemplate,
+                }, {
+                    name: 'policeCaseIndicator',
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    },
+                    template: yesNoTemplate,
+                }, {
+                    name : 'pspPermitNum',
+                    width: '10',
+                    search: false,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name : 'replyDueDate',
+                    template: dateTemplate,
+                    width: '10',
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name : 'withholdingListIndicator',                    
+                    hidden : true,
+                    template: yesNoTemplate,
+                    searchoptions: {
+                        searchhidden: true,
+                    },
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name : 'withholdingBeginDate',
+                    template: dateTemplate,
+                    width: 12,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name : 'withholdingEndDate',
+                    template: dateTemplate,
+                    width: 12,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name : 'policeCaseResult',
+                    hidedlg: true,
+                    width: 12,
+                    search: false
+                }, {
+                    name : 'pspPermitNum',                    
+                    hidden : true,
+                    searchoptions: {
+                        searchhidden: true,
+                    },
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'fdPermitNum',
+                    hidden : true,
+                    searchoptions: {
+                        searchhidden: true,
+                    },
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'telRecordNum',
+                    template:numTemplate,
+                    width: '10',
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'complaintResult>Result',
+                    hidden : true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintResults))
+                        },
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'otherDepartmentEnquiryNum',
+                    template:numTemplate,                    
+                    hidden : true,
+                },{
+                    name: 'complaintResultRemark',
+                    index: 'complaintResultRemark',
+                    hidden:  true,
+                    searchoptions : {
+                        searchhidden: true
+                    }
+                },{
+                    name: 'dcLcContent',
+                    index: 'dcLcContent',
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    },
+                    width: '10',
+                },{
+                    name: 'withholdingRemark',
+                    index: 'withholdingRemark',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.WithholdingRemarks))
+                        }
+                },{
+                    name: 'otherWithholdingRemark',
+                    index: 'otherWithholdingRemark',
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    }
+                }, {
+                    name : 'complaintMasterId',
+                    hidden : true,
+                    search: false,
+                }, {
+                    name: 'orgRefIndicator',
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    },
+                    template: yesNoTemplate,
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete,loadComplete: function(grid) {
+                    defaultGridLoadComplete(grid);
+                    $(this).setGridParam({ datatype: "json" });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $complaintGrid.jqGrid('getRowData', rowId);
+                    var actionUrl = editEnquiryComplaintUrl.replace("-1", data.complaintMasterId);
+                    window.location = actionUrl;
+                },
+                onSelectRow: function (rowId) {
+                    $complaintGrid.setGridParam('editurl', 'system-disaster-maintenance.html?' + rowId);
+                }
+            });
+
+            //navButtons
+            $complaintGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: onNewRecord,
+                position: "first",
+                title: "New Record",
+                cursor: "pointer"
+            });
+
+            $(window).on('resize', function () {
+                $complaintGrid.setGridWidth($('.page-content').width());
+            }).trigger('resize');
+
+            function displayInput() {
+                $('#enquiryComplaintSearchEditModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function onExportRecord() {
+                var grid = $('#complaint-grid-table');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifError("Enquiry And Complaint Search Result has no Record");
+                    return;
+                }
+
+                grid.exportGrid(exportSearchEnquiryComplaintUrl,
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+            };
+
+            function onNewRecord() {
+                displayInput();
+                initSearchForm();
+            };
+        };
+
+        //var pspPermitNumGridInited = false;
+
+        //function initPspPermitNumGrid() {
+        //    if (pspPermitNumGridInited)
+        //        return;
+        //    pspPermitNumGridInited = true;
+
+        //    var $pspPermitNumGrid = $("#pspPermitNum-grid-table");
+        //    var pager_selector = "#pspPermitNum-grid-pager";
+
+        //    $pspPermitNumGrid.jqGrid({
+        //        pager: pager_selector,
+        //        //sortname: 'orgRef',
+        //        //sortorder: 'asc',
+        //        datatype: "local",
+        //        colNames: ['Organisation Reference',
+        //            'Eng & Chi Organisation Name',
+        //            'Subvented',
+        //            'PSP File Reference',
+        //            'Permit No.',
+        //            'PspApprovalHistoryId'
+        //        ],
+        //        colModel: [{
+        //            name: 'orgRef',
+        //            index: 'pspMaster.OrgMaster.OrgRef',
+        //            width: '100',
+        //        }, {
+        //            name: 'orgName',
+        //            index: 'pspMaster.OrgMaster.EngOrgName',
+        //            width: '350',
+        //        }, {
+        //            name: 'subvented',
+        //            index: 'pspMaster.OrgMaster.SubventedIndicator',
+        //            template: yesNoTemplate,
+        //            width: '80',
+        //        }, {
+        //            name: 'pspRef',
+        //            index: 'pspMaster.PspRef',
+        //            width: '150',
+        //        }, {
+        //            name: 'permitNum',
+        //            index: 'permitNum',
+        //            width: '150',
+        //        }, {
+        //            name: 'pspApprovalHistoryId',
+        //            width: '200',
+        //            hidden: 'true',
+        //        }],
+        //        loadComplete: defaultGridLoadComplete,
+        //        ondblClickRow: function (rowId, iRow, iCol, e) {
+        //            var data = $pspPermitNumGrid.jqGrid('getRowData', rowId);
+        //            onSelectPspPermitNum(data);
+        //        }
+        //    });
+
+        //    //navButtons
+        //    $pspPermitNumGrid.jqGrid('navGrid', pager_selector, {
+        //        //navbar options
+        //        search: true,
+        //        refresh: true,
+        //    }, {}, {}, {}, {
+        //        //search form
+        //        recreateForm: true,
+        //        afterShowSearch: defaultSearchFormAfterShowSearch,
+        //        afterRedraw: defaultSearchFormAfterRedraw
+        //    }, {});
+
+        //    function onSelectPspPermitNum(data) {
+        //        $('#pspApprovalHistoryId').val(data.pspApprovalHistoryId);
+        //        $('#pspPermitNum').val(data.permitNum);
+        //        $('#pspPermitNum-modal').modal('hide');
+        //    }
+        //};
+
+        //var fdPermitNumGridInited = false;
+
+        //function initFdPermitNumGrid() {
+        //    if (fdPermitNumGridInited)
+        //        return;
+        //    fdPermitNumGridInited = true;
+
+        //    var $fdPermitNumGrid = $("#fdPermitNum-grid-table");
+        //    var pager_selector = "#fdPermitNum-grid-pager";
+
+        //    $fdPermitNumGrid.jqGrid({
+        //        pager: pager_selector,
+        //        //sortname: 'orgRef',
+        //        //sortorder: 'asc',
+        //        datatype: "local",
+        //        colNames: ['Organisation Reference',
+        //            'Eng & Chi Organisation Name',
+        //            'Subvented',
+        //            'FD File Reference',
+        //            'Permit No.',
+        //            'Flag Day',
+        //            'TWR',
+        //            'TWR Region',
+        //            'FdEventId'
+        //        ],
+        //        colModel: [{
+        //            name: 'orgRef',
+        //            width: '100',
+        //        }, {
+        //            name: 'orgName',
+        //            width: '250',
+        //        }, {
+        //            name: 'subvented',
+        //            template: yesNoTemplate,
+        //            width: '80',
+        //        }, {
+        //            name: 'fdRef',
+        //            width: '100',
+        //        }, {
+        //            name: 'permitNum',
+        //            width: '80',
+        //        }, {
+        //            name: 'flagDay',
+        //            template: dateTemplate,
+        //            width: '80',
+        //        }, {
+        //            name: 'twr',
+        //            width: '80',
+        //        }, {
+        //            name: 'twrDistrict',
+        //            width: '80',
+        //        }, {
+        //            name: 'fdEventId',
+        //            hidden: 'true',
+        //        }],
+        //        loadComplete: defaultGridLoadComplete,
+        //        ondblClickRow: function (rowId, iRow, iCol, e) {
+        //            var data = $fdPermitNumGrid.jqGrid('getRowData', rowId);
+        //            onSelectFdPermitNum(data);
+        //        }
+        //    });
+
+        //    //navButtons
+        //    $fdPermitNumGrid.jqGrid('navGrid', pager_selector, {
+        //        //navbar options
+        //        search: true,
+        //        refresh: true,
+        //    }, {}, {}, {}, {
+        //        //search form
+        //        recreateForm: true,
+        //        afterShowSearch: defaultSearchFormAfterShowSearch,
+        //        afterRedraw: defaultSearchFormAfterRedraw
+        //    }, {});
+
+        //    function onSelectFdPermitNum(data) {
+        //        $('#fdEventId').val(data.fdEventId);
+        //        $('#fdPermitNum').val(data.permitNum);
+        //        $('#fdPermitNum-modal').modal('hide');
+        //    }
+        //};
+
+        var complaintCaseGridInited = false;
+
+        function initComplaintCaseGrid() {
+            if (complaintCaseGridInited)
+                return;
+            complaintCaseGridInited = true;
+
+            var $complaintCaseGrid = $("#complaintCase-grid-table");
+            var pager_selector = "#complaintCase-grid-pager";
+
+            $complaintCaseGrid.jqGrid({
+                pager: pager_selector,
+                sortname: 'orgMaster.OrgRef',
+                sortorder: 'asc',
+                datatype: "local",
+                colNames: ['Organisation Reference',
+                    'Eng & Chi Organisation Name',
+                    'Subvented',
+                    'Record Type',
+                    'Complaint / Enquiry Reference No.',
+                    'Source',
+                    'Activity Concerned',
+                    'Date of Complaint / Enquiry',
+                    'Processing Status',
+                    'ComplaintMaster Id'
+                ],
+                colModel: [{
+                    name: 'orgRef',
+                    index: 'orgMaster.OrgRef',
+                    width: '100',
+                }, {
+                    name: 'orgName',
+                    index: 'orgMaster.EngOrgName',
+                    width: '180',
+                }, {
+                    name: 'subvented',
+                    index: 'orgMaster.SubventedIndicator',
+                    template: yesNoTemplate,
+                    width: '80',
+                }, {
+                    name: 'complaintRecordType',
+                    width: '80',
+                }, {
+                    name: 'complaintRef',
+                    width: '80',
+                }, {
+                    name: 'complaintSource',
+                    width: '80',
+                }, {
+                    name: 'activityConcern',
+                    width: '80',
+                }, {
+                    name: 'complaintDate',
+                    template: dateTemplate,
+                    width: '80',
+                }, {
+                    name: 'processStatus',
+                    width: '80',
+                }, {
+                    name: 'complaintMasterId',
+                    hidden: 'true',
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $complaintCaseGrid.jqGrid('getRowData', rowId);
+                    onSelectComplaintCase(data);
+                }
+            });
+
+            //navButtons
+            $complaintCaseGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+
+            function onSelectComplaintCase(data) {
+                $('#relatedComplaintMasterId').select2("val", data.complaintMasterId);
+                $('#complaintCase-modal').modal('hide');
+            }
+        };
+
+        function initEditForm() {
+            $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+            clearForm('#enquiryComplaintSearchEditForm');
+            $("#otherNonComplianceNature").val("");
+            $("#otherNonComplianceNature").attr("disabled", true);
+            $("#otherCollectionMethod").val("");
+            $("#otherCollectionMethod").attr("disabled", true);
+
+            $('#concernedOrgName').text("");
+            $('#concernedOrgChiName').text("");
+            $("#otherActivityConcern").val("");
+            $("#otherActivityConcern").attr("disabled", true);
+        }
+
+        function clearSearchForm() {
+            clearForm('#searchForm');
+            $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+            $("#searchRegistrationOtherName").val("");
+            $("#searchRegistrationOtherName").attr("disabled", true);
+            $("#searchOtherActivityConcern").val("");
+            $("#searchOtherActivityConcern").attr("disabled", true);
+            $("#searchNonComplianceNatureOther").val("");
+            $("#searchNonComplianceNatureOther").attr("disabled", true);
+            $("#searchFromDate").attr("disabled", true);
+            $("#searchToDate").attr("disabled", true);
+            $("#searchFollowUpIndicator").next('input[type=checkbox]').attr("disabled", true);
+            $("#searchReportPoliceIndicator").next('input[type=checkbox]').attr("disabled", true);
+            $("#searchOthersFollowUpIndicator").next('input[type=checkbox]').attr("disabled", true);
+
+            $('#CritComplaintRefNoMid').val("C");
+        }
+
+        var clearFilter = true;
+        function initSearchForm() {
+            var isFirst = @Html.Raw(Json.Encode(@Model.isFirstSearch))
+            $("#searchFollowUpIndicator").next('input[type=checkbox]').attr("disabled", true);
+            $("#searchReportPoliceIndicator").next('input[type=checkbox]').attr("disabled", true);
+            $("#searchOthersFollowUpIndicator").next('input[type=checkbox]').attr("disabled", true);
+            $("#searchFromDate").attr("disabled", true);
+            $("#searchToDate").attr("disabled", true);
+
+            if(!isFirst){
+                var searchArray = @Html.Raw(Json.Encode(@Model.NonComplianceNatureId))
+                $("#searchNonComplianceNatures").select2("val", searchArray);
+
+                $('#complaint-grid-table').jqGrid('setGridParam',  { search: false, postData: { "filters": localStorage.getItem('complaint-grid-table')} });
+                clearFilter = false || (localStorage.getItem('complaint-grid-table') == "" || localStorage.getItem('complaint-grid-table') == undefined);
+                
+                if('@Model.IsFollowUp'=='True')
+                {
+                    $("#searchFollowUpIndicator").next('input[type=checkbox]').attr("disabled", false);
+                    $("#searchReportPoliceIndicator").next('input[type=checkbox]').attr("disabled", false);
+                    $("#searchOthersFollowUpIndicator").next('input[type=checkbox]').attr("disabled", false);
+                    $("#searchFromDate").removeAttr("disabled");
+                    $("#searchToDate").removeAttr("disabled");
+                }
+                
+                $('#btnSearch').click();
+                clearFilter = true;
+            }
+        }
+    </script>
+}

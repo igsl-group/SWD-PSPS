@@ -1,0 +1,2648 @@
+﻿@model Psps.Web.ViewModels.PSP.PSPViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.PSP_Edit_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="pspEditForm" class="form-horizontal" role="form">
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+    @Html.HiddenFor(m => m.PspMasterId, htmlAttributes: new { @id = "pspMasterId" })
+    @Html.HiddenFor(m => m.twEventsRecCount, htmlAttributes: new { @id = "twEventsRecCount" })
+    @Html.HiddenFor(m => m.PrevPspMasterId, htmlAttributes: new { @id = "prevPspMasterId" })
+    @Html.HiddenFor(m => m.prevApHistExistInd, htmlAttributes: new { @id = "prevApHistExistInd" })
+    @Html.HiddenFor(m => m.prevTwRecCount, htmlAttributes: new { @id = "prevTwRecCount" })
+    @Html.HiddenFor(m => m.HasPspChild, htmlAttributes: new { @id = "hasPspChild" })
+
+    <input id="eventGridFilters" name="eventGridFilters" type="hidden" />
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="orange-skin ui-jqgrid">
+                <div class="ui-jqgrid-hdiv" style="width: 100%;">
+                    <table id="funcTable" class="ui-jqgrid-htable" style="width: 100%;">
+                        <thead>
+                            <tr id="tableHead" class="ui-jqgrid-labels">
+                                <th class="ui-th-column ui-th-ltr" style="width: 10%">
+                                    <div class="ui-jqgrid-sortable">Org.Ref.</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 35%">
+                                    <div class="ui-jqgrid-sortable">Org.Name (Eng. and Chinese)</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 15%">
+                                    <div class="ui-jqgrid-sortable">Withholding Status</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 20%">
+                                    <div class="ui-jqgrid-sortable">
+                                        Contact Person<br>
+                                        (Latest PSP: <span id="lblPspRef"></span>)
+                                    </div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 20%">
+                                    <div class="ui-jqgrid-sortable">
+                                        Contact Person<br>
+                                        (Latest FD: <span id="lblFdRef"></span>)
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="ui-jqgrid-btable" style="color: #393939;">
+                            <tr id="tableHeadDataRow" class="ui-widget-content ui-row-ltr">
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblOrgRef"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblEngOrgName"></label>
+                                    <br />
+                                    <label id="lblChiOrgName"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblWithholdingBeginDate"></label>
+                                    <label id="lblWithholdingEndDate"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblPspContactPersonName"></label>
+                                    <br />
+                                    <label id="lblPspContactPersonEmailAddress"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblFdContactPersonName"></label>
+                                    <br />
+                                    <label id="lblFdContactPersonEmailAddress"></label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hr hr-10"></div>
+
+    <div style="padding-bottom: 15px;">
+        @Html.LabelFor(m => m.CreateModelReferenceNumber, new { @class = "control-label" })
+        <label class="control-label">: &nbsp; &nbsp; @Model.CreateModelReferenceNumber &nbsp; &nbsp; &nbsp;</label>
+        @Html.LabelFor(m => m.PermitNo, new { @class = "control-label" })
+        <label class="control-label" id="lbPermitNum">&nbsp; &nbsp; @Model.PermitNo</label>
+
+        <span class="control-label" style="float: right; margin-right: 20px;">
+            @Html.LabelFor(m => m.TotalLocation, new { @class = "control-label" })
+            <label class="control-label" style="margin-right: 50px;" id="lbTotalLocation">: &nbsp; &nbsp; </label>
+            @Html.LabelFor(m => m.TotalEvent, new { @class = "control-label" })
+            <label class="control-label" id="lbTotalEvent">: &nbsp; &nbsp; </label>
+        </span>
+    </div>
+
+    <div id="details">
+        <a class="anchor" id="anchor-details"></a>
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a href="#pspOverView" data-toggle="tab">PSP</a>
+            </li>
+            <li>
+                <a href="#pspEvent" data-toggle="tab">PSP Event (In rows)<span id="pspEventRecCnt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#pspApprvHist" data-toggle="tab">PSP Approval History<span id="pspApprvHistCnt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#enquiryList" data-toggle="tab">Enquiry&nbsp;<span id="enquiryListRecCnt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#complaint" data-toggle="tab">Complaint&nbsp;<span id="complaintRecCnt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#template" data-toggle="tab">Template&nbsp;<span id="templateRecCnt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#attachment" data-toggle="tab">Attachment&nbsp;<span id="attachmentRecCnt" class="badge">0</span></a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="pspOverView">
+                <fieldset>
+                    @{ Html.RenderPartial("_PSPDetail", Model); }
+                    <br>
+                    <legend>Account Summary</legend>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SubmissionDueDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.SubmissionDueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "submissionDueDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstReminderIssueDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.FirstReminderIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "firstReminderIssueDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.FirstReminderDeadline, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.FirstReminderDeadline, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "firstReminderDeadline", @class = "form-control", @data_provide = "datepicker", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SecondReminderIssueDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.SecondReminderIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "secondReminderIssueDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.SecondReminderDeadline, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.SecondReminderDeadline, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "secondReminderDeadline", @class = "form-control", @data_provide = "datepicker", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AuditedReportReceivedDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @*@Html.TextBoxFor(m => m.AuditedReportReceivedDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "auditReportReceivedDate", @class = "form-control", @data_provide = "datepicker" })*@
+                            @Html.TextBoxFor(m => m.AuditedReportReceivedDate, true, htmlAttributes: new { @id = "auditReportReceivedDate", @class = "form-control", @maxlength = 100 })
+                        </div>
+                        @Html.LabelFor(m => m.ArCheckIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.ArCheckIndicator, true, new SelectList(Model.ArCheckIndicators, "Key", "Value", Model.ArCheckIndicator),
+                                                     htmlAttributes: new { @id = "arCheckIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PublicationReceivedDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @*@Html.TextBoxFor(m => m.PublicationReceivedDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "publicationReceivedDate", @class = "form-control", @data_provide = "datepicker" })*@
+                            @Html.TextBoxFor(m => m.PublicationReceivedDate, true, htmlAttributes: new { @id = "publicationReceivedDate", @class = "form-control", @maxlength = 100 })
+                        </div>
+                        @Html.LabelFor(m => m.PublicationCheckIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.PublicationCheckIndicator, true, new SelectList(Model.PublicationCheckIndicators, "Key", "Value", Model.PublicationCheckIndicator),
+                                                     htmlAttributes: new { @id = "publicationCheckIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.NewspaperCuttingReceivedDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @*@Html.TextBoxFor(m => m.NewspaperCuttingReceivedDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "newspaperCuttingReceivedDate", @class = "form-control", @data_provide = "datepicker" })*@
+                            @Html.TextBoxFor(m => m.NewspaperCuttingReceivedDate, true, htmlAttributes: new { @id = "newspaperCuttingReceivedDate", @class = "form-control", @maxlength = 100 })
+                        </div>
+                        @Html.LabelFor(m => m.NewspaperCuttingCheckIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.NewspaperCuttingCheckIndicator, true, new SelectList(Model.NewspaperCuttingCheckIndicators, "Key", "Value", Model.NewspaperCuttingCheckIndicator),
+                                                     htmlAttributes: new { @id = "newspaperCuttingCheckIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OfficialReceiptReceivedDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @*@Html.TextBoxFor(m => m.OfficialReceiptReceivedDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "officialReceiptReceivedDate", @class = "form-control", @data_provide = "datepicker" })*@
+                            @Html.TextBoxFor(m => m.OfficialReceiptReceivedDate, true, htmlAttributes: new { @id = "officialReceiptReceivedDate", @class = "form-control", @maxlength = 100 })
+                        </div>
+                        @Html.LabelFor(m => m.OfficialReceiptCheckIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.OfficialReceiptCheckIndicator, true, new SelectList(Model.OfficialReceiptCheckIndicators, "Key", "Value", Model.OfficialReceiptCheckIndicator),
+                                                     htmlAttributes: new { @id = "officialReceiptCheckIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DocReceivedRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.DocReceivedRemark, 4, 100, htmlAttributes: new { @id = "docReceivedRemark", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.GrossProceed, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.GrossProceed, true, htmlAttributes: new { @id = "grossProceed", @class = "form-control", @data_decimalFormat = "10,2" })
+                        </div>
+                        @Html.LabelFor(m => m.Expenditure, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.Expenditure, true, htmlAttributes: new { @id = "expenditure", @class = "form-control", @data_decimalFormat = "10,2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.NetProceed, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.NetProceed, true, htmlAttributes: new { @id = "netProceed", @class = "form-control", @data_decimalFormat = "10,2", @readonly = true })
+                        </div>
+                        @Html.LabelFor(m => m.ExpPerGpPercentage, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.ExpPerGpPercentage, true, htmlAttributes: new { @id = "expPerGpPercentage", @class = "form-control", @data_decimalFormat = "4,2", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrgAnnualIncome, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.OrgAnnualIncome, true, htmlAttributes: new { @id = "orgAnnualIncome", @class = "form-control", @data_decimalFormat = "10,2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.QualifyOpinionIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.QualifyOpinionIndicator, true, new SelectList(Model.QualifyOpinionIndicators, "Key", "Value", Model.QualifyOpinionIndicator),
+                                                     htmlAttributes: new { @id = "qualifyOpinionIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.QualityOpinionDetail, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.QualityOpinionDetail, 4, 100, htmlAttributes: new { @id = "qualityOpinionDetail", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WithholdingListIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.WithholdingListIndicator, true, new SelectList(Model.WithholdingListIndicators, "Key", "Value", Model.WithholdingListIndicator),
+                                                     htmlAttributes: new { @id = "withholdingListIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WithholdingBeginDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.WithholdingBeginDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "withholdingBeginDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.WithholdingEndDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.WithholdingEndDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "withholdingEndDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WithholdingRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.WithholdingRemark, 4, 100, htmlAttributes: new { @id = "withholdingRemark", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DocRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.DocRemark, 4, 100, htmlAttributes: new { @id = "docRemark", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                </fieldset>
+                <br>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
+                            <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                                <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                            <button id="btnUpdatePsp" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-ok"></span>@Labels.Update</button>
+                            <button id="btnReleasePermit" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-remove"></span>@Labels.ReleasePermit</button>
+                            <button id="btnClone" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-file"></span>@Labels.CopyToNew</button>
+                            <button id="btnTwoBatch" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-file"></span>@Labels.TwoBatches</button>
+                            <button id="btnAmendmentClone" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-file"></span>@Labels.Amendment</button>
+                            <button id="btnCancelRtn" type="button" class="btn btn-default btn-sm">
+                                <span class="icon-remove"></span>@Labels.Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="pspApprvHist">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="pspApprvHistGridTable"></table>
+                            <div id="pspApprvHistGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="pspEvent">
+                @*@Html.HiddenFor(m => m.PspEventViewModel.TotalEvents, htmlAttributes: new { @id = "totalEvents" })*@
+                <div class="row">
+                    <div class="col-xs-12 no-padding-left no-padding-right">
+                        <div class="grid-stretch-container">
+                            <table id="eventsGridTable"></table>
+                            <div id="eventsGridPager"></div>
+                            <input id="eventsFile" type="file" class="hide" />
+                        </div>
+                    </div>
+                </div>
+                <div class="vspace-6"></div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <button id="btnSelectAllCanRecs" type="button" class="btn btn-sm btn-primary">
+                            @Labels.SelectAll
+                        </button>
+
+                        <button id="btnSelectAllInPage" type="button" class="btn btn-sm btn-primary">
+                            @Labels.SelectAll2
+                        </button>
+                    </div>
+
+                    <div class="col-xs-6">
+                        <div class="pull-right">
+                            <button id="btnRecommendApprove" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-thumbs-up"></span>&nbsp;Recommend to Approve</button>
+                            <button id="btnRecommendCancel" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-thumbs-down"></span>&nbsp;Recommend to Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="vspace-6"></div>
+                <div class="hr dotted"></div>
+                <div class="remarks bigger-120">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <strong>Remarks:</strong>
+                        </div>
+                    </div>
+                    <div class="vspace-6"></div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <strong>
+                                <em>[Import Excel]</em>
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <ul>
+                                <li>New Application: All imported event(s) will be removed and replaced with the new event(s) from uploaded MS Excel file.</li>
+                                <li>All event(s) already approved: This function / button will be disabled.</li>
+                                <li>Partial event(s) approved: Approved events will not be changed while the remaining not-approved events will be replaced by the events uploaded after approval</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="enquiryList">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="enquiryGridTable"></table>
+                            <div id="enquiryGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="complaint">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="complaintGridTable"></table>
+                            <div id="complaintGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="template">
+                @{Html.RenderAction("RenderPSPTemplateModal");}
+            </div>
+
+            <div class="tab-pane" id="attachment">
+                @{Html.RenderAction("RenderPspAttachmentModal");}
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="pspRecommendApproveForm" class="form-horizontal" role="form">
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.PspMasterId, htmlAttributes: new { @id = "recAppPspMasterId" })
+    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "recAppRowVersion" })
+    @Html.HiddenFor(m => m.PrevPspMasterId, htmlAttributes: new { @id = "prevPspMasterId" })
+    @Html.HiddenFor(m => m.twEventsRecCount, htmlAttributes: new { @id = "twEventsRecCount" })
+    @Html.HiddenFor(m => m.prevApHistExistInd, htmlAttributes: new { @id = "prevApHistExistInd" })
+    <div id="processEventsModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnCloseProcessEvents" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Approve/Cancel Events</h4>
+                </div>
+                <div class="modal-body">
+
+                    @Html.BootstrapValidationSummary()
+                    @Html.HiddenFor(m => m.PspEventViewModel.ApprovalStatus, htmlAttributes: new { @id = "ppmApprovalStatus" })
+                    <fieldset>
+                        <div class="form-group">
+                            <div class="col-xs-3">
+                                <legend>@Html.DisplayTextFor(m => m.CreateModelReferenceNumber)</legend>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-3"></div>
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.PspEventViewModel.ProcessEvents, true, htmlAttributes: new { @id = "processEvents", @class = "col-xs-2 form-control", @maxlength = 5 })
+                            </div>
+                            <div class="col-xs-7">
+                                <label>
+                                    of remaining
+                                    <label id="overEvents"></label>
+                                    <label id="remainApproveEvents"></label>
+                                    record(s) will be
+                                    <label id="actionWrd">approved</label>.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" id="ppmApprovalType">
+                            @Html.LabelFor(m => m.PspEventViewModel.ApprovalType, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-4" id="twoBatchExDiv">
+                                @Html.EditorFor(m => m.TwoBatchEx, new { htmlAttributes = new { @id = "twoBatchEx", @class = "form-control" } })
+                                @Html.DisplayNameFor(m => m.TwoBatchEx)
+                            </div>
+                        </div>
+                        <div class="form-group" id="ppmCutOffDate">
+                            @Html.LabelFor(m => m.PspEventViewModel.CutOffDateFrom, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @*@Html.TextBoxFor(m => m.PspEventViewModel.CutOffDateFrom, true, htmlAttributes: new { @id = "ppmCutOffDateFrom", @class = "form-control", @data_provide = "datepicker" })*@
+                                @Html.TextBoxFor(m => m.PspEventViewModel.CutOffDateFrom, true, htmlAttributes: new { @id = "ppmCutOffDateFrom", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                            <div class="col-xs-1">
+                                <label class="control-label" for="ppmCutOffDateTo">to</label>
+                            </div>
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.PspEventViewModel.CutOffDateTo, true, htmlAttributes: new { @id = "ppmCutOffDateTo", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                            <div class="col-xs-2">
+                                <label>
+                                    <label id="coEveNum">0</label>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PspEventViewModel.PermitNo, new { @id = "ppmPermitNolbl", @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.PspEventViewModel.PermitNo, true, htmlAttributes: new { @id = "ppmPermitNo", @class = "form-control", @maxlength = 12, @readonly = true })
+                            </div>
+                        </div>
+                        <div class="form-group" id="ppmPermitIssueDate">
+                            @Html.LabelFor(m => m.PspEventViewModel.PermitIssueDate, new { @id = "ppmPermitIssueDatelbl", @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3 ">
+                                @Html.TextBoxFor(m => m.PspEventViewModel.PermitIssueDate, true, "{0:dd/MM/yyyy}",
+                                        htmlAttributes: new { @id = "ppmPermitIssueDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        @*
+                        <div class="form-group" id="ppmRejectionLetter">
+                            @Html.LabelFor(m => m.PspEventViewModel.RejectionLetterDate, new { @id = "ppmRejectionLetterDatelbl", @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3 ">
+                                @Html.TextBoxFor(m => m.PspEventViewModel.RejectionLetterDate, true, "{0:dd/MM/yyyy}",
+                                        htmlAttributes: new { @id = "ppmRejectionLetterDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group" id="ppmRepresentationReceiveDate">
+                            @Html.LabelFor(m => m.PspEventViewModel.RepresentationReceiveDate, new { @id = "ppmRepresentationReceiveDatelbl", @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3 ">
+                                @Html.TextBoxFor(m => m.PspEventViewModel.RepresentationReceiveDate, true, "{0:dd/MM/yyyy}",
+                                        htmlAttributes: new { @id = "ppmRepresentationReceiveDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PspEventViewModel.CancelReason, new { @id = "ppmCancelReasonlbl", @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8 ">
+                                @Html.TextAreaFor(m => m.PspEventViewModel.CancelReason, 4, 100, htmlAttributes: new { @id = "ppmCancelReason", @class = "form-control", @Maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PspEventViewModel.Remarks, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8 ">
+                                @Html.TextAreaFor(m => m.PspEventViewModel.Remarks, 4, 100, htmlAttributes: new { @id = "remarks", @class = "form-control", @Maxlength = 4000 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnProcessEvents" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.RecommendApprove</button>
+                    <button type="button" id="btnCancelProcessEvents" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="pspEditEventForm" class="form-horizontal" role="form">
+    @{ Html.RenderPartial("_EditPspEventModal", Model); }
+</form>
+@{ Html.RenderAction("RenderPspEventSplitModal"); }
+
+<form id="pspInsertXlsForm" class="form-horizontal" role="form">
+    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "proformaPspMasterRowVersion" })
+    <div id="importPspEveXlsFileModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Import Excel File</h4>
+                </div>
+
+                <div class="modal-body">
+                    <fieldset>
+                        @Html.BootstrapValidationSummary()
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PspEventViewModel.ImportFile, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.FileFor(m => m.PspEventViewModel.ImportFile, htmlAttributes: new { @id = "importPspEventXlsFile", @class = "form-control" })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnImport" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.ImportXlsFile</button>
+                    <button type="button" id="btnCancel" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="attachmentForm" name="attachmentForm" class="form-horizontal">
+    <div id="attachmentModal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Attachment Details</h4>
+                </div>
+
+                <div class="modal-body">
+                    @Html.HiddenFor(m => m.PspAttachmentViewModel.PspMasterId, htmlAttributes: new { @id = "attPspMasterId" })
+                    @Html.HiddenFor(m => m.PspAttachmentViewModel.RowVersion, htmlAttributes: new { @id = "attRowVersion" })
+                    <fieldset>
+                        @*@Html.TextBoxFor(m => m.PspAttachmentViewModel.pspAttachmentId, true, htmlAttributes: new { @id = "pspAttachmentId", @class = "form-control", @maxlength = 200, @type = "hidden" })*@
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PspAttachmentViewModel.FileName, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-6">
+                                @Html.TextBoxFor(m => m.PspAttachmentViewModel.FileName, true, htmlAttributes: new { @id = "fileName", @class = "form-control", @maxlength = 200 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(m => m.PspAttachmentViewModel.FileDescription, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.TextBoxFor(m => m.PspAttachmentViewModel.FileDescription, true, htmlAttributes: new { @id = "fileDescription", @class = "form-control", @maxlength = 1000 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PspAttachmentViewModel.AttachmentFile, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.FileFor(m => m.PspAttachmentViewModel.AttachmentFile, htmlAttributes: new { @id = "attachmentFile", @class = "form-control", @maxlength = 1000 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="attBtnCreate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button type="button" id="attBtnUpdate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="attBtnCancel" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="inputAmendmentDateForm" name="attachmentForm" class="form-horizontal">
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+    <div id="inputAmendmentDateModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="btnCloseAmendment" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">PSP Amendment </h4>
+                </div>
+                <div class="modal-body">
+                    @Html.BootstrapValidationSummary()
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DateofReceivingApplication, new { @class = "col-xs-4 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.DateofReceivingApplication, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "amendmentDateOfReceivingApplication", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCreateAmendment" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button type="button" id="btnCancelAmendment" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style type="text/css">
+    .ui-th-column .cbox, .jqgrow .cbox {
+        opacity: 1;
+    }
+</style>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var $pspEditform = $("#pspEditForm");
+        var editOrgMasterUrl = '@Url.RouteUrl("EditOrgMaster", new { code = -1, ReturnUrl = -2 })';
+        var updatePspUrl = '@Url.RouteUrl("UpdatePsp")';
+        var searchPageUrl = '@Url.RouteUrl("PSPSearchPage")';
+        var searchSummaryPageUrl = '@Url.RouteUrl("PSPSummarySearchPage")';
+        var listPspEventUrl = '@Url.RouteUrl("ListPspEventsByPspMasterId", new { pspMasterId = -1 })';
+        var insertPspEventsByImportXls = '@Url.RouteUrl("InsertPspEventsByImportXls", new { pspMasterId = -1 })';
+        var readPspEventsUrl = '@Url.RouteUrl("ReadPspEvents", new { pspMasterId = -1 })';
+        var approvePspEventsUrl = '@Url.RouteUrl("ApprovePspEvents")';
+        var batchDeletePspEventsUrl = '@Url.RouteUrl("BatchDeletePspEvents")';
+        var createPspUrl = '@Url.RouteUrl("CreatePsp")';
+        var newPspMasterUrl = '@Url.RouteUrl("NewPspMaster", new { createMode = "placeholder", pspMasterId = -1, orgId = -2 })';
+        var cloneTwoBatchPspUrl = '@Url.RouteUrl("CloneTwoBatchPsp")';
+        var pspAmendmentUrl = '@Url.RouteUrl("PspAmendment")';
+        var getEventUrl = '@Url.RouteUrl("GetEventFromGrid", new { pspEventId = -1 })';
+
+        //CR-005 01
+        var releasePermitUrl = '@Url.RouteUrl("ReleasePspPermitNum")';
+
+        var splitPspEventUrl = '@Url.RouteUrl("SplitPspEvent")';
+        var updatePspEventUrl = '@Url.RouteUrl("UpdatePspEvent")';
+        var createPspEventUrl = '@Url.RouteUrl("CreatePspEvent", new { pspMasterId = -1 })';
+        var deletePspEventUrl = '@Url.RouteUrl("DeletePspEvent", new { pspEventId = -1 })';
+
+        var listComplaintUrl = '@Url.RouteUrl("ListPspComplaintEnquiry", new { code = "placeholder", type = "02" })';
+        var listEnquiryUrl = '@Url.RouteUrl("ListPspComplaintEnquiry", new { code = "placeholder", type = "01" })';
+        var editEnquiryComplaintUrl = '@Url.RouteUrl("EditEnquiryComplaint", new { complaintId = -1 })';
+
+        var updatePspAttachmentUrl = '@Url.RouteUrl("UpdatePspAttachment", new { pspAttachmentId = -1 })';
+        var createPspAttachmentUrl = '@Url.RouteUrl("CreatePspAttachment", new { pspMasterId = -1 })';
+        var exportToProformaUrl = '@Url.RouteUrl("ExportToProforma", new { pspMasterId = -1 })';
+        var exportPspEventGridDataUrl = '@Url.RouteUrl("ExportPspEventGridData", new { pspMasterId = -1 })';
+
+        var calPspEditRecCntUrl = '@Url.RouteUrl("CalPspEditRecCnt", new { pspMasterId = -1 })';
+        var listPspApprovHistUrl = '@Url.RouteUrl("ListPspApprovHist", new { pspMasterId = -1 })'
+
+        var searchOrganisationUrl = '@Url.RouteUrl("SearchOrganisation")';
+
+        var EditPspUrl = '@Url.RouteUrl("EditPsp", new { pspMasterId = -1 })';
+        var getEveNumByStEndDtUrl = '@Url.RouteUrl("GetEveNumByStEndDt", new { pspMasterId = -1 })';
+
+        var isPspApprover = @Html.Raw(Json.Encode(ViewData["IS_PSP_APPROVER"]));
+        var pspReminderDeadline = @Html.Raw(Json.Encode(ViewData["PSP_REMINDER_DEADLINE"]));
+        var pspReminderDeadline2 = @Html.Raw(Json.Encode(ViewData["PSP_REMINDER_DEADLINE2"]));
+
+        var pageSize = 10;
+        var selectedAll;
+        var selectedAllinPage;
+        var hasRecomRecsFlag;
+        var remainingApprove = 0;
+
+        var currPspMasterId = $('#pspMasterId').val();
+        $("#attPspMasterId").val(currPspMasterId);
+
+        var varBenOrOrg = "";
+        var selectedRows = [];
+        var arrEventIds;
+        
+        var onWithHolding = false;
+
+        $(function () {
+            if (isPspApprover)
+                $('#permitRevokeIndicator').parents('.form-group').show();
+            else
+                $('#permitRevokeIndicator').parents('.form-group').hide();
+
+            var tabs = $('#tabs');
+
+            //CR-005
+            if (!'@Model.PermitNo' || '@Model.PermitNo' == '') {
+                $('#btnReleasePermit').addClass('hide');
+                $('#lbPermitNum').prev().hide();
+            }
+
+            //$( "#tabs" ).tabs( "option", "select", 3 );
+            //$("#tabs").tabs({ active: 1 });
+            $('#yearofPspDiv').addClass('hidden');
+
+            $('#tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                if ('#pspOverView' === e.target.hash) { }
+
+                if ('#template' == e.target.hash) {
+                    initTemplateGrid();
+                }
+
+                if ('#pspEvent' === e.target.hash) {
+                    refreshEventsVars();
+                    initEventsGrid();
+                }
+
+                if ('#pspApprvHist' == e.target.hash) {
+                    initApprvHistGrid();
+                }
+
+                if ('#enquiryList' === e.target.hash)
+                    initEnquiryGrid();
+
+                if ('#complaint' === e.target.hash)
+                    initComplaintGrid();
+
+                if ('#attachment' === e.target.hash)
+                    initAttachmentGrid();
+
+                //if ('#documents' === e.target.hash)
+                //    initDocumentsGrid();
+            });
+
+            $("#orgId").initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+
+            calRelevantRecordsAmount();
+            runPageUiLogic();
+            runButtonsLogic();
+            //Force change event to enable / disable special Remark
+            $('#specialRemark').trigger('change');
+
+            var qd = {};
+            location.search.substr(1).split("&").forEach(function(item) {
+                var s = item.split("="),
+                    k = s[0],
+                    v = s[1] && decodeURIComponent(s[1]);
+                (k in qd) ? qd[k].push(v) : qd[k] = [v]
+            })
+
+            if (qd["approved"] && qd["approved"] == 1)
+                $('#tabs a[data-toggle="tab"][href="#pspApprvHist"]').tab('show');
+
+
+            function readOnlyCtrols() {
+                ($('#rejectReasonId').val() != "Others") ? $('#otherRejectReason').prop('readonly', true) : $('#otherRejectReason').prop('readonly', false);
+                ($('#pspNotRequireReasonId').val() != "Others") ? $('#otherPspNotRequireReason').prop('readonly', true) : $('#otherPspNotRequireReason').prop('readonly', false);
+                ($('#caseCloseReasonId').val() != "Others") ? $('#otherCaseCloseReason').prop('readonly', true) : $('#otherCaseCloseReason').prop('readonly', false);
+                $('#rejectReasonId').on('change', function () { readOnlyForOtr($(this), "Others", $('#otherRejectReason')) });
+                $('#pspNotRequireReasonId').on('change', function () { readOnlyForOtr($(this), "Others", $('#otherPspNotRequireReason')) });
+                $('#caseCloseReasonId').on('change', function () { readOnlyForOtr($(this), "Others", $('#otherCaseCloseReason')) });
+                $('#specialRemark').on('change', function (e) {
+                    var arrSpeRem = $(this).val();
+                    if (jQuery.inArray("Others", arrSpeRem) !== -1) {
+                        $('#otherSpecialRemark').prop('readonly', false);
+                    }
+                    else {
+                        $('#otherSpecialRemark').val("");
+                        $('#otherSpecialRemark').prop('readonly', true);
+                    }
+                });
+                function readOnlyForOtr($dropDownList, otrLkpCode, $readOnlyCtl) {
+                    var otrReason = $dropDownList.val();
+                    if (otrReason == otrLkpCode) {
+                        $readOnlyCtl.prop('readonly', false);
+                    }
+                    else $readOnlyCtl.prop('readonly', true);
+                };
+            };
+
+            function clearDates() {
+                $('#dateofCompletingApplication').val('');
+                $('#budateforAction').val('');
+                $('#dateofApplicationDisposal').val('');
+                $('#submissionDueDate').val('');
+                $('#firstReminderIssueDate').val('');
+                $('#firstReminderDeadline').val('');
+                $('#secondReminderIssueDate').val('');
+                $('#secondReminderDeadline').val('');
+                $('#auditReportReceivedDate').val('');
+                $('#publicationReceivedDate').val('');
+                $('#newspaperCuttingReceivedDate').val('');
+                $('#officialReceiptReceivedDate').val('');
+            }
+
+            function hideTwAmendbtn() {
+                if ( $('#prevPspMasterId').val() != "" || ($('#twEventsRecCount').val() > 0 && $('#hasPspChild').val().toLowerCase() == "true")) // has parent
+                {
+                    $('#btnTwoBatch').addClass('hide');
+                    $('#btnAmendmentClone').addClass('hide');
+                }
+                else if ( $('#twEventsRecCount').val() > 0) //only tw
+                {
+                    $('#btnTwoBatch').removeClass('hide');
+                    $('#btnAmendmentClone').addClass('hide');
+                }
+                else if ( $('#twEventsRecCount').val() == 0) // only amendment
+                {
+                    $('#btnTwoBatch').addClass('hide');
+                    $('#btnAmendmentClone').removeClass('hide');
+                }
+                else {
+                    $('#btnTwoBatch').addClass('hide');
+                    $('#btnAmendmentClone').addClass('hide');
+                }
+            }
+
+            function runPageUiLogic() {
+                $("#contactPersonLastName").val(($("#contactPersonLastName").val()).toUpperCase());
+                $("#contactPersonLastName").bind('keyup', function (e) {
+                    $("#contactPersonLastName").val(($("#contactPersonLastName").val()).toUpperCase());
+                });
+
+                hideTwAmendbtn();
+
+                $('#grossProceed,#expenditure').change(function () {
+                    if ($('#grossProceed').val() != "" && $('#expenditure').val() != "" && $.isNumeric($('#expenditure').val().replace(/,/g, "")) && $.isNumeric($('#grossProceed').val().replace(/,/g, ""))) {
+                        $('#expPerGpPercentage').val(($('#expenditure').val().replace(/,/g, "") / $('#grossProceed').val().replace(/,/g, "") * 100).toFixed(2));
+                        $('#netProceed').val(($('#grossProceed').val().replace(/,/g, "") - $('#expenditure').val().replace(/,/g, "")).toFixed(2));
+
+                        if ($('#netProceed').val().replace(/,/g, "") < 0)
+                            $('#netProceed').val((0).toFixed(2));
+                    }
+                    else {
+                        $('#expPerGpPercentage').val('');
+                        $('#netProceed').val('');
+                    }
+                });
+
+                if ($('#expPerGpPercentage').val() == "100.") {
+                    $('#expPerGpPercentage').val('100.00');
+                }
+
+                readOnlyCtrols();
+                eventModalReadOnlyCtrols();
+                $('#subvented').select2('val', '');
+                $('#section88').select2('val', '');
+                $('#orgStatus').select2('val', '');
+                $('#engSalute').on('change', function (e) {
+                    $engDDB = $('#engSalute');
+                    var value = $engDDB.val();
+                    $chiDDB = $('#chiSalute');
+                    $chiDDB.select2('val', value);
+                });
+                var value = $('#engSalute').val();
+                $chiDDB = $('#chiSalute');
+                $chiDDB.select2('val', value);
+                $("#chiLocation").blur(function () {
+                    var simplified = TongWen.convert($("#chiLocation").val(), 'simplified');
+                    $("#simpChiLocation").val(simplified);
+                });
+                $('#createModelSection88').on('change', function (e) {
+                    var orgData = $('#orgId').select2('data');
+                    if (orgData) {
+                        var orgSection88 = orgData.section88;
+                        var thisSection88 = $('#createModelSection88').select2('val') === "True";
+
+                        if (orgSection88 != thisSection88) {
+                            alert('@Html.Raw(ViewData["DiffSection88"])');
+                        }
+                    }
+                });
+
+                onEditTopTable();
+
+                $('#ppmCutOffDateFrom,#ppmCutOffDateTo').datepicker().on('changeDate', function (e) {
+                    var ppmCutOffDateFrom = $('#ppmCutOffDateFrom').val();
+                    var ppmCutOffDateTo = $('#ppmCutOffDateTo').val();
+
+                    var from = ppmCutOffDateFrom.split("/");
+                    var to = ppmCutOffDateTo.split("/");
+                    f = new Date(from[2], from[1] - 1, from[0]);
+                    t = new Date(to[2], to[1] - 1, to[0]);
+
+                    if (ppmCutOffDateFrom && ppmCutOffDateFrom.length == 10 && ppmCutOffDateTo && ppmCutOffDateTo.length == 10 && f <= t) {
+                        var actionUrl = getEveNumByStEndDtUrl.replace("-1", currPspMasterId);
+                        var $form = $('<form>')
+                            .append($('<input>').attr({ 'name': 'PspEventViewModel.CutOffDateFrom' }).val(ppmCutOffDateFrom))
+                            .append($('<input>').attr({ 'name': 'PspEventViewModel.CutOffDateTo' }).val(ppmCutOffDateTo));
+
+                        $form.ajaxPostForm(actionUrl, function (response) {
+                            $('#coEveNum').text(response.data.count);
+                        });
+                    }
+                })
+            }
+
+            function onEditTopTable() {
+                $("#lblOrgRef").text('@Model.OrgRef');
+                $("#lblEngOrgName").html('@Model.OrgEngName');
+                $("#lblChiOrgName").html('@Model.OrgChiName');
+                @*if ('@Model.LblWithholdingBeginDate' != null && '@Model.LblWithholdingBeginDate' != "") {
+                    $("#lblWithholdingBeginDate").text("From " + '@Model.LblWithholdingBeginDate');
+                }
+                if ('@Model.LblWithholdingEndDate' != null && '@Model.LblWithholdingEndDate' != "") {
+                    $("#lblWithholdingEndDate").text("To " + '@Model.LblWithholdingEndDate');
+                }*@
+                updateWithholdinglbl('@Model.LblWithholdingBeginDate', '@Model.LblWithholdingEndDate')
+                $("#lblPspRef").text('@Model.LblPspRef');
+                $("#lblPspContactPersonName").text('@Model.LblPspContactPersonName');
+                $("#lblPspContactPersonEmailAddress").text('@Model.LblPspContactPersonEmailAddress');
+                $("#lblFdRef").text('@Model.LblFdRef');
+                $("#lblFdContactPersonName").text('@Model.LblFdContactPersonName');
+                $("#lblFdContactPersonEmailAddress").text('@Model.LblFdContactPersonEmailAddress');
+            }
+
+            $('#firstReminderIssueDate').datepicker().on('changeDate', function () {
+                $this = $(this);
+                if ($this.val()) {
+                    var firstReminderIssueDate = moment($this.val(), "DD/MM/YYYY");
+                    $('#firstReminderDeadline').val(firstReminderIssueDate.add(pspReminderDeadline, "days").format("DD/MM/YYYY"));
+                }
+            });
+
+            $('#secondReminderIssueDate').datepicker().on('changeDate', function () {
+                $this = $(this);
+                if ($this.val()) {
+                    var secondReminderIssueDate = moment($this.val(), "DD/MM/YYYY");
+                    $('#secondReminderDeadline').val(secondReminderIssueDate.add(pspReminderDeadline2, "days").format("DD/MM/YYYY"));
+                }
+            });
+
+            var nameOfModel = '@Html.NameFor(m => m.PspEventViewModel.EventIds)';
+            var prePage =@Html.Raw(Json.Encode(@Model.PrePage))
+
+            function runButtonsLogic() {
+                $('#btnCancelProcessEvents').click(function () {
+                    confirm('@Labels.Cancel_Msg', function (result) {
+                        if (result) {
+                            $('#processEventsModal').modal('hide');
+                        }
+                    });
+                });
+
+                $('#btnCloseProcessEvents').click(function () {
+                    confirm('@Labels.Cancel_Msg', function (result) {
+                        if (result) {
+                            $('#processEventsModal').modal('hide');
+                        }
+                    });
+                });
+
+                $('#btnProcessEvents').click(function () {
+                    var ppmCutOffDateFrom = $('#ppmCutOffDateFrom').val();
+                    var ppmCutOffDateTo = $('#ppmCutOffDateTo').val();
+                    var boolCutOffNotEmpty = $('#ppmCutOffDateFrom').val() != "" && $('#ppmCutOffDateTo').val() != "" ? true : false;
+
+                    var from = ppmCutOffDateFrom.split("/");
+                    var to = ppmCutOffDateTo.split("/");
+                    f = new Date(from[2], from[1] - 1, from[0]);
+                    t = new Date(to[2], to[1] - 1, to[0]);
+
+                    var $pspRecommendApproveForm = $('#pspRecommendApproveForm');
+                    $('#recAppPspMasterRowVersion').val($('#rowVersion').val());
+
+                    //$('#ppmPermitIssueDate').val(dNow.getDate() + '/' + dNow.getMonth() + '/' + dNow.getFullYear());
+                    if (($('#processEvents').val() < 1 || parseInt($('#remainApproveEvents').text()) < $('#processEvents').val()) && !boolCutOffNotEmpty) {
+                        notifError("Only 1 - " + $('#remainApproveEvents').text() + " is allowed");
+                    }
+                    else if ($('#twoBatchEx').val() == "true" && ( ($('#ppmCutOffDateFrom').val() != "" && $('#ppmCutOffDateTo').val() == "") || ($('#ppmCutOffDateFrom').val() == "" && $('#ppmCutOffDateTo').val() != ""))) {
+                        notifError("To use cut off date, both from and to must be filled");
+
+                    }
+                    else if ($('#twoBatchEx').val() == "true" && f > t && boolCutOffNotEmpty) {
+                        notifError("Cut off date from must not exceed cut off date to");
+
+                    }
+                    else {
+                        var selectedRowIds = [];
+                        for (var id in selectedRows) {
+                            selectedRowIds.push(id);
+                            input = $('<input>').attr({ type: 'hidden', name: nameOfModel, "class": "eventId" }).val(id);
+                            $pspRecommendApproveForm.append(input);
+                        }
+
+                        if ($pspRecommendApproveForm.valid()) {
+
+                            if ($('#twoBatchEx').val() == "false") {
+                                $('#ppmCutOffDateFrom').val('');
+                                $('#ppmCutOffDateTo').val('');
+                            }
+
+                            var actionUrl = approvePspEventsUrl;
+
+                            $pspRecommendApproveForm.ajaxPostForm(actionUrl,
+                                 function (response) {
+                                     notifSuccess(response.message);
+                                     $('#processEventsModal').modal('hide');
+                                     refreshEventsVars();
+                                     calRelevantRecordsAmount();
+                                     initEventsGrid();
+
+                                     if ($('#twoBatchEx').val() == "true" &&  $('#hasPspChild').val().toLowerCase() == "false" && $('#prevPspMasterId').val() == "") {
+                                         $('#btnTwoBatch').removeClass('hide');
+                                         $('#btnAmendmentClone').addClass('hide');
+                                     }
+                                     else if ($('#twoBatchEx').val() == "false" &&  $('#hasPspChild').val().toLowerCase() == "true" && $('#prevPspMasterId').val() == "") {
+                                         $('#btnTwoBatch').addClass('hide');
+                                         $('#btnAmendmentClone').removeClass('hide');
+                                     }
+                                     else {
+                                         $('#btnTwoBatch').addClass('hide');
+                                         $('#btnAmendmentClone').addClass('hide');
+                                     }
+
+                                     $('#ppmCutOffDateFrom').prop('disabled', true);
+                                     $('#ppmCutOffDateTo').prop('disabled', true);
+                                     var url = EditPspUrl.replace('-1', currPspMasterId);
+                                     window.location.href = url;
+                                 }
+                            );
+                            $pspRecommendApproveForm.find(".eventId").remove();
+                        }
+                    }
+                });
+
+                $('#btnReleasePermit').click(function () {
+                    confirm('The application result will be recorded as no permit issued. Continue?', function (result) {
+                        if (result) {
+                            confirm('The permit number previously assigned to this application will be relinquished.', function(result) {
+                                if (result) {
+                                    
+                                    var $form = $("#pspEditForm");
+                                    var actionUrl = releasePermitUrl;
+                                    $form.ajaxPostForm(actionUrl,
+                                         function (response) {
+                                             if (response.success) {
+                                                 notifSuccess(response.message);
+                                                 var url = EditPspUrl.replace('-1', response.data);
+                                                 window.location.href = url;
+                                             }
+                                         }
+                                    );
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $('#btnClone').click(function () {
+                    var disable = $('#orgId').select2('data') ? $('#orgId').select2('data').disableIndicator : 0;
+                    if (disable == 1) {
+                        confirm("Organisation was disabled, are you sure want to copy the PSP with this organisation?", function (result) {
+                            if (result) {
+                                var $form = $("#pspEditForm");
+                                var dNow = new Date();
+                                $('#DateofReceivingApplication').val(parseDatetimeToDate(dNow));
+                                clearDates();
+                                window.location.href = newPspMasterUrl.replace("placeholder", "copyToNew").replace("-1", currPspMasterId);
+                            }
+                        });
+                    } else {
+                        var $form = $("#pspEditForm");
+                        var dNow = new Date();
+                        $('#DateofReceivingApplication').val(parseDatetimeToDate(dNow));
+                        clearDates();
+                        window.location.href = newPspMasterUrl.replace("placeholder", "copyToNew").replace("-1", currPspMasterId);
+                    }
+                });
+
+                $('#btnTwoBatch').click(function () {
+                    var $form = $("#pspEditForm");
+                    var dNow = new Date();
+                    $('#DateofReceivingApplication').val(dNow.getDate() + '/' + dNow.getMonth() + '/' + dNow.getFullYear());
+                    //clearDates();
+                    if ($form.valid()) {
+                        var actionUrl = cloneTwoBatchPspUrl;
+
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 if (response.success) {
+                                     //window.location.href = seachPspMasterUrl;
+                                 }
+                                 notifSuccess(response.message);
+                                 var url = EditPspUrl.replace('-1', response.data);
+                                 window.location.href = url;
+                             }
+                        );
+                    }
+                });
+
+                $('#btnAmendmentClone').click(function () {
+                    clearForm('#inputAmendmentDateForm');
+                    $('#inputAmendmentDateModal').modal({
+                        backdrop: 'static',
+                        show: true,
+                        keyboard: false
+                    });
+
+                    addRequired('#amendmentDateOfReceivingApplication');
+
+                });
+
+                $('#btnCancelAmendment').click(function () {
+                    $('#inputAmendmentDateModal').modal('hide');
+                    clearForm('#inputAmendmentDateForm');
+                });
+
+                $('#btnCloseAmendment').click(function () {
+                    $('#inputAmendmentDateModal').modal('hide');
+                    clearForm('#inputAmendmentDateForm');
+                });
+
+                $('#btnCreateAmendment').click(function () {
+
+                    var $form = $("#pspEditForm");
+                    var $dateForm = $("#inputAmendmentDateForm");
+
+                    var amendmentDateOfReceivingApplication = $("#amendmentDateOfReceivingApplication").val();
+
+                    if ($form.valid() && amendmentDateOfReceivingApplication != '') {
+
+                        $("#dateofReceivingApplication").val(amendmentDateOfReceivingApplication);
+
+                        var actionUrl = pspAmendmentUrl;
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 if (response.success) {
+                                     //window.location.href = seachPspMasterUrl;
+                                 }
+                                 notifSuccess(response.message);
+                                 var url = EditPspUrl.replace('-1', response.data);
+                                 window.location.href = url;
+
+                             }
+                        );
+                    }
+                });
+
+                /* Psp Event buttons begin */
+                $('#btnCancelSplit, #btnCloseSplitEvent').click(function () {
+                    confirm('@Labels.Cancel_Msg', function (result) {
+                        if (result) {
+                            $('#splitEventModal').modal('hide');                            
+                        }
+                    });
+                });
+
+                $('#btnSplitEvent').click(function() {
+                    $('#splitEventId').val($('#pspEventId').val());
+                    $('#eventNewEndDate').val($('#eventEndDate').val());
+                    $('#eventRowVersion').val($('#eveRowVersion').val());
+                    $('#splitEventModal').modal({backdrop: 'static', show: true, keyboard: false});
+                });
+
+                $('#btnCancelEvent, #btnCloseEvent').click(function () {
+                    confirm('@Labels.Cancel_Msg', function (result) {
+                        if (result) {
+                            $('#editEventModal').modal('hide');
+                            clearForm('#pspEditEventForm');
+                        }
+                    });
+                });
+                
+                $('#btnUpdateEvent').click(function () {
+                    var $form = $("#pspEditEventForm");
+                    $('#editEvePspMasterId').val(currPspMasterId);
+                    $('#editEventPspMasterRowVersion').val($("#rowVersion").val());
+                    
+                    if ($form.valid()) {
+                        var actionUrl = updatePspEventUrl;
+
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 if (response.success) {
+                                     notifSuccess(response.message);
+                                     calRelevantRecordsAmount();
+                                     $('#editEventModal').modal('hide');
+                                     clearForm('#pspEditEventForm');
+                                     $('#rowVersion').val(response.data.rowVersion);
+                                     $('#editEvePspMasterId').val(currPspMasterId);
+                                     $('#dateofEventPeriodFrom').val(toDDMMYYYY(response.data.eventPeriodFrom));
+                                     $('#dateofEventPeriodTo').val(toDDMMYYYY(response.data.eventPeriodTo));
+
+                                     //$("#eventsGridTable").trigger("reloadGrid", [{ current: true }]);
+                                     $("#eventsGridTable").resetJqGrid(listPspEventUrl.replace("-1", currPspMasterId));
+
+                                     //CR-005 01
+                                     
+                                 }
+                             }
+                        );
+                    }
+                });
+
+                $('#btnCreateEvent').click(function () {
+                    $('#editEvePspMasterId').val(currPspMasterId);
+                    $('#editEventPspMasterRowVersion').val($('#rowVersion').val());
+                    //$('#editEventBypassValidation').val($('#bypassValidation').val());
+                    
+                    var $form = $("#pspEditEventForm");
+                    if ($form.valid()) {
+                        var actionUrl = createPspEventUrl.replace('-1', currPspMasterId);
+
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 if (response.success) {
+                                     refreshEventsVars();
+
+                                     notifSuccess(response.message);
+                                     calRelevantRecordsAmount();
+                                     $('#editEventModal').modal('hide');
+                                     $('#rowVersion').val(response.data.rowVersion);
+                                     $('#dateofEventPeriodFrom').val(toDDMMYYYY(response.data.eventPeriodFrom));
+                                     $('#dateofEventPeriodTo').val(toDDMMYYYY(response.data.eventPeriodTo));
+
+                                     $("#eventsGridTable").resetJqGrid(listPspEventUrl.replace("-1", currPspMasterId));
+
+                                     //CR-005 01
+                                     if (!$("#lbPermitNum").text().trim()) {
+                                         if (response.data.permitNum) {
+                                             $("#lbPermitNum").html("&nbsp; &nbsp; &nbsp; " + response.data.permitNum);
+                                             $('#btnReleasePermit').removeClass('hide');
+                                             $('#lbPermitNum').prev().show();
+                                         }
+                                     }
+                                 }
+                             }
+                        );
+                    }
+                });
+
+                $('#btnEventDelete').click(function () {
+                    confirmDelete(function (result) {
+                        if (result) {
+                            $('#editEvePspMasterId').val(currPspMasterId);
+                            $('#editEventPspMasterRowVersion').val($('#rowVersion').val());
+
+                            var actionUrl = deletePspEventUrl.replace("-1", $('#pspEventId').val());
+                            var $form = $("#pspEditEventForm");
+                            $form.ajaxPostForm(actionUrl,
+                                function (response) {
+                                    if (response.success) {
+                                        refreshEventsVars();
+                                        calRelevantRecordsAmount();
+
+                                        clearForm('#pspEditEventForm');
+                                        $('#editEventModal').modal('hide');
+                                        $('#rowVersion').val(response.data.rowVersion);
+                                        $('#dateofEventPeriodFrom').val(toDDMMYYYY(response.data.eventPeriodFrom));
+                                        $('#dateofEventPeriodTo').val(toDDMMYYYY(response.data.eventPeriodTo));
+                                        notifSuccess(response.message);
+
+                                        $("#eventsGridTable").resetJqGrid(listPspEventUrl.replace("-1", currPspMasterId));
+                                        //$("#eventsGridTable").trigger("reloadGrid", [{ current: true }]);
+
+                                        //CR-005
+                                    }
+                                });
+                        }
+                    })
+                });
+
+                $('#btnRecommendApprove,#btnRecommendCancel').on("click", function (e) {
+                    var btnId = this.id;
+                    var disabled = $('#orgId').select2('data').disableIndicator;
+                    var withhold = onWithHolding || $('#orgId').select2('data').withholdingIndicator;
+                    if (this.id == "btnRecommendApprove") {
+                        if (disabled || withhold) {
+                            confirm("@Html.Raw(ViewData["OrgDisabledOrWithheld"])", function (result) {
+                                if (result) {
+                                    recommendApproveCancel(btnId);                                    
+                                }
+                             });
+                        }
+                        else{
+                            recommendApproveCancel(this.id);
+                        }
+                     }
+                     else{
+                         recommendApproveCancel(this.id);
+                     }
+
+                });
+
+                $('#btnSelectAllInPage').click(function () {
+                    $grid = $('#eventsGridTable');
+                    selectAllLogic2($grid);
+                });
+
+                $('#btnSelectAllCanRecs').click(function () {
+                    $grid = $('#eventsGridTable');
+                    selectAllLogic($grid);
+                });
+                /* End of Psp Event buttons */
+
+                $('#btnUpdatePsp').click(function () {
+                    var $form = $("#pspEditForm");
+
+                    if ($form.valid()) {
+                        var actionUrl = updatePspUrl;
+
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 if (response.success) {
+                                     // window.location.href = seachPspMasterUrl;                                     
+                                     onWithHolding = response.data.withholdingListIndicator;
+                                     $('#rowVersion').val(response.data.rowVersion);
+
+                                     $("#lblOrgRef").text(response.data.orgRef);
+                                     $("#lblEngOrgName").html(response.data.orgEngName);
+                                     $("#lblChiOrgName").html(response.data.orgChiName);
+
+                                     $("#lblPspRef").text(response.data.lblPspRef || "");
+                                     $("#lblPspContactPersonName").text(response.data.lblPspContactPersonName || "");
+                                     $("#lblPspContactPersonEmailAddress").text(response.data.lblPspContactPersonEmailAddress || "");
+
+                                     $("#lblFdRef").text(response.data.lblFdRef || "");
+                                     $("#lblFdContactPersonName").text(response.data.lblFdContactPersonName || "");
+                                     $("#lblFdContactPersonEmailAddress").text(response.data.lblFdContactPersonEmailAddress || "");
+
+                                     updateWithholdinglbl(response.data.lblWithholdingBeginDate, response.data.lblWithholdingEndDate);                                     
+                                 }
+                                 notifSuccess(response.message);
+                             }
+                        );
+                    }
+                });
+
+                $('#btnCancelRtn').click(function () {
+                    confirm("Unsaved change will be discarded. Click OK to proceed. Click Cancel to resume editing.", function (result) {
+                        if (result) {
+                            if (prePage != null) {
+                                if (prePage.indexOf("PSPSummary") != -1) {
+                                    redirectTo(searchSummaryPageUrl);
+                                }
+                                else {
+                                    redirectTo(prePage);
+                                }
+                            } else {
+                                redirectTo(searchPageUrl);
+                            }
+                        }
+
+                    });
+                });
+
+                $('#btnCancel').click(function () {
+                    confirm('@Labels.Cancel_Msg', function (result) {
+                        if (result) {
+                            $('#importPspEveXlsFileModal').modal('hide');
+                            //initForm();
+                        }
+                    });
+                });
+
+                $('#btnImport').click(function () {
+                    if ($("#pspInsertXlsForm").valid()) {
+                        var actionUrl = insertPspEventsByImportXls.replace("-1", currPspMasterId);
+                        $('#proformaPspMasterRowVersion').val($('#rowVersion').val());
+
+                        $("#pspInsertXlsForm").ajaxPostForm(actionUrl,
+                            function (response) {
+                                if (response.data.rowVersion) {
+                                    refreshEventsVars();
+                                    $('#errorMsgDiv').addClass('hide');
+                                    $('#errorMsg').html('');
+                                    $("#eventsGridTable").trigger("reloadGrid", [{ current: true }]);
+                                    $('#rowVersion').val(response.data.rowVersion);
+                                    calRelevantRecordsAmount();
+                                    notifSuccess(response.message);
+                                    $('#importPspEveXlsFileModal').modal('hide');
+                                    $('#importPspEventXlsFile').replaceWith($('#importPspEventXlsFile').clone(true))
+
+                                    //CR-005 01
+                                    if (!$("#lbPermitNum").text().trim()) {
+                                        if (response.data.permitNum) {
+                                            $("#lbPermitNum").html("&nbsp; &nbsp; &nbsp; " + response.data.permitNum);
+                                            $('#btnReleasePermit').removeClass('hide');
+                                            $('#lbPermitNum').prev().show();
+                                        }
+                                    }
+                                }
+                                else {
+                                    window.location.href = response.data;
+                                    notifError('Update unsuccessful, see log file');
+                                    $('#importPspEventXlsFile').replaceWith($('#importPspEventXlsFile').clone(true))
+                                }
+                            }
+                        );
+                    }
+                });
+
+                $('#ppmCutOffDateFrom').prop('disabled', true);
+                $('#ppmCutOffDateTo').prop('disabled', true);
+                $('#twoBatchExDiv :checkbox').click(function () {
+                    var x = 0;
+                    if ($('#twoBatchEx').val() == "true") {
+                        $('#ppmCutOffDateFrom').prop('disabled', false);
+                        $('#ppmCutOffDateTo').prop('disabled', false);
+                    }
+                    else {
+                        $('#ppmCutOffDateFrom').prop('disabled', true);
+                        $('#ppmCutOffDateTo').prop('disabled', true);
+                        $('#ppmCutOffDateFrom').val('');
+                        $('#ppmCutOffDateTo').val('');
+                    }
+                });
+
+                $('#tableHeadDataRow').dblclick(function () {
+                    doEditOrgMasterRecord('@Model.OrgMasterId');
+                });
+            }
+        });
+
+        /* Psp Event function begin */
+        function initEventsGrid() {
+            remainingApprove = 0;
+            var actionUrl = listPspEventUrl.replace("-1", currPspMasterId);
+            var $eventsGrid = $("#eventsGridTable");
+            var pager_selector = "#eventsGridPager";
+            //var myCheckboxTemplate = {
+            //    formatter: 'checkbox', edittype: 'checkbox', type: 'select',
+            //    editoptions: { value: "1:0" }
+            //};
+            if ($eventsGrid.isJqGrid()) {
+                $eventsGrid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $eventsGrid.jqGrid({
+                pager: pager_selector,
+                //data: dataPspEvents,
+                rownumbers: true,
+                headertitles: true,
+                multiselect: true,
+                //sortname: 'pspEventId',
+                sortname: 'eventStartDate',
+                sortorder: 'asc',
+                url: actionUrl,
+                datatype: "json",
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.PspEventViewModel.PspEventId)',
+                    '@Html.DisplayNameFor(m => m.PspEventViewModel.EventDate)',
+                    '@Html.DisplayNameFor(m => m.PspEventViewModel.EventEndDate)',
+                    '@Html.DisplayNameFor(m => m.PspEventViewModel.Time)',
+                    'No. of Event(s)',
+                    '@Html.DisplayNameFor(m => m.PspEventViewModel.District)',
+                    'Location(in English)',
+                    '@Html.DisplayNameFor(m => m.PspEventViewModel.ChiLocation)',
+                    '@Html.DisplayNameFor(m => m.PspEventViewModel.MethodOfCollection)',
+                    '@Html.DisplayNameFor(m => m.PspEventViewModel.EventStatus)',
+                    'Last Update',
+                    '@Html.DisplayNameFor(m => m.PspEventViewModel.Remarks)',
+                    'Validation Message',
+                ],
+                colModel: [{
+                    name: 'pspEventId',
+                    sorttype: 'int',
+                    hidden: true
+                }, {
+                    name: 'eventStartDate',                    
+                    template: dateTemplate,
+                    width: 15
+                }, {
+                    name: 'eventEndDate',
+                    //sorttype: 'date',
+                    template: dateTemplate,
+                    width: 15
+                }, {
+                    name: 'time',
+                    width: 15
+                }, {
+                    name: 'eventCount',
+                    width: 10
+                }, {
+                    name: 'district',
+                    width: 10,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.PspEventViewModel.Districts.ToDictionary(k => k.Key, v => v.Key)))
+                        }
+                }, {
+                    name: 'location',
+                    width: 25,
+                    classes: 'wrappedJqGridCell',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return '<div style="height:40px; max-height:40px">' + (cellvalue || "") + '</div>';
+                    }
+                }, {
+                    name: 'chiLocation',
+                    width: 25,
+                    classes: 'wrappedJqGridCell',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return '<div style="height:40px; max-height:40px">' + (cellvalue || "") + '</div>';
+                    }
+                }, {
+                    name: 'collectionMethod',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(Model.PspEventViewModel.MethodOfCollections))
+                        },
+                    width: 15
+                }, {
+                    name: 'eventStatus',
+                    formatter: function (cellvalue, options, rowObject) {
+                        switch (cellvalue) {
+                            case ("RA"):
+                                return "Ready to approve";
+                                break;
+                            case ("RC"):
+                                return "Ready to cancel";
+                                break;
+                            case ("AP"):
+                                return "Approved";
+                                break;
+                            case ("CA"):
+                                return "Cancelled";
+                                break;
+                            case ("CF"):
+                                return "Flag Day Conflicted";
+                                break;
+                            default:
+                                return "";
+                        }
+                    },
+                    unformat: function (cellvalue, options) {
+                        switch (cellvalue) {
+                            case ("Ready to approve"):
+                                return "RA";
+                                break;
+                            case ("Ready to cancel"):
+                                return "RC";
+                                break;
+                            case ("Approved"):
+                                return "AP";
+                                break;
+                            case ("Cancelled"):
+                                return "CA";
+                                break;
+                            case ("Flag Day Conflicted"):
+                                return "CF";
+                                break;
+                            default:
+                                return "";
+                        }
+                    },
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: {"RA":"Ready to approve","RC":"Ready to cancel","AP":"Approved","CA":"Cancelled"}
+                    },
+                    width: 10
+                }, {
+                    name: 'updatedOn',
+                    template: dateTimeTemplate,
+                    width: 15,
+                    classes: 'ellipsis'
+                }, {
+                    name: 'remarks',
+                    width: 15,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'validationMessage',
+                    width: 15,
+                    classes: 'wrappedJqGridCell'
+                }],
+                loadComplete: function () {
+                    var $grid = $(this);
+                    setTimeout(function () {
+                        updateActionIcons(this);
+                        updatePagerIcons(this);
+                        enableTooltips(this);
+                    }, 0);
+
+                    var iCol = getColumnIndexByName($grid, 'pspEventId');
+                    $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            var $this = $(this);
+                            var rowId = $this.closest("tr.jqgrow").attr("id");
+                            var data = $grid.jqGrid('getRowData', rowId);
+
+                            if (hasRecomRecsFlag && data.eventStatus !== "AP") {
+                                $('#jqg_eventsGridTable_' + data.pspEventId).prop("disabled", true);
+                            }
+                            else { remainingApprove = remainingApprove + 1; }
+                        });
+                    
+
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    if ($('#jqg_eventsGridTable_' + rowId).prop('disabled')) {
+                        return false;
+                    }
+                    editSelectedEvent(rowId);
+                },
+                onSelectAll: function (aRowids, status, e) {
+                    //e.preventDefault();
+                    //onSelectAllrows($eventsGrid, selectedRows, aRowids, status);
+                },
+                onSelectRow: function (rowId, status) {
+                    onSelectedRows($eventsGrid, status, selectedRows, rowId);
+                },
+                beforeSelectRow: function (rowid, e) {
+                    if ($('#jqg_eventsGridTable_' + rowid).prop('disabled')) {
+                        return false;
+                    }
+                    return true;
+                },
+                gridComplete: function () {
+                    retrievePreviousSelectedRows(selectedRows, $eventsGrid);
+                    $('#cb_eventsGridTable').prop('hidden', 'true');
+                    //$('#cb_eventsGridTable').click(function (e) {
+                    //    e.preventDefault();
+                    //});
+                }
+            });
+
+            $('#cb_eventsGridTable').prop('hidden', 'true');
+
+            $eventsGrid.on("reloadGrid", function() {
+                $('#btnSelectAllCanRecs').text("Select All");
+                selectedRows = [];
+                selectedAll = false;
+            });
+
+            //navButtons
+            $eventsGrid.jqGrid('navGrid', pager_selector, { //navbar options
+                search: true,
+                //del: true,
+                refresh: true,
+                afterRefresh: function () {
+                    refreshEventsVars();
+                }
+            }, {}, {}, {
+                //delete record form
+                recreateForm: true,
+                beforeShowForm: beforeDeleteCallback
+            }, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw,
+                onSearch: function() {
+                    refreshEventsVars($(this).jqGrid('getGridParam', "postData").filters);
+                }
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-arrow-down",
+                onClickButton: onExportGridData,
+                position: "first",
+                title: "Export Grid Data",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportProforma,
+                position: "first",
+                title: "Export Proforma",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                id: "navImportBtn",
+                buttonicon: "icon-upload-alt",
+                onClickButton: onImportEvent,
+                position: "first",
+                title: "Import Event(s)",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                id: "navDelBtn",
+                buttonicon: "icon-trash",
+                onClickButton: onDeleteEvents,
+                position: "first",
+                title: "Delete Event(s)",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                id: "navCreateEventBtn",
+                buttonicon: "icon-plus",
+                onClickButton: onNewEvent,
+                position: "first",
+                title: "New Event",
+                cursor: "pointer"
+            });
+
+            $(window).on('resize', function () {
+                $eventsGrid.setGridWidth($('#pspEvent').outerWidth());
+            }).trigger('resize');
+
+            var nameOfModel = '@Html.NameFor(m => m.PspEventViewModel.EventIds)';
+
+            function onNewEvent(data) {
+                clearForm('#pspEditEventForm');
+                $('#editEventBypassValidation').checkboxVal($('#bypassValidation').val() == "true" ? true : false);
+
+                $('#btnCreateEvent').removeClass('hide');
+                $('#btnUpdateEvent').addClass('hide');
+                $('#btnEventDelete').addClass('hide');
+                $('#btnSplitEvent').addClass('hide');
+
+                $('#editEventModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function onDeleteEvents(data) {
+                confirmDelete(function (result) {
+                    if (result) {
+                        if (selectedRows.length > 0) {
+                            for (var id in selectedRows) {
+                                input = $('<input>').attr({ type: 'hidden', name: nameOfModel, "class": "eventId" }).val(id);
+                                $pspEditform.append(input);
+                            }
+
+                            if ($pspEditform.valid()) {
+
+                                var actionUrl = batchDeletePspEventsUrl;
+
+                                $pspEditform.ajaxPostForm(actionUrl,
+                                     function (response) {
+                                         $('#processEventsModal').modal('hide');
+                                         refreshEventsVars();
+                                         calRelevantRecordsAmount();
+                                         notifSuccess(response.message);
+                                         initEventsGrid();
+
+                                         $('#proformaPspMasterRowVersion').val(response.data.rowVersion);
+                                         $('#rowVersion').val(response.data.rowVersion);
+                                     }
+                                );
+                            }
+                            $pspEditform.find(".eventId").remove();
+                        }
+                    }
+                })
+            };
+
+            function onExportGridData() {
+                var $grid = $('#eventsGridTable');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifSuccess("Psp Event Result has no Record");
+                    return;
+                }
+
+                var actionUrl = exportPspEventGridDataUrl.replace("-1", currPspMasterId);
+                $grid.exportGrid(actionUrl,
+                     function (response) {
+                         if (response.data) {
+                             window.location.href = response.data;
+                             notifSuccess('File is ready for download');
+                         }
+                     }
+                );
+            };
+
+            function onExportProforma() {
+                var grid = $('#eventsGridTable');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifSuccess("Psp Event Result has no Record");
+                    return;
+                }
+                var actionUrl = exportToProformaUrl.replace("-1", currPspMasterId);
+                ajaxGet(actionUrl,
+                        function (response) {
+                            if (response.data) {
+                                window.location.href = response.data;
+                                notifSuccess('File is ready for download');
+                            }
+                        }
+                    );
+            };
+
+            function onImportEvent(data) {
+                $('#importPspEventXlsFile').val('');
+                $('#errorMsgDiv').addClass('hide');
+                $('#importPspEveXlsFileModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+
+            };
+
+            function onSelectedRows($grid, status, selectedRows, rowId) {
+                if (status === false) {
+                    delete selectedRows[rowId];
+                    setSelectBtn('both', false);
+                } else {
+                    selectedRows[rowId] = status;
+
+                    var ids = $grid.jqGrid('getDataIDs');
+                    for (var key in ids) {
+                        var id = ids[key];
+
+                        if ((!hasRecomRecsFlag || (hasRecomRecsFlag && arrEventIds[id] == "AP")) && !selectedRows[id])
+                            return;
+                    }
+
+                    setSelectBtn('page', true);
+                    checkSelectAllBtn();
+                }
+            };
+
+            function onSelectAllrows($grid, selectedRows, rowIds, status) {
+                if (status === true) {
+                    for (var i = 0; i < rowIds.length; i++) {
+                        if ($('#jqg_eventsGridTable_' + rowIds[i]).prop("disabled") == false) {
+                            selectedRows[rowIds[i]] = true;
+                        }
+                        else if ($('#jqg_eventsGridTable_' + rowIds[i]).prop("disabled") == true) {
+
+                            $('#jqg_eventsGridTable_' + rowIds[i]).selected(false);
+                        }
+                    }
+                }
+                else {
+                    for (var i = 0; i < rowIds.length; i++) {
+                        delete selectedRows[rowIds[i]];
+                    }
+                }
+            };
+
+            function retrievePreviousSelectedRows(selectedRows, $grid) {
+                //for (var rowId in selectedRows) {
+                //    $grid.setSelection(rowId, true);
+                //}
+                var pageChecked = true;
+                var ids = $grid.jqGrid('getDataIDs');
+                for (var key in ids) {
+                    var id = ids[key];
+                    if (selectedRows[id])
+                        $grid.setSelection(id, true);
+                    else
+                        pageChecked = false;
+                }
+
+                if (pageChecked) {                    
+                    setSelectBtn('page', true);
+                } else {
+                    setSelectBtn('page', false);
+                }
+            };
+
+            function editSelectedEvent(rowId) {
+                $('#btnCreateEvent').addClass('hide');
+                $('#btnUpdateEvent').removeClass('hide');
+                $('#btnSplitEvent').addClass('hide');
+
+                var $form = $("pspEditEventForm");
+                var actionUrl = getEventUrl.replace("-1", rowId);
+                $('#editEventPspMasterRowVersion').val($('#rowVersion').val());
+                $('#editEventBypassValidation').checkboxVal($('#bypassValidation').val() == "true" ? true : false);
+
+                ajaxGet(actionUrl,
+                            function (response) {
+                                $('#pspEventId').val(rowId);
+                                $('#pspMasterId').val(currPspMasterId);
+                                $('#eveRowVersion').val(response.data.pspEventViewModel.rowVersion);
+                                $('#eventStartDate').val(toDDMMYYYY(response.data.pspEventViewModel.eventStartDate));
+                                $('#eventEndDate').val(toDDMMYYYY(response.data.pspEventViewModel.eventEndDate));
+                                $('#eventStartTime').val(response.data.pspEventViewModel.eventStartTime);
+                                $('#eventEndTime').val(response.data.pspEventViewModel.eventEndTime);
+                                $('#eventDistrict').select2('val', response.data.pspEventViewModel.district);
+                                $('#location').val(response.data.pspEventViewModel.location);
+                                $('#chiLocation').val(response.data.pspEventViewModel.chiLocation);
+                                $('#simpChiLocation').val(response.data.pspEventViewModel.simpChiLocation);
+                                $('#methodOfCollection').select2('val', response.data.pspEventViewModel.methodOfCollection);
+                                $('#otherMethodOfCollection').val(response.data.pspEventViewModel.otherMethodOfCollection);
+                                $('#charitySalesItem').val(response.data.pspEventViewModel.charitySalesItem);
+                                $('#editEventRemark').select2('val', response.data.pspEventViewModel.editEventRemark);
+                                $('#validationMessage').val(response.data.pspEventViewModel.validationMessage);
+
+                                if (!response.data.pspEventViewModel.eventStatus || response.data.pspEventViewModel.eventStatus != '') {
+                                    $('#btnEventDelete').addClass('hide');
+
+                                    if (response.data.pspEventViewModel.eventStartDate != response.data.pspEventViewModel.eventEndDate)
+                                        $('#btnSplitEvent').removeClass('hide');
+
+                                    if (!isPspApprover)
+                                        $('#btnUpdateEvent').addClass('hide');
+                                }
+
+                                eventModalReadOnlyCtrols();
+                            }
+
+                    );
+
+                $('#editEventModal').modal({
+                    backdrop: 'static', show: true,
+                    keyboard: false
+                });
+            };
+        };
+
+        function recommendApproveCancel(id) {
+            var chkCount = 0;
+
+            for (var idx in selectedRows) {
+                if (selectedRows[idx] == true) {
+                    chkCount = chkCount + 1;
+                }
+            }
+
+            if (chkCount == 0)
+            { selectedRows = []; }
+
+            if (selectedRows.length == 0) {
+                $('#processEvents').val('');
+                $('#processEvents').prop('readonly', false);
+            }
+            else {
+                $('#processEvents').val(chkCount);
+                $('#processEvents').prop('readonly', true);
+
+            }
+
+            //refreshEventsVars();
+            if ($("#eventsGridTable").jqGrid('getGridParam', 'records') < parseInt($('#remainApproveEvents').text()))
+                $('#overEvents').text($("#eventsGridTable").jqGrid('getGridParam', 'records') + " over ");
+            else
+                $('#overEvents').text("");
+
+            if (id == "btnRecommendApprove") {
+                $('#ppmCancelReasonlbl').addClass('hide');
+                $('#ppmCancelReason').addClass('hide');
+                $('#ppmPermitNolbl').removeClass('hide');
+                $('#ppmPermitNo').removeClass('hide');
+                $('#ppmPermitIssueDate').removeClass('hide');
+                $('#ppmRejectionLetter').removeClass('hide');
+                $('#ppmRepresentationReceiveDate').removeClass('hide');
+                $('#ppmApprovalType').removeClass('hide');
+                $('#ppmCutOffDate').removeClass('hide');
+                $('#ppmApprovalStatus').val('RA');
+                $('#twoBatchEx').checkboxVal(false);
+                $('#cancelEveType').checkboxVal(false);
+                $('#ppmCutOffDateFrom').val('');
+                $('#ppmCutOffDateTo').val('');
+                $('#actionWrd').text(' approved');
+                $('#btnProcessEvents').text('Recommend to Approve');
+            }
+            else if (id == "btnRecommendCancel") {
+                $('#ppmCancelReasonlbl').removeClass('hide');
+                $('#ppmCancelReason').removeClass('hide');
+                $('#ppmPermitNolbl').addClass('hide');
+                $('#ppmPermitNo').addClass('hide');
+                $('#ppmPermitIssueDate').addClass('hide');
+                $('#ppmRejectionLetter').addClass('hide');
+                $('#ppmRepresentationReceiveDate').addClass('hide');
+                $('#ppmCutOffDate').addClass('hide');
+                $('#ppmApprovalType').addClass('hide');
+                $('#ppmApprovalStatus').val('RC');
+                $('#ppmCancelReason').val('');
+                $('#remarks').val('');
+                $("#ppmPermitIssueDate").val('');
+                $('#ppmRepresentationReceiveDate').val('');
+                $('#twoBatchEx').checkboxVal(false);
+                $('#cancelEveType').checkboxVal(false);
+                $('#ppmCutOffDateFrom').val('');
+                $('#ppmCutOffDateTo').val('');
+                $('#actionWrd').text(' cancelled');
+                $('#btnProcessEvents').text('Recommend to Cancel');
+            }
+
+            //style_bootbox_footer_button($prompt);
+            $('#processEventsModal').modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            });
+        }
+
+        function gridToggleCheckbox($grid, checked) {
+            var iCol = getColumnIndexByName($grid, 'pspEventId');
+
+            $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                 .each(function () {
+                    var $this = $(this);
+                    var pspEveId = $this.closest("tr.jqgrow").attr("id");
+                    var disabled = $('#jqg_eventsGridTable_' + pspEveId).prop("disabled");
+
+                    if (disabled == undefined || disabled == false) {
+                        if ($this.closest("tr.jqgrow").find('input[type=checkbox]').prop('checked') == !checked) {
+                            $this.closest("tr.jqgrow").find('input[type=checkbox]').prop('checked', checked);
+                            $grid.setSelection(pspEveId, checked);
+                        }
+                    }
+                 });
+        }
+
+        function setSelectBtn(btn, status) {
+            if (btn == "all" || btn == "both") {
+                selectedAll = status;
+                $('#btnSelectAllCanRecs').text(status ? "De-select All" : "Select All");
+            } 
+            if (btn == "page" || btn =="both") {
+                selectedAllinPage = status;
+                $('#btnSelectAllInPage').text(status ? "De-select All in page" : "Select All in page");
+            }
+        }
+
+        function checkSelectAllBtn() {
+            for (var key in arrEventIds) {
+                if (!hasRecomRecsFlag || (hasRecomRecsFlag && arrEventIds[key] == "AP")) {
+                    if (!selectedRows[key]) {
+                        setSelectBtn('all', false);
+                        return;
+                    }
+                }
+            }
+
+            setSelectBtn('all', true);
+        }
+
+        function selectAllLogic2($grid) {
+            ids = $grid.jqGrid('getDataIDs');
+
+            if (!selectedAllinPage) {                
+                setSelectBtn('page', true);
+
+                for (var key in ids) {
+                    if (!hasRecomRecsFlag || (hasRecomRecsFlag && arrEventIds[ids[key]] == "AP")) {
+                        selectedRows[ids[key]] = true;
+                    } else {
+                        delete selectedRows[ids[key]];
+                    }
+                }
+
+                checkSelectAllBtn();
+
+                gridToggleCheckbox($grid, true);
+            } else {                
+                setSelectBtn('both', false);
+
+                for (var key in ids) {
+                    delete selectedRows[ids[key]];
+                }
+                
+                gridToggleCheckbox($grid, false);
+            }
+        }
+
+        function selectAllLogic($grid) {
+            if (!selectedAll) {                
+                setSelectBtn('both', true);
+                
+                for (var key in arrEventIds) {
+                    if (!hasRecomRecsFlag || (hasRecomRecsFlag && arrEventIds[key] == "AP")) {
+                        selectedRows[key] = true;
+                    } else {
+                        delete selectedRows[key];
+                    }
+                }
+
+                gridToggleCheckbox($grid, true);
+            }
+            else {
+                setSelectBtn('both', false);
+
+                for (var key in arrEventIds) {
+                    delete selectedRows[key];
+                }
+                
+                gridToggleCheckbox($grid, false);
+            }
+        }
+
+        function refreshEventsVars(filter) {
+            var actionUrl = readPspEventsUrl.replace("-1", currPspMasterId);
+
+            ajaxPost(actionUrl, {filter: JSON.parse(filter||null)}, function (response) {
+                $('#remainApproveEvents').text(response.data.pspEventViewModel.totalEvents);
+                $('#dateofEventPeriodFrom').val(toDDMMYYYY(response.data.dateofEventPeriodFrom));
+                $('#dateofEventPeriodTo').val(toDDMMYYYY(response.data.dateofEventPeriodTo));
+
+                hasRecomRecsFlag = response.data.hasRecomApproFlag;
+                arrEventIds = response.data.pspEveLst;
+
+                //if (response.data.approvedEventsCount === 0 || hasCancelledFlag) { $('#btnRecommendCancel').addClass('hide'); }
+                if (response.data.approvedEventsCount === 0) { $('#btnRecommendCancel').addClass('hide'); }
+                else { $('#btnRecommendCancel').removeClass('hide'); }
+
+                if (response.data.hasRecomApproFlag) {
+                    $('#btnRecommendApprove').addClass('hide');
+                    $('#navImportBtn').addClass('hide');
+                    $('#navDelBtn').addClass('hide');
+                    $('#navCreateEventBtn').addClass('hide');
+                }
+                else { $('#btnRecommendApprove').removeClass('hide'); }
+
+                if ($('#btnRecommendApprove').hasClass('hide') && $('#btnRecommendCancel').hasClass('hide'))
+                    $('#btnSelectAllCanRecs').addClass('hide');
+                else
+                    $('#btnSelectAllCanRecs').removeClass('hide');
+            });
+        }
+        /* End of Psp Event function */
+
+        function updateWithholdinglbl(withholdingBeginDate, withholdingEndDate){
+            if (withholdingBeginDate != null && withholdingBeginDate != "") {
+                $("#lblWithholdingBeginDate").text("From " + withholdingBeginDate);
+            }
+            else{
+                $("#lblWithholdingBeginDate").text("");
+            }
+
+            if (withholdingEndDate != null && withholdingEndDate != "") {
+                $("#lblWithholdingEndDate").text("To " + withholdingEndDate);
+            }
+            else{
+                $("#lblWithholdingEndDate").text("");
+            }
+        }
+
+        function eventModalReadOnlyCtrols() {
+            $('#methodOfCollection').on('change', function (e) {
+                var arrSpeRem = $(this).val();
+                (jQuery.inArray("Others", arrSpeRem) !== -1) ? $('#otherMethodOfCollection').prop('readonly', false) : $('#otherMethodOfCollection').prop('readonly', true);
+                (jQuery.inArray("3", arrSpeRem) !== -1) ? $('#charitySalesItem').prop('readonly', false) : $('#charitySalesItem').prop('readonly', true);
+            });
+            ($.inArray("Others", $('#methodOfCollection').val()) !== -1) ? $('#otherMethodOfCollection').prop('readonly', false) : $('#otherMethodOfCollection').prop('readonly', true);
+            ($.inArray("3", $('#methodOfCollection').val()) !== -1) ? $('#charitySalesItem').prop('readonly', false) : $('#charitySalesItem').prop('readonly', true);
+        }
+
+        function initApprvHistGrid() {
+            var actionUrl = listPspApprovHistUrl.replace("-1", currPspMasterId);
+            var $approvHistGrid = $("#pspApprvHistGridTable");
+            var pager_selector = "#pspApprvHistGridPager";
+
+            if ($approvHistGrid.isJqGrid()) {
+                $approvHistGrid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $approvHistGrid.jqGrid({
+                pager: pager_selector,
+                width: 600,
+                //rownumbers: true,
+                sortname: 'updatedOn',
+                sortorder: 'desc',
+                url: actionUrl,
+                datatype: 'json',
+                colNames: [
+                ],
+                colModel: [{
+                    name: 'pspPermitNo',
+                    label: '@Html.DisplayNameFor(m => m.PermitNo)',
+                    width: '80'
+                }, {
+                    name: 'eventStartDate',
+                    template: dateTemplate,
+                    label: '@Html.DisplayNameFor(m => m.PspEventViewModel.EventStartDate)',
+                    width: '110'
+                }, {
+                    name: 'eventEndDate',
+                    template: dateTemplate,
+                    label: '@Html.DisplayNameFor(m => m.PspEventViewModel.EventEndDate)',
+                    width: '110'
+                }, {
+                    name: 'apprType',
+                    label: '@Html.DisplayNameFor(m => m.PspEventViewModel.ApprovalType)',
+                    formatter: function (cellvalue, options, rowObject) {
+                        switch (cellvalue) {
+                            case ("CE"):
+                                return "Cancel";
+                                break;
+                            case ("TW"):
+                                return "Two-Batch Execrised";
+                                break;
+                            case ("AM"):
+                                return "Amendment";
+                                break;
+                            case ("NM"):
+                                return "Normal";
+                                break;
+                            default:
+                                return "";
+                        }
+                    },
+                    unformat: function (cellvalue, options) {
+                        switch (cellvalue) {
+                            case ("Cancel"):
+                                return "CE";
+                                break;
+                            case ("Two-Batch Execrised"):
+                                return "TW";
+                                break;
+                            case ("Amendment"):
+                                return "AM";
+                                break;
+                            case ("Normal"):
+                                return "NM";
+                                break;
+                            default:
+                                return "";
+                        }
+                    },
+                    stype: 'select',
+                    searchoptions: {                        
+                        sopt: ['eq', 'ne'],
+                        value: {"CE":"Cancel","TW":"Two-Batch Execrised","AM":"Amendment","NM":"Normal"}
+                    },
+                    width: '110'
+                }, {
+                    name: 'eventStatus',
+                    label: 'Approval Status',
+                    formatter: function (cellvalue, options, rowObject) {
+                        switch (cellvalue) {
+                            case ("RA"):
+                                return "Ready for approval";
+                                break;
+                            case ("RC"):
+                                return "Ready to cancelled";
+                                break;
+                            case ("AP"):
+                                return "Approved";
+                                break;
+                            case ("CA"):
+                                return "Cancelled";
+                                break;
+                            default:
+                                return "";
+                        }
+
+                    },
+                    unformat: function (cellvalue, options) {
+                        switch (cellvalue) {
+                            case ("Ready for approval"):
+                                return "RA";
+                                break;
+                            case ("Ready to cancelled"):
+                                return "RC";
+                                break;
+                            case ("Approved"):
+                                return "AP";
+                                break;
+                            case ("Cancelled"):
+                                return "CA";
+                                break;
+                            default:
+                                return "";
+                        }
+                    },
+                    stype: 'select',
+                    searchoptions: {                        
+                        sopt: ['eq', 'ne'],
+                        value: {"AP":"Approved","CA":"Cancelled","RA":"Ready for approval","RC":"Ready to cancelled"}
+                    },
+                    width: '110'
+                }, {
+                    name: 'totalEventsToBeApprove',
+                    label: 'Total',
+                    width: '70',
+                    searchoptions: {                        
+                        sopt: ['eq', 'le', 'ge']
+                    }
+                }, {
+                    name: 'cancelReason',
+                    label: '@Html.DisplayNameFor(m => m.PspEventViewModel.CancelReason)',
+                    width: '200'
+                }, {
+                    name: 'remark',
+                    label: '@Html.DisplayNameFor(m => m.PspEventViewModel.Remarks)',
+                    width: '200'
+                }, {
+                    name: 'updatedOn',
+                    label: 'Date of Approval/Cancellation',
+                    template: dateTimeTemplate,
+                    width: '110'
+                }, {
+                    name: 'rejectionDate',
+                    label: 'RejectionDate',
+                    hidden: true,
+                    width: '3'
+                }, {
+                    name: 'permitIssuedDate',
+                    label: 'PermitIssueDate',
+                    hidden: true,
+                    width: '3'
+                }],
+                footerrow: false,
+                loadComplete: defaultGridLoadComplete,
+            });
+
+            $approvHistGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+        };
+
+        function initEnquiryGrid() {
+            var actionUrl = listEnquiryUrl.replace("placeholder", $('#createModelReferenceNumber').val());
+            var $enquiryGrid = $("#enquiryGridTable");
+            var pager_selector = "#enquiryGridPager";
+
+            if ($enquiryGrid.isJqGrid()) {
+                $enquiryGrid.resetJqGrid();
+                return;
+            }
+
+            $enquiryGrid.jqGrid({
+                pager: pager_selector,
+                datatype: "json",
+                url: actionUrl,
+                mtype: "POST",
+                sortname: 'complaintDate',
+                sortorder: 'desc',
+                colNames: ['Complaint Reference No.',
+                    'Source',
+                    'Activity Concerned',
+                    'Date of Complaint',
+                    'Processing Status' ,
+                    'Follow-up Action Taken',
+                    'PSP No.',
+                    'Result of the Complaint',
+                    'Due Date',
+                    'Withholding Begin Date',
+                    'Withholding End Date',
+                    'Investigated by Police',
+                    'No. of Telephone Record',
+                    'No. of Enquiry from Other Department / Authorities',
+                    'ComplaintMasterId'],
+                colModel: [{
+                    name: 'complaintRef',
+                    width: 120,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintSource',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintSources))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'activityConcern',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ActivityConcerns))
+                        },
+                    width: 150,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'processStatus',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ProcessStatus))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'followUpAction',
+                    width: 250
+                },{
+                    name : 'pspPermitNum',
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'complaintResult',
+                    width: 150,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintResults))
+                        },
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'replyDueDate',
+                    template: dateTemplate,
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingBeginDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingEndDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'policeCaseIndicator',
+                    width: 100,
+                    template: yesNoTemplate,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'telRecordNum',
+                    template:numTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'otherDepartmentEnquiryNum',
+                    template:numTemplate,
+                    width: 100,
+                    hidden : 'true',
+                }, {
+                    name : 'complaintMasterId',
+                    hidden : 'true',
+                    search: false,
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $enquiryGrid.jqGrid('getRowData', rowId);
+                    //var currentUrl = window.location.href;
+                    //var returnUrl = currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("psp") - 1);
+                    var returnUrl = window.location.pathname;
+                    var actionUrl = editEnquiryComplaintUrl.replace("-1", data.complaintMasterId) + "?ReturnUrl=" + returnUrl;
+                    window.location = actionUrl;
+                }
+            });
+
+            $enquiryGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+        };
+
+        function initComplaintGrid() {
+            var actionUrl = listComplaintUrl.replace("placeholder", $('#createModelReferenceNumber').val());
+
+            var $complaintGrid = $("#complaintGridTable");
+            var pager_selector = "#complaintGridPager";
+
+            if ($complaintGrid.isJqGrid()) {
+                $complaintGrid.resetJqGrid();
+                return;
+            }
+
+            $complaintGrid.jqGrid({
+                pager: pager_selector,
+                sortname: 'complaintDate',
+                sortorder: 'desc',
+                datatype: "json",
+                mtype: "POST",
+                url: actionUrl,
+                colNames: ['Complaint Reference No.',
+                    'Source',
+                    'Activity Concerned',
+                    'Date of Complaint',
+                    'Processing Status' ,
+                    'Follow-up Action Taken',
+                    'PSP No.',
+                    'Result of the Complaint',
+                    'Due Date',
+                    'Withholding Begin Date',
+                    'Withholding End Date',
+                    'Investigated by Police',
+                    'No. of Telephone Record',
+                    'No. of Enquiry from Other Department / Authorities',
+                    'ComplaintMasterId'],
+                colModel: [{
+                    name: 'complaintRef',
+                    width: 120,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintSource',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintSources))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'activityConcern',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ActivityConcerns))
+                        },
+                    width: 150,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'processStatus',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ProcessStatus))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'followUpAction',
+                    width: 250
+                },{
+                    name : 'pspPermitNum',
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'complaintResult',
+                    width: 150,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintResults))
+                        },
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'replyDueDate',
+                    template: dateTemplate,
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingBeginDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingEndDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'policeCaseIndicator',
+                    width: 100,
+                    template: yesNoTemplate,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'telRecordNum',
+                    template:numTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'otherDepartmentEnquiryNum',
+                    template:numTemplate,
+                    width: 100,
+                    hidden : 'true',
+                }, {
+                    name : 'complaintMasterId',
+                    hidden : 'true',
+                    search: false,
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $complaintGrid.jqGrid('getRowData', rowId);
+                    //var currentUrl = window.location.href;
+                    //var returnUrl = currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("psp") - 1);
+                    var returnUrl = window.location.pathname;
+                    var actionUrl = editEnquiryComplaintUrl.replace("-1", data.complaintMasterId) + "?ReturnUrl=" + returnUrl;
+                    window.location = actionUrl;
+                }
+            });
+
+            $complaintGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+        };
+
+        function calRelevantRecordsAmount() {
+            ajaxGet(calPspEditRecCntUrl.replace("-1", currPspMasterId),
+                function (response) {
+                    $('#pspEventRecCnt').html(response.data.pspEventCnt);
+                    $('#enquiryListRecCnt').html(response.data.pspEnquiryCnt);
+                    $('#complaintRecCnt').html(response.data.pspComplaintCnt);
+                    $('#templateRecCnt').html(response.data.pspLetterCnt);
+                    $('#attachmentRecCnt').html(response.data.pspAttachmentCnt);
+                    $('#pspApprvHistCnt').html(response.data.pspApprvHistCnt);
+
+                    //CR-005 02
+                    $('#lbTotalEvent').html(": &nbsp; &nbsp; " + response.data.pspTotalEvent);
+                    $('#lbTotalLocation').html(": &nbsp; &nbsp; " + response.data.pspTotalLocation);
+
+                    if (response.data.pspApprvHistCnt > 0) {
+                        $('#orgId').select2('readonly', true);
+                        $("#dateofEventPeriodFrom").prop('readonly', true);
+                        $("#dateofEventPeriodTo").prop('readonly', true);
+
+                        //CR-005 Hide the "Release PermitNum" button
+                        $('#btnReleasePermit').addClass('hide');
+                    }
+                }
+            );
+        }
+
+        function doEditOrgMasterRecord(orgMasterId) {
+
+            //var currentUrl = window.location.href;
+            //var returnUrl = currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation") - 1);
+            var returnUrl = window.location.pathname;
+            var actionUrl = editOrgMasterUrl.replace("-1", orgMasterId).replace("-2", returnUrl);
+            window.location = actionUrl;
+
+        };
+    </script>
+}

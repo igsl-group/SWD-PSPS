@@ -1,0 +1,247 @@
+﻿@model Psps.Web.ViewModels.Enquiry.EnquiryReportViewModel
+
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.EnquiryComplaint_Report_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-inline .inline {
+        vertical-align: middle;
+    }
+</style>
+<form class="form-inline" id="reportForm">
+    <fieldset></fieldset>
+    <table id="reports-data-table" class="table table-bordered table-hover table-condensed data-table">
+        <thead>
+            <tr>
+                <th width="50px">File</th>
+                <th width="350px">Description</th>
+                <th>Parameters</th>
+                <th width="100px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>R08</td>
+                <td>Time-based statistics - Different Types of Follow-up letters issued</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R8_DateFrom, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R8_DateFrom, true, htmlAttributes: new { @id = "r8_DateFrom", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                            @Html.LabelFor(m => m.R8_DateTo, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R8_DateTo, true, htmlAttributes: new { @id = "r8_DateTo", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 8)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R09</td>
+                <td>Time-based statistics - Different Types of Follow-up letters issued (Organisation Level)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R9_DateFrom, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R9_DateFrom, true, htmlAttributes: new { @id = "r9_DateFrom", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                            @Html.LabelFor(m => m.R9_DateTo, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R9_DateTo, true, htmlAttributes: new { @id = "r9_DateTo", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 9)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R10</td>
+                <td>Time-based statistics - Counts of non-compliance</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R10_DateFrom, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R10_DateFrom, true, htmlAttributes: new { @id = "r10_DateFrom", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                            @Html.LabelFor(m => m.R10_DateTo, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R10_DateTo, true, htmlAttributes: new { @id = "r10_DateTo", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 10)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R11</td>
+                <td>Time-based statistics - Counts of non-compliance (Organisation Level)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R11_DateFrom, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R11_DateFrom, true, htmlAttributes: new { @id = "r11_DateFrom", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                            @Html.LabelFor(m => m.R11_DateTo, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R11_DateTo, true, htmlAttributes: new { @id = "r11_DateTo", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 11)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R12</td>
+                <td>Time-based statistics - Counts of Result of Complaints</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R12_DateFrom, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R12_DateFrom, true, htmlAttributes: new { @id = "r12_DateFrom", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                            @Html.LabelFor(m => m.R12_DateTo, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R12_DateTo, true, htmlAttributes: new { @id = "r12_DateTo", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 12)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R13</td>
+                <td>Time-based statistics - Counts of Result of Complaints (Organisation Level)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R13_DateFrom, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R13_DateFrom, true, htmlAttributes: new { @id = "r13_DateFrom", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                            @Html.LabelFor(m => m.R13_DateTo, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R13_DateTo, true, htmlAttributes: new { @id = "r13_DateTo", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 13)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>R14</td>
+                <td>Enquiries / Complaints on Fundraising</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R14_FromYear, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R14_FromYear, true, htmlAttributes: new { @id = "r14_FromYear", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                            @Html.LabelFor(m => m.R14_ToYear, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R14_ToYear, true, htmlAttributes: new { @id = "r14_ToYear", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R14_ComplaintSource, new { @class = " control-label" })
+                            @Html.DropDownListFor(m => m.R14_ComplaintSource, true, new SelectList(Model.R14_ComplaintSources.Where(x => x.Key != "08" && x.Key != "09"), "Key", "Value", Model.R14_ComplaintSource), htmlAttributes: new { @id = "r14_ComplaintSource", @class = "form-control", @data_provide = "select2", @style = "width: 310px;" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 14)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>R15</td>
+                <td>Cases Referred to / Investigated by Police</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 15)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>R16</td>
+                <td>Withholding List</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R16_Date, new { @class = " control-label" })
+                            @Html.TextBoxFor(m => m.R16_Date, true, htmlAttributes: new { @id = "r16_Date", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 16)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R18</td>
+                <td>Two Batches Approach Record</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 18)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R19</td>
+                <td>Conviction Record</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 19)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<script>
+    $(function () {
+        $('input.form-control').addClass("data-val-ignore");
+        $('select.form-control').addClass("data-val-ignore");
+    });
+
+    function Generate_Click(e, moduleNum) {
+        var $inputs = $(e.target || e.srcElement).parents("tr").find('input.form-control, select.form-control');
+        $inputs.removeClass("data-val-ignore");
+
+        var $form = $("#reportForm");
+        if ($form.valid()) {
+            var actionUrl = '/api/report/r' + moduleNum + '/generate';
+            $form.ajaxPostForm(actionUrl,
+                function (response) {
+                    if (response.success)
+                        window.location.href = response.data;
+                    else
+                        notifError("No record found")
+                }
+            );
+        }
+
+        $inputs.addClass("data-val-ignore");
+    }
+</script>

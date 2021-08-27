@@ -1,0 +1,3036 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ChangePassword_ConfirmNewPassword" xml:space="preserve">
+    <value>Re-enter New Password</value>
+  </data>
+  <data name="ChangePassword_NewPassword" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="ChangePassword_OldPassword" xml:space="preserve">
+    <value>Old Password</value>
+  </data>
+  <data name="ChangePassword_Title" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="LookupType_Acknowledgement" xml:space="preserve">
+    <value>Acknowledgement</value>
+  </data>
+  <data name="LookupType_AgencyHeadSalutation" xml:space="preserve">
+    <value>Agency Head Salutation</value>
+  </data>
+  <data name="LookupType_AllocationType" xml:space="preserve">
+    <value>Allocation Type</value>
+  </data>
+  <data name="LookupType_ApplicationType" xml:space="preserve">
+    <value>Application Type</value>
+  </data>
+  <data name="LookupType_ApprovalAuthority" xml:space="preserve">
+    <value>Approval Authority</value>
+  </data>
+  <data name="LookupType_District" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="LookupType_EngineType" xml:space="preserve">
+    <value>Engine Type</value>
+  </data>
+  <data name="LookupType_GrantType" xml:space="preserve">
+    <value>Grant Type</value>
+  </data>
+  <data name="LookupType_LFProjectOfficers" xml:space="preserve">
+    <value>LF Project Officers</value>
+  </data>
+  <data name="LookupType_MainNatureOfProject" xml:space="preserve">
+    <value>Main Nature of Project</value>
+  </data>
+  <data name="LookupType_MainProjectStatus" xml:space="preserve">
+    <value>Main Project Status</value>
+  </data>
+  <data name="LookupType_PackageName" xml:space="preserve">
+    <value>Package Name</value>
+  </data>
+  <data name="LookupType_PostOfContactPerson" xml:space="preserve">
+    <value>Post of Contact Person</value>
+  </data>
+  <data name="LookupType_PremisesNature" xml:space="preserve">
+    <value>Premises Nature</value>
+  </data>
+  <data name="LookupType_ProgrammeServices" xml:space="preserve">
+    <value>Programme Services</value>
+  </data>
+  <data name="LookupType_PurposeBuiltMilestones" xml:space="preserve">
+    <value>Purpose-built Milestones</value>
+  </data>
+  <data name="LookupType_ServiceProjectOfficers" xml:space="preserve">
+    <value>Service Project Officers</value>
+  </data>
+  <data name="LookupType_ServiceStatus" xml:space="preserve">
+    <value>Service Status</value>
+  </data>
+  <data name="LookupType_SubNatureOfProject" xml:space="preserve">
+    <value>Sub Nature of Project</value>
+  </data>
+  <data name="LookupType_SubProjectStatus" xml:space="preserve">
+    <value>Sub Project Status</value>
+  </data>
+  <data name="LookupType_TypeOfAcknowledgement" xml:space="preserve">
+    <value>Type of Acknowledgement</value>
+  </data>
+  <data name="LookupType_VehicleMaker" xml:space="preserve">
+    <value>Vehicle Maker</value>
+  </data>
+  <data name="LookupType_VehicleModificationWorks" xml:space="preserve">
+    <value>Vehicle Modification Works</value>
+  </data>
+  <data name="LookupType_VehicleStatus" xml:space="preserve">
+    <value>VehicleStatus</value>
+  </data>
+  <data name="LookupType_VehicleType" xml:space="preserve">
+    <value>Vehicle Type</value>
+  </data>
+  <data name="Lookup_ChiDescription" xml:space="preserve">
+    <value>Chinese Description</value>
+  </data>
+  <data name="Lookup_Code" xml:space="preserve">
+    <value>Lookup Code</value>
+  </data>
+  <data name="Lookup_Details" xml:space="preserve">
+    <value>Lookup Details</value>
+  </data>
+  <data name="Lookup_DisplayOrder" xml:space="preserve">
+    <value>Display Order</value>
+  </data>
+  <data name="Lookup_EngDescription" xml:space="preserve">
+    <value>English Description</value>
+  </data>
+  <data name="Lookup_Title" xml:space="preserve">
+    <value>Lookup Table</value>
+  </data>
+  <data name="Lookup_Type" xml:space="preserve">
+    <value>Lookup Type</value>
+  </data>
+  <data name="NewRecord" xml:space="preserve">
+    <value>New Record</value>
+  </data>
+  <data name="Post_Details" xml:space="preserve">
+    <value>Post Details</value>
+  </data>
+  <data name="Post_Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="Post_Post" xml:space="preserve">
+    <value>Post</value>
+  </data>
+  <data name="Post_Rank" xml:space="preserve">
+    <value>Rank</value>
+  </data>
+  <data name="Post_Role" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="Post_Supervisor" xml:space="preserve">
+    <value>Supervisor</value>
+  </data>
+  <data name="Post_Title" xml:space="preserve">
+    <value>Post Maintenance</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SystemMessage_Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="SystemMessage_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="SystemMessage_Details" xml:space="preserve">
+    <value>System Message Details</value>
+  </data>
+  <data name="SystemMessage_SystemMessageId" xml:space="preserve">
+    <value>System Message Id</value>
+  </data>
+  <data name="SystemMessage_Title" xml:space="preserve">
+    <value>Message Maintenance</value>
+  </data>
+  <data name="SystemMessage_Value" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="SystemParameter_Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="SystemParameter_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="SystemParameter_Details" xml:space="preserve">
+    <value>System Parameter Details</value>
+  </data>
+  <data name="SystemParameter_SystemParameterId" xml:space="preserve">
+    <value>System Parameter Id</value>
+  </data>
+  <data name="SystemParameter_Title" xml:space="preserve">
+    <value>Parameter Maintenance</value>
+  </data>
+  <data name="SystemParameter_Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Split" xml:space="preserve">
+    <value>Split</value>
+  </data>
+  <data name="UserLog_Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="UserLog_ActionedOn" xml:space="preserve">
+    <value>Action Time</value>
+  </data>
+  <data name="UserLog_Activity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
+  <data name="UserLog_EngUserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="UserLog_Remark" xml:space="preserve">
+    <value>Remark</value>
+  </data>
+  <data name="User_ChiUserName" xml:space="preserve">
+    <value>User Name (Chinese)</value>
+  </data>
+  <data name="User_Details" xml:space="preserve">
+    <value>User Details</value>
+  </data>
+  <data name="User_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="User_EngUserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="User_IsActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="User_IsSystemAdministrator" xml:space="preserve">
+    <value>System Administrator</value>
+  </data>
+  <data name="User_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="User_Post" xml:space="preserve">
+    <value>Post</value>
+  </data>
+  <data name="User_TelephoneNumber" xml:space="preserve">
+    <value>Tel. No.</value>
+  </data>
+  <data name="User_Title" xml:space="preserve">
+    <value>User Maintenance</value>
+  </data>
+  <data name="User_UserId" xml:space="preserve">
+    <value>User Id</value>
+  </data>
+  <data name="Letter_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Letter_Details" xml:space="preserve">
+    <value>Version Details</value>
+  </data>
+  <data name="Letter_IsActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Letter_LetterId" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Letter_Name" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Letter_Path" xml:space="preserve">
+    <value>Template</value>
+  </data>
+  <data name="Letter_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Letter_Enable" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Letter_Title" xml:space="preserve">
+    <value>Letter Maintenance</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Role_Title" xml:space="preserve">
+    <value>Role Maintenance</value>
+  </data>
+  <data name="Role_NewRoleName" xml:space="preserve">
+    <value>New Role Name ?</value>
+  </data>
+  <data name="Role_RoleId" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="Role_RoleName" xml:space="preserve">
+    <value>Role Name</value>
+  </data>
+  <data name="Role_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Role_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Role_Module" xml:space="preserve">
+    <value>Module</value>
+  </data>
+  <data name="Acting_Details" xml:space="preserve">
+    <value>Acting Details</value>
+  </data>
+  <data name="Effective_From" xml:space="preserve">
+    <value>Effective From</value>
+  </data>
+  <data name="Effective_To" xml:space="preserve">
+    <value>Effective To</value>
+  </data>
+  <data name="Post_Acting_Title" xml:space="preserve">
+    <value>Acting - assigned to</value>
+  </data>
+  <data name="Post_Assign_to" xml:space="preserve">
+    <value>Assign To</value>
+  </data>
+  <data name="CreateOrUpdate" xml:space="preserve">
+    <value>Create / Update</value>
+  </data>
+  <data name="Role_AccessRights" xml:space="preserve">
+    <value>Access Rights</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="DocumentLibrary_Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="DocumentLibrary_Title" xml:space="preserve">
+    <value>Doc. Lib</value>
+  </data>
+  <data name="Document_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Document_Remark" xml:space="preserve">
+    <value>Remark</value>
+  </data>
+  <data name="Document_UploadedBy" xml:space="preserve">
+    <value>Uploaded By</value>
+  </data>
+  <data name="Document_UploadedOn" xml:space="preserve">
+    <value>Uploaded Time</value>
+  </data>
+  <data name="Role_Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="Role_Post" xml:space="preserve">
+    <value>Post</value>
+  </data>
+  <data name="Role_Members" xml:space="preserve">
+    <value>Role Members</value>
+  </data>
+  <data name="Role_Members_Details" xml:space="preserve">
+    <value>Role Members Details</value>
+  </data>
+  <data name="Profile_AssignTo" xml:space="preserve">
+    <value>Assign To</value>
+  </data>
+  <data name="Profile_EffectiveFrom" xml:space="preserve">
+    <value>Effective From</value>
+  </data>
+  <data name="Profile_EffectiveTo" xml:space="preserve">
+    <value>Effective To</value>
+  </data>
+  <data name="UserLog_Title" xml:space="preserve">
+    <value>User Log Report</value>
+  </data>
+  <data name="Acting_ActingId" xml:space="preserve">
+    <value>Acting Id</value>
+  </data>
+  <data name="Profile_AssignTo_UserId" xml:space="preserve">
+    <value>AssignTo UserId</value>
+  </data>
+  <data name="My_Profile" xml:space="preserve">
+    <value>My Profile</value>
+  </data>
+  <data name="PSP" xml:space="preserve">
+    <value>PSP</value>
+  </data>
+  <data name="Save_As_Draft" xml:space="preserve">
+    <value>Save as draft</value>
+  </data>
+  <data name="Disaster_BeginDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="Disaster_Details" xml:space="preserve">
+    <value>Disaster Maintenence</value>
+  </data>
+  <data name="Disaster_DisasterMasterId" xml:space="preserve">
+    <value>Disaster Master Id</value>
+  </data>
+  <data name="Disaster_DisasterName" xml:space="preserve">
+    <value>Disaster Name</value>
+  </data>
+  <data name="Disaster_EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Disaster_PspApplicationProcedure" xml:space="preserve">
+    <value>Application Procedures for a PSP</value>
+  </data>
+  <data name="Disaster_PspApplicationStatus" xml:space="preserve">
+    <value>Status of Submitted Application for PSP</value>
+  </data>
+  <data name="Disaster_PspPermitConditionCompliance" xml:space="preserve">
+    <value>Compliance of Permit Conditions of PSP</value>
+  </data>
+  <data name="Disaster_DisasterStatistcs" xml:space="preserve">
+    <value>Disaster Statistcs</value>
+  </data>
+  <data name="Disaster_PspScope" xml:space="preserve">
+    <value>Scope of PSP</value>
+  </data>
+  <data name="Others" xml:space="preserve">
+    <value>Others</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="Disaster_SubTotal" xml:space="preserve">
+    <value>Sub Total</value>
+  </data>
+  <data name="Search_Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="Search_AppliedFDBefore" xml:space="preserve">
+    <value>Applied FD Permit Before</value>
+  </data>
+  <data name="Search_AppliedPSPBefore" xml:space="preserve">
+    <value>Applied PSP Before</value>
+  </data>
+  <data name="Search_AppliedSSAFBefore" xml:space="preserve">
+    <value>Applied SSAF Permit Before</value>
+  </data>
+  <data name="Search_NameofContactPerson" xml:space="preserve">
+    <value>Name of Applicant</value>
+  </data>
+  <data name="Search_OrderBy" xml:space="preserve">
+    <value>Order By</value>
+  </data>
+  <data name="Search_OrganisationName" xml:space="preserve">
+    <value>Name of Organisation</value>
+  </data>
+  <data name="Search_OrganisationReference" xml:space="preserve">
+    <value>Organisation Reference</value>
+  </data>
+  <data name="Search_OrganisationSearchTitle" xml:space="preserve">
+    <value>Public Subscription Permit Search</value>
+  </data>
+  <data name="Search_OrganisationStatus" xml:space="preserve">
+    <value>Organisation Status</value>
+  </data>
+  <data name="Search_PrincipalActivities" xml:space="preserve">
+    <value>Objectives / Principal Activities/Services</value>
+  </data>
+  <data name="Search_ReceivedComplaintBefore" xml:space="preserve">
+    <value>Received Complaint Before</value>
+  </data>
+  <data name="Search_ReceivedEnquiryBefore" xml:space="preserve">
+    <value>Received Enquiry Before</value>
+  </data>
+  <data name="Search_ReferenceGuide" xml:space="preserve">
+    <value>Adopt "Good Practice Guide"</value>
+  </data>
+  <data name="Search_Registration" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Search_RegistrationTitle" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="Search_Section" xml:space="preserve">
+    <value>Section 88</value>
+  </data>
+  <data name="Search_Subvented" xml:space="preserve">
+    <value>Subvented</value>
+  </data>
+  <data name="Search_TelephoneNo" xml:space="preserve">
+    <value>Telephone No</value>
+  </data>
+  <data name="Suggestion_ActivityConcern" xml:space="preserve">
+    <value>Activity Concerned</value>
+  </data>
+  <data name="Suggestion_FileRefNum" xml:space="preserve">
+    <value>File No.</value>
+  </data>
+  <data name="Suggestion_SuggestionSource" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Suggestion_AcknowledgementSentDate" xml:space="preserve">
+    <value>Date of Acknowledgement Sent (if applicable)</value>
+  </data>
+  <data name="Suggestion_SuggestionDate" xml:space="preserve">
+    <value>Date of Suggestion / Compliment</value>
+  </data>
+  <data name="Suggestion_SuggestionRef" xml:space="preserve">
+    <value>Suggestion Reference No.</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="EffectiveDate" xml:space="preserve">
+    <value>Effective Date</value>
+  </data>
+  <data name="FileNo" xml:space="preserve">
+    <value>File No</value>
+  </data>
+  <data name="LegalAdviceDescription" xml:space="preserve">
+    <value>Legal Advice Description</value>
+  </data>
+  <data name="LegalAdviceType" xml:space="preserve">
+    <value>Legal Advice Type</value>
+  </data>
+  <data name="PSPRequired" xml:space="preserve">
+    <value>PSP Required</value>
+  </data>
+  <data name="RelatedLegalAdvice" xml:space="preserve">
+    <value>Related Legal Advice</value>
+  </data>
+  <data name="Remarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="Suggestion_Content" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="Suggestion_Nature" xml:space="preserve">
+    <value>Nature</value>
+  </data>
+  <data name="Suggestion_SenderName" xml:space="preserve">
+    <value>Name of Sender / Provider</value>
+  </data>
+  <data name="Suggestion_SuggestionRefNum" xml:space="preserve">
+    <value>Suggestion Reference Number</value>
+  </data>
+  <data name="Disaster_ReportingDate" xml:space="preserve">
+    <value>Reporting Date</value>
+  </data>
+  <data name="Disaster_ReportingOfficer" xml:space="preserve">
+    <value>Reporting Officer</value>
+  </data>
+  <data name="Disaster_DisasterStatisticsId" xml:space="preserve">
+    <value>Disaster Statistics Id</value>
+  </data>
+  <data name="Disaster_RecordPostIdType" xml:space="preserve">
+    <value>Position of Reporting Officer</value>
+  </data>
+  <data name="Disaster_DisasterNames" xml:space="preserve">
+    <value>Disaster Name</value>
+  </data>
+  <data name="Organisation_AddressProofDate" xml:space="preserve">
+    <value>Date of Address Proof</value>
+  </data>
+  <data name="Organisation_Afs1YearEnd" xml:space="preserve">
+    <value>Annual Financial Statement</value>
+  </data>
+  <data name="Organisation_AnnualReport1Date" xml:space="preserve">
+    <value>Annual Report / Service Record</value>
+  </data>
+  <data name="Organisation_ApplicantChiSalute" xml:space="preserve">
+    <value>Name of Applicant (in Chinese)</value>
+  </data>
+  <data name="Organisation_ApplicantPosition" xml:space="preserve">
+    <value>Position of Applicant</value>
+  </data>
+  <data name="Organisation_ApplicantSalute" xml:space="preserve">
+    <value>Name of Applicant</value>
+  </data>
+  <data name="Organisation_ApplicantTelNum" xml:space="preserve">
+    <value>Tel. No. of Applicant</value>
+  </data>
+  <data name="Organisation_BrNum" xml:space="preserve">
+    <value>BR No.</value>
+  </data>
+  <data name="Organisation_ChangeDate" xml:space="preserve">
+    <value>Date of Organisation Name Change</value>
+  </data>
+  <data name="Organisation_ChiAddress" xml:space="preserve">
+    <value>Address of Organisation (in Chinese)</value>
+  </data>
+  <data name="Organisation_ChiName" xml:space="preserve">
+    <value>Name of Organisation (in Chinese)</value>
+  </data>
+  <data name="Organisation_CrNum" xml:space="preserve">
+    <value>CR No.</value>
+  </data>
+  <data name="Organisation_Disabled" xml:space="preserve">
+    <value>Non-active</value>
+  </data>
+  <data name="Organisation_Email" xml:space="preserve">
+    <value>Email Address of Organisation</value>
+  </data>
+  <data name="Organisation_FaxNo" xml:space="preserve">
+    <value>Fax No. of Organisation</value>
+  </data>
+  <data name="Organisation_MaaConstitutionAttachmentId" xml:space="preserve">
+    <value>MAA / Constitution File</value>
+  </data>
+  <data name="Organisation_Objectives" xml:space="preserve">
+    <value>Objectives of organisation</value>
+  </data>
+  <data name="Organisation_OldName" xml:space="preserve">
+    <value>Old Name of Organisation</value>
+  </data>
+  <data name="Organisation_OtherSupportDoc" xml:space="preserve">
+    <value>Other Support Document</value>
+  </data>
+  <data name="Organisation_President" xml:space="preserve">
+    <value>President / Chairperson</value>
+  </data>
+  <data name="Organisation_ReceiveDate" xml:space="preserve">
+    <value>Date of Receiving Reply Slip</value>
+  </data>
+  <data name="Organisation_RegistrationDate" xml:space="preserve">
+    <value>Date of Registration</value>
+  </data>
+  <data name="Organisation_ReplyFrom" xml:space="preserve">
+    <value>Reply from Organisation</value>
+  </data>
+  <data name="Organisation_Secretary" xml:space="preserve">
+    <value>Secretary</value>
+  </data>
+  <data name="Organisation_Section88" xml:space="preserve">
+    <value>Section 88</value>
+  </data>
+  <data name="Organisation_Section88Date" xml:space="preserve">
+    <value>Start Date of Section 88</value>
+  </data>
+  <data name="Organisation_SendDate" xml:space="preserve">
+    <value>Date of Letter Sent</value>
+  </data>
+  <data name="Organisation_SimpliChiName" xml:space="preserve">
+    <value>Name of Organisation (in Simplified Chinese)</value>
+  </data>
+  <data name="Organisation_Treasurer" xml:space="preserve">
+    <value>Treasurer</value>
+  </data>
+  <data name="Organisation_Website" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="DisasterStatistics_NoOfEnquiries" xml:space="preserve">
+    <value>No. of Enquires Received</value>
+  </data>
+  <data name="ComplaintMaster_ActionFileEnclosureNum" xml:space="preserve">
+    <value>Enclosure No. in Action File</value>
+  </data>
+  <data name="ComplaintMaster_ActivityConcern" xml:space="preserve">
+    <value>Activity Concerned</value>
+  </data>
+  <data name="ComplaintMaster_ComplainantName" xml:space="preserve">
+    <value>Name of Complainant</value>
+  </data>
+  <data name="ComplaintMaster_ComplaintDate" xml:space="preserve">
+    <value>Date of Complaint</value>
+  </data>
+  <data name="ComplaintMaster_ComplaintDate1stReceived" xml:space="preserve">
+    <value>Date of Complaint 1st Received by SWD</value>
+  </data>
+  <data name="ComplaintMaster_ComplaintDateReceivedByLFPS" xml:space="preserve">
+    <value>Date of Complaint Received by LFPS</value>
+  </data>
+  <data name="ComplaintMaster_ComplaintRemarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="ComplaintMaster_ComplaintSource" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="ComplaintMaster_DcLcContent" xml:space="preserve">
+    <value>Content (for DC/LC/Mass Media only)</value>
+  </data>
+  <data name="ComplaintMaster_EnclosureNum" xml:space="preserve">
+    <value>Enclosure No. of Complaint</value>
+  </data>
+  <data name="ComplaintMaster_NonComplianceNature" xml:space="preserve">
+    <value>Nature of Non-compliance</value>
+  </data>
+  <data name="ComplaintMaster_OrganisationConcerned" xml:space="preserve">
+    <value>Organisation Concerned</value>
+  </data>
+  <data name="ComplaintMaster_PermitConcerned" xml:space="preserve">
+    <value>Permit Concerned</value>
+  </data>
+  <data name="ComplaintMaster_ProcessingStatus" xml:space="preserve">
+    <value>Processing Status</value>
+  </data>
+  <data name="ComplaintMaster_ReferFrom1823Indicator" xml:space="preserve">
+    <value>Referred from 1823</value>
+  </data>
+  <data name="ComplaintMaster_RelatedCase" xml:space="preserve">
+    <value>Related Case</value>
+  </data>
+  <data name="ComplaintMaster_ReplyDueDate" xml:space="preserve">
+    <value>Due Date to Reply</value>
+  </data>
+  <data name="ComplaintMaster_Unit" xml:space="preserve">
+    <value>Unit of SWD</value>
+  </data>
+  <data name="FD_AFS" xml:space="preserve">
+    <value>AFS in Past 3 Years</value>
+  </data>
+  <data name="FD_ApplicationResult" xml:space="preserve">
+    <value>Application Result</value>
+  </data>
+  <data name="FD_ResultApplicationRemark" xml:space="preserve">
+    <value>Application Remarks (Result)</value>
+  </data>
+  <data name="FD_ApplicationResultInLastYear" xml:space="preserve">
+    <value>Application Result in Last Year</value>
+  </data>
+  <data name="FD_LotGroupInLastYear" xml:space="preserve">
+    <value>No. of Lots in Last Year</value>
+  </data>
+  <data name="FD_RefLotGroup" xml:space="preserve">
+    <value>No. of Lots Proposed in This Year</value>
+  </data>
+  <data name="FD_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="FD_ConsentLetterfromtheCommunityChestofHK" xml:space="preserve">
+    <value>Consent Letter from the Community Chest of HK</value>
+  </data>
+  <data name="FD_DateofOutstandingEmailIssued" xml:space="preserve">
+    <value>Date of Outstanding Email Issued</value>
+  </data>
+  <data name="FD_DateofOutstandingEmailReply" xml:space="preserve">
+    <value>Date of Reply</value>
+  </data>
+  <data name="FD_DateofReceiveingApplication" xml:space="preserve">
+    <value>Date of Receiving Application</value>
+  </data>
+  <data name="FD_DateofReminderforOutstandingEmailIssued" xml:space="preserve">
+    <value>Date of Reminder for Outstanding Email Issued</value>
+  </data>
+  <data name="FD_DateofReminderforOutstandingEmailReply" xml:space="preserve">
+    <value>Date of Reply</value>
+  </data>
+  <data name="FD_District" xml:space="preserve">
+    <value>Region for Regional FD</value>
+  </data>
+  <data name="FD_FlagDay" xml:space="preserve">
+    <value>Flag Day</value>
+  </data>
+  <data name="FD_Grouping" xml:space="preserve">
+    <value>Grouping</value>
+  </data>
+  <data name="FD_GroupingResult" xml:space="preserve">
+    <value>Grouping Result</value>
+  </data>
+  <data name="FD_GroupingwithNoofLot" xml:space="preserve">
+    <value>Grouping with No. of Lot</value>
+  </data>
+  <data name="FD_LanguageUsed" xml:space="preserve">
+    <value>Language Used</value>
+  </data>
+  <data name="FD_NewApplicant" xml:space="preserve">
+    <value>New Applicant</value>
+  </data>
+  <data name="FD_PercentageforGrouping" xml:space="preserve">
+    <value>Percentage for Grouping (%)</value>
+  </data>
+  <data name="FD_PermitIssueDate" xml:space="preserve">
+    <value>Permit Issue Date</value>
+  </data>
+  <data name="FD_PermitNo" xml:space="preserve">
+    <value>Permit No.</value>
+  </data>
+  <data name="FD_PrincipalActivities" xml:space="preserve">
+    <value>Principal Activities / Services</value>
+  </data>
+  <data name="FD_ReferenceNumber" xml:space="preserve">
+    <value>FD File Reference</value>
+  </data>
+  <data name="FD_Subvented" xml:space="preserve">
+    <value>Subvented</value>
+  </data>
+  <data name="FD_TargetIncome" xml:space="preserve">
+    <value>Target Income (HK$)</value>
+  </data>
+  <data name="FD_TheCommunityChestofHKMember" xml:space="preserve">
+    <value>The Community Chest of HK Member</value>
+  </data>
+  <data name="FD_TrackRecordofCharitableActivities" xml:space="preserve">
+    <value>Track Record of Charitable Activities in Past 3 Years</value>
+  </data>
+  <data name="FD_VettingPanelCases" xml:space="preserve">
+    <value>Vetting Panel Cases</value>
+  </data>
+  <data name="FD_YearofFlagDay" xml:space="preserve">
+    <value>Year of Flag Day</value>
+  </data>
+  <data name="PSP_ApplicationDonation" xml:space="preserve">
+    <value>Donation for Disaster:</value>
+  </data>
+  <data name="PSP_ApplicationName" xml:space="preserve">
+    <value>Name of Event:</value>
+  </data>
+  <data name="PSP_ApplicationOthers" xml:space="preserve">
+    <value>Others:</value>
+  </data>
+  <data name="PSP_ApplicationResult" xml:space="preserve">
+    <value>Application Result</value>
+  </data>
+  <data name="PSP_AuditedReportReceivedDate" xml:space="preserve">
+    <value>Date of Receiving Audited Report</value>
+  </data>
+  <data name="PSP_BebeficiaryOrganisationId" xml:space="preserve">
+    <value>Bebeficiary Organisation</value>
+  </data>
+  <data name="PSP_BUDateforAction" xml:space="preserve">
+    <value>BU Date for Action</value>
+  </data>
+  <data name="PSP_CaseCloseReason" xml:space="preserve">
+    <value>Details of Other Application Result</value>
+  </data>
+  <data name="PSP_CharitySalesItems" xml:space="preserve">
+    <value>Charity Sales Items</value>
+  </data>
+  <data name="PSP_DateofApplicationDisposal" xml:space="preserve">
+    <value>Date of Application Disposal</value>
+  </data>
+  <data name="PSP_DateofCompletingApplication" xml:space="preserve">
+    <value>Date of Completing Application</value>
+  </data>
+  <data name="PSP_DateofApplication" xml:space="preserve">
+    <value>Date of Application</value>
+  </data>
+  <data name="PSP_DateofReceivingApplication" xml:space="preserve">
+    <value>Date of Receiving Application</value>
+  </data>
+  <data name="PSP_DocReceivedRemark" xml:space="preserve">
+    <value>Remarks for Document Received</value>
+  </data>
+  <data name="PSP_DocRemark" xml:space="preserve">
+    <value>Document Remarks</value>
+  </data>
+  <data name="PSP_DocSubmission" xml:space="preserve">
+    <value>Document to be Submitted</value>
+  </data>
+  <data name="PSP_FileReference" xml:space="preserve">
+    <value>PSP File Reference</value>
+  </data>
+  <data name="PSP_PreviousFileReference" xml:space="preserve">
+    <value>Parent File Reference</value>
+  </data>
+  <data name="PSP_FileRefLmNum" xml:space="preserve">
+    <value>File Ref. (LM No.):</value>
+  </data>
+  <data name="PSP_FirstReminderDeadline" xml:space="preserve">
+    <value>Deadline for 1st Reminder</value>
+  </data>
+  <data name="PSP_FirstReminderIssueDate" xml:space="preserve">
+    <value>Date of 1st Reminder Issued</value>
+  </data>
+  <data name="PSP_FundUsed" xml:space="preserve">
+    <value>Fund to be used</value>
+  </data>
+  <data name="PSP_LanguageUsed" xml:space="preserve">
+    <value>Language Used</value>
+  </data>
+  <data name="PSP_NewspaperCuttingReceivedDate" xml:space="preserve">
+    <value>Date of Receiving Newspaper Cutting / Website Publications</value>
+  </data>
+  <data name="PSP_OfficialReceiptReceivedDate" xml:space="preserve">
+    <value>Date of Receiving Official Receipt</value>
+  </data>
+  <data name="PSP_OrganisationCode" xml:space="preserve">
+    <value>Organisation</value>
+  </data>
+  <data name="PSP_OtherSpecialRemark" xml:space="preserve">
+    <value>Other Special Remarks</value>
+  </data>
+  <data name="PSP_PastAfsRecord" xml:space="preserve">
+    <value>AFS in Past 3 Years</value>
+  </data>
+  <data name="PSP_PermitNo" xml:space="preserve">
+    <value>Permit No.</value>
+  </data>
+  <data name="PSP_PermitRevoked" xml:space="preserve">
+    <value>Permit Revoked</value>
+  </data>
+  <data name="PSP_PositionofProcessingOfficer" xml:space="preserve">
+    <value>Position of Processing Officer</value>
+  </data>
+  <data name="PSP_PspNotRequireReason" xml:space="preserve">
+    <value>Reason(s) for PSP Not Required</value>
+  </data>
+  <data name="PSP_PublicationReceivedDate" xml:space="preserve">
+    <value>Date of Receiving Publication</value>
+  </data>
+  <data name="PSP_PurposeofFund" xml:space="preserve">
+    <value>Purpose of Fund-Raising</value>
+  </data>
+  <data name="PSP_PurposeofFundRaising" xml:space="preserve">
+    <value>Purpose of Fund-Raising</value>
+  </data>
+  <data name="PSP_QualifyOpinionIndicator" xml:space="preserve">
+    <value>Qualified Opinion of Assurance Report</value>
+  </data>
+  <data name="PSP_QualityOpinionDetail" xml:space="preserve">
+    <value>Details of the Qualified Opinion</value>
+  </data>
+  <data name="PSP_RejectReason" xml:space="preserve">
+    <value>Reason(s) for Reject</value>
+  </data>
+  <data name="PSP_RejectRemark" xml:space="preserve">
+    <value>Reject Remarks</value>
+  </data>
+  <data name="PSP_SecondReminderDeadline" xml:space="preserve">
+    <value>Deadline for 2nd Reminder</value>
+  </data>
+  <data name="PSP_SecondReminderIssueDate" xml:space="preserve">
+    <value>Date of 2nd Reminder Issued</value>
+  </data>
+  <data name="PSP_Section88" xml:space="preserve">
+    <value>Section 88 (Bebeficiary Organisation)</value>
+  </data>
+  <data name="PSP_SubmissionDueDate" xml:space="preserve">
+    <value>Due Date for Submission of Audited Report / Publications / Official Receipt / Newspaper Cutting/Website Publishing</value>
+  </data>
+  <data name="PSP_TitleofEventofProposedActivity" xml:space="preserve">
+    <value>Title of Event/ Nature of Proposed Activity</value>
+  </data>
+  <data name="PSP_TrackRecord" xml:space="preserve">
+    <value>Service Record of Charitable Activities in Past 3 Years</value>
+  </data>
+  <data name="PSP_WithholdingListIndicator" xml:space="preserve">
+    <value>Add to Withholding List</value>
+  </data>
+  <data name="PSP_Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="PSP_ContactPersonName" xml:space="preserve">
+    <value>Name of Contact Person (Eng / Chi)</value>
+  </data>
+  <data name="PSP_ContactPersonNameEng" xml:space="preserve">
+    <value>Name of Contact Person (Eng)</value>
+  </data>
+  <data name="PSP_ContactPersonNameChi" xml:space="preserve">
+    <value>Name of Contact Person (Chi)</value>
+  </data>
+  <data name="PSP_OrgName" xml:space="preserve">
+    <value>Organisation Name (Eng / Chi)</value>
+  </data>
+  <data name="PSP_OrgRef" xml:space="preserve">
+    <value>Organisation Reference</value>
+  </data>
+  <data name="PSP_OrgStatus" xml:space="preserve">
+    <value>Organisation Status</value>
+  </data>
+  <data name="PSP_PrincipalActivities" xml:space="preserve">
+    <value>Principal Activities / Services</value>
+  </data>
+  <data name="PSP_RefGuide" xml:space="preserve">
+    <value>Adopt "Good Practice Guide"</value>
+  </data>
+  <data name="PSP_Registration" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="PSP_Section" xml:space="preserve">
+    <value>Section 88 (At the time of application)</value>
+  </data>
+  <data name="PSP_IsSsaf" xml:space="preserve">
+    <value>SSAF Permit</value>
+  </data>
+  <data name="PSP_Subvented" xml:space="preserve">
+    <value>Subvented</value>
+  </data>
+  <data name="PSP_TelNo" xml:space="preserve">
+    <value>Telephone No</value>
+  </data>
+  <data name="btn_RetrieveAccountSummary" xml:space="preserve">
+    <value>Retrieve Account Summary</value>
+  </data>
+  <data name="FD_Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="FD_ContactPersonName" xml:space="preserve">
+    <value>Name of Contact Person (in English)</value>
+  </data>
+  <data name="FD_OrgName" xml:space="preserve">
+    <value>Organisation Name (Eng / Chi)</value>
+  </data>
+  <data name="FD_OrgRef" xml:space="preserve">
+    <value>Organisation Reference</value>
+  </data>
+  <data name="FD_OrgStatus" xml:space="preserve">
+    <value>Organisation Status</value>
+  </data>
+  <data name="FD_RefGuide" xml:space="preserve">
+    <value>Adopt "Good Practice Guide"</value>
+  </data>
+  <data name="FD_Registration" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="FD_Section" xml:space="preserve">
+    <value>Section 88</value>
+  </data>
+  <data name="FD_TelNo" xml:space="preserve">
+    <value>Telephone No</value>
+  </data>
+  <data name="PSPRef" xml:space="preserve">
+    <value>PSP Reference</value>
+  </data>
+  <data name="PspFdStatus_Approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="PspFdStatus_DataInputStage" xml:space="preserve">
+    <value>Data Input Stage</value>
+  </data>
+  <data name="PspFdStatus_MultiBatchApp" xml:space="preserve">
+    <value>Multiple-batch Application</value>
+  </data>
+  <data name="PspFdStatus_ReadyForApproval" xml:space="preserve">
+    <value>Ready for Approval</value>
+  </data>
+  <data name="PspFdStatus_ApplicationReceived" xml:space="preserve">
+    <value>No. of Application received</value>
+  </data>
+  <data name="PspFdStatus_PSPIssued" xml:space="preserve">
+    <value>No. of PSP Issued</value>
+  </data>
+  <data name="PspFdStatus_RejectedApplication" xml:space="preserve">
+    <value>No. of Rejected Application</value>
+  </data>
+  <data name="PspFdStatus_ApplicationWithdrawn" xml:space="preserve">
+    <value>No. of Application Withdrawn</value>
+  </data>
+  <data name="PspFdStatus_TwoBatchApplication" xml:space="preserve">
+    <value>No. of Two-batch Application</value>
+  </data>
+  <data name="PspFdStatus_OverdueAC" xml:space="preserve">
+    <value>No. of Overdue A/C</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="FDL_FlagDayListDate" xml:space="preserve">
+    <value>Date of Flag Day</value>
+  </data>
+  <data name="FDL_FlagDayListId" xml:space="preserve">
+    <value>Flag Day List ID</value>
+  </data>
+  <data name="FDL_FlagDayListTitle" xml:space="preserve">
+    <value>Flag Day List</value>
+  </data>
+  <data name="CompEnq_Complaint" xml:space="preserve">
+    <value>No. of Complaint Recieved</value>
+  </data>
+  <data name="Suggestion_ComplimentRecieved" xml:space="preserve">
+    <value>No. of Compliment Recieved</value>
+  </data>
+  <data name="CompEnq_EnquiryRecieved" xml:space="preserve">
+    <value>No. of Enquiry Recieved</value>
+  </data>
+  <data name="CompEnq_NARecieved" xml:space="preserve">
+    <value>No. of N/A Recieved</value>
+  </data>
+  <data name="CompEnq_NullRecieved" xml:space="preserve">
+    <value>No. of Null Recieved</value>
+  </data>
+  <data name="Suggestion_SuggestionRecieved" xml:space="preserve">
+    <value>No. of Suggestion Recieved</value>
+  </data>
+  <data name="CompEnq_WarningLetter" xml:space="preserve">
+    <value>No. of Warning Letter Issued</value>
+  </data>
+  <data name="Home_SuggestionGridTitle" xml:space="preserve">
+    <value>Suggestion Statistics (Last 5 years)</value>
+  </data>
+  <data name="Home_PspBringUpGridTitle" xml:space="preserve">
+    <value>(PSP)Bring-up case(s) - Display applications to be due in 10 calendar days</value>
+  </data>
+  <data name="Home_PspFdGridTitle" xml:space="preserve">
+    <value>PSP Application Status (as of Login Time)</value>
+  </data>
+  <data name="PspBringUp_AmenPspNo" xml:space="preserve">
+    <value>Amendment PSP No.</value>
+  </data>
+  <data name="PspBringUp_ApplicationReceiveDate" xml:space="preserve">
+    <value>Date of Receiving</value>
+  </data>
+  <data name="PspBringUp_EngOrgName" xml:space="preserve">
+    <value>Organisation</value>
+  </data>
+  <data name="PspBringUp_PrevPspNo" xml:space="preserve">
+    <value>Previous PSP No.</value>
+  </data>
+  <data name="PspBringUp_ProcessingOfficerPost" xml:space="preserve">
+    <value>Processing Officer</value>
+  </data>
+  <data name="PspBringUp_PspEventDate" xml:space="preserve">
+    <value>First Event Date</value>
+  </data>
+  <data name="PspBringUp_PspRef" xml:space="preserve">
+    <value>PSP File Reference</value>
+  </data>
+  <data name="PspBringUp_SpecialRemark" xml:space="preserve">
+    <value>Special Remark</value>
+  </data>
+  <data name="Home_FdBringUpGridTitle" xml:space="preserve">
+    <value>(FD)Bring-up case(s) - Display all not-yet approved cases</value>
+  </data>
+  <data name="FD_ApplicationStatus" xml:space="preserve">
+    <value>Application Status</value>
+  </data>
+  <data name="FdBringUp_FlagDayType" xml:space="preserve">
+    <value>TW/R</value>
+  </data>
+  <data name="ComplaintBringUp_ComplaintRef" xml:space="preserve">
+    <value>Complaint Ref. No.</value>
+  </data>
+  <data name="ComplaintBringUp_DateOfComplaint" xml:space="preserve">
+    <value>Date of Complaint</value>
+  </data>
+  <data name="ComplaintBringUp_EnclosedNumberActionFile" xml:space="preserve">
+    <value>Encl. No. in Action File</value>
+  </data>
+  <data name="ComplaintBringUp_EngChiOrgName" xml:space="preserve">
+    <value>Eng. &amp; Chi Org Name</value>
+  </data>
+  <data name="ComplaintBringUp_OrgRef" xml:space="preserve">
+    <value>Org. Ref.</value>
+  </data>
+  <data name="ComplaintBringUp_PermitConcerned" xml:space="preserve">
+    <value>Permit Concerned</value>
+  </data>
+  <data name="ComplaintBringUp_Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Home_ComplaintBringUpGridTitle" xml:space="preserve">
+    <value>(Complaint)Bring-up case(s) - Display complaint case(s) to be replied/follow-up in 10 calendar days</value>
+  </data>
+  <data name="LegalAdviceCode" xml:space="preserve">
+    <value>Legal Advice Code</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="LegalAdvice_PartNum_EnclosureNum" xml:space="preserve">
+    <value>Part No. / Encl. No.</value>
+  </data>
+  <data name="LegalAdvice_EnclosureNum" xml:space="preserve">
+    <value>Encl. No.</value>
+  </data>
+  <data name="LegalAdvice_PartNum" xml:space="preserve">
+    <value>Part No.</value>
+  </data>
+  <data name="Disaster_BeginEndDate" xml:space="preserve">
+    <value>Start Date - End Date</value>
+  </data>
+  <data name="Home_CompEnqGridTitle" xml:space="preserve">
+    <value>Enquiry / Complaint (Last 5 years)</value>
+  </data>
+  <data name="Suggestion_NARecieved" xml:space="preserve">
+    <value>No. of N/A Recieved</value>
+  </data>
+  <data name="Suggestion_NullRecieved" xml:space="preserve">
+    <value>No. of Null Recieved</value>
+  </data>
+  <data name="Suggestion_Template_Title" xml:space="preserve">
+    <value>Suggestion Template</value>
+  </data>
+  <data name="Suggestion_PartNum" xml:space="preserve">
+    <value>File No.</value>
+  </data>
+  <data name="Suggestion_Remark" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="Complaint_Report_Title" xml:space="preserve">
+    <value>Complaint Report</value>
+  </data>
+  <data name="Complaint_Template_Title" xml:space="preserve">
+    <value>Complaint Template</value>
+  </data>
+  <data name="Organisation_Report_Title" xml:space="preserve">
+    <value>Organisation Report</value>
+  </data>
+  <data name="Organisation_Template_Title" xml:space="preserve">
+    <value>Organisation Template</value>
+  </data>
+  <data name="LegalAdvice_Report_Title" xml:space="preserve">
+    <value>LegalAdvice Report</value>
+  </data>
+  <data name="FlagDay_Search_Title" xml:space="preserve">
+    <value>Flag Day</value>
+  </data>
+  <data name="FlagDay_New_Title" xml:space="preserve">
+    <value>Flag Day New</value>
+  </data>
+  <data name="FlagDay_Edit_Title" xml:space="preserve">
+    <value>Flag Day Edit</value>
+  </data>
+  <data name="FlagDay_Report_Title" xml:space="preserve">
+    <value>Flag Day Report</value>
+  </data>
+  <data name="FlagDay_Template_Title" xml:space="preserve">
+    <value>Flag Day Template</value>
+  </data>
+  <data name="PSP_Report_Title" xml:space="preserve">
+    <value>PSP Report</value>
+  </data>
+  <data name="PSP_Template_Title" xml:space="preserve">
+    <value>PSP Template</value>
+  </data>
+  <data name="Organisation_ChiMailingAddress" xml:space="preserve">
+    <value>Mailing Address of Organisation (in Chinese)</value>
+  </data>
+  <data name="Organisation_ChiRegisteredAddress" xml:space="preserve">
+    <value>Registered Address of Organisation (in Chinese)</value>
+  </data>
+  <data name="Organisation_EngMailingAddress" xml:space="preserve">
+    <value>Mailing Address of Organisation</value>
+  </data>
+  <data name="Organisation_EngRegisteredAddress" xml:space="preserve">
+    <value>Registered Address of Organisation</value>
+  </data>
+  <data name="Organisation_OtherChiName" xml:space="preserve">
+    <value>Other Name of Organisation (in Chinese)</value>
+  </data>
+  <data name="Organisation_OtherEngName" xml:space="preserve">
+    <value>Other Name of Organisation (in English)</value>
+  </data>
+  <data name="Organisation_SortingName" xml:space="preserve">
+    <value>Name of Organisation (in English)(For sorting)</value>
+  </data>
+  <data name="Organisation_TelNum" xml:space="preserve">
+    <value>Tel. No. of Organisation</value>
+  </data>
+  <data name="AttachmentDocument" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="AttachmentName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="AttachmentRemark" xml:space="preserve">
+    <value>Remark</value>
+  </data>
+  <data name="Psp_Module" xml:space="preserve">
+    <value>PSP Module</value>
+  </data>
+  <data name="PspRead_No" xml:space="preserve">
+    <value>No.</value>
+  </data>
+  <data name="PspRead_BatchNum" xml:space="preserve">
+    <value>Batch No.</value>
+  </data>
+  <data name="PspRead_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="PspRead_District" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="PspRead_EventStatus" xml:space="preserve">
+    <value>Event Status</value>
+  </data>
+  <data name="PspRead_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="PspRead_MethodOfCollection" xml:space="preserve">
+    <value>Method of Collection</value>
+  </data>
+  <data name="PspRead_Remarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="PspRead_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="ImportXlsFile" xml:space="preserve">
+    <value>Import file</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="PspApprove_EventEndDate" xml:space="preserve">
+    <value>Event End Date</value>
+  </data>
+  <data name="PspApprove_EventStartDate" xml:space="preserve">
+    <value>Event Start Date</value>
+  </data>
+  <data name="PspApprove_FileRef" xml:space="preserve">
+    <value>PSP File Reference</value>
+  </data>
+  <data name="PspApprove_OrganisationName" xml:space="preserve">
+    <value>Organisation Name</value>
+  </data>
+  <data name="PspApprove_PermitNo" xml:space="preserve">
+    <value>PSP Permit No.</value>
+  </data>
+  <data name="PspApprove_TotalToBeApprove" xml:space="preserve">
+    <value>Total No. of Record(s) to be approved</value>
+  </data>
+  <data name="PspApprove_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="PspApprove_BatchNum" xml:space="preserve">
+    <value>Batch No.</value>
+  </data>
+  <data name="PspApprove_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="PspApprove_District" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="PspApprove_EventId" xml:space="preserve">
+    <value>Event ID</value>
+  </data>
+  <data name="PspApprove_EventStatus" xml:space="preserve">
+    <value>Event Status</value>
+  </data>
+  <data name="PspApprove_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="PspApprove_MethodOfCollection" xml:space="preserve">
+    <value>Method of Collection</value>
+  </data>
+  <data name="PspApprove_Remarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="PspApprove_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="PspApprove_PspMasterId" xml:space="preserve">
+    <value>Psp Master Id</value>
+  </data>
+  <data name="PspApprove_ApproveGridTitle" xml:space="preserve">
+    <value>Layout (Approve Event) - Select 1st Record</value>
+  </data>
+  <data name="PspApprove_ApprovePspEventsBtn" xml:space="preserve">
+    <value>Approve PSP Event(s)</value>
+  </data>
+  <data name="PspApprove_RejectCancelPspEventsBtn" xml:space="preserve">
+    <value>Reject for cancellation</value>
+  </data>
+  <data name="PspApprove_CancelPspEventsBtn" xml:space="preserve">
+    <value>Approve for cancellation</value>
+  </data>
+  <data name="PspApprove_CancelReason" xml:space="preserve">
+    <value>Reason for Cancellation:</value>
+  </data>
+  <data name="PspApprove_PermitIssuedDate" xml:space="preserve">
+    <value>Date of PSP Issued:</value>
+  </data>
+  <data name="PspApprove_RejectionLetterDate" xml:space="preserve">
+    <value>Date of Rejection Letter (If applicable):</value>
+  </data>
+  <data name="PspApprove_RepresentationReceiveRepliedDate" xml:space="preserve">
+    <value>Date of Representation Received &amp; Replied (If applicable):</value>
+  </data>
+  <data name="PspApprove_RepresentationReceiveDate" xml:space="preserve">
+    <value>Date of Representative Received:</value>
+  </data>
+  <data name="PspApprove_RepresentationReplyDate" xml:space="preserve">
+    <value>Date of Replied:</value>
+  </data>
+  <data name="Organisation_AddressProof" xml:space="preserve">
+    <value>Address Proof</value>
+  </data>
+  <data name="Organisation_AddressProofFile" xml:space="preserve">
+    <value>Address Proof File</value>
+  </data>
+  <data name="Organisation_MaaConstitutionIndicator" xml:space="preserve">
+    <value>MAA / Constitution</value>
+  </data>
+  <data name="PspApprove_PspApprovalHistoryId" xml:space="preserve">
+    <value>Psp Approval History ID</value>
+  </data>
+  <data name="PspApprove_EventIds" xml:space="preserve">
+    <value>eventIds</value>
+  </data>
+  <data name="FD_TerritoryRegion_Application" xml:space="preserve">
+    <value>Category (Application Stage)</value>
+  </data>
+  <data name="FD_TerritoryRegion_Permit" xml:space="preserve">
+    <value>Category (Permit Stage)</value>
+  </data>
+  <data name="FD_TerritoryRegion" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="FD_AcknowledgementReceiveDate" xml:space="preserve">
+    <value>Date of Acknowledgement Received</value>
+  </data>
+  <data name="FD_ApplicationRemark" xml:space="preserve">
+    <value>Application Remarks</value>
+  </data>
+  <data name="FD_ApplyPledgingMechanismIndicator" xml:space="preserve">
+    <value>Successful Pledging Application</value>
+  </data>
+  <data name="FD_ChiFlagSalePurpose" xml:space="preserve">
+    <value>Purpose of Flag Sale in Chinese</value>
+  </data>
+  <data name="FD_ChiProposalDetail" xml:space="preserve">
+    <value>Proposal in Chinese</value>
+  </data>
+  <data name="FD_ChiSalutes" xml:space="preserve">
+    <value>Chi Salutes</value>
+  </data>
+  <data name="FD_ContactPersonChiName" xml:space="preserve">
+    <value>Name of Contact Person (in Chinese)</value>
+  </data>
+  <data name="FD_ContactPersonEmailAddress" xml:space="preserve">
+    <value>Email Address of Contact Person</value>
+  </data>
+  <data name="FD_ContactPersonFirstName" xml:space="preserve">
+    <value>Conatct Person First Name</value>
+  </data>
+  <data name="FD_ContactPersonFLastName" xml:space="preserve">
+    <value>Conatct Person Last Name</value>
+  </data>
+  <data name="FD_ContactPersonLastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="FD_ContactPersonPost" xml:space="preserve">
+    <value>Position of Contact Person</value>
+  </data>
+  <data name="FD_EngSalutes" xml:space="preserve">
+    <value>Eng Salutes</value>
+  </data>
+  <data name="FD_FaxNo" xml:space="preserve">
+    <value>Fax no</value>
+  </data>
+  <data name="FD_FdLotResult" xml:space="preserve">
+    <value>Lots-drawing result</value>
+  </data>
+  <data name="FD_FlagSalePurpose" xml:space="preserve">
+    <value>Purpose of Flag Sale</value>
+  </data>
+  <data name="FD_FundRaisingPurpose" xml:space="preserve">
+    <value>Purpose of FD Fundraising (in English)</value>
+  </data>
+  <data name="FD_PledgingAmt" xml:space="preserve">
+    <value>Pledging Amount (HK$)</value>
+  </data>
+  <data name="FD_PledgingApplicationRemark" xml:space="preserve">
+    <value>Application Remarks (Pledging)</value>
+  </data>
+  <data name="FD_PledgingProposal" xml:space="preserve">
+    <value>Purpose of Flag Sale (Pledging)</value>
+  </data>
+  <data name="FD_PriorityNum" xml:space="preserve">
+    <value>Priority No</value>
+  </data>
+  <data name="FD_ProposalDetail" xml:space="preserve">
+    <value>Proposal</value>
+  </data>
+  <data name="FD_VettingPanelCaseIndicator" xml:space="preserve">
+    <value>Vetting Panel Case</value>
+  </data>
+  <data name="FD_FdLotNum" xml:space="preserve">
+    <value>Lot No</value>
+  </data>
+  <data name="Organisation_LanguageUsed" xml:space="preserve">
+    <value>Language Used</value>
+  </data>
+  <data name="Organisation_PromulgationReason" xml:space="preserve">
+    <value>Reason</value>
+  </data>
+  <data name="Organisation_Provision" xml:space="preserve">
+    <value>Provisions which will NOT be adopted</value>
+  </data>
+  <data name="Organisation_RefPartEnclosureNum" xml:space="preserve">
+    <value>Reference Part / Enclosure No.</value>
+  </data>
+  <data name="Organisation_PartNum" xml:space="preserve">
+    <value>Part No.</value>
+  </data>
+  <data name="Organisation_EnclosureNum" xml:space="preserve">
+    <value>Encl. No.</value>
+  </data>
+  <data name="Organisation_ReplySlipPartNum" xml:space="preserve">
+    <value>Reply Slip Part No.</value>
+  </data>
+  <data name="Organisation_Remarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="Organisation_ReplySlipDate" xml:space="preserve">
+    <value>Date of Reply</value>
+  </data>
+  <data name="Organisation_OtherSimpChiOrgName" xml:space="preserve">
+    <value>Other Name of Organisation (in Simplified Chinese)</value>
+  </data>
+  <data name="ReportPeriod" xml:space="preserve">
+    <value>Report Period</value>
+  </data>
+  <data name="FD_Account_Summary" xml:space="preserve">
+    <value>FD A/C Summary</value>
+  </data>
+  <data name="PSP_Account_Summary" xml:space="preserve">
+    <value>PSP A/C Summary</value>
+  </data>
+  <data name="FD_FileReference" xml:space="preserve">
+    <value>FD File Reference</value>
+  </data>
+  <data name="FD_FdMasterId" xml:space="preserve">
+    <value>Fd Master Id</value>
+  </data>
+  <data name="LookupType_ComplaintActivityConcern" xml:space="preserve">
+    <value>(E&amp;C) Activity Concerned</value>
+  </data>
+  <data name="LookupType_ComplaintRecordType" xml:space="preserve">
+    <value>(E&amp;C) Record Type</value>
+  </data>
+  <data name="LookupType_ComplaintSource" xml:space="preserve">
+    <value>(E&amp;C) Source</value>
+  </data>
+  <data name="LookupType_FdApplicationResult" xml:space="preserve">
+    <value>(FD) Application Result</value>
+  </data>
+  <data name="LookupType_FdDocSubmitted" xml:space="preserve">
+    <value>(FD) Document Submitted</value>
+  </data>
+  <data name="LookupType_FdGrouping" xml:space="preserve">
+    <value>(FD) Grouping</value>
+  </data>
+  <data name="LookupType_FdLotResult" xml:space="preserve">
+    <value>(FD) Lot Result</value>
+  </data>
+  <data name="LookupType_FollowUpLetterType" xml:space="preserve">
+    <value>(FD) Follow-up Letter Type</value>
+  </data>
+  <data name="LookupType_FundUsed" xml:space="preserve">
+    <value>(PSP) Fund to be Used</value>
+  </data>
+  <data name="LookupType_LanguageUsed" xml:space="preserve">
+    <value>Language Used</value>
+  </data>
+  <data name="LookupType_LegalAdviceType" xml:space="preserve">
+    <value>(Legal Advice) Legal Advice Type</value>
+  </data>
+  <data name="LookupType_OrgRegistrationType" xml:space="preserve">
+    <value>(Org) Registration Type</value>
+  </data>
+  <data name="LookupType_OrgReply" xml:space="preserve">
+    <value>(Org) Reply from Organisation</value>
+  </data>
+  <data name="LookupType_OrgStatus" xml:space="preserve">
+    <value>(Org) Organisation Status</value>
+  </data>
+  <data name="LookupType_ReferenceGuideActivityConcern" xml:space="preserve">
+    <value>(Org) Good Practice Guide Activity Concerned</value>
+  </data>
+  <data name="LookupType_PSPApplicationResult" xml:space="preserve">
+    <value>(PSP) Application Result</value>
+  </data>
+  <data name="LookupType_PspBroughtForward" xml:space="preserve">
+    <value>(PSP) Under Processing Brought Forward</value>
+  </data>
+  <data name="LookupType_SsafBroughtForward" xml:space="preserve">
+    <value>(SSAF) Under Processing Brought Forward</value>
+  </data>
+  <data name="LookupType_PspDocSubmitted" xml:space="preserve">
+    <value>(PSP) Document Submitted</value>
+  </data>
+  <data name="LookupType_PSPNotRequireReason" xml:space="preserve">
+    <value>(PSP) PSP Not Require Reason</value>
+  </data>
+  <data name="LookupType_PSPRejectReason" xml:space="preserve">
+    <value>(PSP) Reject Reason</value>
+  </data>
+  <data name="LookupType_PSPRequiredIndicator" xml:space="preserve">
+    <value>(PSP) PSP Required</value>
+  </data>
+  <data name="LookupType_ReferenceGuideProvision" xml:space="preserve">
+    <value>Good Practice Guide Provision</value>
+  </data>
+  <data name="LookupType_Salute" xml:space="preserve">
+    <value>Salute</value>
+  </data>
+  <data name="LookupType_SuggestionActivityConcern" xml:space="preserve">
+    <value>(SUG) Activity Concerned</value>
+  </data>
+  <data name="LookupType_SuggestionNature" xml:space="preserve">
+    <value>(SUG) Suggestion Nature</value>
+  </data>
+  <data name="LookupType_SuggestionSource" xml:space="preserve">
+    <value>(SUG) Suggestion Source</value>
+  </data>
+  <data name="LookupType_TWR" xml:space="preserve">
+    <value>(FD) Territiry-wide / Regional</value>
+  </data>
+  <data name="LookupType_TWRDistrict" xml:space="preserve">
+    <value>(FD) Regional - Region</value>
+  </data>
+  <data name="LookupType_VenueType" xml:space="preserve">
+    <value>(Legal Advice) Venue Type</value>
+  </data>
+  <data name="LookupType_YesNo" xml:space="preserve">
+    <value>Yes No</value>
+  </data>
+  <data name="RPT_R20_DateFrom" xml:space="preserve">
+    <value>Date From</value>
+  </data>
+  <data name="RPT_R20_DateTo" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="FD_AcknowledgementEmailIssueDate" xml:space="preserve">
+    <value>Date of Acknowlegdement Email Issued</value>
+  </data>
+  <data name="FD_AfsReceiveIndicator" xml:space="preserve">
+    <value>Annual Financial Statement Received &amp; Checked</value>
+  </data>
+  <data name="FD_AfsReminderIssueIndicator" xml:space="preserve">
+    <value>Annual Financial Statement Reminder Issued</value>
+  </data>
+  <data name="FD_AfsReSubmitIndicator" xml:space="preserve">
+    <value>Annual Financial Statement Resubmitted</value>
+  </data>
+  <data name="FD_AuditReportReceivedDate" xml:space="preserve">
+    <value>Date of Receiving Audited Report</value>
+  </data>
+  <data name="FD_DocReceiveRemark" xml:space="preserve">
+    <value>Remark for Document Received</value>
+  </data>
+  <data name="FD_DocRemark" xml:space="preserve">
+    <value>Document Remarks</value>
+  </data>
+  <data name="FD_DocSubmission" xml:space="preserve">
+    <value>Document to be Submitted</value>
+  </data>
+  <data name="FD_Expenditure" xml:space="preserve">
+    <value>Expenditure (HK$)</value>
+  </data>
+  <data name="FD_ExpPerGpPercentage" xml:space="preserve">
+    <value>%(Expenditure / Gross Proceeds)</value>
+  </data>
+  <data name="FD_FirstReminderDeadline" xml:space="preserve">
+    <value>Deadline for 1st Reminder</value>
+  </data>
+  <data name="FD_FirstReminderIssueDate" xml:space="preserve">
+    <value>Date of 1st Reminder Issued</value>
+  </data>
+  <data name="FD_GrossProceed" xml:space="preserve">
+    <value>Gross Proceeds (HK$)</value>
+  </data>
+  <data name="FD_NetProceed" xml:space="preserve">
+    <value>Net Proceed (HK$)</value>
+  </data>
+  <data name="FD_NewspaperPublishDate" xml:space="preserve">
+    <value>Date of Publication</value>
+  </data>
+  <data name="FD_PledgedAmt" xml:space="preserve">
+    <value>Pledged Amount (HK$)</value>
+  </data>
+  <data name="FD_PublicationReceivedDate" xml:space="preserve">
+    <value>Date of Receiving Publication of Audited Report</value>
+  </data>
+  <data name="FD_Remark" xml:space="preserve">
+    <value>Remark</value>
+  </data>
+  <data name="FD_RequestPermitteeIndicator" xml:space="preserve">
+    <value>Requested Permittee to Follow Up</value>
+  </data>
+  <data name="FD_SecondReminderDeadline" xml:space="preserve">
+    <value>Deadline for 2nd Reminder</value>
+  </data>
+  <data name="FD_SecondReminderIssueDate" xml:space="preserve">
+    <value>Date of 2nd reminder Issued</value>
+  </data>
+  <data name="FD_StreetCollection" xml:space="preserve">
+    <value>Street Collection (HK$)</value>
+  </data>
+  <data name="FD_SubmissionDueDate" xml:space="preserve">
+    <value>Due Date for Submission Publication of Audited Report</value>
+  </data>
+  <data name="Enquiry_And_Complaint" xml:space="preserve">
+    <value>Enquiry and Complaint</value>
+  </data>
+  <data name="EnquiryComplaint_ActivityConcern" xml:space="preserve">
+    <value>Activity Concerned</value>
+  </data>
+  <data name="EnquiryComplaint_ComplaintRecordType" xml:space="preserve">
+    <value>Record Type</value>
+  </data>
+  <data name="EnquiryComplaint_ComplaintSource" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="EnquiryComplaint_EnquiryComplaintDate" xml:space="preserve">
+    <value>Date of Enquiry / Complaint </value>
+  </data>
+  <data name="EnquiryComplaint_FundRaisingLocation" xml:space="preserve">
+    <value>Location of Fund-raising</value>
+  </data>
+  <data name="EnquiryComplaint_NonComplianceNature" xml:space="preserve">
+    <value>Nature of Non-compliance</value>
+  </data>
+  <data name="EnquiryComplaint_OrgName" xml:space="preserve">
+    <value>Eng &amp; Chi Organisation Names (if applicable)</value>
+  </data>
+  <data name="EnquiryComplaint_OrgRef" xml:space="preserve">
+    <value>Organisation Ref. (if applicable)</value>
+  </data>
+  <data name="EnquiryComplaint_OrgStatus" xml:space="preserve">
+    <value>Organisation Status</value>
+  </data>
+  <data name="EnquiryComplaint_RefNo" xml:space="preserve">
+    <value>Enquiry / Complaint Ref. No</value>
+  </data>
+  <data name="EnquiryComplaint_RegistrationType" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="EnquiryComplaint_SubventedIndicator" xml:space="preserve">
+    <value>Subvented (if applicable)</value>
+  </data>
+  <data name="EnquiryComplaint_FirstComplaintDate" xml:space="preserve">
+    <value>Date of Enquiry / Complaint 1st Received by SWD</value>
+  </data>
+  <data name="EnquiryComplaint_ComplainantName" xml:space="preserve">
+    <value>Name of Complainant / Enquirer</value>
+  </data>
+  <data name="EnquiryComplaint_DcLcContent" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="EnquiryComplaint_GovernmentHotlineIndicator" xml:space="preserve">
+    <value>Referred from 1823</value>
+  </data>
+  <data name="EnquiryComplaint_LfpsReceiveDate" xml:space="preserve">
+    <value>Date of Enquiry / Complaint Received by LFPS</value>
+  </data>
+  <data name="EnquiryComplaint_ReplyDueDate" xml:space="preserve">
+    <value>Due Date to Reply</value>
+  </data>
+  <data name="EnquiryComplaint_ActionFileEnclosureNum" xml:space="preserve">
+    <value>Enclosure No. in Action File</value>
+  </data>
+  <data name="EnquiryComplaint_ComplaintEnclosureNum" xml:space="preserve">
+    <value>Enclosure No. of Enquiry / Complaint </value>
+  </data>
+  <data name="EnquiryComplaint_ComplaintRemarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="EnquiryComplaint_ProcessStatus" xml:space="preserve">
+    <value>Processing Status</value>
+  </data>
+  <data name="EnquiryComplaint_SwdUnit" xml:space="preserve">
+    <value>Unit of SWD</value>
+  </data>
+  <data name="PSP_EventDate" xml:space="preserve">
+    <value>Event Date</value>
+  </data>
+  <data name="PSP_EventStartDate" xml:space="preserve">
+    <value>Event Start Date</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="PSP_ApplyForTwr" xml:space="preserve">
+    <value>Apply for Territory-wide / Regional</value>
+  </data>
+  <data name="PSP_ChiSalutes" xml:space="preserve">
+    <value>Chi Salutes</value>
+  </data>
+  <data name="PSP_EngSalutes" xml:space="preserve">
+    <value>Eng Salute</value>
+  </data>
+  <data name="PSP_Grouping" xml:space="preserve">
+    <value>Grouping</value>
+  </data>
+  <data name="PSP_PspLogResult" xml:space="preserve">
+    <value>Log Result</value>
+  </data>
+  <data name="PSP_AddressProofIndicator" xml:space="preserve">
+    <value>Address Proof</value>
+  </data>
+  <data name="PSP_AfsIndicator" xml:space="preserve">
+    <value>Annual Financial Statement</value>
+  </data>
+  <data name="PSP_AnnualReportIndicator" xml:space="preserve">
+    <value>Annual Report</value>
+  </data>
+  <data name="PSP_TotEvent" xml:space="preserve">
+    <value>Total No. of Event(s)</value>
+  </data>
+  <data name="PSP_AcknowledgementReceiveDate" xml:space="preserve">
+    <value>Date of Acknowledgement</value>
+  </data>
+  <data name="PSP_AFS" xml:space="preserve">
+    <value>AFS in Past 3 Years</value>
+  </data>
+  <data name="PSP_ApplicationRemark" xml:space="preserve">
+    <value>Application Remarks</value>
+  </data>
+  <data name="PSP_ApplyPledgingMechanismIndicator" xml:space="preserve">
+    <value>Applying for Pleding Mechanism</value>
+  </data>
+  <data name="PSP_ChiFlagSalePurpose" xml:space="preserve">
+    <value>Purpose of Flag Sale in chinese</value>
+  </data>
+  <data name="PSP_ChiProposalDetail" xml:space="preserve">
+    <value>Proposal in Chinese</value>
+  </data>
+  <data name="PSP_ConsentLetterfromtheCommunityChestofHK" xml:space="preserve">
+    <value>Consent Letter from the Community of HK</value>
+  </data>
+  <data name="PSP_ContactPersonChiName" xml:space="preserve">
+    <value>Chinese Name</value>
+  </data>
+  <data name="PSP_ContactPersonEmailAddress" xml:space="preserve">
+    <value>Email Address of Contact Person</value>
+  </data>
+  <data name="PSP_ContactPersonFirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="PSP_ContactPersonLastName" xml:space="preserve">
+    <value>LastName</value>
+  </data>
+  <data name="PSP_ContactPersonPost" xml:space="preserve">
+    <value>Position of Contact Person</value>
+  </data>
+  <data name="PSP_DateofOutstandingEmailIssued" xml:space="preserve">
+    <value>Date of Outstanding Email Issued</value>
+  </data>
+  <data name="PSP_DateofOutstandingEmailReply" xml:space="preserve">
+    <value>Date of Reply</value>
+  </data>
+  <data name="PSP_DateofReminderforOutstandingEmailIssued" xml:space="preserve">
+    <value>Date of Reminder for Outstanding Email Issued</value>
+  </data>
+  <data name="PSP_DateofReminderforOutstandingEmailReply" xml:space="preserve">
+    <value>Date of Reply</value>
+  </data>
+  <data name="PSP_FaxNo" xml:space="preserve">
+    <value>Fax No.</value>
+  </data>
+  <data name="PSP_FlagSalePurpose" xml:space="preserve">
+    <value>Purpose of Flag Sale</value>
+  </data>
+  <data name="PSP_FundRaisingPurpose" xml:space="preserve">
+    <value>Purpose of Fund-raising</value>
+  </data>
+  <data name="PSP_GroupingResult" xml:space="preserve">
+    <value>Grouping Result</value>
+  </data>
+  <data name="PSP_GroupingwithNoofLot" xml:space="preserve">
+    <value>Grouping with No. of Lot</value>
+  </data>
+  <data name="PSP_LogResult" xml:space="preserve">
+    <value>Log Result</value>
+  </data>
+  <data name="PSP_LotNum" xml:space="preserve">
+    <value>Lot No</value>
+  </data>
+  <data name="PSP_NewApplicant" xml:space="preserve">
+    <value>New Applicant</value>
+  </data>
+  <data name="PSP_PercentageforGrouping" xml:space="preserve">
+    <value>Percentage for Grouping (%)</value>
+  </data>
+  <data name="PSP_PledgedAmt" xml:space="preserve">
+    <value>Pledged Amount (HK$)</value>
+  </data>
+  <data name="PSP_PledgingAmt" xml:space="preserve">
+    <value>Pledging Amount (HK$)</value>
+  </data>
+  <data name="PSP_PledgingApplicationRemark" xml:space="preserve">
+    <value>Application Remarks (Pledging)</value>
+  </data>
+  <data name="PSP_PledgingProposal" xml:space="preserve">
+    <value>Proposal for Pledging</value>
+  </data>
+  <data name="PSP_PriorityNum" xml:space="preserve">
+    <value>Priority No</value>
+  </data>
+  <data name="PSP_ProposalDetail" xml:space="preserve">
+    <value>Propsal</value>
+  </data>
+  <data name="PSP_TargetIncome" xml:space="preserve">
+    <value>Target Income (HK$)</value>
+  </data>
+  <data name="PSP_TheCommunityChestofHKMember" xml:space="preserve">
+    <value>The Community Chest of HK Member</value>
+  </data>
+  <data name="PSP_TrackRecordofCharitableActivities" xml:space="preserve">
+    <value>Service Record of Charitable Activities in Past 3 Years</value>
+  </data>
+  <data name="PSP_VettingPanelCaseIndicator" xml:space="preserve">
+    <value>Vetting Panel Case</value>
+  </data>
+  <data name="PSP_YearofPsp" xml:space="preserve">
+    <value>Year of PSP</value>
+  </data>
+  <data name="PSP_BreachedPspConds" xml:space="preserve">
+    <value>Breached PSP Conditions</value>
+  </data>
+  <data name="PSP_CharitySalesItemsChi" xml:space="preserve">
+    <value>Charity Sales Items (in Chinese)</value>
+  </data>
+  <data name="PSP_DisasterNames" xml:space="preserve">
+    <value>Name of Disaster (if applicable)</value>
+  </data>
+  <data name="PSP_PurposeofChiFundRaising" xml:space="preserve">
+    <value>Purpose of Fund-raising (in Chinese)</value>
+  </data>
+  <data name="PSP_SpecialRemark" xml:space="preserve">
+    <value>Special Remarks</value>
+  </data>
+  <data name="PSP_TwoBatchApproachEx" xml:space="preserve">
+    <value>Two-Batch Approach Exercises</value>
+  </data>
+  <data name="PSP_UnderPoliceInvest" xml:space="preserve">
+    <value>Under Police Investigation</value>
+  </data>
+  <data name="EnquiryComplaint_ConcernedOrgRef" xml:space="preserve">
+    <value>Organisation Concerned</value>
+  </data>
+  <data name="EnquiryComplaint_FdPermitNum" xml:space="preserve">
+    <value>(FD)Permit No. Concerned</value>
+  </data>
+  <data name="EnquiryComplaint_PspPermitNum" xml:space="preserve">
+    <value>(PSP)Permit No. Concerned</value>
+  </data>
+  <data name="EnquiryComplaint_RelatedComplaintRef" xml:space="preserve">
+    <value>Related Enquiry  / Complaint Case</value>
+  </data>
+  <data name="Organisation_Report_Titile" xml:space="preserve">
+    <value>Organisation Report</value>
+  </data>
+  <data name="ReportPeriodTo" xml:space="preserve">
+    <value>to</value>
+  </data>
+  <data name="EnquiryComplaint_Report_Title" xml:space="preserve">
+    <value>Enquiry Complaint Report</value>
+  </data>
+  <data name="Organisation_ApplicantFirstName" xml:space="preserve">
+    <value>First Name of Applicant</value>
+  </data>
+  <data name="Organisation_ApplicantLastName" xml:space="preserve">
+    <value>Last Name of Applicant</value>
+  </data>
+  <data name="PSP_BeneficiaryOrgId" xml:space="preserve">
+    <value>Beneficiary Organisation &amp; Section 88 Status</value>
+  </data>
+  <data name="PSP_ArCheckIndicator" xml:space="preserve">
+    <value>Audited Report Received &amp; Checked OK</value>
+  </data>
+  <data name="PSP_AuditReportReceivedDate" xml:space="preserve">
+    <value>Date of Receiving Audited Report</value>
+  </data>
+  <data name="PSP_Expenditure" xml:space="preserve">
+    <value>Expenditure (HK$)</value>
+  </data>
+  <data name="PSP_ExpPerGpPercentage" xml:space="preserve">
+    <value>% (Expenditure / Gross Proceeds)</value>
+  </data>
+  <data name="PSP_GrossProceed" xml:space="preserve">
+    <value>Gross Proceeds (HK$)</value>
+  </data>
+  <data name="PSP_NetProceed" xml:space="preserve">
+    <value>Net Proceeds (HK$)</value>
+  </data>
+  <data name="PSP_NewspaperCuttingCheckIndicator" xml:space="preserve">
+    <value>Newspaper Cuttings Received / Website &amp; Checked OK</value>
+  </data>
+  <data name="PSP_OfficialReceiptCheckIndicator" xml:space="preserve">
+    <value>Official Receipt Received &amp; Checked OK</value>
+  </data>
+  <data name="PSP_OrgAnnualIncome" xml:space="preserve">
+    <value>Annual Income of Organisation (HK$)</value>
+  </data>
+  <data name="PSP_PublicationCheckIndicator" xml:space="preserve">
+    <value>Publication Received &amp; Checked OK</value>
+  </data>
+  <data name="PSP_SanctionListIndicator" xml:space="preserve">
+    <value>Sanction List</value>
+  </data>
+  <data name="PspRead_TotalEvents" xml:space="preserve">
+    <value>Total Number of events</value>
+  </data>
+  <data name="PspRead_ProcessEvents" xml:space="preserve">
+    <value>Process events</value>
+  </data>
+  <data name="PspRead_EventIds" xml:space="preserve">
+    <value>EventIds</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Psp_Amendment" xml:space="preserve">
+    <value>Amendment</value>
+  </data>
+  <data name="PspRead_CancelReason" xml:space="preserve">
+    <value>Reason for cancellation</value>
+  </data>
+  <data name="PspRead_PermitIssueDate" xml:space="preserve">
+    <value>Date of PSP Issued</value>
+  </data>
+  <data name="PspRead_PermitNo" xml:space="preserve">
+    <value>Permit No</value>
+  </data>
+  <data name="PspRead_RejectionLetterDate" xml:space="preserve">
+    <value>Date of Rejection Letter (if applicable)</value>
+  </data>
+  <data name="PspRead_RepresentationReceiveDate" xml:space="preserve">
+    <value>Date of Representation Received &amp; Replied (if applicable)</value>
+  </data>
+  <data name="PspRead_ApprovalType" xml:space="preserve">
+    <value>Approval Type</value>
+  </data>
+  <data name="PspRead_ApprovalStatus" xml:space="preserve">
+    <value>Approval Status</value>
+  </data>
+  <data name="Organisation_Edit" xml:space="preserve">
+    <value>Organisation Edit</value>
+  </data>
+  <data name="CopyToNew" xml:space="preserve">
+    <value>Copy to New</value>
+  </data>
+  <data name="FdRead_BatchNum" xml:space="preserve">
+    <value>Batch No.</value>
+  </data>
+  <data name="FdRead_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="FdRead_District" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="FdRead_EventStatus" xml:space="preserve">
+    <value>Event Status</value>
+  </data>
+  <data name="FdRead_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="FdRead_MethodOfCollection" xml:space="preserve">
+    <value>Method of Collection</value>
+  </data>
+  <data name="FdRead_No" xml:space="preserve">
+    <value>No.</value>
+  </data>
+  <data name="FdRead_Remarks" xml:space="preserve">
+    <value>Remark</value>
+  </data>
+  <data name="FdRead_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="FdRead_TWR" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="PspRead_EventEndDate" xml:space="preserve">
+    <value>Event End Date</value>
+  </data>
+  <data name="PspRead_EventEndTime" xml:space="preserve">
+    <value>Event End Time</value>
+  </data>
+  <data name="PspRead_EventStartDate" xml:space="preserve">
+    <value>Event Start Date</value>
+  </data>
+  <data name="PspRead_EventStartTime" xml:space="preserve">
+    <value>Event Start Time</value>
+  </data>
+  <data name="PspRead_EventType" xml:space="preserve">
+    <value>Type of Event / Nature of Proposed Activity</value>
+  </data>
+  <data name="Search_FullyAdopt" xml:space="preserve">
+    <value>Fully Adopt</value>
+  </data>
+  <data name="ReferenceGuide_ProvisionsNotBeAdopteds" xml:space="preserve">
+    <value>Provisions which will NOT be adopted</value>
+  </data>
+  <data name="ReferenceGuide_ReferenceGuideActivityConcern" xml:space="preserve">
+    <value>Activity Concerned</value>
+  </data>
+  <data name="R5_years" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="R6_Disaster" xml:space="preserve">
+    <value>Name of Disaster</value>
+  </data>
+  <data name="EngOrganisationName" xml:space="preserve">
+    <value>Name of Organisation (in English)</value>
+  </data>
+  <data name="EditEnquiryComplaint_ActionFileEnclosureNum" xml:space="preserve">
+    <value>Enclosure No. in Action File</value>
+  </data>
+  <data name="EditEnquiryComplaint_ActivityConcern" xml:space="preserve">
+    <value>Activity Concerned</value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplainantName" xml:space="preserve">
+    <value>Name of Enquirer / Complainant</value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplaintDate" xml:space="preserve">
+    <value>Date of Enquiry / Complaint </value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplaintEnclosureNum" xml:space="preserve">
+    <value>Enclosure No. of Enquiry / Complaint</value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplaintRecordType" xml:space="preserve">
+    <value>Record Type</value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplaintRef" xml:space="preserve">
+    <value>Enquiry / Complaint Ref No.</value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplaintRemarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplaintSource" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="EditEnquiryComplaint_DcLcContent" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="EditEnquiryComplaint_FdPermitNum" xml:space="preserve">
+    <value>(FD)Permit Concerned</value>
+  </data>
+  <data name="EditEnquiryComplaint_FirstComplaintDate" xml:space="preserve">
+    <value>Date of Enquiry  / Complaint 1st Received by SWD</value>
+  </data>
+  <data name="EditEnquiryComplaint_GovernmentHotlineIndicator" xml:space="preserve">
+    <value>Referred from 1823</value>
+  </data>
+  <data name="EditEnquiryComplaint_LfpsReceiveDate" xml:space="preserve">
+    <value>Date of Enquiry / Complaint Received by LFPS</value>
+  </data>
+  <data name="EditEnquiryComplaint_NonComplianceNature" xml:space="preserve">
+    <value>Nature of Non-compliance</value>
+  </data>
+  <data name="EditEnquiryComplaint_OrgRef" xml:space="preserve">
+    <value>Organisation Concerned</value>
+  </data>
+  <data name="EditEnquiryComplaint_ProcessStatus" xml:space="preserve">
+    <value>Processing Status</value>
+  </data>
+  <data name="EditEnquiryComplaint_PspPermitNum" xml:space="preserve">
+    <value>(PSP)Permit Concerned</value>
+  </data>
+  <data name="EditEnquiryComplaint_RelatedComplaintRef" xml:space="preserve">
+    <value>Related Enquiry / Complaint Case</value>
+  </data>
+  <data name="EditEnquiryComplaint_ReplyDueDate" xml:space="preserve">
+    <value>Due Date to Reply</value>
+  </data>
+  <data name="EditEnquiryComplaint_SwdUnit" xml:space="preserve">
+    <value>Unit of SWD</value>
+  </data>
+  <data name="Amendment" xml:space="preserve">
+    <value>Amendment</value>
+  </data>
+  <data name="FullClone" xml:space="preserve">
+    <value>Full Clone</value>
+  </data>
+  <data name="TwoBatches" xml:space="preserve">
+    <value>Two-Batches</value>
+  </data>
+  <data name="EditEnquiryComplaint_AttachmentFile" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="EditEnquiryComplaint_FileDescription" xml:space="preserve">
+    <value>Remark</value>
+  </data>
+  <data name="EditEnquiryComplaint_FileName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Psp_CancelEvent" xml:space="preserve">
+    <value>Cancel Event</value>
+  </data>
+  <data name="Organisation_Title" xml:space="preserve">
+    <value>Organisation Maintenance</value>
+  </data>
+  <data name="LegalAdvice_Search" xml:space="preserve">
+    <value>LegalAdvice Search</value>
+  </data>
+  <data name="Suggestion_Edit" xml:space="preserve">
+    <value>Suggestion Edit</value>
+  </data>
+  <data name="Suggestion_Search" xml:space="preserve">
+    <value>Suggestion Search</value>
+  </data>
+  <data name="Suggestion_Report" xml:space="preserve">
+    <value>Suggestion Report</value>
+  </data>
+  <data name="LegalAdvice_Edit" xml:space="preserve">
+    <value>LegalAdvice Edit</value>
+  </data>
+  <data name="ComplaintTelRecord_ApproverUserId" xml:space="preserve">
+    <value>Post of Officer</value>
+  </data>
+  <data name="ComplaintTelRecord_CollectionMethod" xml:space="preserve">
+    <value>Method of Collection</value>
+  </data>
+  <data name="ComplaintTelRecord_ComplainantTelNum" xml:space="preserve">
+    <value>Telephone No.</value>
+  </data>
+  <data name="ComplaintTelRecord_ComplaintContentRemark" xml:space="preserve">
+    <value>Content / Remarks</value>
+  </data>
+  <data name="ComplaintTelRecord_ComplaintTime" xml:space="preserve">
+    <value>Time of Enquiry / Complaint</value>
+  </data>
+  <data name="ComplaintTelRecord_FdPermitNum" xml:space="preserve">
+    <value>FD</value>
+  </data>
+  <data name="EnquiryComplaint_FundRaiserInvolve" xml:space="preserve">
+    <value>Number of Fund-raisers involved</value>
+  </data>
+  <data name="ComplaintTelRecord_FundRaisingDate" xml:space="preserve">
+    <value>Date of Fund-Raising</value>
+  </data>
+  <data name="ComplaintTelRecord_FundRaisingLocation" xml:space="preserve">
+    <value>Location of Fund-Raising</value>
+  </data>
+  <data name="ComplaintTelRecord_FundRaisingTime" xml:space="preserve">
+    <value>Time of Fund-Raising</value>
+  </data>
+  <data name="ComplaintTelRecord_OfficerName" xml:space="preserve">
+    <value>Name of Officer</value>
+  </data>
+  <data name="ComplaintTelRecord_PspPermitNum" xml:space="preserve">
+    <value>PSP</value>
+  </data>
+  <data name="ComplaintTelRecord_TelComplaintRef" xml:space="preserve">
+    <value>Telephone Complaint Record Sheet Reference No.</value>
+  </data>
+  <data name="ComplaintTelRecord_TelRecordComplainantName" xml:space="preserve">
+    <value>Name of Enquirer / Complainant</value>
+  </data>
+  <data name="ComplaintTelRecord_TelRecordComplaintDate" xml:space="preserve">
+    <value>Date of Enquiry / Complaint </value>
+  </data>
+  <data name="R21_years" xml:space="preserve">
+    <value>For Last</value>
+  </data>
+  <data name="SpellCheck" xml:space="preserve">
+    <value>Spell Check</value>
+  </data>
+  <data name="ExportAll" xml:space="preserve">
+    <value>Export all</value>
+  </data>
+  <data name="ExportSelected" xml:space="preserve">
+    <value>Export selected</value>
+  </data>
+  <data name="DataExport_Title" xml:space="preserve">
+    <value>Data Export</value>
+  </data>
+  <data name="TablesToBeExport" xml:space="preserve">
+    <value>Table(s) to be exported</value>
+  </data>
+  <data name="FD_ApplicationApprovedNum" xml:space="preserve">
+    <value>No. of Flag Day Approved</value>
+  </data>
+  <data name="FD_ApplicationReceivedNum" xml:space="preserve">
+    <value>No. of Applications Received</value>
+  </data>
+  <data name="FD_ApplicationWithdrawNum" xml:space="preserve">
+    <value>No. of Withdraw from holding a flag day</value>
+  </data>
+  <data name="FD_ApprovalDate" xml:space="preserve">
+    <value>Date of Approval</value>
+  </data>
+  <data name="FD_ApproverId" xml:space="preserve">
+    <value>User Id of Approver</value>
+  </data>
+  <data name="FD_PostOfApprover" xml:space="preserve">
+    <value>Post of Approver</value>
+  </data>
+  <data name="Organisation_RegistrationType1" xml:space="preserve">
+    <value>Registration (1)</value>
+  </data>
+  <data name="Organisation_RegistrationType2" xml:space="preserve">
+    <value>Registration (2)</value>
+  </data>
+  <data name="Search_FDIssuedBefore" xml:space="preserve">
+    <value>FD Permit Issued Before</value>
+  </data>
+  <data name="Search_PSPIssuedBefore" xml:space="preserve">
+    <value>PSP Issued Before</value>
+  </data>
+  <data name="Search_SSAFIssuedBefore" xml:space="preserve">
+    <value>SSAF Permit Issued Before</value>
+  </data>
+  <data name="PspRead_ChiLocation" xml:space="preserve">
+    <value>Location (in Chinese)</value>
+  </data>
+  <data name="PspRead_PublicPlace" xml:space="preserve">
+    <value>Public Place</value>
+  </data>
+  <data name="PspRead_SimpChiLocation" xml:space="preserve">
+    <value>Location (in Simplified Chinese)</value>
+  </data>
+  <data name="PspRead_CharitySalesItem" xml:space="preserve">
+    <value>Charity Sales Items</value>
+  </data>
+  <data name="PspRead_OtherMethodOfCollection" xml:space="preserve">
+    <value>Other Method of Collection</value>
+  </data>
+  <data name="LookupType_BenchmarkRFD" xml:space="preserve">
+    <value>(FD) Benchmark(RFD)</value>
+  </data>
+  <data name="LookupType_BenchmarkTWFD" xml:space="preserve">
+    <value>(FD) Benchmark(TWFD)</value>
+  </data>
+  <data name="LookupType_CaseCloseReason" xml:space="preserve">
+    <value>(PSP) Case Close Reason</value>
+  </data>
+  <data name="LookupType_CheckIndicator" xml:space="preserve">
+    <value>Check Indicator</value>
+  </data>
+  <data name="LookupType_ComplaintInvestigationResult" xml:space="preserve">
+    <value>(E&amp;C) Investigation Result</value>
+  </data>
+  <data name="LookupType_ComplaintNonComplianceNature" xml:space="preserve">
+    <value>(E&amp;C) Nature of Non-compliance</value>
+  </data>
+  <data name="LookupType_ComplaintProcessStatus" xml:space="preserve">
+    <value>(E&amp;C) Processing Status</value>
+  </data>
+  <data name="LookupType_ComplaintCollectionMethod" xml:space="preserve">
+    <value>(E&amp;C) Collection Method</value>
+  </data>
+  <data name="LookupType_PspCollectionMethod" xml:space="preserve">
+    <value>(PSP) Collection Method</value>
+  </data>
+  <data name="LookupType_PspEventRemark" xml:space="preserve">
+    <value>(PSP) Remark for Event</value>
+  </data>
+  <data name="LookupType_PspSpecialRemark" xml:space="preserve">
+    <value>(PSP) Special Remark</value>
+  </data>
+  <data name="FDL_Type" xml:space="preserve">
+    <value>Type (Regional / Territory-wide)</value>
+  </data>
+  <data name="FDL_Year" xml:space="preserve">
+    <value>Year of Flag Day</value>
+  </data>
+  <data name="FdList_Title" xml:space="preserve">
+    <value>Flag Day List Maintenance</value>
+  </data>
+  <data name="PSP_AttachmentFile" xml:space="preserve">
+    <value>Attachment File</value>
+  </data>
+  <data name="PSP_FileDescription" xml:space="preserve">
+    <value>File Description</value>
+  </data>
+  <data name="PSP_FileName" xml:space="preserve">
+    <value>File name</value>
+  </data>
+  <data name="FD_AttachmentFile" xml:space="preserve">
+    <value>Attachment File</value>
+  </data>
+  <data name="FD_FileDescription" xml:space="preserve">
+    <value>File Description</value>
+  </data>
+  <data name="FD_FileName" xml:space="preserve">
+    <value>File Name</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_EnclosureNum" xml:space="preserve">
+    <value>Enclosure No. of Correspondence</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_EnquiryContent" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_EnquiryDepartment" xml:space="preserve">
+    <value>Enquiry from</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_MemoDate" xml:space="preserve">
+    <value>Date of Memo</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_MemoFromPoliceDate" xml:space="preserve">
+    <value>Date of Police Memo</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_OrgInvolved" xml:space="preserve">
+    <value>Organisation Involved</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_OtherEnquiryDepartment" xml:space="preserve">
+    <value>Other Method of Collection</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_ReferralDate" xml:space="preserve">
+    <value>Date of Referral</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_RefNum" xml:space="preserve">
+    <value>Reference No.</value>
+  </data>
+  <data name="ComplaintOtherDepartmentEnquiry_Remark" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="PSP_WithholdingBeginDate" xml:space="preserve">
+    <value>Withholding Start Date (A/C)</value>
+  </data>
+  <data name="PSP_WithholdingEndDate" xml:space="preserve">
+    <value>Withholding End Date (A/C)</value>
+  </data>
+  <data name="ComplaintPoliceCase_CaseInvestigateRefNum" xml:space="preserve">
+    <value>Reference No.</value>
+  </data>
+  <data name="ComplaintPoliceCase_CaseNature" xml:space="preserve">
+    <value>Case Nature</value>
+  </data>
+  <data name="ComplaintPoliceCase_ConcernOrgName" xml:space="preserve">
+    <value>Name of Organisation Concerned</value>
+  </data>
+  <data name="ComplaintPoliceCase_ConvictedPersonName" xml:space="preserve">
+    <value>Name of Convicted Person</value>
+  </data>
+  <data name="ComplaintPoliceCase_ConvictedPersonPosition" xml:space="preserve">
+    <value>Position of Convicted Person</value>
+  </data>
+  <data name="ComplaintPoliceCase_CorrespondenceEnclosureNum" xml:space="preserve">
+    <value>Enclosure No. of Correspondence</value>
+  </data>
+  <data name="ComplaintPoliceCase_CourtHearingDate" xml:space="preserve">
+    <value>Date of Court Hearing</value>
+  </data>
+  <data name="ComplaintPoliceCase_CourtRefNum" xml:space="preserve">
+    <value>Court Reference</value>
+  </data>
+  <data name="ComplaintPoliceCase_EnclosureNum" xml:space="preserve">
+    <value>Enclosure in Action File</value>
+  </data>
+  <data name="ComplaintPoliceCase_FundRaisingDate" xml:space="preserve">
+    <value>Date of Fund-Raising</value>
+  </data>
+  <data name="ComplaintPoliceCase_FundRaisingLocation" xml:space="preserve">
+    <value>Location of Fund-Raising</value>
+  </data>
+  <data name="ComplaintPoliceCase_FundRaisingTime" xml:space="preserve">
+    <value>Time of Fund-Raising</value>
+  </data>
+  <data name="ComplaintPoliceCase_InvestigationResult" xml:space="preserve">
+    <value>Result of Investigation</value>
+  </data>
+  <data name="ComplaintPoliceCase_MemoDate" xml:space="preserve">
+    <value>Date of Memo from Police</value>
+  </data>
+  <data name="ComplaintPoliceCase_OffenceDetail" xml:space="preserve">
+    <value>Offence</value>
+  </data>
+  <data name="ComplaintPoliceCase_PoliceRefNum" xml:space="preserve">
+    <value>Police Reference</value>
+  </data>
+  <data name="ComplaintPoliceCase_ReferralDate" xml:space="preserve">
+    <value>Date of Referral</value>
+  </data>
+  <data name="ComplaintPoliceCase_Remark" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="ComplaintPoliceCase_ResultDetail" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="ComplaintPoliceCase_SentenceDetail" xml:space="preserve">
+    <value>Sentence</value>
+  </data>
+  <data name="Organisation_OverallRemark" xml:space="preserve">
+    <value>Overall Remarks</value>
+  </data>
+  <data name="Home_PspFdStatusGridTitle" xml:space="preserve">
+    <value>FD Application Status (as of Login Time)</value>
+  </data>
+  <data name="FD_ApprovalRemarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="FD_ApproverPost" xml:space="preserve">
+    <value>Approver Post</value>
+  </data>
+  <data name="FD_ApproverUserId" xml:space="preserve">
+    <value>Approver User ID</value>
+  </data>
+  <data name="ComplaintTelRecord_OrgName" xml:space="preserve">
+    <value>Name of Organisation</value>
+  </data>
+  <data name="EnquiryComplaint_WithholdingBeginDate" xml:space="preserve">
+    <value>Withholding Start Date</value>
+  </data>
+  <data name="EnquiryComplaint_WithholdingEndDate" xml:space="preserve">
+    <value>Withholding End Date</value>
+  </data>
+  <data name="EnquiryComplaint_WithholdingListIndicator" xml:space="preserve">
+    <value>Add to Withholding</value>
+  </data>
+  <data name="ComplaintFollowUpAction_ActionFileRef" xml:space="preserve">
+    <value>(Report to Police)Action File Reference</value>
+  </data>
+  <data name="ComplaintFollowUpAction_ContactDate" xml:space="preserve">
+    <value>Date of Contact</value>
+  </data>
+  <data name="ComplaintFollowUpAction_ContactOrgName" xml:space="preserve">
+    <value>Telephone Contact with (Name of Organisation)</value>
+  </data>
+  <data name="ComplaintFollowUpAction_ContactPersonName" xml:space="preserve">
+    <value>Name of Person Contacted</value>
+  </data>
+  <data name="ComplaintFollowUpAction_EnclosureNum" xml:space="preserve">
+    <value>Enclosure Number</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpIndicator" xml:space="preserve">
+    <value>Follow-up with Organisation</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpLetterActionFileRef" xml:space="preserve">
+    <value>Action File Reference</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpLetterActionFileRefRemark" xml:space="preserve">
+    <value>(Action File Reference)Remarks</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpLetterIssueDate" xml:space="preserve">
+    <value>Date of Issue</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpLetterReceiver" xml:space="preserve">
+    <value>Letter Issued to (Name of Organisation)</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpLetterRemark" xml:space="preserve">
+    <value>(Letter)Remarks</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpLetterType" xml:space="preserve">
+    <value>Follow-up Letter Issued</value>
+  </data>
+  <data name="ComplaintFollowUpAction_OrgRemark" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="ComplaintFollowUpAction_PoliceOfficerName" xml:space="preserve">
+    <value>Police Officer</value>
+  </data>
+  <data name="ComplaintFollowUpAction_PoliceStation" xml:space="preserve">
+    <value>Police Station</value>
+  </data>
+  <data name="ComplaintFollowUpAction_ReferralPoliceStation" xml:space="preserve">
+    <value>(Written Referral)Police Station</value>
+  </data>
+  <data name="ComplaintFollowUpAction_ReportPoliceIndicator" xml:space="preserve">
+    <value>Report to Police</value>
+  </data>
+  <data name="ComplaintFollowUpAction_RnNum" xml:space="preserve">
+    <value>RN No.</value>
+  </data>
+  <data name="ComplaintFollowUpAction_RnRemark" xml:space="preserve">
+    <value>(Report to Police)Remarks</value>
+  </data>
+  <data name="ComplaintFollowUpAction_VerbalReportDate" xml:space="preserve">
+    <value>Verbal Report to Police on</value>
+  </data>
+  <data name="ComplaintFollowUpAction_WrittenReferralDate" xml:space="preserve">
+    <value>Written Referral to Police on</value>
+  </data>
+  <data name="FD_WithholdingBeginDate" xml:space="preserve">
+    <value>Withholding Start Date (A/C)</value>
+  </data>
+  <data name="FD_WithholdingEndDate" xml:space="preserve">
+    <value>Withholding End Date</value>
+  </data>
+  <data name="FD_WithholdingListIndicator" xml:space="preserve">
+    <value>Add to Withholding List</value>
+  </data>
+  <data name="PSP_ApprovalStatusIfApplicable" xml:space="preserve">
+    <value>Approval Status (if Applicable)</value>
+  </data>
+  <data name="PSP_DateofEventPeriodFrom" xml:space="preserve">
+    <value>Event Start Date</value>
+  </data>
+  <data name="PSP_DateofEventPeriodTo" xml:space="preserve">
+    <value>Event End Date</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="SelectAll2" xml:space="preserve">
+    <value>Select All in page</value>
+  </data>
+  <data name="FdRead_Remark" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="OrgNameChangeHistory_ChangeDate" xml:space="preserve">
+    <value>Date of Change</value>
+  </data>
+  <data name="OrgNameChangeHistory_ChiOrgName" xml:space="preserve">
+    <value>Name of Organisation (in Chinese)</value>
+  </data>
+  <data name="OrgNameChangeHistory_EngOrgName" xml:space="preserve">
+    <value>Name of Organisation (in English)</value>
+  </data>
+  <data name="OrgNameChangeHistory_Remarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="FD_JointApplicationIndicator" xml:space="preserve">
+    <value>Joint Application</value>
+  </data>
+  <data name="FD_ReviewCaseIndicator" xml:space="preserve">
+    <value>Review Case</value>
+  </data>
+  <data name="FD_Section88Indicator" xml:space="preserve">
+    <value>Section 88</value>
+  </data>
+  <data name="FD_ChiFundRaisingPurpose" xml:space="preserve">
+    <value>Purpose of FD Fundraising (in Chinese)</value>
+  </data>
+  <data name="FdRead_BagColor" xml:space="preserve">
+    <value>Colour of Bags</value>
+  </data>
+  <data name="FdRead_FlagColor" xml:space="preserve">
+    <value>Colour of Flags</value>
+  </data>
+  <data name="PSP_EventYear" xml:space="preserve">
+    <value>Event Year</value>
+  </data>
+  <data name="PSP_Overdue" xml:space="preserve">
+    <value>Overdue A/C</value>
+  </data>
+  <data name="PSP_EventCancel" xml:space="preserve">
+    <value>All Events Cancelled</value>
+  </data>
+  <data name="PSP_EventEndDate" xml:space="preserve">
+    <value>Event End Date</value>
+  </data>
+  <data name="FD_PermitAcknowledgementReceiveDate" xml:space="preserve">
+    <value>Acknowledgement Received Date</value>
+  </data>
+  <data name="FD_Overdue" xml:space="preserve">
+    <value>Overdue A/C</value>
+  </data>
+  <data name="FD_LateIndicator" xml:space="preserve">
+    <value>Late A/C</value>
+  </data>
+  <data name="PSP_ArCheckIndicator_Edit" xml:space="preserve">
+    <value>Checked OK</value>
+  </data>
+  <data name="PSP_Fras_Title" xml:space="preserve">
+    <value>(FRAS)Re-submit</value>
+  </data>
+  <data name="PSP_Edit_Title" xml:space="preserve">
+    <value>Create / Edit PSP</value>
+  </data>
+  <data name="PSP_NewspaperCuttingCheckIndicator_Edit" xml:space="preserve">
+    <value>Checked OK</value>
+  </data>
+  <data name="PSP_OfficialReceiptCheckIndicator_Edit" xml:space="preserve">
+    <value>Checked OK</value>
+  </data>
+  <data name="PSP_PublicationCheckIndicator_Edit" xml:space="preserve">
+    <value>Checked OK</value>
+  </data>
+  <data name="Lookup_IsActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Cancel_Msg" xml:space="preserve">
+    <value>Unsaved change will be discarded. Click OK to proceed. Click Cancel to resume editing.</value>
+  </data>
+  <data name="EnquiryComplaint_FollowUpIndicator" xml:space="preserve">
+    <value>Follow-up with Organisation</value>
+  </data>
+  <data name="EnquiryComplaint_OthersFollowUpIndicator" xml:space="preserve">
+    <value>Follow-up with Other Parties</value>
+  </data>
+  <data name="EnquiryComplaint_ReportPoliceIndicator" xml:space="preserve">
+    <value>Report to Police</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpOfficerName" xml:space="preserve">
+    <value>Name of Follow-up Officer</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpOfficerPosition" xml:space="preserve">
+    <value>Position of Follow-up Officer</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpOrgReply" xml:space="preserve">
+    <value>Reply from the Organisation</value>
+  </data>
+  <data name="ComplaintFollowUpAction_FollowUpOrgReplyDate" xml:space="preserve">
+    <value>Date of Reply</value>
+  </data>
+  <data name="ComplaintFollowUpAction_PoliceInvestigationResult" xml:space="preserve">
+    <value>Investigation Result of the Police</value>
+  </data>
+  <data name="ComplaintFollowUpAction_PoliceReplyDate" xml:space="preserve">
+    <value>Date of Investigation Result</value>
+  </data>
+  <data name="ComplaintFollowUpAction_ReferralPoliceOfficerName" xml:space="preserve">
+    <value>Name of Follow-up Officer</value>
+  </data>
+  <data name="ComplaintFollowUpAction_ReferralPoliceOfficerPosition" xml:space="preserve">
+    <value>Position of Follow-up Officer</value>
+  </data>
+  <data name="ComplaintFollowUpAction_OtherFollowUpContactDate" xml:space="preserve">
+    <value>Date of Contact / Correspondence</value>
+  </data>
+  <data name="ComplaintFollowUpAction_OtherFollowUpFileRef" xml:space="preserve">
+    <value>File Reference Number</value>
+  </data>
+  <data name="ComplaintFollowUpAction_OtherFollowUpIndicator" xml:space="preserve">
+    <value>Follow-up with other Parties</value>
+  </data>
+  <data name="ComplaintFollowUpAction_OtherFollowUpOfficerName" xml:space="preserve">
+    <value>Name of Follow-up Officer</value>
+  </data>
+  <data name="ComplaintFollowUpAction_OtherFollowUpOfficerPosition" xml:space="preserve">
+    <value>Post of Follow-up Officer</value>
+  </data>
+  <data name="ComplaintFollowUpAction_OtherFollowUpPartyName" xml:space="preserve">
+    <value>Name of the Party Contacted</value>
+  </data>
+  <data name="ComplaintFollowUpAction_OtherFollowUpRemark" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="EnquiryComplaint_IsFollowUp" xml:space="preserve">
+    <value>Follow-up Action Taken</value>
+  </data>
+  <data name="EditEnquiryComplaint_CollectionMethod" xml:space="preserve">
+    <value>Method of Collection</value>
+  </data>
+  <data name="EditEnquiryComplaint_FundRaisingDate" xml:space="preserve">
+    <value>Date of Fund-Raising</value>
+  </data>
+  <data name="EditEnquiryComplaint_FundRaisingLocation" xml:space="preserve">
+    <value>Location of Fund-raising</value>
+  </data>
+  <data name="EditEnquiryComplaint_FundRaisingTime" xml:space="preserve">
+    <value>Time of Fund-Raising</value>
+  </data>
+  <data name="EditEnquiryComplaint_OtherNonComplianceNature" xml:space="preserve">
+    <value>Other Nature of Non-compliance</value>
+  </data>
+  <data name="EnquiryComplaint_CollectionMethod" xml:space="preserve">
+    <value>Method of Collection</value>
+  </data>
+  <data name="EnquiryComplaint_ComplaintResult" xml:space="preserve">
+    <value>Result of the Complaint</value>
+  </data>
+  <data name="EnquiryComplaint_ComplaintResultRemark" xml:space="preserve">
+    <value>Remarks(Result of the Complaint)</value>
+  </data>
+  <data name="EnquiryComplaint_FundRaisingDate" xml:space="preserve">
+    <value>Date of Fund-Raising</value>
+  </data>
+  <data name="EnquiryComplaint_FundRaisingTime" xml:space="preserve">
+    <value>Time of Fund-Raising</value>
+  </data>
+  <data name="EnquiryComplaint_OtherNonComplianceNature" xml:space="preserve">
+    <value>Other Nature of Non-compliance</value>
+  </data>
+  <data name="EnquiryComplaint_OtherWithholdingRemark" xml:space="preserve">
+    <value>Other Withholding Remarks</value>
+  </data>
+  <data name="EnquiryComplaint_WithholdingRemark" xml:space="preserve">
+    <value>Withholding Remarks</value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplaintResult" xml:space="preserve">
+    <value>Result of the Complaint</value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplaintResultRemark" xml:space="preserve">
+    <value>Remarks(Result of the Complaint)</value>
+  </data>
+  <data name="EditEnquiryComplaint_OtherWithholdingRemark" xml:space="preserve">
+    <value>Other Withholding Remarks</value>
+  </data>
+  <data name="EditEnquiryComplaint_WithholdingRemark" xml:space="preserve">
+    <value>Withholding Remarks</value>
+  </data>
+  <data name="PSP_DateofReceiveingApplication" xml:space="preserve">
+    <value>Date of Receiveing Application </value>
+  </data>
+  <data name="PSP_LateIndicator" xml:space="preserve">
+    <value>Late A/C</value>
+  </data>
+  <data name="PSP_OverdueIndicator" xml:space="preserve">
+    <value>Overdue A/C</value>
+  </data>
+  <data name="PSP_ProcessingOfficerPost" xml:space="preserve">
+    <value>Processing Officer</value>
+  </data>
+  <data name="PSP_Registration1" xml:space="preserve">
+    <value>Registration 1</value>
+  </data>
+  <data name="PSP_Registration2" xml:space="preserve">
+    <value>Registration 2</value>
+  </data>
+  <data name="EnquiryComplaint_PoliceCaseIndicator" xml:space="preserve">
+    <value>Investigated by the Police</value>
+  </data>
+  <data name="EnquiryComplaint_WithholdingIndicator" xml:space="preserve">
+    <value>Withholding</value>
+  </data>
+  <data name="EnquiryComplaint_OrgRefIndicator" xml:space="preserve">
+    <value>Org. Reference Not Mapped</value>
+  </data>
+  <data name="PspApprove_Region" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="FD_ChiPledgingProposal" xml:space="preserve">
+    <value>Purpose of Flag Sale (Pledging) in Chinese</value>
+  </data>
+  <data name="FD_AfsRecordDetails" xml:space="preserve">
+    <value>AFS Record Details</value>
+  </data>
+  <data name="FD_AfsRecordEndDate" xml:space="preserve">
+    <value>AFS Record End Date</value>
+  </data>
+  <data name="FD_AfsRecordStartDate" xml:space="preserve">
+    <value>AFS Record Start Date</value>
+  </data>
+  <data name="FD_TrackRecordDetails" xml:space="preserve">
+    <value>Track Record Details</value>
+  </data>
+  <data name="FD_TrackRecordEndDate" xml:space="preserve">
+    <value>Track Record End Date</value>
+  </data>
+  <data name="FD_TrackRecordStartDate" xml:space="preserve">
+    <value>Track Record Start Date</value>
+  </data>
+  <data name="PSP_AfsRecordDetails" xml:space="preserve">
+    <value>AFS Record Details</value>
+  </data>
+  <data name="PSP_AfsRecordEndDate" xml:space="preserve">
+    <value>AFS Record End Date</value>
+  </data>
+  <data name="PSP_AfsRecordStartDate" xml:space="preserve">
+    <value>AFS Record Start Date</value>
+  </data>
+  <data name="PSP_TrackRecordDetails" xml:space="preserve">
+    <value>Service Record Details</value>
+  </data>
+  <data name="PSP_TrackRecordEndDate" xml:space="preserve">
+    <value>Service Record End Date</value>
+  </data>
+  <data name="PSP_TrackRecordStartDate" xml:space="preserve">
+    <value>Service Record Start Date</value>
+  </data>
+  <data name="EnquiryComplaint_ComplaintSourceRemark" xml:space="preserve">
+    <value>(Source) Remarks</value>
+  </data>
+  <data name="EditEnquiryComplaint_ComplaintSourceRemark" xml:space="preserve">
+    <value>(Source) Remarks</value>
+  </data>
+  <data name="Home_ChangedPostId" xml:space="preserve">
+    <value>Post(s) allow to use</value>
+  </data>
+  <data name="Reference_Guide" xml:space="preserve">
+    <value>Organisation (Good Practice Guide)</value>
+  </data>
+  <data name="RecommendApprove" xml:space="preserve">
+    <value>Recommend to Approve / Cancel</value>
+  </data>
+  <data name="FDACSummary_PermitNo" xml:space="preserve">
+    <value>FD Permit No</value>
+  </data>
+  <data name="FDACSummary_FlagDay" xml:space="preserve">
+    <value>Flag Day</value>
+  </data>
+  <data name="FDACSummary_FlagDayYear" xml:space="preserve">
+    <value>Flag Year</value>
+  </data>
+  <data name="PSP_Late" xml:space="preserve">
+    <value>Late A/C</value>
+  </data>
+  <data name="Search_FlagYear" xml:space="preserve">
+    <value>Flag Year</value>
+  </data>
+  <data name="LookupType_ComplaintResult" xml:space="preserve">
+    <value>(E&amp;C) Complaint Result</value>
+  </data>
+  <data name="LookupType_ComplaintWithholdingRemarks" xml:space="preserve">
+    <value>(E&amp;C) Complaint Withholding Remarks</value>
+  </data>
+  <data name="LookupType_FdCollectionMethod" xml:space="preserve">
+    <value>(FD) Collection Method</value>
+  </data>
+  <data name="LookupType_FdEventRemark" xml:space="preserve">
+    <value>(FD) Event Remark</value>
+  </data>
+  <data name="LookupType_NoSolicitationDate" xml:space="preserve">
+    <value>Dates – No moving around solicitation</value>
+  </data>
+  <data name="Delete_Msg" xml:space="preserve">
+    <value>Are you sure to delete the record?</value>
+  </data>
+  <data name="Search_FdYear" xml:space="preserve">
+    <value>Flag Year</value>
+  </data>
+  <data name="FD_FdYear" xml:space="preserve">
+    <value>Flag Year</value>
+  </data>
+  <data name="EditEnquiryComplaint_FundRaiserInvolve" xml:space="preserve">
+    <value>Number of Fund-raisers involved</value>
+  </data>
+  <data name="PspRead_ValidationMessage" xml:space="preserve">
+    <value>Validation Message</value>
+  </data>
+  <data name="PSP_BypassValidation" xml:space="preserve">
+    <value>Bypass Event Validation</value>
+  </data>
+  <data name="PspApprove_btnRejectEventBtn" xml:space="preserve">
+    <value>Reject Application</value>
+  </data>
+  <data name="FdRead_PermitRevokeIndicator" xml:space="preserve">
+    <value>Permit Revoke</value>
+  </data>
+  <data name="PSP_PermitRevokeIndicator" xml:space="preserve">
+    <value>Permit Revoke</value>
+  </data>
+  <data name="PspRead_CutOffDate" xml:space="preserve">
+    <value>Cut Off Date</value>
+  </data>
+  <data name="Search_WithHoldInd" xml:space="preserve">
+    <value>History of Withholding</value>
+  </data>
+  <data name="ComplaintMaster_OtherNonComplianceNature" xml:space="preserve">
+    <value>Nature of Other Non-Complaince</value>
+  </data>
+  <data name="Generate" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="EditEnquiryComplaint_OrgName" xml:space="preserve">
+    <value>Organisation Concerned (which no record in PSPS)</value>
+  </data>
+  <data name="Redirect" xml:space="preserve">
+    <value>Redirect</value>
+  </data>
+  <data name="Disaster_ChiDisasterName" xml:space="preserve">
+    <value>Disaster Name in Chinese</value>
+  </data>
+  <data name="Disaster_DisasterDate" xml:space="preserve">
+    <value>Date of Disaster</value>
+  </data>
+  <data name="Fras_PspGridTitle" xml:space="preserve">
+    <value>List of PSP Application(s) need to be re-submited to (OGCIO)FRAS</value>
+  </data>
+  <data name="LookupType_PspRegion" xml:space="preserve">
+    <value>PSP Region</value>
+  </data>
+  <data name="ReleasePermit" xml:space="preserve">
+    <value>Release Permit No.</value>
+  </data>
+  <data name="PSP_TotalEvent" xml:space="preserve">
+    <value>Total No. of Events</value>
+  </data>
+  <data name="PSP_TotalLocations" xml:space="preserve">
+    <value>Total No. of Locations</value>
+  </data>
+  <data name="Home_SsafGridTitle" xml:space="preserve">
+    <value>SSAF Application Status (as of Login Time)</value>
+  </data>
+</root>

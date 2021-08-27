@@ -1,0 +1,112 @@
+﻿@model Psps.Web.ViewModels.Organisation.OrgNameChangeHistoryViewModel
+
+<form id="orgNameChangeHistoryForm" name="orgNameChangeHistoryForm" class="form-horizontal">
+    <div id="orgNameChangeHistoryModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnOrgNameChangeClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">History of Name Change Details</h4>
+                </div>
+                <fieldset>
+                    <div class="modal-body">
+                        @Html.TextBoxFor(m => m.OrgNameChangeId, true, htmlAttributes: new { @id = "orgNameChangeId", @class = "form-control", @type = "hidden" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.OrgNameChangeDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-6">
+                                @Html.TextBoxFor(m => m.OrgNameChangeDate, true, htmlAttributes: new { @id = "orgNameChangeDate", @class = "form-control", @maxlength = 200, @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.OrgNameChangeEngOrgName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(m => m.OrgNameChangeEngOrgName, true, htmlAttributes: new { @id = "orgNameChangeEngOrgName", @class = "form-control", @maxlength = 255, @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.OrgNameChangeChiOrgName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(m => m.OrgNameChangeChiOrgName, true, htmlAttributes: new { @id = "orgNameChangeChiOrgName", @class = "form-control", @maxlength = 255, @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.OrgNameChangeRemarks, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.OrgNameChangeRemarks, true, rows: 4, htmlAttributes: new { @id = "orgNameChangeRemarks", @class = "form-control", @maxlength = 4000 })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="modal-footer">
+                    <button type="button" id="btnOrgNameChangeUpdate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Save</button>
+                    <button type="button" id="btnOrgNameChangeDelete" class="btn btn-sm btn-primary">
+                        <span class="icon-trash"></"></span>&nbsp;@Labels.Delete</button>
+                    <button type="button" id="btnOrgNameChangeCancel" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var updateOrgNameChangeHistoryUrl = '@Url.RouteUrl("UpdateOrgNameChangeHistory")';
+    var deleteOrgNameChangeHistoryUrl = '@Url.RouteUrl("DeleteOrgNameChangeHistory", new { orgNameChangeId = "placeholder" })';
+
+    $(function () {
+        initEditOrgNameChangeForm();
+        $('#btnOrgNameChangeUpdate').click(function () {
+            var $form = $("#orgNameChangeHistoryForm");
+            if ($form.valid()) {
+                var actionUrl = updateOrgNameChangeHistoryUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#orgNameChangeHistoryModal').modal('hide');
+                         $("#orgMasterHistoryGridTable").trigger("reloadGrid", [{ current: true }]);
+                         notifSuccess(response.message);
+                         initEditOrgNameChangeForm();
+                     }
+                );
+            }
+        });
+
+        $('#btnOrgNameChangeDelete').click(function () {
+            var $form = $("#orgNameChangeHistoryForm");
+            confirmDelete(function (result) {
+                if (result) {
+                    var actionUrl = deleteOrgNameChangeHistoryUrl.replace("placeholder", $('#orgNameChangeId').val());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#orgNameChangeHistoryModal').modal('hide');
+                             $("#orgMasterHistoryGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                             initEditOrgNameChangeForm();
+                         }
+                    );
+                }
+            })
+        });
+
+        $('#btnOrgNameChangeCancel').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    initEditOrgNameChangeForm();
+                    $('#orgNameChangeHistoryModal').modal('hide');
+                }
+            });
+        });
+        $('#btnOrgNameChangeClose').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    initEditOrgNameChangeForm();
+                    $('#orgNameChangeHistoryModal').modal('hide');
+                }
+            });
+        });
+    });
+
+    function initEditOrgNameChangeForm() {
+        $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+        clearForm('#orgNameChangeHistoryForm');
+    }
+</script>

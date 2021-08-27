@@ -1,0 +1,1207 @@
+﻿@model Psps.Web.ViewModels.PspApprove.PspApproveViewModel
+
+@{
+    ViewBag.Title = "Approve";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="pspApprove" class="form-horizontal" role="form">
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="pspRecommendEventListGridTable"></table>
+                <div id="pspRecommendEventListGridPager"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="vspace-6"></div>
+
+<form id="pspApproveEventsForm" class="form-horizontal" role="form">
+    <div class="col-xs-12">
+
+        <legend style="text-align: center" id="approveSectionTitle">Approve Event</legend>
+    </div>
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.PspRecommendApproveEventsViewModel.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+    @Html.HiddenFor(m => m.PspRecommendEventsViewModel.DisableInd, htmlAttributes: new { @id = "disableInd" })
+    @Html.HiddenFor(m => m.PspRecommendEventsViewModel.WithHoldInd, htmlAttributes: new { @id = "withHoldInd" })
+    @Html.HiddenFor(m => m.PspRecommendEventsViewModel.PspMasterId, htmlAttributes: new { @id = "pspMasterId" })
+    <div class="form-group">
+        <div class="col-xs-2">
+            <label class="control-label" id="approveGridTitle"></label>
+        </div>
+    </div>
+    <fieldset>
+        <div class="form-group">
+            <div class="col-xs-12">
+                <div class="grid-stretch-container">
+                    <table id="pspRecommendApproveEventGridTable"></table>
+                    <div id="pspRecommendApproveEventGridPager"></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                <button id="btnSelectAllAppRecs" type="button" class="btn btn-sm btn-primary">
+                    @Labels.SelectAll
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                <label class="control-label" id="selectedRowsCountApproveGrid"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.PspRecommendApproveEventsViewModel.PermitNo, new { @class = "col-xs-2 control-label align-left" })
+            <div class="col-xs-2">
+                @Html.TextBoxFor(m => m.PspRecommendApproveEventsViewModel.PermitNo, true, htmlAttributes: new { @id = "appPermitNo", @class = "form-control", @maxlength = 12, @readonly = true })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.PspRecommendApproveEventsViewModel.PermitIssueDate, new { @class = "col-xs-2 control-label align-left" })
+            <div class="col-xs-2">
+                @Html.TextBoxFor(m => m.PspRecommendApproveEventsViewModel.PermitIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "appPermitIssuedDate", @class = "form-control", @data_provide = "datepicker" })
+                <label class="control-label align-left" style="padding-top: 10px; vertical-align: top;">(dd/mm/yyyy)</label>
+            </div>
+        </div>
+        @*    <div class="form-group">
+        <div class="col-xs-3">
+            @Html.LabelFor(m => m.PspRecommendApproveEventsViewModel.RejectionLetterDate, new { @class = "control-label", @style = "text-align: left" })
+        </div>
+        <div class="col-xs-2">
+            <div class="input-group" style="float: left">
+                @Html.TextBoxFor(m => m.PspRecommendApproveEventsViewModel.RejectionLetterDate,
+                             true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "appRejectionLetterDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="col-xs-1" style="text-align: left">
+            <label class="control-label">(dd/mm/yyyy)</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-3">
+            @Html.LabelFor(m => m.PspRecommendApproveEventsViewModel.RepresentationReceiveDate, new { @class = "control-label", @style = "text-align: left" })
+        </div>
+        <div class="col-xs-2">
+            <div class="input-group" style="float: left">
+                @Html.TextBoxFor(m => m.PspRecommendApproveEventsViewModel.RepresentationReceiveDate, true, "{0:dd/MM/yyyy}",
+                                        htmlAttributes: new { @id = "appRepresentationReceiveDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+        <div class="col-xs-1" style="text-align: left">
+            <label class="control-label">(dd/mm/yyyy)</label>
+        </div>
+    </div>*@
+        <div class="form-group">
+            @Html.LabelFor(m => m.PspRecommendApproveEventsViewModel.Remark, new { @class = "col-xs-2 control-label align-left" })
+            <div class="col-xs-9">
+                @Html.TextAreaFor(m => m.PspRecommendApproveEventsViewModel.Remark, 4, 100,
+                                htmlAttributes: new { @id = "appRemark", @class = "form-control", @maxlength = 4000 })
+            </div>
+        </div>
+        <div class="vspace-6"></div>
+        <div class="form-group">
+            <div class="col-xs-6">
+                <button id="btnRejectEvent" type="button" class="btn btn-sm btn-primary">
+                    @Labels.PspApprove_btnRejectEventBtn
+                </button>
+                <button id="btnApproveEvent" type="button" class="btn btn-sm btn-primary">
+                    @Labels.PspApprove_ApprovePspEventsBtn
+                </button>
+                <button id="btnApproveEventCancel" type="button" class="btn btn-sm btn-primary">
+                    @Labels.Cancel
+                </button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<form id="pspCancelEventsForm" class="form-horizontal" role="form">
+    <fieldset>
+        <div class="col-xs-12">
+            <legend style="text-align: center" id="cancelSectionTitle">Cancel Event</legend>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-2">
+                <label class="control-label" id="cancelGridTitle"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                <div class="grid-stretch-container">
+                    <table id="pspRecommendCancelEventGridTable"></table>
+                    <div id="pspRecommendCancelEventGridPager"></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                <button id="btnSelectAllCanRecs" type="button" class="btn btn-sm btn-primary">
+                    @Labels.SelectAll
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                <label class="control-label" id="selectedRowsCountCancelGrid"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                @Html.LabelFor(m => m.PspRecommendCancelEventsViewModel.PermitNo, new { @class = "control-label" })
+            </div>
+            <div class="col-xs-3">
+                <div class="input-group" style="float: left">
+                    @Html.TextBoxFor(m => m.PspRecommendCancelEventsViewModel.PermitNo, true, htmlAttributes: new { @id = "canPermitNo", @class = "form-control", @maxlength = 12, @readonly = true })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                @Html.LabelFor(m => m.PspRecommendCancelEventsViewModel.PermitIssueDate, new { @class = "control-label" })
+            </div>
+            <div class="col-xs-2">
+                <div class="input-group" style="float: left">
+                    @Html.TextBoxFor(m => m.PspRecommendCancelEventsViewModel.PermitIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "canPermitIssueDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-xs-1" style="text-align: left">
+                <label class="control-label">(dd/mm/yyyy)</label>
+            </div>
+        </div>
+        @*    <div class="form-group">
+        <div class="col-xs-3">
+            @Html.LabelFor(m => m.PspRecommendCancelEventsViewModel.RejectionLetterDate, new { @class = "control-label", @style = "text-align: left" })
+        </div>
+        <div class="col-xs-2">
+            <div class="input-group" style="float: left">
+                @Html.TextBoxFor(m => m.PspRecommendCancelEventsViewModel.RejectionLetterDate,
+                                         true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "canRejectionLetterDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="col-xs-1" style="text-align: left">
+            <label class="control-label">(dd/mm/yyyy)</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-3">
+            @Html.LabelFor(m => m.PspRecommendCancelEventsViewModel.RepresentationReceiveDate, new { @class = "control-label", @style = "text-align: left" })
+        </div>
+        <div class="col-xs-2">
+            <div class="input-group" style="float: left">
+                @Html.TextBoxFor(m => m.PspRecommendCancelEventsViewModel.RepresentationReceiveDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+        <div class="col-xs-1" style="text-align: left">
+            <label class="control-label">(dd/mm/yyyy)</label>
+        </div>
+    </div>*@
+        <div class="form-group">
+            <div class="col-xs-3" style="text-align: left">
+                @Html.LabelFor(m => m.PspRecommendCancelEventsViewModel.CancelReason, new { @class = "control-label", @style = "text-align: left" })
+            </div>
+            <div class="col-xs-9">
+                <div class="input-group" style="float: left">
+                    @Html.TextAreaFor(m => m.PspRecommendCancelEventsViewModel.CancelReason, 4, 100, htmlAttributes: new { @id = "cancelReason", @class = "form-control", @maxlength = 4000, @readonly = true })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3" style="text-align: left">
+                @Html.LabelFor(m => m.PspRecommendCancelEventsViewModel.Remark, new { @class = "control-label" })
+            </div>
+            <div class="col-xs-9">
+                @*@Html.TextAreaFor(m => m.PspRecommendCancelEventsViewModel.Remarks, 4, 100, htmlAttributes: new { @maxlength = 4000 })*@
+                <div class="input-group" style="float: left">
+                    @Html.TextAreaFor(m => m.PspRecommendCancelEventsViewModel.Remark, 4, 100, htmlAttributes: new { @maxlength = 4000 })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-6">
+                <button id="btnRejectCancelEvent" type="button" class="btn btn-sm btn-primary">
+                    @Labels.PspApprove_RejectCancelPspEventsBtn
+                </button>
+                <button id="btnCancelEventC" type="button" class="btn btn-sm btn-primary">
+                    @Labels.PspApprove_CancelPspEventsBtn
+                </button>
+                <button id="btnCancelEventCancel" type="button" class="btn btn-sm btn-primary">
+                    @Labels.Cancel
+                </button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<form id="pspEditEventForm" class="form-horizontal" role="form">
+    @{ Html.RenderPartial("_EditPspEventModal", Model.PSPViewModel); }
+</form>
+
+<style type="text/css">
+    .ui-th-column .cbox, .jqgrow .cbox {
+        opacity: 1;
+    }
+</style>
+@section scripts {
+    <script type="text/javascript">
+        var listPspRecommendEventsUrl = '@Url.RouteUrl("ListPspRecommendEvents")';
+        var listPspRecommendApproveEventsUrl = '@Url.RouteUrl("ListPspRecommendApproveEvents", new { pspApprovalHistoryId = -1, pspEventStatus = "placeholder", pspPermitNum = "placeholder2" })';
+        var listPspRecommendCancelEventsUrl = '@Url.RouteUrl("ListPspRecommendCancelEvents", new { pspApprovalHistoryId = -1, pspEventStatus = "placeholder", pspPermitNum = "placeholder2" })';
+        var approveRecommendEventUrl = '@Url.RouteUrl("ApproveRecommendEvent", new { pspApprovalHistoryId = -1 })';
+        var cancelRecommendEventUrl = '@Url.RouteUrl("CancelRecommendEvent", new { pspApprovalHistoryId = -1 })';
+        var rejectEventUrl = '@Url.RouteUrl("RejectEvent", new { pspApprovalHistoryId = -1, type = -2 })';
+        var getAproVarsUrl = '@Url.RouteUrl("GetAproVars", new { pspApprovalHistoryId = -1 })';
+        var getToBeApprovedEventsUrl = '@Url.RouteUrl("GetToBeApprovedEvents", new { pspApprovalHistoryId = -1, pspEventStatus = "placeholder", pspPermitNum = "placeholder2" })';
+        var selectedRows = []; //Important array which memorize user previous selected rows
+        var eventStatus = "";
+        var totalEveCount;
+        var selectedAll;
+        var firstEveId;
+        var firstIdIsAcquired = false;
+        var currApprvHisId;
+        var currPermitNo;
+        var arrEventIds;
+        var eventStartDate;
+        var rowCount;
+        var getEventUrl = '@Url.RouteUrl("GetEventFromGrid", new { pspEventId = -1 })';
+        var updatePspEventUrl = '@Url.RouteUrl("UpdatePspEvent")';
+        var createPspEventUrl = '@Url.RouteUrl("CreatePspEvent", new { pspMasterId = -1 })';
+        var deletePspEventUrl = '@Url.RouteUrl("DeletePspEvent", new { pspEventId = -1 })';
+
+        $(function () {
+            initPspRecommendEventsGrid();
+            initPspRecommendApproveEventsGrid();
+            initPspRecommendCancelEventsGrid();
+
+            addRequired('#appPermitIssuedDate');
+
+            $('#pspApproveEventsForm').addClass('hide');
+            $('#pspCancelEventsForm').addClass('hide');
+
+            $("#chiLocation").blur(function () {
+                var simplified = TongWen.convert($("#chiLocation").val(), 'simplified');
+                $("#simpChiLocation").val(simplified);
+            });
+
+            $('#btnApproveEvent').click(function () {
+                var $form = $('#pspApproveEventsForm');
+                var $grid = $('#pspRecommendApproveEventGridTable');
+                var now = moment();
+                var $rowCount = rowCount;
+                var $totalEveCount = parseInt(totalEveCount);
+                
+                var d = $('#disableInd').val().toString().toLowerCase() == "true" ? true : false;
+                var w = $('#withHoldInd').val().toString().toLowerCase() == "true" ? true : false;
+
+                if (moment(eventStartDate, "DD/MM/YYYY") < now) {
+                    confirm('Approval date is later than some of the Events start date, want to continue?', function (result) {
+                        if (result) {
+                            if ($rowCount < $totalEveCount) {
+                                confirm('@Html.Raw(ViewData["NotAllEventsApproved"])', function (result) {
+                                    if (result) {
+                                        if (d || w) {
+                                            confirm("@Html.Raw(ViewData["OrgDisabledOrWithheld"])", function (result) {
+                                                if (result) {
+                                                    processSubmitPostBack($grid, $form, approveRecommendEventUrl, "approveEves");
+                                                }
+                                            })
+                                        }
+                                        else {
+                                            processSubmitPostBack($grid, $form, approveRecommendEventUrl, "approveEves");
+                                        }
+                                    }
+                                })
+                            }
+                            else {
+                                if (d || w) {
+                                    confirm("@Html.Raw(ViewData["OrgDisabledOrWithheld"])", function (result) {
+                                          if (result) {
+                                              processSubmitPostBack($grid, $form, approveRecommendEventUrl, "approveEves");
+                                          }
+                                    })
+                                }
+                                else {
+                                    processSubmitPostBack($grid, $form, approveRecommendEventUrl, "approveEves");
+                                }
+                            }
+                        }
+                    });
+                }
+                else {
+                    if ($rowCount < $totalEveCount) {
+                        confirm('@Html.Raw(ViewData["NotAllEventsApproved"])', function (result) {
+                            if (result) {
+                                if (d || w) {
+                                    confirm("@Html.Raw(ViewData["OrgDisabledOrWithheld"])", function (result) {
+                                        if (result) {
+                                            processSubmitPostBack($grid, $form, approveRecommendEventUrl, "approveEves");
+                                        }
+                                    })
+                                }
+                                else {
+                                    processSubmitPostBack($grid, $form, approveRecommendEventUrl, "approveEves");
+                                }
+                                    }
+                                })
+                            }
+                    else {
+                         if (d || w) {
+                             confirm("@Html.Raw(ViewData["OrgDisabledOrWithheld"])", function (result) {
+                                  if (result) {
+                                       processSubmitPostBack($grid, $form, approveRecommendEventUrl, "approveEves");
+                                  }
+                             })
+                         }
+                         else {
+                             processSubmitPostBack($grid, $form, approveRecommendEventUrl, "approveEves");
+                         }
+                    }
+                }
+            });
+
+            $('#btnRejectEvent').click(function () {
+                var $form = $('#pspApproveEventsForm');
+                var rowId = $('#pspRecommendEventListGridTable').jqGrid('getGridParam', 'selrow');
+                var appHistId = $('#pspRecommendEventListGridTable').jqGrid('getCell', rowId, 'pspApprovalHistoryId');
+                url = rejectEventUrl.replace('-1', appHistId).replace("-2", 1);
+                confirm('The listing events will be rejected, want to continue?', function (result) {
+                    if (result) {
+                        if ($form.valid()) {
+                            var actionUrl = url;
+
+                            $form.ajaxPostForm(
+                                actionUrl,
+                                function (response) {
+                                    $("#pspRecommendEventListGridTable").trigger("reloadGrid", [{ current: true }]);
+                                    $form.addClass('hide');
+                                    notifSuccess(response.message);
+                                }
+                            );
+                        }
+                    }
+                });
+            });
+
+            $('#btnRejectCancelEvent').click(function () {
+                var $form = $('#pspCancelEventsForm');
+                var rowId = $('#pspRecommendEventListGridTable').jqGrid('getGridParam', 'selrow');
+                var appHistId = $('#pspRecommendEventListGridTable').jqGrid('getCell', rowId, 'pspApprovalHistoryId');
+                url = rejectEventUrl.replace('-1', appHistId).replace("-2", 2);
+                confirm('The listing events will be rejected, want to continue?', function (result) {
+                    if (result) {
+                        if ($form.valid()) {
+                            var actionUrl = url;
+
+                            $form.ajaxPostForm(
+                                actionUrl,
+                                function (response) {
+                                    $("#pspRecommendEventListGridTable").trigger("reloadGrid", [{ current: true }]);
+                                    $form.addClass('hide');
+                                    notifSuccess(response.message);
+                                }
+                            );
+                        }
+                    }
+                });
+            });
+
+            $('#btnCancelEventC').click(function () {
+                var $form = $('#pspCancelEventsForm');
+                var $grid = $('#pspRecommendCancelEventGridTable');
+                processSubmitPostBack($grid, $form, cancelRecommendEventUrl, "cancelEves")
+            });
+
+            $('#btnSelectAllAppRecs').click(function () {
+                var $grid = $('#pspRecommendApproveEventGridTable');
+                var $label = $('#selectedRowsCountApproveGrid');
+                var endtext = "approved";
+                selectAllLogic($(this), $label, $grid, endtext);
+            });
+
+            $('#btnSelectAllCanRecs').click(function () {
+                $grid = $('#pspRecommendCancelEventGridTable');
+                $label = $('#selectedRowsCountCancelGrid');
+                var endtext = "cancelled";
+
+                selectAllLogic($(this), $label, $grid, endtext);
+
+            });
+
+            function selectAllLogic($btn, $label, $grid, endtext) {
+                var iCol = getColumnIndexByName($grid, 'pspEventId');
+
+                if (!selectedAll) {
+                    selectedAll = true;
+                    $btn.text("De-select all");
+
+                    for (var i = 0 ; i < arrEventIds.length; i++) {
+                        selectedRows[arrEventIds[i]] = true;
+                    }
+
+                    $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                    .each(function () {
+                        var $this = $(this);
+                        var rowId = $this.closest("tr.jqgrow").attr("id");
+
+                        if ($this.closest("tr.jqgrow").find('input[type=checkbox]').prop('checked') == false) {
+                            $this.closest("tr.jqgrow").find('input[type=checkbox]').prop('checked', true);
+                            $grid.setSelection(rowId, true);
+                        }
+                    });
+
+                    rowCount = arrEventIds.length;
+                }
+                else {
+                    selectedAll = false;
+                    $btn.text("Select all");
+
+                    for (var i = 0 ; i < arrEventIds.length; i++) {
+                        delete selectedRows[arrEventIds[i]];
+                    }
+                    $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                    .each(function () {
+                        var $this = $(this);
+                        var rowId = $this.closest("tr.jqgrow").attr("id");
+                        //selectedRows[rowId] = true;
+                        if ($this.closest("tr.jqgrow").find('input[type=checkbox]').prop('checked') == true) {
+                            $this.closest("tr.jqgrow").find('input[type=checkbox]').prop('checked', false);
+                            $grid.setSelection(rowId, false);
+                        }
+                    });
+                    rowCount = 0;
+                }
+
+                if (rowCount > 1)
+                    $label.text(rowCount + " event(s) will be " + endtext + ".");
+                else
+                    $label.text(rowCount + " event will be " + endtext + ".");
+            }
+        });
+
+        function getAproVars() {
+            var actionUrl = getAproVarsUrl.replace("-1", currApprvHisId);
+            ajaxGet(actionUrl, function (response) {
+                $('#withHoldInd').val(response.data.pspRecommendEventsViewModel.withHoldInd);
+                $('#disableInd').val(response.data.pspRecommendEventsViewModel.disableInd);
+            });
+        }
+
+        function processSubmitPostBack($grid, $form, url, eventStatus) {
+            //get approval hist Id
+            $mainGrid = $('#pspRecommendEventListGridTable');
+            var rowId = $mainGrid.jqGrid('getGridParam', 'selrow');
+            var appHistId = $mainGrid.jqGrid('getCell', rowId, 'pspApprovalHistoryId');
+
+            //get all evendts Id
+            var selectedRowIds = [];
+            for (var id in selectedRows)
+            { selectedRowIds.push(id); }
+
+            if (selectedRowIds.length > 0) {
+                for (var i = 0; i < selectedRowIds.length; i++) {
+                    var input;
+                    if (eventStatus == "approveEves")
+                        input = $('<input>').attr({ type: 'hidden', name: '@Html.NameFor(m => m.PspRecommendApproveEventsViewModel.EventIds)', "class": "eveId" }).val(selectedRowIds[i]);
+                    else if (eventStatus == "cancelEves")
+                        input = $('<input>').attr({ type: 'hidden', name: '@Html.NameFor(m => m.PspRecommendCancelEventsViewModel.EventIds)', "class": "eveId" }).val(selectedRowIds[i]);
+                $form.append(input);
+            }
+            if ($form.valid()) {
+                var actionUrl = url.replace('-1', appHistId);
+
+                $form.ajaxPostForm(
+                    actionUrl,
+                    function (response) {
+                        $("#pspRecommendEventListGridTable").trigger("reloadGrid", [{ current: true }]);
+                        $form.addClass('hide');
+                        
+                        var EditPspUrl = '@Url.RouteUrl("EditPsp", new { pspMasterId = -1 })';
+                        var url = EditPspUrl.replace('-1', $('#pspMasterId').val()) + "?approved=1";
+
+                        notifSuccess(response.message, function () { window.location.href = url; });                        
+                    }
+                );
+            }
+            $form.find('.eveId').remove();
+        }
+    }
+
+    function onSelectedRows($grid, $label, eventStatus, rowCount, status, selectedRows, rowId) {
+
+        if (status === false) {
+            delete selectedRows[rowId];
+            selectedAll = false;
+            rowCount--;
+        } else {
+            selectedRows[rowId] = status;
+            rowCount++;
+        }
+
+        //rowCount = rowCount - $grid.jqGrid('getGridParam', 'selarrrow').length;
+        //var selectedRowCount = $grid.jqGrid('getGridParam', 'selarrrow');
+        //var count = selectedRowCount.length;
+
+        if (eventStatus == "TW" || eventStatus == "AM" || eventStatus == "NM")
+            var endtext = "approved";
+        if (eventStatus == 'CE')
+            var endtext = "cancelled";
+        if (rowCount > 1)
+            $label.text(rowCount + " event(s) will be " + endtext + ".");
+        else
+            $label.text(rowCount + " event will be " + endtext + ".");
+
+        return rowCount;
+    }
+
+    function onSelectAllrows($grid, $label, selectedRows, rowIds, status, rowCount, eventStatus) {
+        if (eventStatus == "TW" || eventStatus == "AM" || eventStatus == "NM")
+            var endtext = "approved";
+        if (eventStatus == 'CE')
+            var endtext = "cancelled";
+
+        if (status === true) {
+            $label.text(($grid.jqGrid('getGridParam', 'selarrrow').length + rowCount) + " event(s) will be " + endtext);
+            for (var i = 0; i < rowIds.length; i++) {
+                selectedRows[rowIds[i]] = true;
+            }
+        }
+        else {
+            if (rowCount > 1)
+            { $label.text(rowCount + " event(s) will be " + endtext); }
+            else
+            { $label.text(rowCount + " event will be " + endtext); }
+            for (var i = 0; i < rowIds.length; i++) {
+                delete selectedRows[rowIds[i]];
+            }
+        }
+        return rowCount;
+    }
+
+    function retrievePreviousSelectedRows(selectedRows, $grid, rowCount, $label, eventStatus) {
+        for (var rowId in selectedRows) {
+            $grid.setSelection(rowId, true);
+            rowCount = rowCount + 1;
+        }
+        if (eventStatus == "TW" || eventStatus == "AM" || eventStatus == "NM")
+            var endtext = "approved";
+        if (eventStatus == 'CE')
+            var endtext = "cancelled";
+        if (rowCount > 1)
+            $label.text(rowCount.toString() + " event(s) will be " + endtext);
+        else
+            $label.text(rowCount.toString() + " event will be " + endtext);
+        var currSelectedCount = $grid.jqGrid('getGridParam', 'selarrrow').length;
+        rowCount = rowCount - currSelectedCount;
+
+        return rowCount;
+    }
+
+    //main grid row click
+    function onRowClick(e) {
+        $('#pspMasterId').val(e.pspMasterId);
+
+        selectedRows = [];
+        selectedAll = false;
+        $('#btnSelectAllAppRecs').text("Select all");
+        $('#btnSelectAllCanRecs').text("Select all");
+
+        firstIdIsAcquired = false;
+
+        $('#selectedRowsCountApproveGrid').text("");
+        $('#selectedRowsCountCancelGrid').text("");
+
+        if (e.approvalType == "TW" || e.approvalType == "AM" || e.approvalType == "NM") {
+            $('#appPermitNo').val(e.permitNum);
+            if (e.rejectionLetterDate) $('#appRejectionLetterDate').val(toDDMMYYYY(e.rejectionLetterDate));
+            if (e.permitIssueDate) $('#appPermitIssuedDate').val(toDDMMYYYY(e.permitIssueDate));
+            $('#cancelReason').val(e.cancelReason);
+            $('#selectedRowsCountApproveGrid').text("0 event will be approved");
+            $('#pspCancelEventsForm').addClass('hide');
+            $('#pspApproveEventsForm').removeClass('hide');
+
+            $grid = $('#pspRecommendApproveEventGridTable');
+            $('#approveGridTitle').text(e.pspRef);
+            currApprvHisId = e.pspApprovalHistoryId;
+            currPermitNo = e.permitNum;
+            $label = $('#selectedRowsCountApproveGrid');
+            initPspRecommendApproveEventsGrid();
+            var actionUrl = getToBeApprovedEventsUrl.replace('-1', e.pspApprovalHistoryId).replace('placeholder', e.approvalType).replace('placeholder2', e.permitNum);
+            ajaxGet(actionUrl,
+                    function (response) {
+                        arrEventIds = response.data;
+                    }
+            )
+        }
+        else if (e.approvalType == "CE") {
+            $('#canPermitNo').prop('readonly', true).val(e.permitNum);
+            if (e.rejectionLetterDate) $('#canRejectionLetterDate').val(toDDMMYYYY(e.rejectionLetterDate));
+            if (e.permitIssueDate) $('#canPermitIssueDate').val(toDDMMYYYY(e.permitIssueDate));
+            $('#cancelReason').val(e.cancelReason);
+            $('#selectedRowsCountCancelGrid').text("0 event will be cancelled");
+            $('#pspApproveEventsForm').addClass('hide');
+            $('#pspCancelEventsForm').removeClass('hide');
+            $grid = $('#pspRecommendCancelEventGridTable');
+            $('#cancelGridTitle').text(e.pspRef);
+            currApprvHisId = e.pspApprovalHistoryId;
+            currPermitNo = e.permitNum;
+            $label = $('#selectedRowsCountCancelGrid');
+            initPspRecommendCancelEventsGrid();
+            var actionUrl = getToBeApprovedEventsUrl.replace('-1', e.pspApprovalHistoryId).replace('placeholder', e.approvalType).replace('placeholder2', e.permitNum);
+            ajaxGet(actionUrl,
+                    function (response) {
+                        arrEventIds = response.data;
+                    }
+            )
+        }
+        totalEveCount = e.totEventsToBeApproved;
+        getAproVars();
+    }
+
+    function initPspRecommendEventsGrid() {
+        var actionUrl = listPspRecommendEventsUrl;
+        var $grid = $('#pspRecommendEventListGridTable');
+        var pager_selector = '#pspRecommendEventListGridPager';
+
+        $grid.jqGrid({
+            pager: pager_selector,
+            sortname: 'eventStartDate',
+            sortorder: 'asc',
+            url: actionUrl,
+            datatype: 'json',
+            colNames: [
+                '',
+                '@Html.DisplayNameFor(m => m.PspRecommendEventsViewModel.PspMasterId)',
+                'Organisation Name(Eng.&Chi)',
+                '@Html.DisplayNameFor(m => m.PspRecommendEventsViewModel.PspFileRef)',
+                '@Html.DisplayNameFor(m => m.PspRecommendEventsViewModel.PspPermitNo)',
+                '@Html.DisplayNameFor(m => m.PspRecommendEventsViewModel.PspEventStartDate)',
+                '@Html.DisplayNameFor(m => m.PspRecommendEventsViewModel.PspEventEndDate)',
+                '@Html.DisplayNameFor(m => m.PspRecommendEventsViewModel.PspType)',
+                '@Html.DisplayNameFor(m => m.PspRecommendEventsViewModel.PspToBeApproveTotal)',
+                'Processing Officer',
+                'RejectionDate',
+                'PermitIssueDate',
+                'CancelReason',
+                'PspApprovalHistoryId'
+            ],
+            colModel: [{
+                name: 'id',
+                hidden: true,
+                width: '4'
+            }, {
+                name: 'pspMasterId',
+                hidden: true,
+                width: '4'
+            }, {
+                name: 'engOrgNameSorting',
+                width: '4'
+            }, {
+                name: 'pspRef',
+                sortindex: 'pspYear asc, pspRef',
+                width: '4',
+                formatter: 'showlink',
+                formatoptions: { baseLinkUrl: 'javascript:', showAction: "RedirectToPspEdit('", addParam: "');" }
+            }, {
+                name: 'permitNum',
+                width: '3'
+            }, {
+                name: 'eventStartDate',
+                template: dateTemplate,
+                width: '3'
+            }, {
+                name: 'eventEndDate',
+                template: dateTemplate,
+                width: '3',
+            }, {
+                name: 'approvalType',
+                formatter: function (cellvalue, options, rowObject) {
+                    switch (cellvalue) {
+                        case ("CE"):
+                            return "Cancel";
+                            break;
+                        case ("TW"):
+                            return "Two-Batch Execrised";
+                            break;
+                        case ("AM"):
+                            return "Amendment";
+                            break;
+                        case ("NM"):
+                            return "Normal";
+                            break;
+                        default:
+                            return "";
+                    }
+
+                },
+                unformat: function (cellvalue, options) {
+                    switch (cellvalue) {
+                        case ("Cancel"):
+                            return "CE";
+                            break;
+                        case ("Two-Batch Execrised"):
+                            return "TW";
+                            break;
+                        case ("Amendment"):
+                            return "AM";
+                            break;
+                        case ("Normal"):
+                            return "NM";
+                            break;
+                        default:
+                            return "";
+                    }
+                },
+                width: '3'
+
+            }, {
+                name: 'totEventsToBeApproved',
+                width: '3'
+            }, {
+                name: 'processingOfficerPost',
+                width: '3'
+            }, {
+                name: 'rejectionLetterDate',
+                hidden: true,
+                width: '3'
+            }, {
+                name: 'permitIssueDate',
+                hidden: true,
+                width: '3'
+            }, {
+                name: 'cancelReason',
+                hidden: true,
+                width: '3'
+            }, {
+                name: 'pspApprovalHistoryId',
+                hidden: true,
+                width: '3'
+            }],
+            loadComplete: defaultGridLoadComplete,
+            ondblClickRow: function (rowId, iRow, iCol, e) {
+                var data = $grid.jqGrid('getRowData', rowId);
+                eventStatus = data.approvalType;
+                eventStartDate = data.eventStartDate;
+                onRowClick(data);
+            }
+        });
+
+        //navButtons
+        $grid.jqGrid('navGrid', pager_selector, {
+            //navbar options
+            search: false,
+            refresh: true,
+        }, {}, {}, {}, {}, {});
+
+    }
+
+    function RedirectToPspEdit(id) {
+
+        var row = id.split("=");
+        var row_ID = row[1];
+        var pspMasterId = $("#pspRecommendEventListGridTable").getCell(row_ID, 'pspMasterId');
+        var pspApprovalHistoryId = $("#pspRecommendEventListGridTable").getCell(row_ID, 'pspApprovalHistoryId');
+        var returnUrl = window.location.pathname;
+        var EditPspUrl = '@Url.RouteUrl("EditPsp", new { pspMasterId = -1 })';
+        var url = EditPspUrl.replace('-1', pspMasterId).replace(-2, pspApprovalHistoryId) + "?ReturnUrl=" + returnUrl;
+        window.location.href = url;
+
+    }
+
+    function initPspRecommendApproveEventsGrid() {
+        var actionUrl = listPspRecommendApproveEventsUrl.replace('-1', currApprvHisId).replace('placeholder', eventStatus).replace('placeholder2', currPermitNo);
+        rowCount = 0;
+        var $grid = $('#pspRecommendApproveEventGridTable');
+        var pager_selector = '#pspRecommendApproveEventGridPager';
+
+        if ($grid.isJqGrid()) {
+            $grid.resetJqGrid(actionUrl);
+            return;
+        }
+
+        $grid.jqGrid({
+            pager: pager_selector,
+            width: 600,
+            //rownumbers: true,
+            rownumWidth: 50,
+            sortname: 'eventStartDate',
+            sortorder: 'asc',
+            multiselect: true,
+            datatype: 'local',
+            colNames: [
+                '@Html.DisplayNameFor(m => m.PspRecommendApproveEventsViewModel.EventStartDate)',
+                '@Html.DisplayNameFor(m => m.PspRecommendApproveEventsViewModel.EventEndDate)',
+                '@Html.DisplayNameFor(m => m.PspRecommendApproveEventsViewModel.Time)',
+                'No. of Event(s)',
+                'Location(in English)',
+                'Location(in Chinese)',
+                'Region',
+                '@Html.DisplayNameFor(m => m.PspRecommendApproveEventsViewModel.MethodOfCollection)',
+                '@Html.DisplayNameFor(m => m.PspRecommendApproveEventsViewModel.EventStatus)',
+                'Last Update Date',
+                '@Html.DisplayNameFor(m => m.PspRecommendApproveEventsViewModel.Remark)',
+                'pspEventId'
+            ],
+            colModel: [{
+                name: 'eventStartDate',
+                jsonmap: 'eventStartDate',
+                template: dateTemplate,
+                width: '3',
+            }, {
+                name: 'eventEndDate',
+                jsonmap: 'eventEndDate',
+                template: dateTemplate,
+                width: '3',
+            }, {
+                name: 'time',
+                jsonmap: 'time',
+                width: '3'
+            }, {
+                name: 'eventCount',
+                width: '2'
+            }, {
+                name: 'location',
+                jsonmap: 'location',
+                classes: 'wrappedJqGridCell',
+                width: '4',
+            }, {
+                name: 'chiLocation',
+                jsonmap: 'chiLocation',
+                classes: 'wrappedJqGridCell',
+                width: '4',
+            }, {
+                name: 'district',
+                jsonmap: 'district',
+                width: '2'
+            }, {
+                name: 'collectionMethod',
+                jsonmap: 'collectionMethod',
+                width: '2',
+                classes: 'wrappedJqGridCell'
+            }, {
+                name: 'eventStatus',
+                jsonmap: 'eventStatus',
+                formatter: function (cellvalue, options, rowObject) {
+                    return "RA" === cellvalue ? "Ready to approve" : "RC" === cellvalue ? "Ready to cancel" : "";
+                },
+                unformat: function (cellvalue, options) {
+                    return "Ready to approve" === cellvalue ? "RA" : "Ready to cancel" === cellvalue ? "RC" : "";
+                },
+                width: '3'
+            }, {
+                name: 'updatedOn',
+                jsonmap: 'updatedOn',
+                template: dateTimeTemplate,
+                width: '3',
+                classes: 'wrappedJqGridCell'
+            }, {
+                name: 'remark',
+                jsonmap: 'remark',
+                width: '3',
+                classes: 'wrappedJqGridCell'
+            }, {
+                name: 'pspEventId',
+                jsonmap: 'pspEventId',
+                hidden: true,
+                width: '3'
+            }],
+            footerrow: false,
+            loadComplete:
+            function () {
+                defaultGridLoadComplete;
+                if (!firstIdIsAcquired) {
+                    var iCol = getColumnIndexByName($grid, 'pspEventId');
+                    firstEveId = $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")").closest("tr.jqgrow").attr("id");
+                    firstIdIsAcquired = true;
+                }
+            }
+            ,
+            //onSelectAll: function (aRowids, status) {
+            //    $label = $('#selectedRowsCountApproveGrid');
+            //    rowCount = onSelectAllrows($grid, $label, selectedRows, aRowids, status, rowCount, eventStatus);
+            //},
+            ondblClickRow: function (rowId, iRow, iCol, e) {
+                //if ($('#jqg_eventsGridTable_' + rowId).prop('disabled')) {
+                //    return false;
+                //}
+                editSelectedEvent(rowId);
+            },
+            onSelectRow: function (rowId, status) {
+                $label = $('#selectedRowsCountApproveGrid');
+                rowCount = onSelectedRows($grid, $label, eventStatus, rowCount, status, selectedRows, rowId);
+            },
+            gridComplete: function () {
+                rowCount = 0;
+                $label = $('#selectedRowsCountApproveGrid');
+                $('#cb_pspRecommendApproveEventGridTable').prop('hidden', 'true');
+                rowCount = retrievePreviousSelectedRows(selectedRows, $grid, rowCount, $label, eventStatus);
+            }
+        });
+
+        }
+
+        function initPspRecommendCancelEventsGrid() {
+            var actionUrl = listPspRecommendCancelEventsUrl.replace('-1', currApprvHisId).replace('placeholder', eventStatus).replace('placeholder2', currPermitNo);
+            var $grid = $('#pspRecommendCancelEventGridTable');
+            var pager_selector = '#pspRecommendCancelEventGridPager';
+
+            rowCount = 0;
+
+            if ($grid.isJqGrid()) {
+                $grid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                width: 600,
+                rownumbers: true,
+                rownumWidth: 50,
+                multiselect: true,
+                //sortname: 'disasterStatisticsId',
+                //sortorder: 'asc',
+                datatype: 'local',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.PspRecommendApproveEventsViewModel.EventStartDate)',
+                    '@Html.DisplayNameFor(m => m.PspRecommendApproveEventsViewModel.EventEndDate)',
+                    '@Html.DisplayNameFor(m => m.PspRecommendApproveEventsViewModel.Time)',
+                    'No. of Event(s)',
+                    'Location(in English)',
+                    'Location(in Chinese)',
+                    '@Html.DisplayNameFor(m => m.PspRecommendCancelEventsViewModel.District)',
+                    '@Html.DisplayNameFor(m => m.PspRecommendCancelEventsViewModel.MethodOfCollection)',
+                    '@Html.DisplayNameFor(m => m.PspRecommendCancelEventsViewModel.EventStatus)',
+                    '@Html.DisplayNameFor(m => m.PspRecommendCancelEventsViewModel.Remark)',
+                    'pspEventId'
+
+                ],
+                colModel: [{
+                    name: 'eventStartDate',
+                    jsonmap: 'eventStartDate',
+                    template: dateTemplate,
+                    width: '2',
+                }, {
+                    name: 'eventEndDate',
+                    jsonmap: 'eventEndDate',
+                    template: dateTemplate,
+                    width: '2',
+                }, {
+                    name: 'time',
+                    jsonmap: 'time',
+                    width: '2'
+                }, {
+                    name: 'eventCount',
+                    width: 6
+                }, {
+                    name: 'location',
+                    jsonmap: 'location',
+                    width: '4',
+                }, {
+                    name: 'chiLocation',
+                    jsonmap: 'chiLocation',
+                    width: '4',
+                }, {
+                    name: 'district',
+                    jsonmap: 'district',
+                    width: '1'
+                }, {
+                    name: 'collectionMethod',
+                    jsonmap: 'collectionMethod',
+                    width: '3',
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'eventStatus',
+                    jsonmap: 'eventStatus',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return "RC" === cellvalue ? "Ready to cancel" : "";
+                    },
+                    unformat: function (cellvalue, options) {
+                        return "Ready to cancel" === cellvalue ? "RC" : "";
+                    },
+                    width: '3'
+                }, {
+                    name: 'remark',
+                    jsonmap: 'remark',
+                    width: '3',
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'pspEventId',
+                    jsonmap: 'pspEventId',
+                    hidden: true,
+                    width: '3'
+                }],
+                footerrow: false,
+                loadComplete: function () {
+                    defaultGridLoadComplete;
+                    if (!firstIdIsAcquired) {
+                        var iCol = getColumnIndexByName($grid, 'pspEventId');
+                        firstEveId = $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")").closest("tr.jqgrow").attr("id");
+                        firstIdIsAcquired = true;
+                    }
+                },
+                //onSelectAll: function (aRowids, status) {
+                //    $label = $('#selectedRowsCountCancelGrid');
+                //    rowCount = onSelectAllrows($grid, $label, selectedRows, aRowids, status, rowCount, eventStatus);
+                //},
+                onSelectRow: function (rowId, status) {
+                    $label = $('#selectedRowsCountCancelGrid');
+                    rowCount = onSelectedRows($grid, $label, eventStatus, rowCount, status, selectedRows, rowId);
+                },
+                gridComplete: function () {
+                    rowCount = 0;
+                    $label = $('#selectedRowsCountCancelGrid');
+                    $('#cb_pspRecommendCancelEventGridTable').prop('hidden', 'true');
+                    rowCount = retrievePreviousSelectedRows(selectedRows, $grid, rowCount, $label, eventStatus)
+                }
+            });
+
+        }
+
+        function editSelectedEvent(rowId) {
+            $('#btnCreateEvent').addClass('hide');
+            $('#btnEventDelete').addClass('hide');
+            $('#btnSplitEvent').addClass('hide');
+
+            $('#btnUpdateEvent').removeClass('hide');
+
+            var $form = $("pspEditEventForm");
+            var actionUrl = getEventUrl.replace("-1", rowId);
+
+            ajaxGet(actionUrl,
+                        function (response) {
+                            $('#pspEventId').val(rowId);
+                            $('#editEvePspMasterId').val($('#pspMasterId').val());
+                            $('#editEventPspMasterRowVersion').val(response.data.rowVersion);
+                            $('#eveRowVersion').val(response.data.pspEventViewModel.rowVersion);
+                            $('#eventStartDate').val(toDDMMYYYY(response.data.pspEventViewModel.eventStartDate));
+                            $('#eventEndDate').val(toDDMMYYYY(response.data.pspEventViewModel.eventEndDate));
+                            $('#eventStartTime').val(response.data.pspEventViewModel.eventStartTime);
+                            $('#eventEndTime').val(response.data.pspEventViewModel.eventEndTime);
+                            $('#eventDistrict').select2('val', response.data.pspEventViewModel.district);
+                            $('#location').val(response.data.pspEventViewModel.location);
+                            $('#chiLocation').val(response.data.pspEventViewModel.chiLocation);
+                            $('#simpChiLocation').val(response.data.pspEventViewModel.simpChiLocation);
+                            $('#editEventBypassValidation').val(response.data.pspEventViewModel.bypassValidation);
+                            //response.data.pspEventViewModel.publicPlace == true ? $('#publicPlace').val(true) : $('#publicPlace').val(false);
+                            $('#methodOfCollection').select2('val', response.data.pspEventViewModel.methodOfCollection);
+                            $('#otherMethodOfCollection').val(response.data.pspEventViewModel.otherMethodOfCollection);
+                            $('#charitySalesItem').val(response.data.pspEventViewModel.charitySalesItem);
+                            $('#editEventRemark').select2('val', response.data.pspEventViewModel.editEventRemark);
+                            $('#validationMessage').val(response.data.pspEventViewModel.validationMessage);
+
+                            eventModalReadOnlyCtrols();
+                        }
+
+                );
+
+            $('#editEventModal').modal({
+                backdrop: 'static', show: true,
+                keyboard: false
+            });
+        };
+
+        function eventModalReadOnlyCtrols() {
+            $('#methodOfCollection').on('change', function (e) {
+                var arrSpeRem = $(this).val();
+                (jQuery.inArray("Others", arrSpeRem) !== -1) ? $('#otherMethodOfCollection').prop('readonly', false) : $('#otherMethodOfCollection').prop('readonly', true);
+                (jQuery.inArray("3", arrSpeRem) !== -1) ? $('#charitySalesItem').prop('readonly', false) : $('#charitySalesItem').prop('readonly', true);
+            });
+            ($.inArray("Others", $('#methodOfCollection').val()) !== -1) ? $('#otherMethodOfCollection').prop('readonly', false) : $('#otherMethodOfCollection').prop('readonly', true);
+            ($.inArray("3", $('#methodOfCollection').val()) !== -1) ? $('#charitySalesItem').prop('readonly', false) : $('#charitySalesItem').prop('readonly', true);
+        }
+
+        $('#btnCancelEvent').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    $('#editEventModal').modal('hide');
+                    clearForm('#pspEditEventForm');
+                }
+            });
+        });
+
+            $('#btnCloseEvent').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editEventModal').modal('hide');
+                        clearForm('#pspEditEventForm');
+                    }
+                });
+            });
+
+            $('#btnUpdateEvent').click(function () {
+                var $form = $("#pspEditEventForm");
+
+                if ($form.valid()) {
+
+                    var actionUrl = updatePspEventUrl;
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             if (response.success) {
+                                 notifSuccess(response.message);
+                                 $('#editEventModal').modal('hide');
+                                 clearForm('#pspEditEventForm');
+                                 $('#editEventPspMasterRowVersion').val(response.data.rowVersion);
+                                 $("#pspRecommendApproveEventGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 //$('#dateofEventPeriodFrom').val(toDDMMYYYY(response.data.eventPeriodFrom));
+                                 //$('#dateofEventPeriodTo').val(toDDMMYYYY(response.data.eventPeriodTo));
+
+                             }
+                         }
+                    );
+                }
+            });
+
+            $('#btnCreateEvent').click(function () {
+
+                var $form = $("#pspEditEventForm");
+                if ($form.valid()) {
+                    currPspMasterId = $("#editEvePspMasterId").val();
+                    var actionUrl = createPspEventUrl.replace('-1', currPspMasterId);
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             if (response.success) {
+                                 notifSuccess(response.message);
+                                 $('#editEventModal').modal('hide');
+                                 $("#pspRecommendApproveEventGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 $("#pspRecommendEventListGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 calRelevantRecordsAmount();
+                                 $('#editEventPspMasterRowVersion').val(response.data.rowVersion);
+                                 //$('#dateofEventPeriodFrom').val(toDDMMYYYY(response.data.eventPeriodFrom));
+                                 //$('#dateofEventPeriodTo').val(toDDMMYYYY(response.data.eventPeriodTo));
+                             }
+
+                         }
+                    );
+                }
+            });
+
+            $('#btnEventDelete').click(function () {
+                confirmDelete(function (result) {
+                    if (result) {
+
+                        var actionUrl = deletePspEventUrl.replace("-1", $('#pspEventId').val());
+                        var $form = $("#pspEditEventForm");
+                        $form.ajaxPostForm(actionUrl,
+                            function (response) {
+                                if (response.success) {
+                                    $('#editEventModal').modal('hide');
+                                    clearForm('#pspEditEventForm');
+                                    $("#pspRecommendApproveEventGridTable").trigger("reloadGrid", [{ current: true }]);
+                                    $("#pspRecommendEventListGridTable").trigger("reloadGrid", [{ current: true }]);
+                                    calRelevantRecordsAmount();
+                                    $('#editEventPspMasterRowVersion').val(response.data.rowVersion);
+                                    //$('#dateofEventPeriodFrom').val(toDDMMYYYY(response.data.eventPeriodFrom));
+                                    //$('#dateofEventPeriodTo').val(toDDMMYYYY(response.data.eventPeriodTo));
+                                    notifSuccess(response.message);
+                                }
+                            });
+                    }
+                })
+            });
+    </script>
+}

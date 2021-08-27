@@ -1,0 +1,226 @@
+﻿@model Psps.Web.ViewModels.FlagDay.FlagDayViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.FlagDay_New_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="flagDayCreateForm" class="form-horizontal">
+    <div id="details">
+        <a class="anchor" id="anchor-details"></a>
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a href="#flagDay" data-toggle="tab">Flag Day</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="flagDay">
+                <fieldset>
+                    <legend>Flag Day Details</legend>
+                    @Html.BootstrapValidationSummary()
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.CreateMode, htmlAttributes: new { @id = "fdCreateMode" })
+                    @{ Html.RenderPartial("_FlagDayDetail", Model); }
+                </fieldset>
+                <br>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
+                            <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                                <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                            <button id="btnCreateFlagDay" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-ok"></span>@Labels.Create</button>
+                            <button id="btnCancel" type="button" class="btn btn-default btn-sm">
+                                <span class="icon-remove"></span>@Labels.Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div id="orgModal" class="modal fade" style="z-index: 1060">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Search Organisation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="orgIdGridTable"></table>
+                            <div id="orgIdGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">
+                    <span class="icon-remove"></span>&nbsp;Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var listOrganisationUrl = '@Url.RouteUrl("ListFlagDayOrganisation")';
+        var createFlagDayUrl = '@Url.RouteUrl("CreateFlagDay")';
+        var listSearchFdMasterUrl = '@Url.RouteUrl("FlagDaySearchPage")';
+        var editFdMasterUrl = '@Url.RouteUrl("EditFdMaster", new { fdMasterId = -1 })';
+        var searchOrganisationUrl = '@Url.RouteUrl("SearchOrganisation")';
+        var getOrganisationUrl = '@Url.RouteUrl("GetOrganisation", new { orgRef = "orgRef" })';
+
+        var pageSize = 10;
+
+        var $form = $('#flagDayCreateForm')
+        var currFdMasterId = $('#fdMasterId').val();
+        var currCreateMode = $('#fdCreateMode').val();
+
+        $(function () {
+            //$('yearofFlagDay').val('');
+            var dNow = new Date();
+            if (currCreateMode == "copyToNew") {
+                $('#DateofReceivingApplication').val(parseDatetimeToDate(dNow));
+                //$('#outstandingEmailIssueDate').val('');
+                //$('#outstandingEmailReplyDate').val('');
+                //$('#outstandingEmailReminderIssueDate').val('');
+                //$('#outstandingEmailReminderReplyDate').val('');
+                $('#acknowledgementReceiveDate').val('');
+                $('#submissionDueDate').val('');
+                $('#firstReminderIssueDate').val('');
+                $('#firstReminderDeadline').val('');
+                $('#secondReminderIssueDate').val('');
+                $('#secondReminderDeadline').val('');
+                $('#auditReportReceivedDate').val('');
+                $('#publicationReceivedDate').val('');
+                $('#newspaperPublishDate').val('');
+                $('#acknowledgementEmailIssueDate').val('');
+                $('#createModelOrgName').text('@Model.OrgEngName');
+                $('#createModelOrgChiName').text('@Model.OrgChiName');
+                //$('#yearofFlagDay').select2('val','');
+                $('#referenceNumber').val('');
+                $('#twr').select2('val','');
+                // Vetting Result
+                $('#groupingId').select2('val','');
+                $('#percentageForGrouping').val('');
+                $('#groupingResult').val('');
+                $('#vettingPanelCaseIndicator').checkboxVal(false);
+                $('#reviewCaseIndicator').checkboxVal(false);
+                // Application Result
+                $('#applicationResultId').select2('val','');
+                $('#resultApplicationRemark').val('');
+                $('#applicationRemark').val('');
+                $('#fdLotNum').val('');
+                $('#groupingwithNoofLot').val('');
+                $('#fdLotResult').select2('val','');
+                $('#priorityNum').val('');
+                // Pledging Application Result
+                $('#applyPledgingMechanismIndicator').checkboxVal(false);
+                $('#pledgingAmt').val('');
+                $('#pledgingProposal').val('');
+                $('#chiPledgingProposal').val('');
+                $('#pledgingApplicationRemark').val('');
+            }
+            else if(currCreateMode == "new")
+            {
+                //clearForm('#flagDayCreateForm');
+                $('#DateofReceivingApplication').val(parseDatetimeToDate(dNow));
+            }
+
+            $('#engSalute').on('change', function (e) {
+                $engDDB = $('#engSalute');
+                var value = $engDDB.val();
+                $chiDDB = $('#chiSalute');
+                $chiDDB.select2('val', value);
+            });
+
+            $('#applicationResultId').change( function () {
+                if( this.value == "1")
+                {
+                    $('#fdLotNum').prop('readOnly',false);
+                    $('#groupingwithNoofLot').prop('readOnly',false);
+                    $('#fdLotResult').prop('readOnly',false);
+                    $('#priorityNum').prop('readOnly',false);
+                }
+                else
+                {
+                    $('#fdLotNum').prop('readOnly',true);
+                    $('#groupingwithNoofLot').prop('readOnly',true);
+                    $('#fdLotResult').prop('readOnly',true);
+                    $('#priorityNum').prop('readOnly',true);
+                };
+            });
+            //$("#contactPersonFirstName").val(($("#contactPersonFirstName").val()).toUpperCase());
+            //$("#contactPersonFirstName").bind('keyup', function (e) {
+            //    $("#contactPersonFirstName").val(($("#contactPersonFirstName").val()).toUpperCase());
+            //});
+            $("#contactPersonLastName").bind('keyup', function (e) {
+                $("#contactPersonLastName").val(($("#contactPersonLastName").val()).toUpperCase());
+            });
+
+            //$("#contactPersonLastName").val(($("#contactPersonLastName").val()).toUpperCase());
+
+            $('#groupingId,#percentageForGrouping').change(function () {
+                if ($('#groupingId').val() != "" && $('#percentageForGrouping').val() != "" && $.isNumeric($('#percentageForGrouping').val())) {
+                    $('#groupingResult').val( $('#percentageForGrouping').val() +""+ $('#groupingId').select2('data').text );
+                }
+                else {
+                    $('#groupingResult').val('');
+                }
+            });
+
+            $('#createModelOrgRef').initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+            $('#createModelOrgRef').change(function () {
+                var disable = $('#createModelOrgRef').select2('data') ? $('#createModelOrgRef').select2('data').disableIndicator : 0;
+                if (disable == 1)
+                    alert("Organisation was disabled, are you sure want to create new flag day with this organisation?");
+            });
+            runButtonsLogic();
+
+            function runButtonsLogic() {
+                $('#btnCreateFlagDay').click(function () {
+                    var $form = $("#flagDayCreateForm");
+
+                    if ($('#applicationResultId').val() != "1")
+                    {
+                        $('#fdLotNum').val('');
+                        $('#groupingwithNoofLot').val('');
+                        $('#fdLotResult').select2('val','');
+                        $('#priorityNum').val('');
+                    }
+
+                    if ($form.valid())
+                    {
+                        var actionUrl = createFlagDayUrl;
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 notifSuccess(response.message);
+                                 window.location.href = editFdMasterUrl.replace('-1', response.data);
+                             }
+                        );
+                    }
+                });
+
+                var prePage =@Html.Raw(Json.Encode(@Model.PrePage));
+                $('#btnCancel').click(function () {
+                    confirm("Unsaved change will be discarded. Click OK to proceed. Click Cancel to resume editing.", function (result) {
+                        if (result) {
+                            if (prePage != null && prePage!="") {
+                                redirectTo(prePage);
+                            } else {
+                                redirectTo(listSearchFdMasterUrl);
+                            }
+                        }
+                    });
+                });
+
+            }
+
+        });
+    </script>
+}

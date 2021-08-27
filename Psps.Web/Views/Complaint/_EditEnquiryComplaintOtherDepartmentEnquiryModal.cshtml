@@ -1,0 +1,168 @@
+﻿@model Psps.Web.ViewModels.Complaint.ComplaintOtherDepartmentEnquiryViewModel
+<div class="tab-pane" id="otherDepartmentEnquiry">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="otherDepartmentEnquiry-grid-table"></table>
+                <div id="otherDepartmentEnquiry-grid-pager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var listOtherDepartmentEnquiryUrl = '@Url.RouteUrl("ListOtherDepartmentEnquiry", new { complaintMasterId = -1 })';
+    var getOtherDepartmentEnquiryUrl = '@Url.RouteUrl("GetOtherDepartmentEnquiry", new { complaintOtherDeptEnquiryId = -1 })';
+    var exportComplaintOtherDepartmentEnquiryUrl = '@Url.RouteUrl("ExportComplaintOtherDepartmentEnquiry", new { complaintMasterId = -1 })';
+
+    function initOtherDepartmentEnquiryGrid() {
+        var actionUrl = listOtherDepartmentEnquiryUrl.replace("-1", $("#complaintMasterId").val());
+        var $grid = $("#otherDepartmentEnquiry-grid-table");
+        var pager_selector = "#otherDepartmentEnquiry-grid-pager";
+
+        if ($grid.isJqGrid()) {
+            $grid.reloadJqGrid();
+            return;
+        }
+
+        $grid.jqGrid({
+            pager: pager_selector,
+            url: actionUrl,
+            datatype: 'json',
+            sortname: 'refNum',
+            sortorder: 'asc',
+            colNames: ['Reference No.', 'Date of Referral', 'Date of Memo', 'Enquiry From', 'Name of Organisation involved',
+                       'Content', 'Enclosure No.', 'ComplaintOtherDeptEnquiryId'],
+            colModel: [{
+                name: 'refNum',
+                index: 'refNum',
+                width: 120,
+            }, {
+                name: 'referralDate',
+                index: 'referralDate',
+                template: dateTemplate,
+                width: 90,
+            }, {
+                name: 'memoDate',
+                index: 'memoDate',
+                template: dateTemplate,
+                width: 90,
+            }, {
+                name: 'enquiryDepartment',
+                index: 'enquiryDepartment',
+                stype: 'select',
+                searchoptions: {
+                    sopt: ['eq', 'ne'],
+                    value: @Html.Raw(Json.Encode(@Model.EnquiryDepartments)),
+                },
+                width: 200,
+            }, {
+                name: 'orgInvolved',
+                index: 'orgInvolved',
+                width: 200,
+            }, {
+                name: 'enquiryContent',
+                index: 'enquiryContent',
+                width: 200,
+            }, {
+                name: 'enclosureNum',
+                index: 'enclosureNum',
+                width: 150,
+            }, {
+                name: 'complaintOtherDeptEnquiryId',
+                hidden: true,
+            }],
+            editurl: "/dummy.html", //nothing is saved
+            loadComplete: defaultGridLoadComplete,
+            ondblClickRow: function (rowId, iRow, iCol, e) {
+                var data = $grid.jqGrid('getRowData', rowId);
+                var actionUrl = getOtherDepartmentEnquiryUrl.replace("-1", data.complaintOtherDeptEnquiryId);
+                ajaxGet(actionUrl,
+                    function (response) {
+                        onEditRecord(response.data);
+                    }
+                );
+            },
+            onSelectRow: function (rowId) {
+                $grid.setGridParam('editurl', 'organisation-edit?' + rowId);
+            }
+        });
+
+        //navButtons
+        $grid.jqGrid('navGrid', pager_selector, {
+            //navbar options
+            search: true,
+            refresh: true,
+        }, {}, {}, {}, {
+            //search form
+            recreateForm: true,
+            afterShowSearch: defaultSearchFormAfterShowSearch,
+            afterRedraw: defaultSearchFormAfterRedraw
+        }, {}).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-download-alt",
+            onClickButton: onExportRecord,
+            position: "first",
+            title: "Export Data",
+            cursor: "pointer"
+        }).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-plus",
+            onClickButton: onNewRecord,
+            position: "first",
+            title: "New Record",
+            cursor: "pointer"
+        });
+
+        function displayOtherDepartmentEnquiryInput() {
+            $('#edit-otherDepartmentEnquiry-modal').modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            });
+        }
+        function onExportRecord() {
+            var grid = $('#otherDepartmentEnquiry-grid-table');
+            var data = grid.jqGrid('getRowData');
+
+            if (data.length == 0) {
+                notifSuccess("Enquiry from Other Dept./Authorities Search Result is no Record");
+                return;
+            }
+            var actionUrl = exportComplaintOtherDepartmentEnquiryUrl.replace("-1", $("#complaintMasterId").val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        }
+        function onEditRecord(data) {
+            $("#btnSaveOtherDepartmentEnquiry").hide();
+            $("#btnUpdateOtherDepartmentEnquiry").show();
+            $("#btnDeleteOtherDepartmentEnquiry").show();
+
+            displayOtherDepartmentEnquiryInput();
+            $('#complaintOtherDeptEnquiryId').val(data.complaintOtherDeptEnquiryId);
+            $('#otherDepartmentEnquiryRefNum').val(data.otherDepartmentEnquiryRefNum);
+            $('#otherDepartmentEnquiryReferralDate').datepicker('update', toDDMMYYYY(data.otherDepartmentEnquiryReferralDate));
+            $('#otherDepartmentEnquiryMemoDate').datepicker('update', toDDMMYYYY(data.otherDepartmentEnquiryMemoDate));
+            $('#otherDepartmentEnquiryMemoFromPoliceDate').datepicker('update', toDDMMYYYY(data.otherDepartmentEnquiryMemoFromPoliceDate));
+            $('#enquiryDepartment').select2('val', data.enquiryDepartment);
+            if (data.otherEnquiryDepartment != null && data.otherEnquiryDepartment!="") {
+                $('#otherEnquiryDepartment').val(data.otherEnquiryDepartment);
+                $("#otherEnquiryDepartment").attr("disabled", false);
+            }
+            $('#otherDepartmentEnquiryOrgInvolved').val(data.otherDepartmentEnquiryOrgInvolved);
+            $("#otherDepartmentEnquiryEnquiryContentHtml").summernote('code', data.otherDepartmentEnquiryEnquiryContentHtml);
+            $('#otherDepartmentEnquiryEnclosureNum').val(data.otherDepartmentEnquiryEnclosureNum);
+            $("#otherDepartmentEnquiryRemarkHtml").summernote('code', data.otherDepartmentEnquiryRemarkHtml);
+
+        };
+
+        function onNewRecord() {
+            displayOtherDepartmentEnquiryInput();
+            clearForm('#edit-otherDepartmentEnquiry-modal');
+            $('#edit-otherDepartmentEnquiry-modal').find('.wysiwyg-editor').each(function () { $(this).summernote('reset'); });
+            $("#otherDepartmentEnquiryOrgInvolved").val($("#orgRef").select2("val") ? $("#orgRef").select2("data").text : $("#concernedOrgName").val());
+        };
+    };
+</script>

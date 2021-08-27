@@ -1,0 +1,203 @@
+﻿@model Psps.Web.ViewModels.PSP.PSPViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.PSP_Edit_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="pspCreateForm" class="form-horizontal" role="form">
+
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+
+    <div id="details">
+        <a class="anchor" id="anchor-details"></a>
+
+        <fieldset>
+            @Html.HiddenFor(m => m.CreateMode, htmlAttributes: new { @id = "pspCreateMode" })
+            @Html.HiddenFor(m => m.PrevPspMasterId, htmlAttributes: new { @id = "previousPspMasterId" })
+            @{ Html.RenderPartial("_PSPDetail", Model); }
+        </fieldset>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="pull-right">
+                    <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                        <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                    <button id="btnCreatePsp" type="button" class="btn btn-primary btn-sm">
+                        <span class="icon-ok"></span>@Labels.Create</button>
+                    <button id="btnCancelRtn" type="button" class="btn btn-default btn-sm">
+                        <span class="icon-remove"></span>@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var $pspCreateForm = $("#pspCreateForm");
+        var listOrganisationUrl = '@Url.RouteUrl("ListPspOrganisation")';
+        var searchPageUrl = '@Url.RouteUrl("PSPSearchPage")';
+        var rtnSearchOrgUrl = '@Url.RouteUrl("ReturnSearchOrg")';
+        var createPspUrl = '@Url.RouteUrl("CreatePsp")';
+        var currPspMasterId = $('#pspMasterId').val();
+        var currCreateMode = $('#pspCreateMode').val();
+        var EditPspUrl = '@Url.RouteUrl("EditPsp", new { pspMasterId = -1 })';
+
+        var searchOrganisationUrl = '@Url.RouteUrl("SearchOrganisation")';
+        var getOrganisationUrl = '@Url.RouteUrl("GetOrganisation", new { orgRef = "orgRef" })';
+
+        var createMode = '@ViewContext.RouteData.Values["createMode"]';
+
+        var pageSize = 10;
+
+        $(function () {
+            var tabs = $('#tabs');
+            $('#tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                if ('#pspOverView' === e.target.hash) { }
+            });
+
+            $('#orgId').initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+
+            @*if (createMode == "fromOrg")
+                $('#orgId').select2('val', '@Model.CreateModelOrgRef', true);*@
+
+            //$('#orgId').trigger('change');
+
+            runPageUiLogic();
+            runButtonsLogic();
+            //Force change event to enable / disable special Remark
+            $('#specialRemark').trigger('change');
+
+            //TIR #: PSUAT00037-13 - A message “A new application is successfully created” will be displayed when the record is copied successfully for "Copy to New" action.
+            if (createMode == 'copyToNew')
+                notifSuccess("A new application is successfully created");
+
+            function readOnlyCtrols() {
+                ($('#rejectReasonId').val() != "Others") ? $('#otherRejectReason').prop('readonly', true) : $('#otherRejectReason').prop('readonly', false);
+                ($('#pspNotRequireReasonId').val() != "Others") ? $('#otherPspNotRequireReason').prop('readonly', true) : $('#otherPspNotRequireReason').prop('readonly', false);
+                ($('#caseCloseReasonId').val() != "Others") ? $('#otherCaseCloseReason').prop('readonly', true) : $('#otherCaseCloseReason').prop('readonly', false);
+                $('#rejectReasonId').on('change', function () { readOnlyForOtr($(this), "Others", $('#otherRejectReason')) });
+                $('#pspNotRequireReasonId').on('change', function () { readOnlyForOtr($(this), "Others", $('#otherPspNotRequireReason')) });
+                $('#caseCloseReasonId').on('change', function () { readOnlyForOtr($(this), "Others", $('#otherCaseCloseReason')) });
+                $('#specialRemark').on('change', function (e) {
+                    var arrSpeRem = $(this).val();
+                    if (jQuery.inArray("Others", arrSpeRem) !== -1) {
+                        $('#otherSpecialRemark').prop('readonly', false);
+                    }
+                    else {
+                        $('#otherSpecialRemark').val("");
+                        $('#otherSpecialRemark').prop('readonly', true);
+                    }
+                });
+                function readOnlyForOtr($dropDownList, otrLkpCode, $readOnlyCtl) {
+                    var otrReason = $dropDownList.val();
+                    if (otrReason == otrLkpCode) {
+                        $readOnlyCtl.prop('readonly', false);
+                    }
+                    else $readOnlyCtl.prop('readonly', true);
+                };
+            };
+            function clearDates() {
+                $('#dateofCompletingApplication').val('');
+                $('#budateforAction').val('');
+                $('#dateofApplication').val('');
+                //$('#dateofApplicationDisposal').val('');
+                $('#submissionDueDate').val('');
+                $('#firstReminderIssueDate').val('');
+                $('#firstReminderDeadline').val('');
+                $('#secondReminderIssueDate').val('');
+                $('#secondReminderDeadline').val('');
+                $('#auditReportReceivedDate').val('');
+                $('#publicationReceivedDate').val('');
+                $('#newspaperCuttingReceivedDate').val('');
+                $('#officialReceiptReceivedDate').val('');
+                $('#afsRecordStartDate').val('');
+                $('#afsRecordEndDate').val('');
+                $('#trackRecordStartDate').val('');
+                $('#trackRecordEndDate').val('');
+            }
+            function runPageUiLogic() {
+                $("#contactPersonLastName").val(($("#contactPersonLastName").val()).toUpperCase());
+
+                $("#contactPersonLastName").bind('keyup', function (e) {
+                    $("#contactPersonLastName").val(($("#contactPersonLastName").val()).toUpperCase());
+                });
+
+                readOnlyCtrols();
+
+                $('#engSalute').on('change', function (e) {
+                    $engDDB = $('#engSalute');
+                    var value = $engDDB.val();
+                    $chiDDB = $('#chiSalute');
+                    $chiDDB.select2('val', value);
+                });
+
+                var dNow = new Date();
+                if (currCreateMode == "copyToNew") {
+
+                    clearDates();
+                    $('#applicationResultId').select2('val', '');
+                    $('#trackRecordDetails').val('');
+                    $('#afsRecordDetails').val('');
+                }
+                else if (currCreateMode == "new") {
+                    clearForm("#pspCreateForm");
+                }
+
+                $('#dateofReceivingApplication').val(parseDatetimeToDate(dNow));
+                $('#yearofPsp').select2('val', dNow.getFullYear().toString());
+                $('#yearofPspDiv').addClass('hidden');
+
+                $('#createModelSection88').on('change', function (e) {
+                    var orgData = $('#orgId').select2('data');
+                    if (orgData) {
+                        var orgSection88 = orgData.section88;
+                        var thisSection88 = $('#createModelSection88').select2('val') === "True";
+
+                        if (orgSection88 != thisSection88) {
+                            alert('@Html.Raw(ViewData["DiffSection88"])');
+                        }
+                    }
+                });
+            }
+
+            var prePage = '@Model.PrePage';
+            function runButtonsLogic() {
+
+                $('#btnCreatePsp').click(function () {
+                    var $form = $("#pspCreateForm");
+
+                    if ($form.valid()) {
+
+                        var actionUrl = createPspUrl;
+
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 notifSuccess(response.message);
+                                 var url = EditPspUrl.replace('-1', response.data);
+                                 window.location.href = url;
+                             }
+                        );
+                    }
+                });
+
+                $('#btnCancelRtn').click(function () {
+                    confirm("@Labels.Cancel_Msg", function (result) {
+                        if (result) {
+                            if (prePage != null && prePage != "") {
+                                redirectTo(prePage);
+                            } else {
+                                redirectTo(searchPageUrl);
+                            }
+                        }
+
+                    });
+                });
+            }
+
+        });
+    </script>
+}

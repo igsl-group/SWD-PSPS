@@ -1,0 +1,182 @@
+﻿@model  Psps.Web.ViewModels.SystemParameters.SystemParameterViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.SystemParameter_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="systemParameterForm" class="form-horizontal" role="form">
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="systemParameterGridTable"></table>
+                <div id="systemParameterGridPager"></div>
+            </div>
+        </div>
+    </div>
+    <div id="editModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@Labels.SystemParameter_Details</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.BootstrapValidationSummary()
+
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.SystemParameterId, htmlAttributes: new { @id = "systemParameterId" })
+                    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Code, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-6">
+                                @Html.TextBoxFor(m => m.Code, true, htmlAttributes: new { @id = "code", @class = "form-control", @maxlength = 100, @readonly = true })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Description, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.TextBoxFor(m => m.Description, true, htmlAttributes: new { @id = "description", @class = "form-control", @maxlength = 100 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Value, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.TextAreaFor(model => model.Value, true, rows: 2, htmlAttributes: new { @id = "value", @class = "form-control", @maxlength = 255 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnUpdateSystemParameter" type="button" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button id="btnCancel" type="button" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listSystemParameterUrl = '@Url.RouteUrl("ListSystemParameter")';
+        var getSystemParameterUrl = '@Url.RouteUrl("GetSystemParameter", new { SystemParameterId = -1 })';
+        var editSystemParameterUrl = '@Url.RouteUrl("EditSystemParameter", new { SystemParameterId = -1 })';
+
+        $(function () {
+            initSystemParameterGrid();
+
+            $('#btnUpdateSystemParameter').click(function () {
+                var $form = $("#systemParameterForm");
+                if ($form.valid()) {
+                    var actionUrl = editSystemParameterUrl.replace('-1', $('#systemParameterId').val());
+                    //alert($('#roleForm').serialize());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#editModal').modal('hide');
+                             $("#systemParameterGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                    }
+                });
+            });
+            $('#btnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                    }
+                });
+            });
+        });
+
+        function initSystemParameterGrid() {
+            var $grid = $('#systemParameterGridTable');
+            var pager_selector = '#systemParameterGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                sortname: 'code',
+                sortorder: 'asc',
+                url: listSystemParameterUrl,
+                datatype: 'json',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.SystemParameterId)',
+                    '@Html.DisplayNameFor(m => m.Code)',
+                    '@Html.DisplayNameFor(m => m.Description)',
+                    '@Html.DisplayNameFor(m => m.Value)'
+                ],
+                colModel: [{
+                    name: 'systemParameterId',
+                    hidden: true
+                }, {
+                    name: 'code',
+                    width: 1
+                }, {
+                    name: 'description',
+                    width: 2
+                }, {
+                    name: 'value',
+                    width: 2
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+
+            function doShowModal() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                $('#editModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function doEditRecord(data) {
+                var actionUrl = getSystemParameterUrl.replace("-1", data.systemParameterId);
+
+                ajaxGet(actionUrl,
+                        function (response) {
+                            $('#rowVersion').val(response.data.rowVersion);
+                            $('#systemParameterId').val(response.data.systemParameterId);
+                            $('#code').prop('readonly', true).val(response.data.code);
+                            $('#description').val(response.data.description);
+                            $('#value').val(response.data.value);
+
+                            doShowModal();
+                        }
+                );
+            };
+        };
+    </script>
+}

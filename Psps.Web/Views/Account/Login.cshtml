@@ -1,0 +1,79 @@
+﻿@model Psps.Web.ViewModels.Account.LoginViewModel
+@using Psps.Core.Infrastructure;
+
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+
+    var config = Psps.Core.Infrastructure.EngineContext.Current.Resolve<Psps.Core.Configuration.PspsConfig>();
+}
+
+<div class="main-container login-layout">
+    <div class="main-content">
+        <div class="row">
+            <div class="col-xs-12">
+               <div class="center">
+                    <h1>
+                        <span class="">@config.AppName</span>
+                    </h1>
+                </div>
+                <div class="login-container">
+                    <div class="space-6"></div>
+                    <div class="position-relative">
+                        <div id="login-box" class="login-box visible widget-box no-border">
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <h4 class="header lighter bigger">
+                                        <i class="icon-coffee"></i>
+                                        Please Enter Your Information
+                                    </h4>
+
+                                    @Html.BootstrapValidationSummary()
+
+                                    <div class="space-6"></div>
+                                    @using (Html.BeginRouteForm("Login", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @id = "loginForm", @class = "form-horizontal", role = "form" }))
+                                    {
+                                        <fieldset></fieldset>
+                                        @Html.AntiForgeryToken()
+                                        <label class="block clearfix">
+                                            <span class="block input-icon input-icon-right">@Html.TextBoxFor(m => m.UserId, htmlAttributes: new { @class = "form-control", placeholder = "User Id" })
+                                                <i class="icon-user"></i>
+                                            </span>
+                                        </label>
+
+                                        <label class="block clearfix">
+                                            <span class="block input-icon input-icon-right">@Html.PasswordFor(m => m.Password, htmlAttributes: new { @class = "form-control", placeholder = "Password" })
+                                                <i class="icon-lock"></i>
+                                            </span>
+                                        </label>
+
+                                        <div class="space"></div>
+
+                                        <div class="clearfix">
+                                            <button id="submit" type="submit" class="width-35 pull-right btn btn-sm btn-primary">
+                                                <i class="icon-key"></i>
+                                                Login
+                                            </button>
+                                        </div>
+
+                                        <div class="space-4"></div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .login-layout {
+        background-color: #f4f1ea;
+    }
+
+    body .main-container .main-content {
+        margin-left: 0;
+    }
+</style>

@@ -1,0 +1,28 @@
+﻿@model decimal?
+@using Psps.Core;
+
+@{
+    var useNativeUnobtrusiveAttributes = (bool)ViewData["useNativeUnobtrusiveAttributes"];
+    var htmlAttributes = ViewData["htmlAttributes"] as IDictionary<string, object> ?? HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
+
+    string cssClass = null;
+    if (htmlAttributes.ContainsKey("class")) { cssClass = (string)htmlAttributes["class"]; }
+    cssClass += " inputmask-decimal";
+    htmlAttributes["class"] = cssClass;
+
+    string integerDigits = "10";
+    string digits = "2";
+    if (htmlAttributes.ContainsKey("data-decimalFormat"))
+    {
+        var decimalFormat = ((string)htmlAttributes["data-decimalFormat"]).Split(',');
+        integerDigits = decimalFormat[0];
+        digits = decimalFormat[1];
+    }
+
+    string inputmask = null;
+    if (htmlAttributes.ContainsKey("data-inputmask")) { inputmask = (string)htmlAttributes["data-inputmask"]; }
+    inputmask += "'alias': 'pspsDecimal', 'integerDigits': " + integerDigits + ", 'digits': " + digits;
+    htmlAttributes["data-inputmask"] = inputmask; 
+}
+
+@Html.TextBoxFor(m => m, useNativeUnobtrusiveAttributes, "{0:n2}", htmlAttributes: htmlAttributes)

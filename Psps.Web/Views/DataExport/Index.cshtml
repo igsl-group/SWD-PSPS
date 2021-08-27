@@ -1,0 +1,61 @@
+﻿@model Psps.Web.ViewModels.DataExport.DataExportViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.DataExport_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="dataExportForm" class="form-horizontal">
+    <fieldset>
+        <div class="form-group">
+            @Html.LabelFor(m => m.TablesToBeExport, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-10">
+                @Html.ListBoxFor(model => model.TablesToBeExport, true, new MultiSelectList(Model.Tables, "Key", "Value", Model.TablesToBeExport), htmlAttributes: new { @id = "role", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="vspace-6"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnExportAll" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-download-alt"></span>&nbsp;@Labels.ExportAll
+                </button>
+                <button id="btnExportSelected" type="button" class="btn btn-primary btn-sm" data-dismiss="modal">
+                    <span class="icon-download-alt"></span>&nbsp;@Labels.ExportSelected
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var exportAllUrl = '@Url.RouteUrl("ExportAll")';
+        var exportSelectedUrl = '@Url.RouteUrl("ExportSelected")';
+        var $dataExportForm = $('#dataExportForm');
+
+        $(function () {
+            $('#btnExportAll').click(function () {
+                $dataExportForm.attr({ 'action': exportAllUrl, 'method': 'POST' });
+                $dataExportForm.submit();
+            });
+
+            $('#btnExportSelected').click(function () {
+                var count = $('.select2-search-choice').length;
+
+                if (count == 0) {
+                    notifError("No tables are selected!");
+                    return;
+                }
+
+                $dataExportForm.attr({ 'action': exportSelectedUrl, 'method': 'POST' });
+                $dataExportForm.submit();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,35 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.SiteMapPathHelperModel
+@using System.Web.Mvc.Html
+@using System.Linq
+@using MvcSiteMapProvider.Web.Html.Models
+
+@helper GenerateBreadcrumb(List<SiteMapNodeModel> nodes)
+{
+    var firstNode = nodes.ElementAt(nodes.Count > 1 ? 1 : 0);
+
+    <text>
+    <h1>
+        @Html.DisplayFor(m => firstNode)
+
+        @if (nodes.Count > 1)
+        {
+            var restNodes = nodes.GetRange(2, nodes.Count - 2);
+
+            foreach (var node in restNodes)
+            {
+            <text>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                @Html.DisplayFor(m => node)
+            </small>
+            </text>
+            }
+        }
+    </h1>
+    </text>
+}
+
+@if (Model.Nodes.Any())
+{
+    @GenerateBreadcrumb(Model.Nodes)
+}

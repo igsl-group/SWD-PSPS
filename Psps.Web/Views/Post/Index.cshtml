@@ -1,0 +1,103 @@
+﻿@model Psps.Web.ViewModels.Posts.PostActingViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Post_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="postForm" class="form-horizontal" role="form">
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="postGridTable"></table>
+                <div id="postGridPager"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var withExtraInformation = false;
+        var listPostUrl = '@Url.RouteUrl("ListPost")';
+        var newPostUrl = '@Url.RouteUrl("NewPost")';
+        var editPostUrl = '@Url.RouteUrl("EditPost", new { postId = -1 })';
+        var getPostUrl = '@Url.RouteUrl("GetPost", new { postId = -1 })';
+
+        $(function () {
+            initPostGrid();
+
+        });
+
+        function initPostGrid() {
+            var $grid = $('#postGridTable');
+            var pager_selector = '#postGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                sortname: 'rank.RankLevel',
+                sortorder: 'asc',
+                url: listPostUrl,
+                datatype: 'json',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.PostId)',
+                    '@Html.DisplayNameFor(m => m.Rank)',
+                    '@Html.DisplayNameFor(m => m.Owner)',
+                    '@Html.DisplayNameFor(m => m.Supervisor)'
+                ],
+                colModel: [{
+                    name: 'postId',
+                    sorttype: 'string',
+                    width: '5'
+                }, {
+                    name: 'rank',
+                    width: '5'
+                }, {
+                    name: 'owner',
+                    width: '5'
+                }, {
+                    name: 'supervisor',
+                    width: '5'
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function doEditRecord(data) {
+                var actionUrl = getPostUrl.replace("-1", data.postId);
+                window.location = actionUrl;
+
+            };
+
+            function doNewRecord() {
+                var actionUrl = newPostUrl;
+                location.href = actionUrl;
+            };
+        };
+    </script>
+}

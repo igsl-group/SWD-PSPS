@@ -1,0 +1,2907 @@
+﻿@model Psps.Web.ViewModels.Organisation.OrganisationViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = @Labels.Organisation_Edit;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form id="OrgMasterEditFrom" class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="orange-skin ui-jqgrid">
+                <div class="ui-jqgrid-hdiv" style="width: 100%;">
+                    <table id="funcTable" class="ui-jqgrid-htable" style="width: 100%;">
+                        <thead>
+                            <tr id="tableHead" class="ui-jqgrid-labels">
+                                <th class="ui-th-column ui-th-ltr" style="width: 10%">
+                                    <div class="ui-jqgrid-sortable">Org.Ref.</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 35%">
+                                    <div class="ui-jqgrid-sortable">Org.Name (Eng. and Chinese)</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 15%">
+                                    <div class="ui-jqgrid-sortable">Withholding Status</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 20%">
+                                    <div class="ui-jqgrid-sortable">
+                                        Contact Person<br>
+                                        (Latest PSP: <span id="lblPspRef"></span>)
+                                    </div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 20%">
+                                    <div class="ui-jqgrid-sortable">
+                                        Contact Person<br>
+                                        (Latest FD: <span id="lblFdRef"></span>)
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="ui-jqgrid-btable" style="color: #393939;">
+                            <tr class="ui-widget-content ui-row-ltr">
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblOrgRef"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblEngOrgName"></label>
+                                    <br />
+                                    <label id="lblChiOrgName"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblWithholdingBeginDate"></label>
+                                    <label id="lblWithholdingEndDate"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblPspContactPersonName"></label>
+                                    <br />
+                                    <label id="lblPspContactPersonEmailAddress"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblFdContactPersonName"></label>
+                                    <br />
+                                    <label id="lblFdContactPersonEmailAddress"></label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hr hr-10"></div>
+    <div>
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a href="#organisation" id="tab1" data-toggle="tab">Organisation</a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#orgMasterHistory" data-toggle="tab">History of Name Change<span id="orgMasterHistoryAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#withholdingHistory" data-toggle="tab">History of Withholding<span id="withholdingHistoryAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#referenceGuide" data-toggle="tab">Good Practice Guide<span id="referenceGuideAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#psp" data-toggle="tab">PSP Application<span id="pspAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#fd" data-toggle="tab">FD Application<span id="fdAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#ssaf" data-toggle="tab">SSAF Application<span id="ssafAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#afs" data-toggle="tab">AFS <span id="afsAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#trackRecord" data-toggle="tab">Track Record <span id="trackRecordAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#enquiry" data-toggle="tab">Enquiry <span id="enquiryAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#complaint" data-toggle="tab">Complaint <span id="complaintAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#template" data-toggle="tab">Template<span id="templateAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#attachment" data-toggle="tab">Attachment<span id="attachmentAmount" class="badge">0</span></a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            @Html.BootstrapValidationSummary()
+            @Html.AntiForgeryToken()
+            <div id="organisation" class="tab-pane active">
+
+                <fieldset>
+                    @Html.HiddenFor(m => m.OrgMasterId, htmlAttributes: new { @id = "orgMasterId" })
+                    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationReference, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.OrganisationReference, true, htmlAttributes: new { @id = "organisationReference", @class = "form-control", @maxlength = 8 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationDisabled, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.EditorFor(model => model.OrganisationDisabled, new { htmlAttributes = new { @id = "organisationDisabled" } })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OrganisationName, true, htmlAttributes: new { @id = "organisationName", @class = "form-control", @maxlength = 255 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationChiName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OrganisationChiName, true, htmlAttributes: new { @id = "organisationChiName", @class = "form-control", @maxlength = 255 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationSimpliChiName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OrganisationSimpliChiName, true, htmlAttributes: new { @id = "organisationSimpliChiName", @class = "form-control", @maxlength = 255 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EngOrgNameSorting, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.EngOrgNameSorting, true, htmlAttributes: new { @id = "engOrgNameSorting", @class = "form-control", @maxlength = 256 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherEngOrgName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OtherEngOrgName, true, htmlAttributes: new { @id = "otherEngOrgName", @class = "form-control", @maxlength = 256 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherChiOrgName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OtherChiOrgName, true, htmlAttributes: new { @id = "otherChiOrgName", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherSimpChiOrgName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OtherSimpChiOrgName, true, htmlAttributes: new { @id = "otherSimpChiOrgName", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EngRegisteredAddress1, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress1, true, htmlAttributes: new { @id = "engRegisteredAddress1", @class = "form-control", @maxlength = 400 })
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress2, true, htmlAttributes: new { @id = "engRegisteredAddress2", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress3, true, htmlAttributes: new { @id = "engRegisteredAddress3", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress4, true, htmlAttributes: new { @id = "engRegisteredAddress4", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress5, true, htmlAttributes: new { @id = "engRegisteredAddress5", @class = "form-control", @maxlength = 200 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ChiRegisteredAddress1, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress1, true, htmlAttributes: new { @id = "chiRegisteredAddress1", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress2, true, htmlAttributes: new { @id = "chiRegisteredAddress2", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress3, true, htmlAttributes: new { @id = "chiRegisteredAddress3", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress4, true, htmlAttributes: new { @id = "chiRegisteredAddress4", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress5, true, htmlAttributes: new { @id = "chiRegisteredAddress5", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EngMailingAddress1, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.EngMailingAddress1, true, htmlAttributes: new { @id = "engMailingAddress1", @class = "form-control", @maxlength = 400 })
+                            @Html.TextBoxFor(m => m.EngMailingAddress2, true, htmlAttributes: new { @id = "engMailingAddress2", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngMailingAddress3, true, htmlAttributes: new { @id = "engMailingAddress3", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngMailingAddress4, true, htmlAttributes: new { @id = "engMailingAddress4", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngMailingAddress5, true, htmlAttributes: new { @id = "engMailingAddress5", @class = "form-control", @maxlength = 200 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ChiMailingAddress1, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.ChiMailingAddress1, true, htmlAttributes: new { @id = "chiMailingAddress1", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiMailingAddress2, true, htmlAttributes: new { @id = "chiMailingAddress2", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiMailingAddress3, true, htmlAttributes: new { @id = "chiMailingAddress3", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiMailingAddress4, true, htmlAttributes: new { @id = "chiMailingAddress4", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiMailingAddress5, true, htmlAttributes: new { @id = "chiMailingAddress5", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationWebsite, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OrganisationWebsite, true, htmlAttributes: new { @id = "organisationWebsite", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TelNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.TelNum, true, htmlAttributes: new { @id = "telNum", @class = "form-control", @maxlength = 50 })
+                        </div>
+                        @Html.LabelFor(m => m.Fax, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.Fax, true, htmlAttributes: new { @id = "fax", @class = "form-control", @maxlength = 50 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.Email, true, htmlAttributes: new { @id = "email", @class = "form-control", @maxlength = 200 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ApplicantSaluteId, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-2">
+                            @Html.DropDownListFor(m => m.ApplicantSaluteId, true, new SelectList(Model.ApplicantSalutes, "Key", "Value", Model.ApplicantSaluteId), htmlAttributes: new { @id = "applicantSaluteId", @class = "form-control", @data_provide = "select2", @style = "width: 150px;" })
+                        </div>
+                        <div class="col-xs-4">
+                            @Html.TextBoxFor(m => m.ApplicantFirstName, true, htmlAttributes: new { @id = "applicantFirstName", @class = "form-control", @maxlength = 100, @placeholder = "First Name" })
+                        </div>
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.ApplicantLastName, true, htmlAttributes: new { @id = "applicantLastName", @class = "form-control", @maxlength = 50, @placeholder = "Last Name" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ApplicantChiSaluteId, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(m => m.ApplicantChiLastName, true, htmlAttributes: new { @id = "applicantChiLastName", @class = "form-control", @maxlength = 10, @placeholder = "姓氏" })
+                        </div>
+                        <div class="col-xs-4">
+                            @Html.TextBoxFor(m => m.ApplicantChiFirstName, true, htmlAttributes: new { @id = "applicantChiFirstName", @class = "form-control", @maxlength = 5, @placeholder = "名字" })
+                        </div>
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.ApplicantChiSaluteId, true, new SelectList(Model.ApplicantChiSalutes, "Key", "Value", Model.ApplicantChiSaluteId), htmlAttributes: new { @id = "applicantChiSaluteId", @class = "form-control", @data_provide = "select2", @style = "width: 150px;", @disabled = true, })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ApplicantPosition, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.ApplicantPosition, true, htmlAttributes: new { @id = "applicantPosition", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ApplicantTelNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.ApplicantTelNum, true, htmlAttributes: new { @id = "applicantTelNum", @class = "form-control", @maxlength = 50 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.President, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.President, true, htmlAttributes: new { @id = "president", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Secretary, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.Secretary, true, htmlAttributes: new { @id = "secretary", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Treasurer, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.Treasurer, true, htmlAttributes: new { @id = "treasurer", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Objectives, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.Objectives, 4, 100, htmlAttributes: new { @id = "objectives", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Subvented, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-4">
+                            @Html.EditorFor(model => model.Subvented, new { htmlAttributes = new { @id = "subvented" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Section88, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(model => model.Section88, new { htmlAttributes = new { @id = "section88" } })
+                        </div>
+                        @Html.LabelFor(m => m.Section88Date, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.Section88Date, true, "{0:d/M/yyyy}", htmlAttributes: new { @id = "section88Date", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.RegistrationType1, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.RegistrationType1, true, new SelectList(Model.RegistrationTitles, "Key", "Value", Model.RegistrationType1), htmlAttributes: new { @id = "registrationType1", @class = "form-control", @data_provide = "select2" })
+                        </div>
+                        @Html.LabelFor(m => m.RegistrationDate1, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.RegistrationDate1, true, htmlAttributes: new { @id = "registrationDate1", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                        </div>
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.RegistrationOtherName1, true, htmlAttributes: new { @id = "registrationOtherName1", @class = "form-control", @maxlength = 100, @disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.RegistrationType2, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.RegistrationType2, true, new SelectList(Model.RegistrationTitles, "Key", "Value", Model.RegistrationType2), htmlAttributes: new { @id = "registrationType2", @class = "form-control", @data_provide = "select2" })
+                        </div>
+                        @Html.LabelFor(m => m.RegistrationDate2, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.RegistrationDate2, true, htmlAttributes: new { @id = "registrationDate2", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                        </div>
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.RegistrationOtherName2, true, htmlAttributes: new { @id = "registrationOtherName2", @class = "form-control", @maxlength = 100, @disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                    @Html.LabelFor(m => m.BrNum1, new { @class = "col-xs-3 control-label" })
+                <div class="col-xs-1">
+                    @Html.TextBoxFor(m => m.BrNum1, true, htmlAttributes: new { @id = "brNum1", @class = "form-control", @maxlength = 8, @style = "width:90px;" })
+                </div>
+                    <div class="col-xs-1">
+                        @Html.TextBoxFor(m => m.BrNum2, true, htmlAttributes: new { @id = "brNum2", @class = "form-control", @maxlength = 3 })
+                    </div>
+                    <label class="col-xs-1 control-label"></label>
+                    @Html.LabelFor(m => m.CrNum, new { @class = "col-xs-3 control-label" })
+                <div class="col-xs-2">
+                    @Html.TextBoxFor(m => m.CrNum, true, htmlAttributes: new { @id = "crNum", @class = "form-control", @maxlength = 20 })
+                </div>
+                </div>*@
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AddressProofIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(model => model.AddressProofIndicator, new { htmlAttributes = new { @id = "addressProofIndicator" } })
+                        </div>
+                        @Html.LabelFor(m => m.AddressProofDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.AddressProofDate, true, htmlAttributes: new { @id = "addressProofDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AddressProofAttachmentId, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.FileFor(m => m.AddressProofAttachmentId, htmlAttributes: new { @id = "addressProofAttachmentId", @class = "form-control", @maxlength = 1000 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.MaaConstitutionIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(model => model.MaaConstitutionIndicator, new { htmlAttributes = new { @id = "maaConstitutionIndicator" } })
+                        </div>
+                        @Html.LabelFor(m => m.MaaConstitutionAttachmentId, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.FileFor(m => m.MaaConstitutionAttachmentId, htmlAttributes: new { @id = "maaConstitutionAttachmentId", @class = "form-control", @maxlength = 1000 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherSupportDocRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-1">
+                            @Html.EditorFor(model => model.OtherSupportDocIndicator, new { htmlAttributes = new { @id = "otherSupportDocIndicator" } })
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                    <label class="col-xs-3 control-label"></label>
+                    <label class="col-xs-1 control-label" style="padding: 10px 0px 0px 0px;">Remarks</label>
+                    <div class="col-xs-8">
+                        @Html.TextAreaFor(m => m.OtherSupportDocRemark, 4, 100, htmlAttributes: new { @id = "otherSupportDocRemark", @class = "form-control", @maxlength = 4000 })
+                    </div>
+                </div>*@
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">Remarks</label>
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.OtherSupportDocRemark, 4, 100, htmlAttributes: new { @id = "otherSupportDocRemark", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label"></label>
+                        <div class="col-xs-9">
+                            @Html.FileFor(m => m.OtherSupportDocAttachmentId, htmlAttributes: new { @id = "otherSupportDocAttachmentId", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OverallRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.OverallRemark, 4, 100, htmlAttributes: new { @id = "overallRemark", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
+                            <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                                <span class=""></span>&nbsp;@Labels.SpellCheck
+                            </button>
+                            <button type="button" id="btnCreate" class="btn btn-sm btn-primary">
+                                <span class="icon-ok"></span>&nbsp;@Labels.Create
+                            </button>
+                            <button type="button" id="btnUpdate" class="btn btn-sm btn-primary">
+                                <span class="icon-ok"></span>&nbsp;@Labels.Update
+                            </button>
+                            <button type="button" id="btnDelete" class="btn btn-sm btn-primary hide">
+                                <span class="icon-trash"></"></span>&nbsp;@Labels.Delete
+                            </button>
+                            <button type="button" id="btnCancel" class="btn btn-sm btn-default" data-dismiss="modal">
+                                <span class="icon-remove"></span>&nbsp;@Labels.Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="orgMasterHistory" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="orgMasterHistoryGridTable"></table>
+                            <div id="orgMasterHistoryGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="withholdingHistory" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="withholdingHistoryGridTable"></table>
+                            <div id="withholdingHistoryGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="referenceGuide" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="referenceGuideGridTable"></table>
+                            <div id="referenceGuideGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="psp" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="pspGridTable"></table>
+                            <div id="pspGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fd" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="fdGridTable"></table>
+                            <div id="fdGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ssaf" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="ssafGridTable"></table>
+                            <div id="ssafGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="complaint" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="complaintGridTable"></table>
+                            <div id="complaintGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="afs" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="afsGridTable"></table>
+                            <div id="afsGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="trackRecord" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="trackRecordGridTable"></table>
+                            <div id="trackRecordGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="enquiry" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="enquiryGridTable"></table>
+                            <div id="enquiryGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="template">
+                @{Html.RenderAction("RenderOrgTemplateModal");}
+            </div>
+
+            <div id="attachment" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="attachmentGridTable"></table>
+                            <div id="attachmentGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@{Html.RenderAction("RenderOrgAttachmentModal");}
+@{Html.RenderAction("RenderOrgNameChangeHistoryModal");}
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        @*var listOrgMasterUrl = '@Url.RouteUrl("ListOrgMaster")';*@
+        var newOrgMasterUrl = '@Url.RouteUrl("CreateOrgMaster")';
+        var editOrgMasterUrl = '@Url.RouteUrl("UpdateOrgMaster", new { orgId = "placeholder" })';
+        var getOrgMasterUrl = '@Url.RouteUrl("GetOrgMaster", new { orgId = "placeholder" })';
+        var deleteOrgMasterUrl = '@Url.RouteUrl("DeleteOrgMaster", new { orgMasterId = -1 })';
+        var listOrgMasterHistoryUrl = '@Url.RouteUrl("ListOrgMasterHistory", new { Code = "placeholder" })';
+        var listWithholdingHistoryUrl = '@Url.RouteUrl("ListWithholdingHistory", new { Code = "placeholder" })';
+        var listReferenceGuideUrl = '@Url.RouteUrl("ListReferenceGuide", new { Code = "placeholder" })';
+        var listPSPUrl = '@Url.RouteUrl("ListPSPTab", new { Code = "placeholder" })';
+        var listFDUrl = '@Url.RouteUrl("ListFDTab", new { Code = "placeholder" })';
+        var listSSAFUrl = '@Url.RouteUrl("ListPSPTab", new { Code = "placeholder", isSSAF = true})';
+        var editFdMasterUrl = '@Url.RouteUrl("EditFdMaster", new { fdMasterId = -1 })';
+
+        var listComplaintUrl = '@Url.RouteUrl("ListOrgComplaintEnquiry", new { Code = "placeholder", Type = "02" })';
+        var listEnquiryUrl = '@Url.RouteUrl("ListOrgComplaintEnquiry", new { Code = "placeholder", Type = "01" })';
+
+        var listTemplateUrl = '@Url.RouteUrl("ListTemplateforOrg", new { Code = "placeholder" })';
+        var listAfsUrl = '@Url.RouteUrl("ListAfs", new { orgId = -1 })';
+        var listTrackRecordUrl = '@Url.RouteUrl("ListTrackRecord", new { orgId = -1 })';
+
+        var listOrgAttachmentUrl = '@Url.RouteUrl("ListOrgAttachment", new { Code = "placeholder" })';
+        var createOrgAttachmentUrl = '@Url.RouteUrl("CreateOrgAttachment", new { Code = "placeholder" })';
+        var updateOrgAttachmentUrl = '@Url.RouteUrl("UpdateOrgAttachment")';
+        var downloadOrgAttachmentUrl = '@Url.RouteUrl("DownloadOrgAttachment", new { AttachmentId = -1 })';
+        var deleteOrgAttachmentUrl = '@Url.RouteUrl("DeleteOrgAttachment", new { AttachmentId = -1 })';
+
+        var calRelevantRecordsforOrgUrl = '@Url.RouteUrl("CalRelevantRecordsforOrg", new { code = "placeholder" })';
+        var indexUrl = '@Url.RouteUrl("ReturnSearchOrg")';
+
+        var exportNameChangeHistoryUrl = '@Url.RouteUrl("ExportNameChangeHistory", new { orgId = "placeholder" })';
+        var exportWithholdingHistoryUrl = '@Url.RouteUrl("ExportWithholdingHistory", new { orgId = "placeholder" })';
+        var exportPSPTabUrl = '@Url.RouteUrl("ExportPSPTab", new { orgId = "placeholder" })';
+        var exportFDTabUrl = '@Url.RouteUrl("ExportFDTab", new { orgId = "placeholder" })';
+        var exportSSAFTabUrl = '@Url.RouteUrl("ExportPSPTab", new { orgId = "placeholder", isSSAF = true })';
+
+        var exportComplaintTabUrl = '@Url.RouteUrl("ExportOrgComplaintEnquiry", new { Code = "placeholder", Type = "02" })';
+        var exportEnquiryTabUrl = '@Url.RouteUrl("ExportOrgComplaintEnquiry", new { Code = "placeholder", Type = "01" })';
+
+        var editEnquiryComplaintUrl = '@Url.RouteUrl("EditEnquiryComplaint", new { complaintId = -1 })';
+        var editPspUrl = '@Url.RouteUrl("EditPsp", new { pspMasterId = -1 })';
+        var editFdMasterUrl = '@Url.RouteUrl("EditFdMaster", new { fdMasterId = -1 })';
+        @*var newPspUrl = '@Url.RouteUrl("NewPspMaster", new { createMode = "placeholder", pspMasterId = -1, orgId = -2 })';;*@
+        var deleteOrgNameChangeHistoryUrl = '@Url.RouteUrl("DeleteOrgNameChangeHistory", new { orgNameChangeId = -1 })';
+
+        var createFdMasterUrl = '@Url.RouteUrl("CreateFdMaster", new { createMode = "placeholder", orgId = "-1" })';
+
+        var createPspMasterUrl= '@Url.RouteUrl("CreatePspMaster", new { createMode = "placeholder", orgId = "-1" })';
+
+        var returnUrl = window.location.pathname;
+
+        var editOrgGuideUrl = '@Url.RouteUrl("EditOrgGuide", new { orgRefGuidePromulgationId = -1 })';
+        var newOrgGuideUrl = '@Url.RouteUrl("NewOrgRefGuide", new { orgId = "placeholder" })';
+
+        var isProcessingOfficer = @Html.Raw(Json.Encode(@Model.isProcessingOfficer));
+
+        var onWithHold = false;
+        var inactive = false;
+
+        function returnSearchPage() {
+            window.location = indexUrl;
+        }
+
+        $(function () {
+            $('#tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                switch (e.target.hash) {
+                    case '#orgMasterHistory':
+                        initNameChangeHistoryGrid();
+                        break;
+                    case '#withholdingHistory':
+                        initwithholdingHistoryGrid();
+                        break;
+                    case '#referenceGuide':
+                        initReferenceGuideGrid();
+                        break;
+                    case '#fd':
+                        initFdGrid();
+                        break;
+                    case '#afs':
+                        initAfsGrid();
+                        break;
+                    case '#trackRecord':
+                        initTrackRecordGrid();
+                        break;
+                    case '#psp':
+                        initPspListGrid();
+                        break;
+                    case '#ssaf':
+                        initSSAFListGrid();
+                        break;
+                    case '#enquiry':
+                        initEnquiryGrid();
+                        break;
+                    case '#complaint':
+                        initComplaintGrid();
+                        break;
+                    case '#template':
+                        initTemplateGrid();
+                        break;
+                    case '#attachment':
+                        initAttachmentGrid();
+                        break;
+                }
+
+                calRelevantRecordsAmount();
+            });
+
+            //initPspListGrid();
+
+            //initcomplaintGrid();
+            //initEnquiryGrid();
+            //inittemplateGrid();
+
+            var $div = $('#tabs');
+            $div.removeClass('hide');
+            if (!$('#orgMasterId').val())//new
+            {
+                $('#tab1').trigger("click");
+                $('#btnCreate').removeClass('hide');
+                $('#btnUpdate').addClass('hide');
+                onNewRecord();
+            }
+            else//edit
+            {
+                $('#tab1').trigger("click");
+                $('#btnUpdate').removeClass('hide');
+                $div.find('.read-mode-only').removeClass('hide');
+                $('#btnCreate').addClass('hide');
+
+                var $form = $("#OrgMasterEditFrom");
+
+                var actionUrl = getOrgMasterUrl.replace("placeholder", $('#orgMasterId').val());
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         onEditRecord(response.data);
+                     }
+                );
+                calRelevantRecordsAmount();
+            }
+
+            $('#btnCreate').click(function () {
+                var $form = $("#OrgMasterEditFrom");
+                if ($form.valid()) {
+                    var actionUrl = newOrgMasterUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             doNewRecord();
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnUpdate').click(function () {
+                var $form = $("#OrgMasterEditFrom");
+                if ($form.valid()) {
+                    var actionUrl = editOrgMasterUrl.replace("placeholder", $('#orgMasterId').val());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             calRelevantRecordsAmount();
+                             $("#validationSummary").remove();
+                             notifSuccess(response.message);
+
+                             $("#lblEngOrgName").html($("#organisationName").val());
+                             $("#lblChiOrgName").html( $("#organisationChiName").val());
+            
+                             onWithHold = response.data.withholdingIndicator;
+                             inactive = response.data.organisationDisabled;
+
+                             $("#lblPspRef").text(response.data.PspRef);
+                             $("#lblPspContactPersonName").text(response.data.PspContactPersonName);
+                             $("#lblPspContactPersonEmailAddress").text(response.data.PspContactPersonEmailAddress);
+                             $("#lblFdRef").text(response.data.FdRef);
+                             $("#lblFdContactPersonName").text(response.data.FdContactPersonName);
+                             $("#lblFdContactPersonEmailAddress").text(response.data.OrganisationReference);
+                                                          
+                             if(response.data.WithholdingBeginDate!=null && response.data.WithholdingBeginDate!="")
+                             {
+                                 $("#lblWithholdingBeginDate").text("From "+response.data.WithholdingBeginDate);
+                             }
+                             if(response.data.WithholdingEndDate!=null && response.data.WithholdingEndDate!="")
+                             {
+                                 $("#lblWithholdingEndDate").text("To "+response.data.WithholdingEndDate);
+                             }
+
+                             $('#rowVersion').val(response.data.rowVersion);
+                         }
+                    );
+                }
+            });
+
+            $('#btnDelete').click(function () {
+
+                var actionUrl = deleteOrgMasterUrl.replace('-1', $('#orgMasterId').val());
+                confirmDelete(function (result) {
+                    if (result) {
+                        ajaxPost(actionUrl,
+                             function (response) {
+                                 notifSuccess(response.message);
+                                 setTimeout('returnSearchPage()', 1000);
+
+                             },
+                             function (response) {
+                                 notifError(response.message);
+                             }
+                        )
+                    }
+                });
+            });
+
+            $('#attBtnCreate').click(function () {
+                var $form = $("#AttachmentForm");
+                if ($form.valid()) {
+                    var actionUrl = createOrgAttachmentUrl.replace("placeholder", $('#orgMasterId').val());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#attachmentModal').modal('hide');
+                             $("#attachmentGridTable").trigger("reloadGrid", [{ current: true }]);
+                             calRelevantRecordsAmount();
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#attBtnUpdate').click(function () {
+                var $form = $("#AttachmentForm");
+                if ($form.valid()) {
+                    var actionUrl = updateOrgAttachmentUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#attachmentModal').modal('hide');
+                             $("#attachmentGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#attBtnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        clearForm('#AttachmentForm');
+                        $('#AttachmentForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                        $('#attachmentModal').modal('hide');
+                    }
+                });
+            });
+            $('#attBtnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        clearForm('#AttachmentForm');
+                        $('#AttachmentForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                        $('#attachmentModal').modal('hide');
+                    }
+                });
+            });
+
+            var prePage =@Html.Raw(Json.Encode(@Model.PrePage))
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        if (prePage != null) {
+                            redirectTo(prePage);
+                        } else {
+                            redirectTo(indexUrl);
+                        }
+                    }
+                });
+            });
+
+            runPageUiLogic();
+        });
+
+        function onEditPspFdRecord(Mode, masterId) {
+            if (Mode == "PSP" || Mode == "SSAF"){
+                var actionUrl = editPspUrl.replace("-1", masterId)+"?ReturnUrl="+returnUrl;
+                window.location = actionUrl;
+            }
+
+            if(Mode == "FD"){
+                var actionUrl = editFdMasterUrl.replace("-1", masterId)+"?ReturnUrl="+returnUrl;
+                window.location = actionUrl;
+            }
+        };
+
+        function runPageUiLogic() {
+            $("#organisationName").blur(function () {
+                var organisationName = $("#organisationName").val();
+                var the = organisationName.substring(0, 3);
+                if (the.trim().toLowerCase() == "the") {
+                    var engOrgNameSorting = organisationName.substring(3).trim() + "," + the;
+                    $("#engOrgNameSorting").val(engOrgNameSorting);
+                } else {
+                    $("#engOrgNameSorting").val($("#organisationName").val());
+
+                }
+                if(organisationName.toLowerCase()=="na" || organisationName.toLowerCase()=="nil") {
+                    $("#organisationName").val("(Do not have a registered English name)");
+                    $("#engOrgNameSorting").val("(Do not have a registered English name)");
+                }
+            });
+
+            $("#organisationChiName").blur(function () {
+                var organisationChiName=$("#organisationChiName").val();
+                if(organisationChiName.toLocaleLowerCase()=="na" || organisationChiName.toLocaleLowerCase()=="nil"){
+                    $("#organisationChiName").val("沒有中文註冊名稱");
+                }
+                var simplified = TongWen.convert($("#organisationChiName").val(), 'simplified');
+                $("#organisationSimpliChiName").val(simplified);
+            });
+
+            $("#otherChiOrgName").blur(function () {
+                var simplified = TongWen.convert($("#otherChiOrgName").val(), 'simplified');
+                $("#otherSimpChiOrgName").val(simplified);
+            });
+
+            $("#registrationType1").change(function () {
+                var registrationType1 = $("#registrationType1 option:selected").text();
+                if (!registrationType1.toLowerCase().indexOf("other")) {
+                    $("#registrationOtherName1").removeAttr("disabled");
+                } else {
+                    $("#registrationOtherName1").val("");
+                    $("#registrationOtherName1").attr("disabled", true);
+                }
+            });
+
+            $("#registrationType2").change(function () {
+                var registrationType2 = $("#registrationType2 option:selected").text();
+                if (!registrationType2.toLowerCase().indexOf("other")) {
+                    $("#registrationOtherName2").removeAttr("disabled");
+                } else {
+                    $("#registrationOtherName2").val("");
+                    $("#registrationOtherName2").attr("disabled", true);
+                }
+            });
+            $("#engRegisteredAddress1").blur(function () {
+                $("#engMailingAddress1").val($("#engRegisteredAddress1").val());
+            });
+            $("#engRegisteredAddress2").blur(function () {
+                $("#engMailingAddress2").val($("#engRegisteredAddress2").val());
+            });
+            $("#engRegisteredAddress3").blur(function () {
+                $("#engMailingAddress3").val($("#engRegisteredAddress3").val());
+            });
+            $("#engRegisteredAddress4").blur(function () {
+                $("#engMailingAddress4").val($("#engRegisteredAddress4").val());
+            });
+            $("#engRegisteredAddress5").blur(function () {
+                $("#engMailingAddress5").val($("#engRegisteredAddress5").val());
+            });
+            $("#chiRegisteredAddress1").blur(function () {
+                $("#chiMailingAddress1").val($("#chiRegisteredAddress1").val());
+            });
+            $("#chiRegisteredAddress2").blur(function () {
+                $("#chiMailingAddress2").val($("#chiRegisteredAddress2").val());
+            });
+            $("#chiRegisteredAddress3").blur(function () {
+                $("#chiMailingAddress3").val($("#chiRegisteredAddress3").val());
+            });
+            $("#chiRegisteredAddress4").blur(function () {
+                $("#chiMailingAddress4").val($("#chiRegisteredAddress4").val());
+            });
+            $("#chiRegisteredAddress5").blur(function () {
+                $("#chiMailingAddress5").val($("#chiRegisteredAddress5").val());
+            });
+            $("#applicantLastName").bind('keyup', function (e) {
+                $("#applicantLastName").val(($("#applicantLastName").val()).toUpperCase());
+            });
+
+            $('#applicantSaluteId').on('change', function (e) {
+                $engDDB = $('#applicantSaluteId');
+                var value = $engDDB.val();
+                $chiDDB = $('#applicantChiSaluteId');
+                $chiDDB.select2('val', value);
+            });
+
+        }
+
+        function doNewRecord() {
+
+            $('#btnCreate').removeClass('hide');
+            $('#btnUpdate').addClass('hide');
+
+            $("#organisationReference").prop('readonly', true).val('');
+            $("#organisationDisabled").checkboxVal(false);
+            $("#organisationName").val('');
+            $("#organisationChiName").val('');
+            $("#organisationSimpliChiName").val('');
+            $("#engOrgNameSorting").val('');
+            $("#otherEngOrgName").val('');
+            $("#otherChiOrgName").val('');
+            $("#otherSimpChiOrgName").val('');
+
+            $("#engRegisteredAddress1").val('');
+            $("#engRegisteredAddress2").val('');
+            $("#engRegisteredAddress3").val('');
+            $("#engRegisteredAddress4").val('');
+            $("#engRegisteredAddress5").val('');
+            $("#chiRegisteredAddress1").val('');
+            $("#chiRegisteredAddress2").val('');
+            $("#chiRegisteredAddress3").val('');
+            $("#chiRegisteredAddress4").val('');
+            $("#chiRegisteredAddress5").val('');
+            $("#engMailingAddress1").val('');
+            $("#engMailingAddress2").val('');
+            $("#engMailingAddress3").val('');
+            $("#engMailingAddress4").val('');
+            $("#engMailingAddress5").val('');
+            $("#chiMailingAddress1").val('');
+            $("#chiMailingAddress2").val('');
+            $("#chiMailingAddress3").val('');
+            $("#chiMailingAddress4").val('');
+            $("#chiMailingAddress5").val('');
+
+            $("#organisationWebsite").val('');
+            $("#telNum").val('');
+            $("#fax").val('');
+            $("#email").val('');
+            $("#applicantSaluteId").select2("val", '');
+            $("#applicantFirstName").val('');
+            $("#applicantLastName").val('');
+            $("#applicantChiSaluteId").select2("val", '');
+            $("#applicantChiFirstName").val('');
+            $("#applicantChiLastName").val('');
+            $("#applicantPosition").val('');
+            $("#applicantTelNum").val('');
+            $("#president").val('');
+            $("#secretary").val('');
+            $("#treasurer").val('');
+            $("#objectives").val('');
+            $("#subvented").checkboxVal(false);
+            $("#section88").checkboxVal(false);
+            $("#section88Date").val('');
+            $("#registrationTitleId").select2("val", '');
+            $("#registration").val('');
+            $("#registrationDate").val('');
+            //$("#brNum1").val('');
+            //$("#brNum2").val('');
+            //$("#crNum").val('');
+            $("#addressProofDate").val('');
+        }
+
+        function onEditRecord(data) {
+            $("#lblOrgRef").text(data.organisationReference);
+            $("#lblEngOrgName").html(data.organisationName);
+            $("#lblChiOrgName").html(data.organisationChiName);
+            
+            onWithHold = data.withholdingIndicator;
+            inactive = data.organisationDisabled;
+
+            if('@Model.WithholdingBeginDate'!=null && '@Model.WithholdingBeginDate'!=""){
+                $("#lblWithholdingBeginDate").text("From "+'@Model.WithholdingBeginDate');
+            }
+            if('@Model.WithholdingEndDate'!=null && '@Model.WithholdingEndDate'!=""){
+                $("#lblWithholdingEndDate").text("To "+'@Model.WithholdingEndDate');
+            }
+            $("#lblPspRef").text('@Model.PspRef');
+            $("#lblPspContactPersonName").text('@Model.PspContactPersonName');
+            $("#lblPspContactPersonEmailAddress").text('@Model.PspContactPersonEmailAddress');
+            $("#lblFdRef").text('@Model.FdRef');
+            $("#lblFdContactPersonName").text('@Model.FdContactPersonName');
+            $("#lblFdContactPersonEmailAddress").text('@Model.OrganisationReference');
+
+            $('#btnUpdate').removeClass('hide');
+            $('#btnCreate').addClass('hide');
+
+            $("#organisationReference").prop('readonly', true).val(data.organisationReference);
+            $("#organisationDisabled").checkboxVal(data.organisationDisabled);
+            $("#organisationName").val(data.organisationName);
+            $("#organisationChiName").val(data.organisationChiName);
+            $("#organisationSimpliChiName").val(data.organisationSimpliChiName);
+            $("#engOrgNameSorting").val(data.engOrgNameSorting);
+            $("#otherEngOrgName").val(data.otherEngOrgName);
+            $("#otherChiOrgName").val(data.otherChiOrgName);
+            $("#otherSimpChiOrgName").val(data.otherSimpChiOrgName);
+
+            $("#engRegisteredAddress1").val(data.engRegisteredAddress1);
+            $("#engRegisteredAddress2").val(data.engRegisteredAddress2);
+            $("#engRegisteredAddress3").val(data.engRegisteredAddress3);
+            $("#engRegisteredAddress4").val(data.engRegisteredAddress4);
+            $("#engRegisteredAddress5").val(data.engRegisteredAddress5);
+            $("#chiRegisteredAddress1").val(data.chiRegisteredAddress1);
+            $("#chiRegisteredAddress2").val(data.chiRegisteredAddress2);
+            $("#chiRegisteredAddress3").val(data.chiRegisteredAddress3);
+            $("#chiRegisteredAddress4").val(data.chiRegisteredAddress4);
+            $("#chiRegisteredAddress5").val(data.chiRegisteredAddress5);
+            $("#engMailingAddress1").val(data.engMailingAddress1);
+            $("#engMailingAddress2").val(data.engMailingAddress2);
+            $("#engMailingAddress3").val(data.engMailingAddress3);
+            $("#engMailingAddress4").val(data.engMailingAddress4);
+            $("#engMailingAddress5").val(data.engMailingAddress5);
+            $("#chiMailingAddress1").val(data.chiMailingAddress1);
+            $("#chiMailingAddress2").val(data.chiMailingAddress2);
+            $("#chiMailingAddress3").val(data.chiMailingAddress3);
+            $("#chiMailingAddress4").val(data.chiMailingAddress4);
+            $("#chiMailingAddress5").val(data.chiMailingAddress5);
+
+            $("#organisationWebsite").val(data.organisationWebsite);
+            $("#telNum").val(data.telNum);
+            $("#fax").val(data.fax);
+            $("#email").val(data.email);
+            $("#applicantSaluteId").select2("val", data.applicantSaluteId);
+            $("#applicantFirstName").val(data.applicantFirstName);
+            $("#applicantLastName").val(data.applicantLastName);
+            $("#applicantChiSaluteId").select2("val", data.applicantSaluteId);
+            $("#applicantChiFirstName").val(data.applicantChiFirstName);
+            $("#applicantChiLastName").val(data.applicantChiLastName);
+            $("#applicantPosition").val(data.applicantPosition);
+            $("#applicantTelNum").val(data.applicantTelNum);
+            $("#president").val(data.president);
+            $("#secretary").val(data.secretary);
+            $("#treasurer").val(data.treasurer);
+            $("#objectives").val(data.objectives);
+            $("#subvented").checkboxVal(data.subvented);
+            $("#section88").checkboxVal(data.section88);
+            $("#section88Date").val(toDDMMYYYY(data.section88Date));
+            $("#registrationType1").select2("val", data.registrationType1);
+            if ($("#registrationType1 option:selected").val() == "05") {
+                $("#registrationOtherName1").val(data.registrationOtherName1);
+                $("#registrationOtherName1").attr("disabled", false);
+            }
+            $("#registrationDate1").val(toDDMMYYYY(data.registrationDate1));
+            $("#registrationType2").select2("val", data.registrationType2);
+            if ($("#registrationType2 option:selected").val() == "05") {
+                $("#registrationOtherName2").val(data.registrationOtherName2);
+                $("#registrationOtherName2").attr("disabled", false);
+            }
+            $("#registrationDate2").val(toDDMMYYYY(data.registrationDate2));
+
+            $("#addressProofIndicator").checkboxVal(data.addressProofIndicator);
+            $("#addressProofDate").val(toDDMMYYYY(data.addressProofDate));
+            $("#maaConstitutionIndicator").checkboxVal(data.maaConstitutionIndicator);
+            $("#otherSupportDocIndicator").checkboxVal(data.otherSupportDocIndicator);
+            $("#otherSupportDocRemark").val(data.otherSupportDocRemark);
+            $("#overallRemark").val(data.overallRemark);
+
+            //$("#annualReport1Indicator").checkboxVal(data.annualReport1Indicator);
+            //$("#annualReport1BeginDate").val(toDDMMYYYY(data.annualReport1BeginDate));
+            //$("#annualReport1EndDate").val(toDDMMYYYY(data.annualReport1EndDate));
+            //$("#annualReport2Indicator").checkboxVal(data.annualReport2Indicator);
+            //$("#annualReport2BeginDate").val(toDDMMYYYY(data.annualReport2BeginDate));
+            //$("#annualReport2EndDate").val(toDDMMYYYY(data.annualReport2EndDate));
+            //$("#annualReport3Indicator").checkboxVal(data.annualReport3Indicator);
+            //$("#annualReport3BeginDate").val(toDDMMYYYY(data.annualReport3BeginDate));
+            //$("#annualReport3EndDate").val(toDDMMYYYY(data.annualReport3EndDate));
+
+            //$("#afs1YearEnd").val(toDDMMYYYY(data.afs1YearEnd));
+            //$("#afs1Indicator").checkboxVal(data.afs1Indicator);
+            //$("#afs2YearEnd").val(toDDMMYYYY(data.afs2YearEnd));
+            //$("#afs2Indicator").checkboxVal(data.afs2Indicator);
+            //$("#afs3YearEnd").val(toDDMMYYYY(data.afs3YearEnd));
+            //$("#afs3Indicator").checkboxVal(data.afs3Indicator);
+
+            $("#qualifiedOpinionIndicator").checkboxVal(data.qualifiedOpinionIndicator);
+            $("#qualifiedOpinionRemark").val(data.qualifiedOpinionRemark);
+            
+            $('#rowVersion').val(data.rowVersion);
+        }
+
+        function calRelevantRecordsAmount() {
+            ajaxPost(calRelevantRecordsforOrgUrl.replace("placeholder", $('#orgMasterId').val()),
+                function (response) {
+                    $('#orgMasterHistoryAmount').html(response.data.nameChangeHistoryAmount);
+                    $('#withholdingHistoryAmount').html(response.data.withholdingHistoryAmount);
+                    $('#referenceGuideAmount').html(response.data.referenceGuideAmount);
+                    $('#pspAmount').html(response.data.pspAmount);
+                    $('#fdAmount').html(response.data.fdAmount);
+                    $('#ssafAmount').html(response.data.ssafAmount);
+                    $('#complaintAmount').html(response.data.complaintAmount);
+                    $('#enquiryAmount').html(response.data.enquiryAmount);
+                    $('#templateAmount').html(response.data.templateAmount);
+                    $('#attachmentAmount').html(response.data.attachmentAmount);
+                    $('#afsAmount').html(response.data.afsAmount);
+                    $('#trackRecordAmount').html(response.data.trackRecordAmount);
+
+                }
+            );
+        }
+
+        //function onClickOrgMasterHistory() {
+        //    var $grid = $('#orgMasterHistoryGridTable');
+        //    $grid.jqGrid('clearGridData');
+        //    $grid.jqGrid('setGridParam', { search: false });
+        //    var postData = $grid.jqGrid('getGridParam', 'postData');
+        //    $.extend(postData, { filters: "" });
+        //    $grid.jqGrid('setGridParam', {
+        //        url: listOrgMasterHistoryUrl.replace("placeholder", $('#orgMasterId').val()),
+        //        datatype: 'json'
+        //    });
+
+        //    $grid.trigger("reloadGrid", [{ page: 1 }]);
+        //}
+
+        function initNameChangeHistoryGrid() {
+            var actionUrl = listOrgMasterHistoryUrl.replace("placeholder", $('#orgMasterId').val());
+            var $grid = $("#orgMasterHistoryGridTable");
+            var nameChangeHistory_pager_selector = "#orgMasterHistoryGridPager";
+            var isHidden = '@Model.isProcessingOfficer' == 'True' ? false : true;
+
+            if ($grid.isJqGrid()) {
+                $grid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: nameChangeHistory_pager_selector,
+                url: actionUrl,
+                datatype: "json",
+                sortname: 'changeDate desc, orgNameChangeId',
+                sortorder: "desc",
+                colNames: ['Date of Effective', 'Name of Organisation (in English)', 'Name of Organisation (in Chinese)', 'Remarks','Action','OrgNameChangeId'],
+                colModel: [{
+                    name: 'changeDate',
+                    index: 'changeDate',
+                    width: 120,
+                    template: dateTemplate,
+                }, {
+                    name: 'engOrgName',
+                    width: 300,
+                }, {
+                    name: 'chiOrgName',
+                    width: 300,
+                }, {
+                    name: 'remarks',
+                    width: 250,
+                }, {
+                    name: 'rowAction',
+                    hidden : isHidden,
+                    width: 60,
+                    template: rowActionTemplate,
+                    delbutton: false
+                }, {
+                    name: 'orgNameChangeId',
+                    hidden : 'true',
+                    search: false,
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: function () {
+                    var $grid = $(this);
+                    setTimeout(function () {
+                        updateActionIcons(this);
+                        updatePagerIcons(this);
+                        enableTooltips(this);
+                    }, 0);
+
+                    var iCol = getColumnIndexByName($grid, 'rowAction');
+                    $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            var $this = $(this);
+
+                            //delete document button
+                            $("<div>", {
+                                title: "Delete",
+                                mouseover: function () {
+                                    $this.addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $this.removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $grid.jqGrid('getRowData', rowId);
+                                    doDeleteRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-trash red"></span>')
+                                .prependTo($this.children("div"));
+
+                        });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', nameChangeHistory_pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', nameChangeHistory_pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportNameChangeHistoryRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            });
+
+        };
+
+        function doDeleteRecord(data) {
+            var actionUrl = deleteOrgNameChangeHistoryUrl.replace('-1', data.orgNameChangeId);
+            confirmDelete(function (result) {
+                if (result) {
+                    ajaxPost(actionUrl,
+                         function (response) {
+                             $("#orgMasterHistoryGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    )
+                }
+            });
+
+        };
+
+        function doShowModal() {
+            $('#orgNameChangeHistoryModal').modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            });
+        };
+
+        function doEditRecord(data) {
+            clearForm('#orgNameChangeHistoryForm');
+            $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+            $('#orgNameChangeId').val(data.orgNameChangeId);
+            $('#orgNameChangeDate').val(data.changeDate);
+            $('#orgNameChangeEngOrgName').val(data.engOrgName);
+            $('#orgNameChangeChiOrgName').val(data.chiOrgName);
+            $('#orgNameChangeRemarks').val(data.remarks);
+
+            if (!isProcessingOfficer) {
+                $('#btnOrgNameChangeDelete').addClass('hide');
+            }
+            doShowModal();
+        };
+        function onExportNameChangeHistoryRecord() {
+            var grid = $('#orgMasterHistoryGridTable');
+            var data = grid.jqGrid('getRowData');
+            if (data.length == 0) {
+                notifSuccess("History of Name Change is no Record");
+                return;
+            }
+
+            var actionUrl = exportNameChangeHistoryUrl.replace("placeholder", $('#orgMasterId').val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        };
+
+        //function onClickWithholdingHistory() {
+        //    var $grid = $('#withholdingHistoryGridTable');
+        //    $grid.jqGrid('clearGridData');
+        //    $grid.jqGrid('setGridParam', { search: false });
+        //    var postData = $grid.jqGrid('getGridParam', 'postData');
+        //    $.extend(postData, { filters: "" });
+        //    $grid.jqGrid('setGridParam', {
+        //        url: listWithholdingHistoryUrl.replace("placeholder", $('#orgMasterId').val()),
+        //        datatype: 'json'
+        //    });
+
+        //    $grid.trigger("reloadGrid", [{ page: 1 }]);
+
+        //}
+
+        function initwithholdingHistoryGrid() {
+            var $grid = $("#withholdingHistoryGridTable");
+            var withholdingHistory_pager_selector = "#withholdingHistoryGridPager";
+            var actionUrl = listWithholdingHistoryUrl.replace("placeholder", $('#orgMasterId').val());
+
+            if ($grid.isJqGrid()) {
+                $grid.reloadJqGrid();
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: withholdingHistory_pager_selector,
+                url: actionUrl,
+                datatype: "json",
+                sortname: 'withholdingBeginDate',
+                sortorder: 'desc',
+                colNames: [
+                    'Record Key',
+                    'Withholding Start Date',
+                    'Withholding End Date',
+                    'Reason for Withholding',
+                    'Ref. No.',
+                    'Permit No.',
+                    'Withholding Remarks'
+                    //'A/C Submitted',
+                    //'Official Receipt Submitted',
+                    //'Newspaper Cuttings / Publication Submitted',
+                    //'Document Remarks'
+                ],
+                colModel: [{
+                    name: 'recordKey',                    
+                    hidden: true
+                },{
+                    name: 'withholdingBeginDate',
+                    template: dateTemplate,
+                    width: 100
+                }, {
+                    name: 'withholdingEndDate',
+                    template: dateTemplate,
+                    width: 100
+                },{
+                    name: 'withholdSource',
+                    width: 100
+                }, {
+                    name: 'ref',
+                    width: 100
+                }, {
+                    name: 'permitNum',
+                    width: 70
+                }, {
+                    name: 'withholdingReason',
+                    width: 400
+                }
+                //{
+                //    name: 'eventEndDate',
+                //    template: dateTemplate,
+                //    width: 100
+                //}, {
+                //    name: 'docSubmission',
+                //    width: 70
+                //}, {
+                //    name: 'officialReceiptReceivedDate',
+                //    width: 100
+                //}, {
+                //    name: 'newspaperCuttingReceivedDate',
+                //    width: 130
+                //}, {
+                //    name: 'docRemark',
+                //    width: 150}
+                ],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    //var currentUrl=window.location.href;
+                    //var returnUrl=currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation")-1);
+                    //var returnUrl = window.location.pathname;
+                    if(data.withholdSource.toLowerCase().indexOf("psp") != -1){
+                        //var actionUrl = editPspUrl.replace("-1", data.recordKey)+"?ReturnUrl="+returnUrl;
+                        //window.location = actionUrl;
+                        onEditPspFdRecord("PSP", data.recordKey);
+                    }
+
+                    if(data.withholdSource.toLowerCase().indexOf("fd") != -1){
+                        //var actionUrl = editFdMasterUrl.replace("-1", data.recordKey)+"?ReturnUrl="+returnUrl;
+                        //window.location = actionUrl;
+                        onEditPspFdRecord("FD", data.recordKey);
+                    }
+
+                    if(data.withholdSource.toLowerCase().indexOf("complaint") != -1){
+                        var actionUrl = editEnquiryComplaintUrl.replace("-1", data.recordKey)+"?ReturnUrl="+returnUrl;
+                        window.location = actionUrl;
+                    }
+
+                }
+            });
+
+            $grid.jqGrid('navGrid', withholdingHistory_pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }).jqGrid('navButtonAdd', withholdingHistory_pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportWithholdingHistoryRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            });
+        };
+
+        function onExportWithholdingHistoryRecord() {
+            var grid = $('#withholdingHistoryGridTable');
+            var data = grid.jqGrid('getRowData');
+            if (data.length == 0) {
+                notifSuccess("History of Withholding is no Record");
+                return;
+            }
+
+            var actionUrl = exportWithholdingHistoryUrl.replace("placeholder", $('#orgMasterId').val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        };
+
+        function initReferenceGuideGrid() {
+            var $grid = $("#referenceGuideGridTable");
+            var referenceGuide_pager_selector = "#referenceGuideGridPager";
+            var actionUrl = listReferenceGuideUrl.replace("placeholder", $('#orgMasterId').val());
+
+            if ($grid.isJqGrid()) {
+                $grid.reloadJqGrid();
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: referenceGuide_pager_selector,
+                url: actionUrl,
+                datatype: "json",
+                sortname: 'sendDate',
+                sortorder: 'desc',
+                colNames: [
+                    'OrgRefGuidePromulgationId',
+                    'Date of Letter Sent',
+                    'Part No.',
+                    'Encl. No.',
+                    'Date of Reply Slip Receiving Date',
+                    'Date of Reply',
+                    'Reply from Organisation',
+                    'Reason',
+                    'Remarks',
+                ],
+                colModel: [{
+                    name: 'orgRefGuidePromulgationId',
+                    hidden: true
+                },{
+                    name: 'sendDate',
+                    template: dateTemplate,
+                    width: 100
+                }, {
+                    name: 'partNum',
+                    width: 100
+                }, {
+                    name: 'enclosureNum',
+                    width: 100
+                }, {
+                    name: 'replySlipReceiveDate',
+                    template: dateTemplate,
+                    width: 150
+                }, {
+                    name: 'replySlipDate',
+                    template: dateTemplate,
+                    width: 100
+                }, {
+                    name: 'orgReply',
+                    width: 200
+                }, {
+                    name: 'promulgationReason',
+                    width: 200
+                }, {
+                    name: 'remarks',
+                    width: 200
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    if (data.orgRefGuidePromulgationId > 0) {
+                        var actionUrl = editOrgGuideUrl.replace("-1", data.orgRefGuidePromulgationId);
+                        window.location = actionUrl;
+                    }
+
+                },
+            });
+
+            //group headers
+            $grid.jqGrid('setGroupHeaders', {
+                groupHeaders: [
+                    {
+                        startColumnName: 'partNum',
+                        numberOfColumns: 2, titleText: 'File Reference',
+                    }
+                ],
+                useColSpanStyle: true
+            });
+
+            $grid.jqGrid('navGrid', referenceGuide_pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }).jqGrid('navButtonAdd', referenceGuide_pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: doNewRefGuideRecord,
+                position: "first",
+                title: "New Record",
+                cursor: "pointer"
+            });
+        };
+
+        function doNewRefGuideRecord() {
+            var actionUrl = newOrgGuideUrl.replace("placeholder", $('#orgMasterId').val());
+            window.location = actionUrl;
+        };
+
+        //function onClickPSP() {
+        //    var $grid = $('#pspGridTable');
+        //    $grid.jqGrid('clearGridData');
+        //    $grid.jqGrid('setGridParam', { search: false });
+        //    var postData = $grid.jqGrid('getGridParam', 'postData');
+        //    $.extend(postData, { filters: "" });
+        //    $grid.jqGrid('setGridParam', {
+        //        url: listPSPUrl.replace("placeholder", $('#orgMasterId').val()),
+        //        datatype: 'json'
+        //    });
+
+        //    $grid.trigger("reloadGrid", [{ page: 1 }]);
+
+        //}
+
+        function initPspListGrid() {
+            var actionUrl = listPSPUrl.replace("placeholder", $('#orgMasterId').val());
+            var $grid = $("#pspGridTable");
+            var pspList_pager_selector = "#pspGridPager";
+
+            if ($grid.isJqGrid()) {
+                $grid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: pspList_pager_selector,
+                url: actionUrl,
+                datatype: "json",
+                sortname: 'applicationReceiveDate',
+                sortorder: 'desc',
+                colNames: ['PSP File Reference', 'Date of Receiving Application', 'Date of Disposal / Completion', 'Purpose of Fund-Raising', 'Application Result','Permit No',
+                           'Event Start Date', 'Event End Date', 'Two-batches Approach', 'Processing Officer', 'No. of Event Approved', 'No. of Event Held',
+                            'No. of Event Cancelled','% of Event Held','Audited A/C Settled','Special Remark','pspMasterId'],
+                colModel: [{
+                    name: 'pspRef',
+                    width: 100,
+                }, {
+                    name: 'applicationReceiveDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'applicationDisposalDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'engFundRaisingPurpose',
+                    width: 80,
+                }, {
+                    name: 'applicationResult',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.PSPApplicationResults))
+                        },
+                    width: 80,
+                }, {
+                    name: 'permitNum',
+                    classes: 'wrappedJqGridCell',
+                    width: 100,
+                }, {
+                    name: 'eventPeriodFrom',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'eventPeriodTo',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'twoBatchApproachIndicator',
+                    width: 60,
+                    template: yesNoTemplate,
+                    align: 'center',
+                }, {
+                    name: 'processingOfficerPost',
+                    width: 80,
+                }, {
+                    name: 'eventApprovedNum',
+                    template:numTemplate,
+                    width: 50,
+                }, {
+                    name: 'eventHeldNum',
+                    template:numTemplate,
+                    width: 50,
+                }, {
+                    name: 'eventCancelledNum',
+                    template:numTemplate,
+                    width: 50,
+                }, {
+                    name: 'eventHeldPercent',
+                    sortable : false,
+                    search : false,
+                    width: 50,
+                }, {
+                    name: 'arCheckIndicator',
+                    index: 'arCheckIndicatorRaw',
+                    sortIndex: 'arCheckIndicator',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: @Html.Raw(Json.Encode(@Model.CheckIndicator))
+                        },
+                    align: 'center',
+                    width: 50,
+                },{
+                    name: 'specialRemark',
+                    classes: 'wrappedJqGridCell',
+                    width: 150,
+                }, {
+                    name: 'pspMasterId',
+                    hidden : true
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    //var currentUrl=window.location.href;
+                    //var returnUrl=currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation")-1);
+                    //var actionUrl = editPspUrl.replace("-1", data.pspMasterId)+"?ReturnUrl="+returnUrl;
+                    //window.location = actionUrl;
+                    onEditPspFdRecord("PSP", data.pspMasterId);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pspList_pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }).jqGrid('navButtonAdd', pspList_pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onPSPTabRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pspList_pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: doNewRecord,
+                position: "first",
+                title: "New Record",
+                cursor: "pointer"
+            });
+
+            function doNewRecord() {
+                var actionUrl = createPspMasterUrl.replace("placeholder", "fromOrg").replace("-1", $("#orgMasterId").val()) + "?isSsaf=false&?returnUrl=" + returnUrl;
+
+                if (inactive || onWithHold ) {
+                    confirm("@Html.Raw(ViewData["OrgDisabledOrWithheld"])", function (result) {
+                        if (result) {
+                            window.location = actionUrl;
+                        }
+                    });
+                } else 
+                    window.location = actionUrl;
+            };
+        };
+
+        function onPSPTabRecord() {
+            var grid = $('#pspGridTable');
+            var data = grid.jqGrid('getRowData');
+
+            if (data.length == 0) {
+                notifSuccess("PSP is no Record");
+                return;
+            }
+
+            var actionUrl = exportPSPTabUrl;
+            grid.exportGrid(actionUrl.replace("placeholder", $('#orgMasterId').val()),
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        };
+
+        function initSSAFListGrid() {
+            var actionUrl = listSSAFUrl.replace("placeholder", $('#orgMasterId').val());
+            var $grid = $("#ssafGridTable");
+            var ssafList_pager_selector = "#ssafGridPager";
+
+            if ($grid.isJqGrid()) {
+                $grid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: ssafList_pager_selector,
+                url: actionUrl,
+                datatype: "json",
+                sortname: 'applicationReceiveDate',
+                sortorder: 'desc',
+                colNames: ['PSP File Reference', 'Date of Receiving Application', 'Date of Disposal / Completion', 'Purpose of Fund-Raising', 'Application Result','Permit No',
+                           'Event Start Date', 'Event End Date', 'Two-batches Approach', 'Processing Officer', 'No. of Event Approved', 'No. of Event Held',
+                            'No. of Event Cancelled','% of Event Held','Audited A/C Settled','Special Remark','pspMasterId'],
+                colModel: [{
+                    name: 'pspRef',
+                    width: 100,
+                }, {
+                    name: 'applicationReceiveDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'applicationDisposalDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'engFundRaisingPurpose',
+                    width: 80,
+                }, {
+                    name: 'applicationResult',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.PSPApplicationResults))
+                        },
+                    width: 80,
+                }, {
+                    name: 'permitNum',
+                    classes: 'wrappedJqGridCell',
+                    width: 100,
+                }, {
+                    name: 'eventPeriodFrom',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'eventPeriodTo',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'twoBatchApproachIndicator',
+                    width: 60,
+                    template: yesNoTemplate,
+                    align: 'center',
+                }, {
+                    name: 'processingOfficerPost',
+                    width: 80,
+                }, {
+                    name: 'eventApprovedNum',
+                    template:numTemplate,
+                    width: 50,
+                }, {
+                    name: 'eventHeldNum',
+                    template:numTemplate,
+                    width: 50,
+                }, {
+                    name: 'eventCancelledNum',
+                    template:numTemplate,
+                    width: 50,
+                }, {
+                    name: 'eventHeldPercent',
+                    sortable : false,
+                    search : false,
+                    width: 50,
+                }, {
+                    name: 'arCheckIndicator',
+                    index: 'arCheckIndicatorRaw',
+                    sortIndex: 'arCheckIndicator',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: @Html.Raw(Json.Encode(@Model.CheckIndicator))
+                        },
+                    align: 'center',
+                    width: 50,
+                },{
+                    name: 'specialRemark',
+                    classes: 'wrappedJqGridCell',
+                    width: 150,
+                }, {
+                    name: 'pspMasterId',
+                    hidden : true
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    //var currentUrl=window.location.href;
+                    //var returnUrl=currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation")-1);
+                    //var actionUrl = editPspUrl.replace("-1", data.pspMasterId)+"?ReturnUrl="+returnUrl;
+                    //window.location = actionUrl;
+                    onEditPspFdRecord("SSAF", data.pspMasterId);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', ssafList_pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                    //search form
+                    recreateForm: true,
+                    afterShowSearch: defaultSearchFormAfterShowSearch,
+                    afterRedraw: defaultSearchFormAfterRedraw
+                }).jqGrid('navButtonAdd', ssafList_pager_selector, {
+                    caption: "",
+                    buttonicon: "icon-download-alt",
+                    onClickButton: onSSAFTabRecord,
+                    position: "first",
+                    title: "Export Data",
+                    cursor: "pointer"
+            }).jqGrid('navButtonAdd', ssafList_pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: doNewRecord,
+                position: "first",
+                title: "New Record",
+                cursor: "pointer"
+            });
+
+            function doNewRecord() {                
+                var actionUrl = createPspMasterUrl.replace("placeholder", "fromOrg").replace("-1", $("#orgMasterId").val()) + "?isSsaf=true&?returnUrl=" + returnUrl;
+
+                if (inactive || onWithHold ) {
+                    confirm("@Html.Raw(ViewData["OrgDisabledOrWithheld"])", function (result) {
+                        if (result) {
+                            window.location = actionUrl;
+                        }
+                    });
+                } else 
+                    window.location = actionUrl;
+            };
+        };
+
+        function onSSAFTabRecord() {
+            var grid = $('#ssafGridTable');
+            var data = grid.jqGrid('getRowData');
+
+            if (data.length == 0) {
+                notifSuccess("SSFA is no Record");
+                return;
+            }
+
+            var actionUrl = exportSSAFTabUrl;
+            grid.exportGrid(actionUrl.replace("placeholder", $('#orgMasterId').val()),
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        };
+
+        //function onClickFD() {
+        //    var $grid = $('#fdGridTable');
+        //    $grid.jqGrid('clearGridData');
+        //    $grid.jqGrid('setGridParam', { search: false });
+        //    var postData = $grid.jqGrid('getGridParam', 'postData');
+        //    $.extend(postData, { filters: "" });
+        //    $grid.jqGrid('setGridParam', {
+        //        url: listFDUrl.replace("placeholder", $('#orgMasterId').val()),
+        //        datatype: 'json'
+        //    });
+
+        //    $grid.trigger("reloadGrid", [{ page: 1 }]);
+
+        //}
+
+        //var fdGridInited = false;
+        function initFdGrid() {
+            var $grid = $("#fdGridTable");
+            var pager_selector = "#fdGridPager";
+            var actionUrl = listFDUrl.replace("placeholder", $('#orgMasterId').val());
+
+            if ($grid.isJqGrid()) {
+                $grid.reloadJqGrid();
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                url: actionUrl,
+                datatype: "json",
+                sortname: 'ApplicationReceiveDate',
+                sortorder: 'desc',
+                colNames: [
+                    'FD File Reference',
+                    'Year of Flag Day',
+                    'Flag Day',
+                    'TW/R',
+                    'Date of Receiving Application',
+                    'Application Result',
+                    'Grouping',
+                    'Apply Pledging',
+                    'FD Permit No.',
+                    'Permit Issue Date',
+                    'Purpose of Flag Day',
+                    'Audited A/C Settled', 
+                    'Amount of Net Proceeds',
+                    'fdMasterId'
+                ],
+                colModel: [{
+                    name: 'fdRef',
+                    width: 80
+                }, {
+                    name: 'fdYear',                    
+                    width: 50
+                }, {
+                    name: 'flagDay',
+                    template: dateTemplate,
+                    width: 80
+                }, {
+                    name: 'twr',
+                    index: 'applyForTwr',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.TWRs))
+                        },
+                    width: 100
+                }, {
+                    name: 'applicationReceiveDate',                    
+                    template: dateTemplate,
+                    width: 100
+                }, {
+                    name: 'applicationResult',                    
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.FdApplicationResults))
+                        },
+                    width: 80
+                }, {
+                    name: 'fdGroupDesc',
+                    index: 'fdGroup',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.FdGroupings))
+                        },
+                    width: 60
+                }, {
+                    name: 'applyPledgingMechanismIndicator',
+                    width: 60,
+                    template: yesNoTemplate
+                }, {
+                    name: 'permitNum',                    
+                    width: 80
+                }, {
+                    name: 'permitIssueDate',                    
+                    template: dateTemplate,
+                    hidden: true,
+                    searchoptions: {                        
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'proposalDetail',
+                    index: 'FundRaisingPurpose',
+                    width: 200
+                }, {
+                    name: 'AfsReceiveIndicator',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (true === cellvalue) {
+                            return "Yes";
+                        } else if (false === cellvalue) {
+                            return "No";
+                        } else {
+                            return "";
+                        }
+                    },
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: "1:Yes;0:No"
+                    },
+                    width: 80
+                }, {
+                    name: 'netProceed',
+                    formatter: 'number',
+                    formatoptions: { defaultValue: '' },
+                    width: 80
+                }, {
+                    name: 'fdMasterId',
+                    hidden : true
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    //var currentUrl=window.location.href;
+                    //var returnUrl=currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation")-1);
+                    //var actionUrl = editFdMasterUrl.replace("-1", data.fdMasterId)+"?ReturnUrl="+returnUrl;
+                    //window.location = actionUrl;
+                    onEditPspFdRecord("FD", data.fdMasterId);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onFDTabRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: doNewRecord,
+                position: "first",
+                title: "New Record",
+                cursor: "pointer"
+            });
+
+            function doNewRecord(){
+                //window.location.href = newFdMasterUrl.replace("placeholder", "new");
+                //var currentUrl=window.location.href;
+                //var returnUrl=currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation")-1);
+                var actionUrl = createFdMasterUrl.replace("placeholder", "fromOrg").replace("-1",$("#orgMasterId").val())+"?returnUrl="+returnUrl;
+                window.location = actionUrl;
+            }
+        };
+
+        function onFDTabRecord() {
+            var grid = $('#fdGridTable');
+            var data = grid.jqGrid('getRowData');
+            if (data.length == 0) {
+                notifSuccess("FD is no Record");
+                return;
+            }
+
+            var actionUrl = exportFDTabUrl.replace("placeholder", $('#orgMasterId').val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        };
+
+        //function onClickComplaint() {
+        //    var $grid = $('#complaintGridTable');
+        //    $grid.jqGrid('clearGridData');
+        //    $grid.jqGrid('setGridParam', { search: true });
+        //    var postData = $grid.jqGrid('getGridParam', 'postData');
+
+        //    //$.extend(postData, { filters: '{"groupOp":"AND","rules":[{"field":"orgRef","op":"eq","data":"'+  $('#organisationReference').val() + '"},{"field":"complaintRecordType","op":"eq","data":"02"}]}'});
+        //    $.extend(postData, { filters: ''});
+        //    $grid.jqGrid('setGridParam', {
+        //        url: listComplaintUrl.replace("placeholder", $('#organisationReference').val()),
+        //        //url: listComplaintUrl,
+        //        mtype: "POST",
+        //        datatype: 'json'
+        //    });
+
+        //    $grid.trigger("reloadGrid", [{ page: 1 }]);
+        //}
+
+        function initComplaintGrid() {
+            var actionUrl = listComplaintUrl.replace("placeholder", $('#organisationReference').val());
+            var $grid = $("#complaintGridTable");
+            var pager_selector = "#complaintGridPager";
+
+            if ($grid.isJqGrid()) {
+                $grid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                sortname: 'complaintDate',
+                sortorder: 'desc',
+                url: actionUrl,
+                mtype: 'post',
+                datatype: "json",
+                colNames: ['Complaint Reference No.',
+                    'Source',
+                    'Activity Concerned',
+                    'Date of Complaint',
+                    'Processing Status' ,
+                    'Follow-up Action Taken',
+                    'PSP No. / File Ref. No.',
+                    'Result of the Complaint',
+                    'Due Date',
+                    'Withholding Begin Date',
+                    'Withholding End Date',
+                    'Investigated by Police',
+                    'No. of Telephone Record',
+                    'No. of Enquiry from Other Department / Authorities',
+                    'ComplaintMasterId'],
+                colModel: [{
+                    name: 'complaintRef',
+                    width: 70,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintSource',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintSources))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'activityConcern',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ActivityConcerns))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'processStatus',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ProcessStatus))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'followUpAction',
+                    width: 200
+                },{
+                    name : 'pspRef',
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'complaintResult',
+                    index: 'ComplaintResult>Result',
+                    width: 100,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintResults))
+                        },
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'replyDueDate',
+                    template: dateTemplate,
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingBeginDate',
+                    template: dateTemplate,
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingEndDate',
+                    template: dateTemplate,
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'policeCaseIndicator',
+                    width: 80,
+                    template: yesNoTemplate,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'telRecordNum',
+                    template:numTemplate,
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'otherDepartmentEnquiryNum',
+                    template:numTemplate,
+                    width: 0,
+                    hidden : true,
+                }, {
+                    name : 'complaintMasterId',
+                    width: 0,
+                    hidden : true,
+                    search: false,
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    //var currentUrl=window.location.href;
+                    //var returnUrl=currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation")-1);
+                    var actionUrl = editEnquiryComplaintUrl.replace("-1", data.complaintMasterId)+"?ReturnUrl="+returnUrl;
+                    window.location = actionUrl;
+                }
+            });
+
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportComplaintTabRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            });
+        };
+
+        function onExportComplaintTabRecord() {
+            var grid = $('#complaintGridTable');
+            var data = grid.jqGrid('getRowData');
+
+            if (data.length == 0) {
+                notifSuccess("Complaint is no Record");
+                return;
+            }
+
+            var actionUrl = exportComplaintTabUrl.replace("placeholder", $('#organisationReference').val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        };
+
+        function initEnquiryGrid() {
+            var $grid = $("#enquiryGridTable");
+            var pager_selector = "#enquiryGridPager";
+            var actionUrl = listEnquiryUrl.replace("placeholder", $('#organisationReference').val());
+
+            if ($grid.isJqGrid()) {
+                $grid.reloadJqGrid();
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                sortname: 'complaintDate',
+                sortorder: 'desc',
+                url: actionUrl,
+                datatype: 'json',
+                mtype: 'post',
+                colNames: ['Complaint Reference No.',
+                    'Source',
+                    'Activity Concerned',
+                    'Date of Complaint',
+                    'Processing Status' ,
+                    'Follow-up Action Taken',
+                    'PSP No.',
+                    'Result of the Complaint',
+                    'Due Date',
+                    'Withholding Begin Date',
+                    'Withholding End Date',
+                    'Investigated by Police',
+                    'No. of Telephone Record',
+                    'No. of Enquiry from Other Department / Authorities',
+                    'ComplaintMasterId'],
+                colModel: [{
+                    name: 'complaintRef',
+                    width: 120,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintSource',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintSources))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'activityConcern',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ActivityConcerns))
+                        },
+                    width: 150,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'processStatus',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ProcessStatus))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'followUpAction',
+                    width: 250
+                },{
+                    name : 'pspRef',
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'complaintResult',
+                    index: 'ComplaintResult>Result',
+                    width: 150,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintResults))
+                        },
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'replyDueDate',
+                    template: dateTemplate,
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingBeginDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingEndDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'policeCaseIndicator',
+                    width: 100,
+                    template: yesNoTemplate,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'telRecordNum',
+                    template:numTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'otherDepartmentEnquiryNum',
+                    template:numTemplate,
+                    width: 100,
+                    hidden : 'true',
+                }, {
+                    name : 'complaintMasterId',
+                    hidden : 'true',
+                    search: false,
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    //var currentUrl=window.location.href;
+                    //var returnUrl=currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation")-1);
+                    var actionUrl = editEnquiryComplaintUrl.replace("-1", data.complaintMasterId)+"?ReturnUrl="+returnUrl;
+                    window.location = actionUrl;
+                }
+            });
+
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportEnquiryTabRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            });
+        };
+
+        function onExportEnquiryTabRecord() {
+            var grid = $('#enquiryGridTable');
+            var data = grid.jqGrid('getRowData');
+
+            if (data.length == 0) {
+                notifSuccess("Enquiry is no Record");
+                return;
+            }
+
+            var actionUrl = exportEnquiryTabUrl.replace("placeholder", $('#organisationReference').val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        };
+
+        function initAfsGrid() {
+            var actionUrl = listAfsUrl.replace("-1", $('#orgMasterId').val());
+            var $afsGrid = $("#afsGridTable");
+            var pager_selector = "#afsGridPager";
+
+            if ($afsGrid.isJqGrid()) {
+                $afsGrid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $afsGrid.jqGrid({
+                pager: pager_selector,
+                sortname: 'applicationReceiveDate desc, createdOn',
+                sortorder: 'desc',
+                datatype: "json",
+                url: actionUrl,
+                colNames: [
+                'Record Key',
+                'orgId',
+                'OrgRef',
+                'Permit Type',
+                'File Ref',
+                'From Date',
+                'To Date',
+                'Details',
+                'Date of Record Created at',
+                'Date of Receiving Application'
+                ],
+                colModel: [{
+                    name: 'recordKey',                    
+                    hidden: true
+                }, {
+                    name: 'orgId',
+                    width: 100,
+                }, {
+                    name: 'orgRef',
+                    hidden: true
+                }, {
+                    name: 'permitType',
+                    width: 100,
+                }, {
+                    name: 'fileRef',
+                    width: 150,
+                }, {
+                    name: 'afsRecordStartDate',
+                    template: dateTemplate,
+                    width: 150,
+                }, {
+                    name: 'afsRecordEndDate',
+                    template: dateTemplate,
+                    width: 150,
+                }, {
+                    name: 'afsRecordDetails',
+                    width: 650,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'createdOn',
+                    template: dateTemplate,
+                    hidden: true
+                }, {
+                    name: 'applicationReceiveDate',
+                    template: dateTemplate,
+                    hidden: true
+                }
+                ],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $afsGrid.jqGrid('getRowData', rowId);
+
+                    if(data.permitType.toLowerCase()=="psp"){
+                        onEditPspFdRecord("PSP", data.recordKey);
+                    }
+                    else if(data.permitType.toLowerCase()=="fd"){
+                        onEditPspFdRecord("FD", data.recordKey);
+                    }
+                }
+            });
+
+            //navButtons
+            $afsGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {})
+        };
+
+        function initTrackRecordGrid() {
+            var actionUrl = listTrackRecordUrl.replace("-1", $('#orgMasterId').val());
+            var $trackRecordGrid = $("#trackRecordGridTable");
+            var pager_selector = "#trackRecordGridPager";
+
+            if ($trackRecordGrid.isJqGrid()) {
+                $trackRecordGrid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $trackRecordGrid.jqGrid({
+                pager: pager_selector,
+                sortname: 'applicationReceiveDate desc, createdOn',
+                sortorder: 'desc',
+                datatype: "json",
+                url: actionUrl,
+                colNames: [
+                'Record Key',
+                'orgId',
+                'OrgRef',
+                'Permit Type',
+                'File Ref',
+                'From Date',
+                'To Date',
+                'Details',
+                'Date of Record Created at',
+                'Date of Receiving Application'
+                ],
+                colModel: [{
+                    name: 'recordKey',                    
+                    hidden: true
+                }, {
+                    name: 'orgId',
+                    hidden: true
+                }, {
+                    name: 'orgRef',
+                    hidden: true
+                }, {
+                    name: 'permitType',
+                    width: 100,
+                }, {
+                    name: 'fileRef',
+                    width: 150,
+                }, {
+                    name: 'trackRecordStartDate',
+                    template: dateTemplate,
+                    width: 150,
+                }, {
+                    name: 'trackRecordEndDate',
+                    template: dateTemplate,
+                    width: 150,
+                }, {
+                    name: 'trackRecordDetails',
+                    width: 650,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'createdOn',
+                    template: dateTemplate,
+                    hidden: true
+                }, {
+                    name: 'applicationReceiveDate',
+                    template: dateTemplate,
+                    hidden: true
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $trackRecordGrid.jqGrid('getRowData', rowId);
+
+                    if(data.permitType.toLowerCase()=="psp"){
+                        onEditPspFdRecord("PSP", data.recordKey);
+                    }
+                    else if(data.permitType.toLowerCase()=="fd"){
+                        onEditPspFdRecord("FD", data.recordKey);
+                    }
+                }
+            });
+
+            //navButtons
+            $trackRecordGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {})
+        };
+
+        //function onClickAttachment() {
+        //    var $grid = $('#attachmentGridTable');
+        //    $grid.jqGrid('clearGridData');
+        //    $grid.jqGrid('setGridParam', { search: false });
+        //    var postData = $grid.jqGrid('getGridParam', 'postData');
+        //    $.extend(postData, { filters: "" });
+        //    $grid.jqGrid('setGridParam', {
+        //        url: ,
+        //        datatype: 'json'
+        //    });
+
+        //    $grid.trigger("reloadGrid", [{ page: 1 }]);
+
+        //}
+
+        //var attachmentGridInited = false;
+        function initAttachmentGrid() {
+            var actionUrl = listOrgAttachmentUrl.replace('placeholder', $('#orgMasterId').val());
+            var $grid = $("#attachmentGridTable");
+            var attachment_pager_selector = "#attachmentGridPager";
+
+            if ($grid.isJqGrid()) {
+                $grid.reloadJqGrid();
+                return;
+            }
+
+            $grid.jqGrid({
+                autowidth: true,
+                url: actionUrl,
+                sortname: 'fileName',
+                sortorder: 'asc',
+                datatype: "json",
+                colNames: [
+                    '',
+                    'File Description',
+                    'File Name',
+                    'Uploaded By',
+                    'Uploaded Date',
+                    'Action'],
+                colModel: [{
+                    name: 'orgAttachmentId',
+                    hidden: true,
+                }, {
+                    name: 'fileDescription',
+                    sorttype: 'text',
+                    width: 400
+                }, {
+                    name: 'fileName',
+                    sorttype: 'text',
+                    width: 350
+                }, {
+                    name: 'createdById',
+                    sorttype: 'text',
+                    width: 100
+                }, {
+                    name: 'createdOn',
+                    template: dateTemplate,
+                    width: 100
+                }, {
+                    name: 'rowAction',
+                    width: 80,
+                    template: rowActionTemplate,
+                    delbutton: false
+                }],
+                rownumbers: true,
+                viewrecords: true,
+                rowNum: 10,
+                rowList: [10, 20, 30],
+                pager: attachment_pager_selector,
+                altRows: true,
+                toppager: false,
+                multiselect: false,
+                //multikey: "ctrlKey",
+                multiboxonly: false,
+                caption: "",
+                autowidth: true,
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: function () {
+                    var $grid = $(this);
+                    setTimeout(function () {
+                        updateActionIcons(this);
+                        updatePagerIcons(this);
+                        enableTooltips(this);
+                    }, 0);
+
+                    var iCol = getColumnIndexByName($grid, 'rowAction');
+                    $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            var $this = $(this);
+
+                            //delete document button
+                            $("<div>", {
+                                title: "Delete",
+                                mouseover: function () {
+                                    $this.addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $this.removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $grid.jqGrid('getRowData', rowId);
+                                    doDeleteRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-trash red"></span>')
+                                .prependTo($this.children("div"));
+
+                            //download document button
+                            $("<div>", {
+                                title: "Download",
+                                mouseover: function () {
+                                    $this.addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $this.removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $grid.jqGrid('getRowData', rowId);
+                                    doDownloadRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-download-alt red"></span>')
+                                .prependTo($this.children("div"));
+                        });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //enable search/filter toolbar
+            //jQuery(attachment_grid_selector).jqGrid('filterToolbar',{defaultSearch:true,stringResult:true})
+
+            //navButtons
+            $grid.jqGrid('navGrid', attachment_pager_selector, { //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', attachment_pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: doNewRecord,
+                position: "first",
+                title: "New Record",
+                cursor: "pointer"
+            });
+
+            function doShowModal() {
+                $('#attachmentModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function doEditRecord(data) {
+                clearForm('#AttachmentForm');
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                $('#attBtnUpdate').removeClass('hide');
+                $('#attBtnCreate').addClass('hide');
+                $('#attachmentName').val(data.fileName);
+                $('#attachmentRemark').val(data.fileDescription);
+                $('#attachmentId').val(data.orgAttachmentId);
+                $('#attachmentDocument').val('');
+
+                doShowModal();
+            };
+
+            function doDownloadRecord(data) {
+                var actionUrl = downloadOrgAttachmentUrl.replace('-1', data.orgAttachmentId);
+                window.location = actionUrl;
+            };
+
+            function doNewRecord() {
+                clearForm('#AttachmentForm');
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                $('#attBtnCreate').removeClass('hide');
+                $('#attBtnUpdate').addClass('hide');
+                $('#attachmentDocument').val('');
+                doShowModal();
+            };
+
+            function doDeleteRecord(data) {
+                var actionUrl = deleteOrgAttachmentUrl.replace('-1', data.orgAttachmentId);
+                confirmDelete(function (result) {
+                    if (result) {
+                        ajaxPost(actionUrl,
+                             function (response) {
+                                 //$('#editModal').modal('hide');
+                                 $("#attachmentGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 notifSuccess(response.message);
+                             },
+
+                             function (response) {
+                                 notifError(response.message);
+                             }
+                        )
+                    }
+                });
+
+            };
+        };
+    </script>
+}

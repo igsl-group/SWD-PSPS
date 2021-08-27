@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5CBA9091-540A-4CDE-B5A5-5343C617EABA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Psps.Services</RootNamespace>
+    <AssemblyName>Psps.Services</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CsvHelper">
+      <HintPath>..\packages\CsvHelper.2.10.0\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>..\packages\EPPlus.3.1.3.3\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actings\ActingService.cs" />
+    <Compile Include="Actings\IActingService.cs" />
+    <Compile Include="ComplaintMasters\ComplaintMasterService.cs" />
+    <Compile Include="ComplaintMasters\ComplaintAttachmentService.cs" />
+    <Compile Include="ComplaintMasters\ComplaintFollowUpActionService.cs" />
+    <Compile Include="ComplaintMasters\ComplaintPoliceCaseService.cs" />
+    <Compile Include="ComplaintMasters\ComplaintOtherDepartmentEnquiryService.cs" />
+    <Compile Include="ComplaintMasters\ComplaintResultService.cs" />
+    <Compile Include="ComplaintMasters\IComplaintOtherDepartmentEnquiryService.cs" />
+    <Compile Include="ComplaintMasters\IComplaintPoliceCaseService.cs" />
+    <Compile Include="ComplaintMasters\IComplaintFollowUpActionService.cs" />
+    <Compile Include="ComplaintMasters\IComplaintResultService.cs" />
+    <Compile Include="ComplaintMasters\IComplaintTelRecordService.cs" />
+    <Compile Include="ComplaintMasters\ComplaintTelRecordService.cs" />
+    <Compile Include="ComplaintMasters\IComplaintAttachmentService.cs" />
+    <Compile Include="ComplaintMasters\IComplaintMasterService.cs" />
+    <Compile Include="ComplaintMasters\IComplaintDocService.cs" />
+    <Compile Include="ComplaintMasters\ComplaintDocService.cs" />
+    <Compile Include="Disaster\DisasterMasterService.cs" />
+    <Compile Include="DisasterStatistics\DisasterStatisticsService.cs" />
+    <Compile Include="Disaster\IDisasterMasterService.cs" />
+    <Compile Include="DisasterStatistics\IDisasterStatisticsService.cs" />
+    <Compile Include="DocumentLibrary\DocumentService.cs" />
+    <Compile Include="DocumentLibrary\IDocumentService.cs" />
+    <Compile Include="DocumentLibrary\DocumentLibraryService.cs" />
+    <Compile Include="DocumentLibrary\IDocumentLibraryService.cs" />
+    <Compile Include="FlagDayList\FlagDayListService.cs" />
+    <Compile Include="FlagDayList\IFlagDayListService.cs" />
+    <Compile Include="FlagDays\FdApprovalHistoryService.cs" />
+    <Compile Include="FlagDays\FdAttachmentService.cs" />
+    <Compile Include="FlagDays\FdEventService.cs" />
+    <Compile Include="FlagDays\IFdApprovalHistoryService.cs" />
+    <Compile Include="FlagDays\IFdAttachmentService.cs" />
+    <Compile Include="FlagDays\IFdEventService.cs" />
+    <Compile Include="FlagDays\IFlagDayService.cs" />
+    <Compile Include="FlagDays\FlagDayService.cs" />
+    <Compile Include="FlagDays\IFlagDayDocService.cs" />
+    <Compile Include="FlagDays\FlagDayDocService.cs" />
+    <Compile Include="OGCIO\BaseApi.cs" />
+    <Compile Include="OGCIO\FundRaisingActivityApi.cs" />
+    <Compile Include="OGCIO\IBaseApi.cs" />
+    <Compile Include="OGCIO\IFundRaisingActivityApi.cs" />
+    <Compile Include="OGCIO\IOrganisationApi.cs" />
+    <Compile Include="OGCIO\OGCIOHttpAuthenticator.cs" />
+    <Compile Include="OGCIO\OrganisationApi.cs" />
+    <Compile Include="Home\HomeService.cs" />
+    <Compile Include="Home\IHomeService.cs" />
+    <Compile Include="LegalAdvices\ILegalAdviceService.cs" />
+    <Compile Include="LegalAdvices\LegalAdviceService.cs" />
+    <Compile Include="OGCIO\RestSharpJsonNetSerializer.cs" />
+    <Compile Include="Organisations\IOrgAfsTrViewService.cs" />
+    <Compile Include="Organisations\OrgAfsTrViewService.cs" />
+    <Compile Include="Organisations\OrgProvisionNotAdoptService.cs" />
+    <Compile Include="Organisations\IOrgProvisionNotAdoptService.cs" />
+    <Compile Include="Organisations\IOrganisationService.cs" />
+    <Compile Include="Organisations\IOrganisationDocService.cs" />
+    <Compile Include="Organisations\IOrgAttachmentService.cs" />
+    <Compile Include="Organisations\IOrgNameChangeHistoryService.cs" />
+    <Compile Include="Organisations\IOrgRefGuidePromulgationService.cs" />
+    <Compile Include="Organisations\OrganisationService.cs" />
+    <Compile Include="Organisations\OrganisationDocService.cs" />
+    <Compile Include="Organisations\OrgAttachmentService.cs" />
+    <Compile Include="Organisations\OrgNameChangeHistoryService.cs" />
+    <Compile Include="Organisations\OrgRefGuidePromulgationService.cs" />
+    <Compile Include="Organisations\WithholdingHistoryService.cs" />
+    <Compile Include="Organisations\IWithholdingHistoryService.cs" />
+    <Compile Include="Posts\IPostsInRolesService.cs" />
+    <Compile Include="Posts\PostsInRolesService.cs" />
+    <Compile Include="PSPs\IPspApprovalHistoryService.cs" />
+    <Compile Include="PSPs\IPspAttachmentService.cs" />
+    <Compile Include="PSPs\IPspCountEventsService.cs" />
+    <Compile Include="PSPs\IPspDocService.cs" />
+    <Compile Include="PSPs\IPspEventService.cs" />
+    <Compile Include="PSPs\IPspService.cs" />
+    <Compile Include="PSPs\PspApprovalHistoryService.cs" />
+    <Compile Include="PSPs\PspAttachmentService.cs" />
+    <Compile Include="PSPs\PspCountEventsService.cs" />
+    <Compile Include="PSPs\PspDocService.cs" />
+    <Compile Include="PSPs\PspEventService.cs" />
+    <Compile Include="PSPs\PSPService.cs" />
+    <Compile Include="Ranks\IRankService.cs" />
+    <Compile Include="Ranks\RankService.cs" />
+    <Compile Include="Posts\IPostService.cs" />
+    <Compile Include="Posts\PostService.cs" />
+    <Compile Include="Reports\IReportService.cs" />
+    <Compile Include="Reports\ReportService.cs" />
+    <Compile Include="Security\FunctionsInRolesService.cs" />
+    <Compile Include="Security\IFunctionsInRolesService.cs" />
+    <Compile Include="Security\RoleService.cs" />
+    <Compile Include="Suggestions\ISuggestionAttachmentService.cs" />
+    <Compile Include="Suggestions\ISuggestionMasterService.cs" />
+    <Compile Include="Suggestions\SuggestionAttachmentService.cs" />
+    <Compile Include="Suggestions\ISuggestionDocService.cs" />
+    <Compile Include="Suggestions\SuggestionDocService.cs" />
+    <Compile Include="Suggestions\SuggestionMasterService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserLogs\IUserLogService.cs" />
+    <Compile Include="UserLogs\UserLogService.cs" />
+    <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Events\EventPublisherExtensions.cs" />
+    <Compile Include="Events\IConsumer.cs" />
+    <Compile Include="Events\IEventPublisher.cs" />
+    <Compile Include="Events\ISubscriptionService.cs" />
+    <Compile Include="Events\SubscriptionService.cs" />
+    <Compile Include="Infrastructure\BaseService.cs" />
+    <Compile Include="Infrastructure\IService.cs" />
+    <Compile Include="Lookups\ILookupService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lookups\LookupService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\AclService.cs" />
+    <Compile Include="Security\IAclService.cs" />
+    <Compile Include="Security\FormsAuthenticationService.cs" />
+    <Compile Include="Security\FunctionService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Security\IAuthenticationService.cs" />
+    <Compile Include="Security\IFunctionService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Security\IRoleService.cs" />
+    <Compile Include="SystemMessages\IMessageService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SystemMessages\MessageService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Accounts\IUserService.cs" />
+    <Compile Include="Accounts\UserService.cs" />
+    <Compile Include="SystemParameters\IParameterService.cs" />
+    <Compile Include="SystemParameters\ParameterService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DocX\DocX\DocX.csproj">
+      <Project>{e863d072-aa8b-4108-b5f1-785241b37f67}</Project>
+      <Name>DocX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Core\Psps.Core.csproj">
+      <Project>{54748c7e-20c2-401d-bbdf-9793aa8e1117}</Project>
+      <Name>Psps.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Data\Psps.Data.csproj">
+      <Project>{576d1314-a75a-4ff7-8e10-7580d0f6e237}</Project>
+      <Name>Psps.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Models\Psps.Models.csproj">
+      <Project>{ebdf4286-98c8-4af8-a307-dcb7e9eb6fcb}</Project>
+      <Name>Psps.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

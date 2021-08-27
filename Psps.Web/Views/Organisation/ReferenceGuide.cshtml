@@ -1,0 +1,759 @@
+﻿@model Psps.Web.ViewModels.Organisation.OrganisationViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Reference_Guide;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="orgGuideform" class="form-horizontal" role="form">
+
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <div class="form-group">
+            @Html.LabelFor(m => m.OrganisationReference, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                <table>
+                    <tr>
+                        <td>
+                            ORG
+                        <td>
+                        <td>
+                            @Html.TextBoxFor(m => m.OrganisationReference, true, htmlAttributes: new { @id = "organisationReference", @class = "form-control", @maxlength = 4, @style = "width: 100px;" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            @Html.LabelFor(m => m.OrganisationName, new { @class = "col-xs-2 control-label" })
+
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.OrganisationName, true, htmlAttributes: new { @id = "organisationName", @class = "form-control", @maxlength = 256 })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.OrganisationStatusId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.OrganisationStatusId, true, new SelectList(Model.OrganisationStatus, "Key", "Value", Model.OrganisationStatusId), htmlAttributes: new { @id = "organisationStatusId", @class = "form-control", @data_provide = "select2" })
+            </div>
+            @Html.LabelFor(m => m.SubventedId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.SubventedId, true, new SelectList(Model.Subventeds, "Key", "Value", Model.SubventedId), htmlAttributes: new { @id = "subventedId", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.RegistrationTitleId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.RegistrationTitleId, true, new SelectList(Model.RegistrationTitles, "Key", "Value", Model.RegistrationTitleId), htmlAttributes: new { @id = "registrationTitleId", @class = "form-control", @data_provide = "select2" })
+            </div>
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.Registration, true, htmlAttributes: new { @id = "registration", @class = "form-control", @maxlength = 20, @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.SectionId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.SectionId, true, new SelectList(Model.Sections, "Key", "Value", Model.SectionId), htmlAttributes: new { @id = "sectionId", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.OrgReply, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-10">
+                @Html.DropDownListFor(model => model.OrgReply, true, new SelectList(Model.OrgReplys, "Key", "Value", Model.OrgReply), htmlAttributes: new { @id = "searchOrgReplys", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ReferenceGuideActivityConcern, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-10">
+                @Html.DropDownListFor(model => model.ReferenceGuideActivityConcern, true, new SelectList(Model.ActivityConcerns, "Key", "Value", Model.ReferenceGuideActivityConcern), htmlAttributes: new { @id = "searchActivityConcern", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ReplySlipReceiveDateStart, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-2" style="width: 130px;">
+                @Html.TextBoxFor(m => m.ReplySlipReceiveDateStart, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "replySlipReceiveDateStart", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+            </div>
+            <div class="col-xs-1" style="width: 30px;">
+                <label style="padding: 10px 0px 0px 10px;">to</label>
+            </div>
+            <div class="col-xs-3" style="width: 130px;">
+                @Html.TextBoxFor(m => m.ReplySlipReceiveDateEnd, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "replySlipReceiveDateEnd", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.SendDateStart, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-2" style="width: 130px;">
+                @Html.TextBoxFor(m => m.SendDateStart, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "sendDateStart", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+            </div>
+            <div class="col-xs-1" style="width: 30px;">
+                <label style="padding: 10px 0px 0px 10px;">to</label>
+            </div>
+            <div class="col-xs-2" style="width: 130px;">
+                @Html.TextBoxFor(m => m.SendDateEnd, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "sendDateEnd", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.AppliedPSPBeforeId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.AppliedPSPBeforeId, true, new SelectList(Model.AppliedPSPBefores, "Key", "Value", Model.AppliedPSPBeforeId), htmlAttributes: new { @id = "appliedPSPBeforeId", @class = "form-control", @data_provide = "select2" })
+            </div>
+
+            <div class="col-xs-5">
+                <label class="col-xs-2 control-label">Date</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.FromPspApplicationDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchFromPspApplicationDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+                <label class="col-xs-2 control-label">to</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.ToPspApplicationDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchToPspApplicationDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.AppliedFDBeforeId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.AppliedFDBeforeId, true, new SelectList(Model.AppliedFDBefores, "Key", "Value", Model.AppliedFDBeforeId), htmlAttributes: new { @id = "appliedFDBeforeId", @class = "form-control", @data_provide = "select2" })
+            </div>
+            <div class="col-xs-5">
+                @Html.LabelFor(m => m.AppliedFDBeforeFdYear, new { @class = "col-xs-2 control-label" })
+                <div class="col-xs-9">
+                    @Html.ListBoxFor(m => m.AppliedFDBeforeFdYear, new MultiSelectList(Model.FdYears, "Key", "Value", Model.AppliedFDBeforeFdYear),
+                                          htmlAttributes: new { @id = "appliedFDBeforeFdYear", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.AppliedSSAFBeforeId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.AppliedSSAFBeforeId, true, new SelectList(Model.AppliedSSAFBefores, "Key", "Value", Model.AppliedSSAFBeforeId), htmlAttributes: new { @id = "appliedSSAFBeforeId", @class = "form-control", @data_provide = "select2" })
+            </div>
+
+            <div class="col-xs-5">
+                <label class="col-xs-2 control-label">Date</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.FromSSAFApplicationDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchFromSsafApplicationDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+                <label class="col-xs-1 control-label">to</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.ToSSAFApplicationDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchToSsafApplicationDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.PSPIssuedBeforeId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.PSPIssuedBeforeId, true, new SelectList(Model.PSPIssuedBefores, "Key", "Value", Model.PSPIssuedBeforeId), htmlAttributes: new { @id = "pspIssuedBeforeId", @class = "form-control", @data_provide = "select2" })
+            </div>
+            <div class="col-xs-5">
+                <label class="col-xs-2 control-label">Date</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.FromPspPermitIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchFromPspPermitIssueDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+                <label class="col-xs-2 control-label">to</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.ToPspPermitIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchToPspPermitIssueDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FDIssuedBeforeId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.FDIssuedBeforeId, true, new SelectList(Model.FDIssuedBefores, "Key", "Value", Model.FDIssuedBeforeId), htmlAttributes: new { @id = "fdIssuedBeforeId", @class = "form-control", @data_provide = "select2" })
+            </div>
+            <div class="col-xs-5">
+                @Html.LabelFor(m => m.FdIssuedBeforeFdYear, new { @class = "col-xs-2 control-label" })
+                <div class="col-xs-9">
+                    @Html.ListBoxFor(m => m.FdIssuedBeforeFdYear, new MultiSelectList(Model.FdYears, "Key", "Value", Model.FdIssuedBeforeFdYear),
+                                          htmlAttributes: new { @id = "fdIssuedBeforeFdYear", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.SSAFIssuedBeforeId, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.SSAFIssuedBeforeId, true, new SelectList(Model.SSAFIssuedBefores, "Key", "Value", Model.SSAFIssuedBeforeId), htmlAttributes: new { @id = "ssafIssuedBeforeId", @class = "form-control", @data_provide = "select2" })
+            </div>
+
+            <div class="col-xs-5">
+                <label class="col-xs-2 control-label">Date</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.FromSSAFPermitIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchFromSsafPermitIssueDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+                <label class="col-xs-1 control-label">to</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.ToSSAFPermitIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "searchToSsafPermitIssueDate", @class = "form-control", @data_provide = "datepicker", @style = "width: 100px" })
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="vspace-6"></div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnSearch" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-search"></span>&nbsp;@Labels.Search</button>
+                <button id="btnClear" type="button" class="btn btn-sm btn-default">
+                    <span class="icon-eraser"></span>&nbsp;@Labels.Clear</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="gridForm" class="form-horizontal" role="form">
+    <input id="filters" name="filters" type="hidden" />
+    <input id="sidx" name="sidx" type="hidden" />
+    <input id="sord" name="sord" type="hidden" />
+    <fieldset>
+        <legend>Organisation(Good Practice Guide) Search Result</legend>
+    </fieldset>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="orgGuideGridTable" class="searchGrid"></table>
+                <div id="orgGuideGridPager"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnImpOrgRefGuideModal" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-upload"></span>&nbsp;Import</button>
+                <button id="btnExportRec" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-download"></span>&nbsp;Export</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@{Html.RenderAction("RenderImportRefGuideXlsFileModal");}
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listOrgGuideUrl = '@Url.RouteUrl("ListOrgGuide")';
+        var editOrgGuideUrl = '@Url.RouteUrl("EditOrgGuide", new { orgRefGuidePromulgationId = -1 })';
+
+        var exportReferenceGuideUrl = '@Url.RouteUrl("ExportReferenceGuide")';
+        var exportRecUrl = '@Url.RouteUrl("ExportRec")';
+
+        $(function () {
+            if (!$('#appliedPSPBeforeId').select2('val')) {
+                $('#searchFromPspApplicationDate').prop('readonly', true);
+                $('#searchToPspApplicationDate').prop('readonly', true);
+            }
+
+            $('#appliedPSPBeforeId').change(function () {
+                if ($(this).select2('val')) {
+                    $('#searchFromPspApplicationDate').prop('readonly', false);
+                    $('#searchToPspApplicationDate').prop('readonly', false);
+                }
+                else {
+                    $('#searchFromPspApplicationDate').prop('readonly', true);
+                    $('#searchToPspApplicationDate').prop('readonly', true);
+                }
+            });
+
+            if (!$('#appliedSSAFBeforeId').select2('val')) {
+                $('#searchFromSsafApplicationDate').prop('readonly', true);
+                $('#searchToSsafApplicationDate').prop('readonly', true);
+            }
+
+            $('#appliedSSAFBeforeId').change(function () {
+                if ($(this).select2('val')) {
+                    $('#searchFromSsafApplicationDate').prop('readonly', false);
+                    $('#searchToSsafApplicationDate').prop('readonly', false);
+                }
+                else {
+                    $('#searchFromSsafApplicationDate').prop('readonly', true);
+                    $('#searchToSsafApplicationDate').prop('readonly', true);
+                }
+            });
+            
+            if (!$('#pspIssuedBeforeId').select2('val')) {
+                $('#searchFromPspPermitIssueDate').prop('readonly', true);
+                $('#searchToPspPermitIssueDate').prop('readonly', true);
+            }
+
+            $('#pspIssuedBeforeId').change(function () {
+                if ($(this).select2('val')) {
+                    $('#searchFromPspPermitIssueDate').prop('readonly', false);
+                    $('#searchToPspPermitIssueDate').prop('readonly', false);
+                }
+                else {
+                    $('#searchFromPspPermitIssueDate').prop('readonly', true);
+                    $('#searchToPspPermitIssueDate').prop('readonly', true);
+                }
+            });
+
+            if (!$('#ssafIssuedBeforeId').select2('val')) {
+                $('#searchFromSsafPermitIssueDate').prop('readonly', true);
+                $('#searchToSsafPermitIssueDate').prop('readonly', true);
+            }
+
+            $('#ssafIssuedBeforeId').change(function () {
+                if ($(this).select2('val')) {
+                    $('#searchFromSsafPermitIssueDate').prop('readonly', false);
+                    $('#searchToSsafPermitIssueDate').prop('readonly', false);
+                }
+                else {
+                    $('#searchFromSsafPermitIssueDate').prop('readonly', true);
+                    $('#searchToSsafPermitIssueDate').prop('readonly', true);
+                }
+            });
+
+            if (!$('#appliedFDBeforeId').select2('val'))
+                $('#appliedFDBeforeFdYear').select2('readonly', true);
+            if (!$('#fdIssuedBeforeId').select2('val'))
+                $('#fdIssuedBeforeFdYear').select2('readonly', true);
+
+            $('#appliedFDBeforeId').change(function () {
+                if ($(this).select2('val'))
+                    $('#appliedFDBeforeFdYear').select2('readonly', false);
+                else
+                    $('#appliedFDBeforeFdYear').select2('readonly', true);
+            });
+
+            $('#fdIssuedBeforeId').change(function () {
+                if ($(this).select2('val'))
+                    $('#fdIssuedBeforeFdYear').select2('readonly', false);
+                else
+                    $('#fdIssuedBeforeFdYear').select2('readonly', true);
+            });
+
+            $('#btnExportRec').on('click', function (e) {
+                var grid = $('#orgGuideGridTable');
+                var data = grid.jqGrid('getRowData');
+                if (data.length == 0) {
+                    notifError("Good Practice Guide Search Result has no Record");
+                    return;
+                }
+
+                grid.exportGrid(exportRecUrl,
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+            });
+
+            $('#btnImpOrgRefGuideModal').on('click', function (e) {
+                $('#importRefGuideXlsFile').val('');
+                $('#importErrorMsgDiv').addClass('hide');
+                $('#importRefGuideXlsFileModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            });
+
+            $("#registrationTitleId").change(function () {
+                var registrationTitle = $("#registrationTitleId option:selected").text();
+                registrationTitle = registrationTitle.substring(registrationTitle.indexOf("-") + 1, registrationTitle.length)
+                if (!registrationTitle.toLowerCase().indexOf("other")) {
+                    $("#registration").removeAttr("disabled");
+                } else {
+                    $("#registration").val("");
+                    $("#registration").attr("disabled", true);
+                }
+            });
+
+            initOrgGrid();
+
+            $('#btnSearch').on('click', function () {
+                var $form = $('#orgGuideform');
+                var $grid = $('#orgGuideGridTable');
+                $grid.jqGrid('clearGridData');
+                
+                //Clear the multiple select2 when nothing selected
+                resetPostData($form, $grid);
+                //if ($("#appliedFDBeforeFdYear").val() == null) {
+                //    delete postData["AppliedFDBeforeFdYear"];
+                //}
+
+                //if ($("#fdIssuedBeforeFdYear").val() == null) {
+                //    delete postData["FdIssuedBeforeFdYear"];
+                //}
+
+                //if ($("#searchOrgReplys").val() == null) {
+                //    delete postData["OrgReply"];
+                //}                
+
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, queryStringToJson($form.serialize()))
+                if (clearFilter)
+                    $.extend(postData, { filters: "" });
+
+                $grid.jqGrid('setGridParam', {
+                    url: listOrgGuideUrl,
+                    datatype: 'json',
+                    mtype: "POST",
+                    search: !clearFilter,
+                    postData: postData
+                    //serializeGridData: function(postData) {
+                    //    var newPostData = $.extend(postData, queryStringToJson($('#orgGuideform').serialize()));
+                    //    //return $.param(queryStringToJson($('#orgGuideform').serialize()));
+                    //    return $.param(newPostData);
+                    //}
+                });
+                $grid.trigger("reloadGrid", [{ page: 1 }]);
+            });
+
+            initSearchForm();
+
+            $('#btnClear').click(function () {
+                clearForm("#orgGuideform");
+                $("#registrationTitleId").change();
+            });
+        });
+
+        var clearFilter = true;
+        function initSearchForm() {
+            var isFirst = @Html.Raw(Json.Encode(@Model.isFirstSearch));
+
+            if(!isFirst){
+                var array = @Html.Raw(Json.Encode(@Model.OrgReply));
+                $('#searchOrgReplys').select2('val', array);
+
+                $('#orgGuideGridTable').jqGrid('setGridParam',  { postData: { "filters": localStorage.getItem('orgGuideGridTable')} });
+                //$('#organisationStatusId').select2("val", response.data.organisationStatusId);
+                //$('#subventedId').select2("val", response.data.subventedId);
+                //$('#registrationTitleId').select2("val", response.data.registrationTitleId);
+                //$('#sectionId').select2("val", response.data.sectionId);
+                clearFilter = false || (localStorage.getItem('orgGuideGridTable') == "" || localStorage.getItem('orgGuideGridTable') == undefined);
+                $('#btnSearch').click();
+                clearFilter = true;
+            }
+            else{
+                $('#organisationStatusId,#subventedId,#registrationTitleId,#sectionId,#searchOrgReplys').select2("val", '');
+            }
+        }
+
+        function initOrgGrid() {
+            var $grid = $('#orgGuideGridTable');
+            var pager_selector = '#orgGuideGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                url: listOrgGuideUrl,
+                sortname: "sendDate desc, engOrgNameSorting",
+                sortorder: "asc",
+                datatype: "local",
+                mtype: "post",
+                colNames: [
+                    'RowNumber',
+                    'OrgRefGuidePromulgationId',
+                    'OrgMasterId',
+                    'Org. Reference', 'File Ref.', 'Organisation Name (Eng.)', 'Organisation Name (Chi.)', 'Organisation Status', 'Subvented', 'Registration (1)', 'Registration (2)', 'Section 88',
+                    'Eng & Chi Organisation Name',
+                    'Approved (Y/N)',
+                    'Date of Letter Sent',
+                    'Reply from Organisation',
+                    'Date of Receiving Reply Slip',
+                    'Activity Concerned (Code)',
+                    'Activity Concerned',
+                    'Provisions which will not be adopted',
+                    'Reason',
+                    'Remarks',
+                    'Address',
+                    'Email Address',
+                    'Name of Organisation in English',
+                    'Name of Organisation in Chinese',
+                    'Mailing Address in English',
+                    'Mailing Address in Chinese',
+                    'Contact Person',
+                    'Contact Person’s Email',
+                    'Organisation’s Email Address',
+                    'Part No.',
+                    'Encl. No.',
+                    '@Html.DisplayNameFor(m => m.AppliedPSPBeforeId)',
+                    '@Html.DisplayNameFor(m => m.AppliedFDBeforeId)',
+                    '@Html.DisplayNameFor(m => m.PSPIssuedBeforeId)',
+                    '@Html.DisplayNameFor(m => m.FDIssuedBeforeId)'
+                ],
+                colModel: [{
+                    name: 'rowNumber',
+                    hidden: true,
+                    width: 0
+                }, {
+                    name: 'orgRefGuidePromulgationId',
+                    hidden: true,
+                    width: 0
+                }, {
+                    name: 'orgMasterId',
+                    hidden: true,
+                    width: 0
+                }, {
+                    name: 'orgRef',
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'fileRef',
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'EngOrgName',
+                    index: 'orgMaster.EngOrgNameSorting',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                    }
+                }, {
+                    name: 'ChiOrgName',
+                    index: 'orgMaster.ChiOrgName',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                    }
+                }, {
+                    name: 'DisableIndicator',
+                    index: 'orgMaster.DisableIndicator',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.OrganisationStatus))
+                        }
+                }, {
+                    name: 'SubventedIndicator',
+                    index: 'orgMaster.SubventedIndicator',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                    },
+                    template: yesNoTemplate
+                }, {
+                    name: 'RegistrationType1',
+                    index: 'OrgMaster.RegistrationType1',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.RegistrationTitles))
+                        }
+                }, {
+                    name: 'RegistrationType2',
+                    index: 'OrgMaster.RegistrationType2',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.RegistrationTitles))
+                        }
+                }, {
+                    name: 'Section88Indicator',
+                    index: 'Section88Indicator',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                    },
+                    template: yesNoTemplate
+                }, {
+                    name: 'engOrgNameSorting',
+                    index: 'engOrgNameSorting, sendDate',
+                    width: '400',
+                    search: false
+                }, {
+                    name: 'approved',
+                    //template: yesNoTemplate,
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'sendDate',
+                    template: dateTemplate,
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'orgReply',
+                    index: 'orgReply',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne', 'nu'],
+                        value: @Html.Raw(Json.Encode(@Model.OrgReplys))
+                        },
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'replySlipReceiveDate',
+                    template: dateTemplate,
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'activityConcern',
+                    index: 'activityConcern',
+                    fixed: true,
+                    hidden: true,
+                    searchoptions: { searchhidden: true },
+                    exporthidden: false
+                }, {
+                    name: 'activityConcernDesc',
+                    fixed: true,
+                    width: '100',
+                    search: false
+                }, {
+                    name: 'orgProvisionNotAdopts',
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'promulgationReason',
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'remarks',
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'engMailingAddress1',
+                    width: '300'
+                }, {
+                    name: 'emailAddress',
+                    fixed: true,
+                    width: '150'
+                },{
+                    name: 'engOrgName',
+                    hidden: true,
+                    exporthidden: true
+                },{
+                    name: 'chiOrgName',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'engMailingAddress',
+                    index : 'engMailingAddress1',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'chiMailingAddress',
+                    index : 'chiMailingAddress1',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'contactPerson',
+                    index : 'contactPerson',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'contactPersonEmail',
+                    index : 'emailAddress',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'orgEmailAddress',
+                    index : 'emailAddress',
+                    width: 0,
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'partNum',
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'enclosureNum',
+                    fixed: true,
+                    width: '100'
+                }, {
+                    name: 'appliedPSPBefore',
+                    template: yesNoTemplate,
+                    hidden: true,
+                    searchoptions: { searchhidden: true }
+                }, {
+                    name: 'appliedFDBefore',
+                    template: yesNoTemplate,
+                    hidden: true,
+                    searchoptions: { searchhidden: true }
+                }, {
+                    name: 'pspIssuedBefore',
+                    template: yesNoTemplate,
+                    hidden: true,
+                    searchoptions: { searchhidden: true }
+                }, {
+                    name: 'fDPermitIssuedBefore',
+                    template: yesNoTemplate,
+                    hidden: true,
+                    searchoptions: { searchhidden: true }
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: function(grid) {
+                    defaultGridLoadComplete(grid);
+                    $(this).setGridParam({ datatype: "json" });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    if (data.orgRefGuidePromulgationId > 0)
+                        doEditRecord(data);
+                },
+                onSelectRow: function (rowId) {
+                    $grid.setGridParam('editurl', 'system-disaster-maintenance.html?' + rowId);
+                }
+            });
+
+            //group headers
+            $grid.jqGrid('setGroupHeaders', {
+                groupHeaders: [
+                    {
+                        startColumnName: 'partNum',
+                        numberOfColumns: 2, titleText: 'File Reference',
+                    }
+                ],
+                useColSpanStyle: true
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+                beforeRefresh: function() { resetPostData($('#orgGuideform'), $(this)) }
+            }, {}, {}, {}, {
+                //search form
+                recreateFilter: true,
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            });
+
+            function onExportRecord() {
+                var grid = $('#orgGuideGridTable');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifError("Good Practice Guide Search Result has no Record");
+                    return;
+                }
+
+                grid.exportGrid(exportReferenceGuideUrl,
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+            }
+
+            $(window).on('resize', function () {
+                $grid.setGridWidth($('.page-content').width());
+            }).trigger('resize');
+
+            function doEditRecord(data) {
+                var actionUrl = editOrgGuideUrl.replace("-1", data.orgRefGuidePromulgationId);
+                window.location = actionUrl;
+
+            };
+
+        };
+    </script>
+}

@@ -1,0 +1,127 @@
+﻿@model Psps.Web.ViewModels.PSP.PSPViewModel
+
+@*<form id="pspEditEventForm" class="form-horizontal" role="form">*@
+<div id="editEventModal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="btnCloseEvent" class="close" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">PSP Event Edit </h4>
+            </div>
+            <div class="modal-body">
+                @Html.BootstrapValidationSummary()
+                @Html.HiddenFor(m => m.PspMasterId, htmlAttributes: new { @id = "editEvePspMasterId" })
+                @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "editEventPspMasterRowVersion" })
+                @*@Html.HiddenFor(m => m.BypassValidation, htmlAttributes: new { @id = "editEventBypassValidation" })*@
+                @Html.HiddenFor(m => m.PspEventViewModel.PspEventId, htmlAttributes: new { @id = "pspEventId" })
+                @Html.HiddenFor(m => m.PspEventViewModel.RowVersion, htmlAttributes: new { @id = "eveRowVersion" })
+                @Html.HiddenFor(m => m.YearofPsp, htmlAttributes: new { @id = "yearofPsp" })
+
+                <fieldset>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.EventStartDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PspEventViewModel.EventStartDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "eventStartDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.EventEndDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PspEventViewModel.EventEndDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "eventEndDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.Time, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(m => m.PspEventViewModel.EventStartTime, true, htmlAttributes: new { @id = "eventStartTime", @class = "form-control ", @maxlength = 4 })
+                        </div>
+                        <div class="col-xs-1">
+                            <label class="control-label">to</label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(m => m.PspEventViewModel.EventEndTime, true, htmlAttributes: new { @id = "eventEndTime", @class = "form-control", @maxlength = 4 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.District, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-2">
+                            @Html.DropDownListFor(m => m.PspEventViewModel.District, true, new SelectList(Model.PspEventViewModel.Districts, "Key", "Key", Model.PspEventViewModel.District),
+                                                                                    htmlAttributes: new { @id = "eventDistrict", @class = "form-control", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.Location, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.PspEventViewModel.Location, 4, 500, htmlAttributes: new { @id = "location", @class = "form-control", @maxlength = 2000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.ChiLocation, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.PspEventViewModel.ChiLocation, 4, 500, htmlAttributes: new { @id = "chiLocation", @class = "form-control", @maxlength = 2000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.SimpChiLocation, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.PspEventViewModel.SimpChiLocation, 4, 500, htmlAttributes: new { @id = "simpChiLocation", @class = "form-control", @maxlength = 2000 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.MethodOfCollection, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.ListBoxFor(m => m.PspEventViewModel.MethodOfCollection, new MultiSelectList(Model.PspEventViewModel.MethodOfCollections, "Key", "Value", Model.PspEventViewModel.MethodOfCollection),
+                                        htmlAttributes: new { @id = "methodOfCollection", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.OtherMethodOfCollection, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.PspEventViewModel.OtherMethodOfCollection, htmlAttributes: new { @id = "otherMethodOfCollection", @class = "form-control", @maxlength = 200, @readOnly = true })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.EditEventRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.ListBoxFor(m => m.PspEventViewModel.EditEventRemark, new MultiSelectList(Model.PspEventViewModel.EditEventRemarks, "Key", "Value", Model.PspEventViewModel.EditEventRemarks),
+                                        htmlAttributes: new { @id = "editEventRemark", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.BypassValidation, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.BypassValidation, new { htmlAttributes = new { @id = "editEventBypassValidation", @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.ValidationMessage, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.PspEventViewModel.ValidationMessage, htmlAttributes: new { @id = "validationMessage", @class = "form-control", @maxlength = 200, @readOnly = true })
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCreateEvent" class="btn btn-sm btn-primary">
+                    <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                <button type="button" id="btnUpdateEvent" class="btn btn-sm btn-primary">
+                    <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                <button type="button" id="btnSplitEvent" class="btn btn-sm btn-primary">
+                    <span class="icon-ok"></span>&nbsp;@Labels.Split</button>
+                <button type="button" id="btnEventDelete" class="btn btn-sm btn-primary">
+                    <span class="icon-trash"></span>@Labels.Delete</button>
+                <button type="button" id="btnCancelEvent" class="btn btn-sm btn-default">
+                    <span class="icon-remove"></span>&nbsp;Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*</form>*@
+
+<script type="text/javascript">
+
+    $(function () {
+
+    });
+</script>

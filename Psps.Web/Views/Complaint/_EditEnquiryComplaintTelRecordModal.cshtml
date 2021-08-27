@@ -1,0 +1,164 @@
+﻿<div class="tab-pane" id="telRecord">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="telRecord-grid-table"></table>
+                <div id="telRecord-grid-pager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var listTelRecordUrl = '@Url.RouteUrl("ListTelRecord", new { complaintMasterId = -1 })';
+    var getComplaintTelRecordUrl = '@Url.RouteUrl("GetComplaintTelRecord", new { complaintTelRecordId = -1 })';
+    var exportComplaintTelRecordUrl = '@Url.RouteUrl("ExportComplaintTelRecord", new { complaintMasterId = -1 })';
+
+    function initTelRecordGrid() {
+        var actionUrl = listTelRecordUrl.replace("-1", $("#complaintMasterId").val());
+        var $grid = $("#telRecord-grid-table");
+        var pager_selector = "#telRecord-grid-pager";
+
+        if ($grid.isJqGrid()) {
+            $grid.reloadJqGrid();
+            return;
+        }
+
+        $grid.jqGrid({
+            pager: pager_selector,
+            url: actionUrl,
+            datatype: 'json',
+            sortname: 'telComplaintRef',
+            sortorder: 'asc',
+            colNames: ['Telephone Complaint Record Sheet Ref. No.', 'Date of Complaint / Enquiry', 'Name of Enquirer / Complainant',
+                       'Telephone No.', 'Name of Organisation',
+                       'Permit No. (if applicable)', 'ComplaintTelRecordId'],
+            colModel: [{
+                name: 'telComplaintRef',
+                width: '180',
+            }, {
+                name: 'complaintDate',
+                template: dateTemplate,
+                width: '150',
+            }, {
+                name: 'complainantName',
+                width: '150',
+            }, {
+                name: 'complainantTelNum',
+                width: '120',
+            }, {
+                name: 'engOrgName',
+                index: 'complaintMaster.OrgMaster.EngOrgName',
+                width: '300',
+            }, {
+                name: 'permitNum',
+                index: 'pspApprovalHistory.PermitNum',
+                width: '110',
+            }, {
+                name: 'complaintTelRecordId',
+                hidden: true,
+            }],
+            editurl: "/dummy.html", //nothing is saved
+            loadComplete: defaultGridLoadComplete,
+            ondblClickRow: function (rowId, iRow, iCol, e) {
+                var data = $grid.jqGrid('getRowData', rowId);
+                var actionUrl = getComplaintTelRecordUrl.replace("-1", data.complaintTelRecordId);
+                ajaxGet(actionUrl,
+                    function (response) {
+                        onEditRecord(response.data);
+                    }
+                );
+            }
+        });
+
+        //navButtons
+        $grid.jqGrid('navGrid', pager_selector, {
+            //navbar options
+            search: true,
+            refresh: true,
+        }, {}, {}, {}, {
+            //search form
+            recreateForm: true,
+            afterShowSearch: defaultSearchFormAfterShowSearch,
+            afterRedraw: defaultSearchFormAfterRedraw
+        }, {}).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-download-alt",
+            onClickButton: onExportRecord,
+            position: "first",
+            title: "Export Data",
+            cursor: "pointer"
+        }).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-plus",
+            onClickButton: onNewRecord,
+            position: "first",
+            title: "New Record",
+            cursor: "pointer"
+        });
+
+        function displayTelRecordInput() {
+            $('#telRecordComplaintMasterId').val($('#complaintMasterId').val());
+            $('#edit-telRecord-modal').modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            });
+        }
+
+        function onExportRecord() {
+            var grid = $('#telRecord-grid-table');
+            var data = grid.jqGrid('getRowData');
+
+            if (data.length == 0) {
+                notifSuccess("ComplaintTelRecord Search Result is no Record");
+                return;
+            }
+            var actionUrl = exportComplaintTelRecordUrl.replace("-1", $("#complaintMasterId").val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        }
+
+        function onNewRecord() {
+            $("#btnCreateTelRecord").show();
+            $("#btnUpdateTelRecord").hide();
+
+            clearForm('#edit-telRecord-modal');
+            displayTelRecordInput();
+
+            $('#telRecordPspApprovalHistoryId').select2('val', '', true);
+            $('#telRecordFdEventId').select2('val', '', true);
+
+            $("#complaintTelRecordOrgName").val(($("#orgRef").select2('data') && $("#orgRef").select2('data').text) || $('#concernedOrgName').val());
+            $('#officerName').val('@CurrentUser.Name');
+            $('#officerPost').val('@CurrentUser.PostId');
+        };
+
+        function onEditRecord(data) {
+            $("#btnCreateTelRecord").hide();
+            $("#btnDeleteTelRecord").show();
+            $("#btnUpdateTelRecord").show();
+
+            displayTelRecordInput();
+            $('#complaintTelRecordId').val(data.complaintTelRecordId);
+
+            $('#telComplaintRef').val(data.telComplaintRef);
+            $('#telRecordComplaintDate').datepicker('update', toDDMMYYYY(data.telRecordComplaintDate));
+            $('#complaintTime').val(data.complaintTime);
+
+            $('#telRecordComplainantName').val(data.telRecordComplainantName);
+            $('#complainantTelNum').val(data.complainantTelNum);
+
+            $('#complaintTelRecordOrgName').val(data.complaintTelRecordOrgName);
+
+            $('#telRecordPspApprovalHistoryId').select2('val', data.pspApprovalHistoryId, true);
+            $('#telRecordFdEventId').select2('val', data.fdEventId, true);
+
+            $("#complaintContentRemarkHtml").summernote('code', data.complaintContentRemarkHtml);
+            $('#officerName').val(data.officerName);
+            $('#officerPost').val(data.officerPost);
+        };
+    };
+</script>

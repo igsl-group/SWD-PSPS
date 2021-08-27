@@ -1,0 +1,86 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.MenuHelperModel
+@using System.Web.Mvc.Html
+@using MvcSiteMapProvider.Web.Html.Models
+
+@helper GenerateSidebar(List<SiteMapNodeModel> nodes)
+{
+    @:<ul class="nav nav-list">
+foreach (SiteMapNodeModel node in nodes)
+{
+    bool anyActiveDescendants = node.Descendants.Any(n => n.IsCurrentNode);
+    string url = node.IsClickable ? node.Url : "#";
+    string isActive = anyActiveDescendants || (!node.IsRootNode && node.IsInCurrentPath) || node.IsCurrentNode ? " active" : "";
+    string isOpen = anyActiveDescendants || (!node.IsRootNode && node.IsInCurrentPath) ? " open" : "";
+    string cssClass = node.Attributes.ContainsKey("cssClass") ? node.Attributes["cssClass"].ToString() : "";
+
+    if (!node.Children.Any())
+    {
+        <text>
+        <li class="@isActive@isOpen">
+            <a href="@url">
+                <i class="@cssClass"></i>
+                <span class="menu-text">
+                    @node.Title</span>
+            </a>
+        </li>
+        </text>
+    }
+    else
+    {
+        <text>
+        <li class="@isActive@isOpen">
+            <a href="#" class="dropdown-toggle">
+                <i class="@cssClass"></i>
+                <span class="menu-text">
+                    @node.Title</span>
+                <b class="arrow icon-angle-down"></b>
+            </a>@GenerateSubMenu(node.Children)
+        </li>
+        </text>
+    }
+}
+    @:</ul>
+}
+
+@helper GenerateSubMenu(SiteMapNodeModelList nodes)
+{
+    @:<ul class="submenu">
+foreach (SiteMapNodeModel node in nodes)
+{
+    bool anyActiveDescendants = node.Descendants.Any(n => n.IsCurrentNode);
+    string url = node.IsClickable ? node.Url : "#";
+    string isActive = anyActiveDescendants || (!node.IsRootNode && node.IsInCurrentPath) || node.IsCurrentNode ? " active" : "";
+    string isOpen = anyActiveDescendants || (!node.IsRootNode && node.IsInCurrentPath) ? " open" : "";
+    string cssClass = node.Attributes.ContainsKey("cssClass") ? node.Attributes["cssClass"].ToString() : "";
+
+    if (!node.Children.Any())
+    {
+        <text>
+        <li class="@isActive@isOpen">
+            <a href="@url">
+                <i class="icon-double-angle-right"></i>
+                @node.Title
+            </a>
+        </li>
+        </text>
+    }
+    else
+    {
+        <text>
+        <li class="@isActive@isOpen">
+            <a href="@url" class="dropdown-toggle">
+                <i class="icon-double-angle-right"></i>
+                @node.Title
+                <b class="arrow icon-angle-down"></b>
+            </a>@GenerateSubMenu(node.Children)
+        </li>
+        </text>
+    }
+}
+    @:</ul>
+}
+
+@if (Model.Nodes.Any())
+{
+    @GenerateSidebar(Model.Nodes)
+}

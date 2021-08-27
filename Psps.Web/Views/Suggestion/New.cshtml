@@ -1,0 +1,572 @@
+﻿@model Psps.Web.ViewModels.Suggestion.SuggestionMasterViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Suggestion_Edit;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="SuggestionEditFrom" class="form-horizontal">
+    <div id="details" class="">
+
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a href="#suggestion" id="tab1" data-toggle="tab">Suggestion</a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#template" data-toggle="tab">Template<span id="templateAmount" class="badge">0</span></a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#attachment" onclick="onClickAttachment()" data-toggle="tab">Attachment<span id="attachmentAmount" class="badge">0</span></a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            @Html.BootstrapValidationSummary()
+            @Html.AntiForgeryToken()
+            <div class="tab-pane active" id="suggestion">
+                <legend>Suggestion Details</legend>
+
+                <fieldset>
+                    <div class="modal-body">
+                        @Html.HiddenFor(m => m.SuggestionMasterId, htmlAttributes: new { @id = "suggestionMasterId" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SuggestionRefNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.SuggestionRefNum, true, htmlAttributes: new { @id = "suggestionRefNum", @class = "form-control", @maxlength = 20, @style = "width: 200px" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SuggestionSourceId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.DropDownListFor(m => m.SuggestionSourceId, true, new SelectList(Model.SuggestionSources, "Key", "Value", Model.SuggestionSourceId), htmlAttributes: new { @id = "suggestionSources", @class = "form-control", @data_provide = "select2" })
+
+                                @Html.TextBoxFor(m => m.SuggestionSourceOther, true, htmlAttributes: new { @id = "suggestionSourceOther", @class = "form-control", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ActivityConcernId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.DropDownListFor(m => m.ActivityConcernId, true, new SelectList(Model.ActivityConcerns, "Key", "Value", Model.ActivityConcernId), htmlAttributes: new { @id = "activityConcerns", @class = "form-control", @data_provide = "select2" })
+
+                                @Html.TextBoxFor(m => m.SuggestionActivityConcernOther, true, htmlAttributes: new { @id = "suggestionActivityConcernOther", @class = "form-control", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NatureId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.DropDownListFor(m => m.NatureId, true, new SelectList(Model.Natures, "Key", "Value", Model.Natures.First().Key), htmlAttributes: new { @id = "natures", @class = "form-control", @data_provide = "select2", style = "width: 200px;" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SuggestionDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.SuggestionDate, true, htmlAttributes: new { @id = "suggestionDate", @class = "form-control", @maxlength = 20, @style = "width: 200px", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SenderName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(m => m.SenderName, true, htmlAttributes: new { @id = "senderName", @class = "form-control", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SuggestionDescription, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextAreaFor(m => m.SuggestionDescription, true, 4, 100, htmlAttributes: new { @id = "suggestionDescription", @class = "form-control", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FileRefNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.PartNum, true, htmlAttributes: new { @id = "partNum", @class = "form-control", @maxlength = 20 })
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.EnclosureNum, true, htmlAttributes: new { @id = "enclosureNum", @class = "form-control", @maxlength = 50 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AcknowledgementSentDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.AcknowledgementSentDate, true, htmlAttributes: new { @id = "acknowledgementSentDate", @class = "form-control", @maxlength = 20, @style = "width: 200px", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Remark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(m => m.Remark, 4, 100, htmlAttributes: new { @id = "remark", @class = "form-control", @maxlength = 4000 })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
+                            <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                                <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                            <button type="button" id="btnCreate" class="btn btn-sm btn-primary">
+                                <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                            <button type="button" id="btnUpdate" class="btn btn-sm btn-primary">
+                                <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                            <button type="button" id="btnCancel" class="btn btn-sm btn-default" data-dismiss="modal">
+                                <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="template">
+                @{Html.RenderAction("RenderSuggestionTemplateModal");}
+            </div>
+
+            <div id="attachment" class="tab-pane">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="attachmentGridTable"></table>
+                            <div id="attachmentGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@{Html.RenderAction("RenderSuggestionAttachmentDetailModal");}
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var newSuggestionMasterUrl = '@Url.RouteUrl("CreateSuggestionMaster")';
+        var editSuggestionMasterUrl = '@Url.RouteUrl("UpdateSuggestionMaster", new { code = "placeholder" })';
+        var getSuggestionMasterUrl = '@Url.RouteUrl("GetSuggestionMaster", new { code = -1 })';
+
+        var listSuggestionAttachmentUrl = '@Url.RouteUrl("ListSuggestionAttachment", new { Code = "placeholder" })';
+        var createSuggestionAttachmentUrl = '@Url.RouteUrl("CreateSuggestionAttachment", new { Code = "placeholder" })';
+        var updateSuggestionAttachmentUrl = '@Url.RouteUrl("UpdateSuggestionAttachment")';
+        var downloadSuggestionAttachmentUrl = '@Url.RouteUrl("DownloadSuggestionAttachment", new { AttachmentId = -1 })';
+        var deleteSuggestionAttachmentUrl = '@Url.RouteUrl("DeleteSuggestionAttachment", new { AttachmentId = -1 })';
+
+        var calRelevantRecordsUrl = '@Url.RouteUrl("CalRelevantRecords", new { code = "placeholder" })';
+
+        var indexUrl = '@Url.RouteUrl("ReturnSearchSug")';
+
+        $(function ($) {
+            $('#tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                if ('#template' == e.target.hash) {
+                    initTemplateGrid();
+                }
+            });
+
+            //inittemplateGrid();
+            initattachmentGrid();
+            var $div = $('#details');
+            $div.removeClass('hide');
+            if ($('#suggestionMasterId').val() == "" || $('#suggestionMasterId').val() == "0")//new
+            {
+                $('#tab1').trigger("click");
+                $('#btnCreate').removeClass('hide');
+                $('#btnUpdate').addClass('hide');
+                onNewRecord();
+            }
+            else//edit
+            {
+
+                $('#tab1').trigger("click");
+                $('#btnUpdate').removeClass('hide');
+                $div.find('.read-mode-only').removeClass('hide');
+                $('#btnCreate').addClass('hide');
+
+                $('#suggestionSources,#natures,#activityConcerns').select2("val", '');
+                var $form = $("#SuggestionEditFrom");
+
+                var actionUrl = getSuggestionMasterUrl.replace(-1, $('#suggestionMasterId').val());
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         onEditRecord(response.data);
+                     }
+                );
+                calRelevantRecordsAmount();
+            }
+
+            $('#btnCreate').click(function () {
+                var $form = $("#SuggestionEditFrom");
+                if ($form.valid()) {
+                    var actionUrl = newSuggestionMasterUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnUpdate').click(function () {
+                var $form = $("#SuggestionEditFrom");
+                if ($form.valid()) {
+                    var actionUrl = editSuggestionMasterUrl.replace("placeholder", $('#suggestionMasterId').val());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#attBtnCreate').click(function () {
+                var $form = $("#attachmentForm");
+                if ($form.valid()) {
+                    var actionUrl = createSuggestionAttachmentUrl.replace("placeholder", $('#suggestionMasterId').val());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#attachmentModal').modal('hide');
+                             $("#attachmentGridTable").trigger("reloadGrid", [{ current: true }]);
+                             calRelevantRecordsAmount();
+                             $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#attBtnUpdate').click(function () {
+                var $form = $("#attachmentForm");
+                if ($form.valid()) {
+                    var actionUrl = updateSuggestionAttachmentUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#attachmentModal').modal('hide');
+                             $("#attachmentGridTable").trigger("reloadGrid", [{ current: true }]);
+                             $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#attBtnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#attachmentModal').modal('hide');
+                        clearForm('#attachmentForm');
+                    }
+                });
+            });
+            $('#attBtnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#attachmentModal').modal('hide');
+                        clearForm('#attachmentForm');
+                    }
+                });
+            });
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        window.location = indexUrl;
+                    }
+                });
+            });
+
+            $("#suggestionSources").change(function () {
+                var suggestionSource = $("#suggestionSources option:selected").text();
+                if (suggestionSource.toLocaleLowerCase() == "Other Departments / Authorities".toLocaleLowerCase()) {
+                    $("#suggestionSourceOther").removeAttr("disabled");
+                } else {
+                    $("#suggestionSourceOther").val("");
+                    $("#suggestionSourceOther").attr("disabled", true);
+                }
+            });
+
+            $("#activityConcerns").change(function () {
+                var activityConcern = $("#activityConcerns option:selected").text();
+                if (activityConcern.toLocaleLowerCase() == "Others".toLocaleLowerCase()) {
+                    $("#suggestionActivityConcernOther").removeAttr("disabled");
+                } else {
+                    $("#suggestionActivityConcernOther").val("");
+                    $("#suggestionActivityConcernOther").attr("disabled", true);
+                }
+            });
+
+        });
+
+        function calRelevantRecordsAmount() {
+            ajaxPost(calRelevantRecordsUrl.replace("placeholder", $('#suggestionMasterId').val()),
+                function (response) {
+                    $('#templateAmount').html(response.data.templateAmount);
+                    $('#attachmentAmount').html(response.data.attachmentAmount);
+                }
+            );
+        }
+
+        function onClickAttachment() {
+            var $grid = $('#attachmentGridTable');
+            $grid.jqGrid('clearGridData');
+            $grid.jqGrid('setGridParam', { search: false });
+            var postData = $grid.jqGrid('getGridParam', 'postData');
+            $.extend(postData, { filters: "" });
+            $grid.jqGrid('setGridParam', {
+                url: listSuggestionAttachmentUrl.replace('placeholder', $('#suggestionMasterId').val()),
+                datatype: 'json'
+            });
+
+            $grid.trigger("reloadGrid", [{ page: 1 }]);
+
+        }
+
+        var attachmentGridInited = false;
+        function initattachmentGrid() {
+            if (attachmentGridInited)
+                return;
+            attachmentGridInited = true;
+
+            var $attachmentGrid = $("#attachmentGridTable");
+            var attachment_pager_selector = "#attachmentGridPager";
+
+            $attachmentGrid.jqGrid({
+                autowidth: true,
+                data: fileUploadData,
+                sortname: 'fileName',
+                sortorder: 'asc',
+                datatype: "local",
+                colNames: [
+                    'AttachmentId',
+                    'Remarks',
+                    'File Name',
+                    'Uploaded By',
+                    'Uploaded Date',
+                    'Action'],
+                colModel: [{
+                    name: 'attachmentId',
+                    hidden: true,
+                }, {
+                    name: 'remarks',
+                    hidden: true,
+                }, {
+                    name: 'fileName',
+                    sorttype: 'text',
+                    width: 300
+                }, {
+                    name: 'CreatedById',
+                    jsonmap: 'uploadedBy',
+                    sorttype: 'text',
+                    width: 300
+                }, {
+                    name: 'CreatedOn',
+                    jsonmap: 'uploadedTime',
+                    template: dateTimeTemplate,
+                    width: 300
+                }, {
+                    name: 'rowAction',
+                    width: 80,
+                    template: rowActionTemplate,
+                    delbutton: false
+                }],
+                rownumbers: true,
+                viewrecords: true,
+                rowNum: 10,
+                rowList: [10, 20, 30],
+                pager: attachment_pager_selector,
+                altRows: true,
+                toppager: false,
+                multiselect: false,
+                //multikey: "ctrlKey",
+                multiboxonly: false,
+                caption: "",
+                autowidth: true,
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: function () {
+                    var $grid = $(this);
+                    setTimeout(function () {
+                        updateActionIcons(this);
+                        updatePagerIcons(this);
+                        enableTooltips(this);
+                    }, 0);
+
+                    var iCol = getColumnIndexByName($grid, 'rowAction');
+                    $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            var $this = $(this);
+
+                            //delete document button
+                            $("<div>", {
+                                title: "Delete",
+                                mouseover: function () {
+                                    $this.addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $this.removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $grid.jqGrid('getRowData', rowId);
+                                    doDeleteRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-trash red"></span>')
+                                .prependTo($this.children("div"));
+
+                            //download document button
+                            $("<div>", {
+                                title: "Download",
+                                mouseover: function () {
+                                    $this.addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $this.removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $grid.jqGrid('getRowData', rowId);
+                                    doDownloadRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-download-alt red"></span>')
+                                .prependTo($this.children("div"));
+                        });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $attachmentGrid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //enable search/filter toolbar
+            //jQuery(attachment_grid_selector).jqGrid('filterToolbar',{defaultSearch:true,stringResult:true})
+
+            //navButtons
+            $attachmentGrid.jqGrid('navGrid', attachment_pager_selector, { //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', attachment_pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: doNewRecord,
+                position: "first",
+                title: "New Record",
+                cursor: "pointer"
+            });
+
+            function doShowModal() {
+                $('#attachmentModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function doEditRecord(data) {
+                clearForm('#attachmentForm');
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                $('#attBtnUpdate').removeClass('hide');
+                $('#attBtnCreate').addClass('hide');
+                $('#attachmentName').val(data.fileName);
+                $('#attachmentRemark').val(data.remarks);
+                $('#attachmentId').val(data.attachmentId);
+                $('#attachmentDocument').val('');
+
+                doShowModal();
+            };
+
+            function doDownloadRecord(data) {
+                var actionUrl = downloadSuggestionAttachmentUrl.replace('-1', data.attachmentId);
+                window.location = actionUrl;
+            };
+
+            function doNewRecord() {
+                clearForm('#attachmentForm');
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                $('#attBtnCreate').removeClass('hide');
+                $('#attBtnUpdate').addClass('hide');
+                $('#attachmentDocument').val('');
+                doShowModal();
+            };
+
+            function doDeleteRecord(data) {
+                var actionUrl = deleteSuggestionAttachmentUrl.replace('-1', data.attachmentId);
+                confirmDelete(function (result) {
+                    if (result) {
+                        ajaxPost(actionUrl,
+                             function (response) {
+                                 //$('#editModal').modal('hide');
+                                 $("#attachmentGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 notifSuccess(response.message);
+                             },
+
+                             function (response) {
+                                 notifError(response.message);
+                             }
+                        )
+                    }
+                });
+
+            };
+        };
+
+        function onEditRecord(data) {
+
+            $('#btnUpdate').removeClass('hide');
+            $('#btnCreate').addClass('hide');
+
+            $('#suggestionRefNum').prop('readonly', true).val(data.suggestionRefNum);
+            $('#suggestionSources').select2('val', data.suggestionSourceId);
+            if (data.suggestionSourceOther == "") {
+                $('#suggestionSourceOther').prop('readonly', true).val(data.suggestionSourceOther);
+            } else {
+                $('#suggestionSourceOther').val(data.suggestionSourceOther);
+            }
+            $('#activityConcerns').select2('val', data.activityConcernId);
+            if (data.suggestionActivityConcernOther == "") {
+                $('#suggestionActivityConcernOther').prop('readonly', true).val(data.suggestionActivityConcernOther);
+            } else {
+                $('#suggestionActivityConcernOther').val(data.suggestionActivityConcernOther);
+            }
+
+            $('#suggestionRef').val(data.suggestionRef);
+            $('#natures').select2('val', data.natureId);
+            $('#suggestionDate').val(toDDMMYYYY(data.suggestionDate));
+            $('#senderName').val(data.senderName);
+            $('#suggestionDescription').val(data.suggestionDescription);
+            $('#partNum').val(data.partNum);
+            $('#enclosureNum').val(data.enclosureNum);
+            $('#acknowledgementSentDate').val(toDDMMYYYY(data.acknowledgementSentDate));
+            $('#remark').val(data.remark);
+        };
+
+        function onNewRecord() {
+
+            $('#btnCreate').removeClass('hide');
+            $('#btnUpdate').addClass('hide');
+
+            $('#suggestionMasterId').val('');
+            $('#suggestionRefNum').prop('readonly', true).val('');
+            $('#suggestionSources').select2('val', '');
+            $('#suggestionSourceOther').prop('readonly', true).val('');
+            $('#activityConcerns').select2('val', '');
+            $('#suggestionActivityConcernOther').prop('readonly', true).val('');
+            $('#suggestionRef').val('');
+            $('#natures').select2('val', '');
+            $('#suggestionDate').val('');
+            $('#senderName').val('');
+            $('#suggestionDescription').val('');
+            $('#partNum').val('');
+            $('#enclosureNum').val('');
+            $('#acknowledgementSentDate').val('');
+            $('#remark').val('');
+        };
+    </script>
+}

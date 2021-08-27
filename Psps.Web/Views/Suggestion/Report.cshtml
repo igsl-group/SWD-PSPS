@@ -1,0 +1,73 @@
+﻿@model Psps.Web.ViewModels.Suggestion.SuggestionMasterViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Suggestion_Report;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-inline .inline {
+        vertical-align: middle;
+    }
+</style>
+<form class="form-inline" id="reportForm">
+    <table id="reports-data-table" class="table table-bordered table-hover table-condensed data-table">
+        <thead>
+            <tr>
+                <th style="width: 50px">File</th>
+                <th style="width: 320px">Description</th>
+                <th>Parameters</th>
+                <th style="width: 100px">Action</th>
+            </tr>
+        </thead>
+        <tbody id="suggestionTbody">
+            <tr>
+                <td>R20</td>
+                <td>Register of Compliments / Suggestion</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R20_DateFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R20_DateFrom, true, htmlAttributes: new { @id = "r20_DateFrom", @class = "form-control", @maxlength = 10, @data_provide = "datepicker" })
+                            @Html.LabelFor(m => m.R20_DateTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R20_DateTo, true, htmlAttributes: new { @id = "r20_DateTo", @class = "form-control", @maxlength = 10, @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 20)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        $(function () {
+            $('input.form-control').addClass("data-val-ignore");
+        });
+
+        function Generate_Click(e, moduleNum) {
+            var $inputs = $(e.target || e.srcElement).parents("tr").find('input.form-control, select.form-control');
+            $inputs.removeClass("data-val-ignore");
+
+            var $form = $("#reportForm");
+            if ($form.valid()) {
+                var actionUrl = '/api/report/r' + moduleNum + '/generate';
+                $form.ajaxPostForm(actionUrl,
+                    function (response) {
+                        if (response.success)
+                            window.location.href = response.data;
+                        else
+                            notifError("No record found")
+                    }
+                );
+            }
+
+            $inputs.addClass("data-val-ignore");
+        }
+    </script>
+}

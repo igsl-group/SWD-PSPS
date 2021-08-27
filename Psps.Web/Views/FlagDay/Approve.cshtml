@@ -1,0 +1,438 @@
+﻿@model Psps.Web.ViewModels.FlagDay.FlagDayApproveViewModel
+@using Psps.Core;
+@using Psps.Core.Infrastructure;
+@using Psps.Resources;
+@{
+    ViewBag.Title = "Approve";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
+}
+
+<form id="fdEventSummaryForm" class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="fdEventSummaryGridTable"></table>
+                <div id="fdEventSummaryGridPager"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<form id="fdEventApproveForm" class="form-horizontal">
+    <div>
+        <a class="anchor" id="anchorDetails"></a>
+        <div class="hr hr20 hr-dotted"></div>
+
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a href="#fdApprove" data-toggle="tab">FD Result List</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="fdApproveStat" class="tab-pane active">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="approvalGridtable"></table>
+                            <div id="approvalGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vspace-6"></div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="pull-right">
+                        <button id="btnApprove" type="button" class="btn btn-primary btn-sm">
+                            <span class="icon-ok"></span>&nbsp;Approve</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="fdEditModalForm" class="form-horizontal">
+    <div id="fdEventEditModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="modelCloseBtn" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Flag Day Details</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.BootstrapValidationSummary()
+                    @Html.AntiForgeryToken()
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.YearofFlagDay, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.YearofFlagDay, true, htmlAttributes: new { @id = "yearOfFlagDay", @class = "form-control", @readOnly = true })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PostOfApprover, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.PostOfApprover, true, htmlAttributes: new { @id = "approverPost", @class = "form-control", @readOnly = true })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ApproverId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.ApproverId, true, htmlAttributes: new { @id = "approverId", @class = "form-control", @readOnly = true })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ApprovalDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.ApprovalDate, true, htmlAttributes: new { @id = "approvalDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SummaryRemarks, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(m => m.SummaryRemarks, 4, 100, htmlAttributes: new { @class = "form-control", @maxlength = 4000 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button id="modelApproveBtn" type="button" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;Approve</button>
+                    <button type="button" id="modelCancelBtn" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- inline scripts related to this page -->
+@section scripts {
+    <script type="text/javascript">
+        var listFdEventSummaryUrl = '@Url.RouteUrl("ListFdEventSummary")';
+        var listFdApplicationUrl = '@Url.RouteUrl("ListFdApplication", new { fdYear = "placeholder" })';
+        var approveFdEventsUrl = '@Url.RouteUrl("ApproveFdEvents")';
+        var submitFRASUrl = '@Url.RouteUrl("FDSubmitFRAS")';
+
+        var gblFdYear = "";
+        $(function ($) {
+            initSummaryGrid();
+            initApproveFdEventGrid();
+            $('#fdEventApproveForm').addClass('hide');
+            $('#btnApprove').on('click', function () {
+                displayInput();
+                $('#yearOfFlagDay').val(gblFdYear.toString());
+                $('#approverId').val('@currentUser.UserId');
+                $('#approverPost').val('@currentUser.PostId');
+                var currentDate = new Date();
+                var day = currentDate.getDate();
+                var month = currentDate.getMonth();
+                var year = currentDate.getFullYear();
+                $('#approvalDate').val(('0' + day).slice(-2) + '/' + ('0' + (month + 1)).slice(-2) + '/' + year);
+
+                //            if (confirm("Are you sure to Approve all applications handled in the selected Year?"))
+                //			{
+                //				alert('Approved')
+                //			};
+            });
+            $('#modelApproveBtn').on('click', function () {
+                var $form = $("#fdEditModalForm");
+                if ($form.valid()) {
+                    var actionUrl = approveFdEventsUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $("#fdEventSummaryGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                             $('#fdEventApproveForm').addClass('hide');
+                             $('#fdEventEditModal').modal('hide');
+
+                         }
+                    );
+
+                }
+            });
+
+            $('#modelCancelBtn').on('click', function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#fdEventEditModal').modal('hide');
+                        clearForm('#fdEventApproveForm');
+                        $('fdEventApproveForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                    }
+                });
+            });
+            $('#modelCloseBtn').on('click', function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#fdEventEditModal').modal('hide');
+                        clearForm('#fdEventApproveForm');
+                        $('fdEventApproveForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                    }
+                });
+            });
+
+            function displayInput() {
+                $('#fdEventEditModal').modal({
+                    backdrop: 'static', show: true,
+                    keyboard: false
+                });
+            }
+            //$('#tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            //    switch (e.target.hash) {
+            //        case "#fdApprove":
+            //            initApproveFdEventGrid();
+            //            break;
+            //    }
+            //});
+        });
+
+        function initSummaryGrid() {
+            var actionUrl = listFdEventSummaryUrl;
+            var $grid = $("#fdEventSummaryGridTable");
+            var pager_selector = "#fdEventSummaryGridPager";
+
+            if ($grid.isJqGrid()) {
+                $grid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                url: actionUrl,
+                datatype: "json",
+                colNames: [
+                    '@Labels.FD_YearofFlagDay',
+                    '@Labels.FD_ApplicationReceivedNum',
+                    '@Labels.FD_ApplicationApprovedNum',
+                    '@Labels.FD_ApplicationWithdrawNum',
+                    '@Labels.FD_PostOfApprover',
+                    '@Labels.FD_ApproverId',
+                    '@Labels.FD_ApprovalDate',
+                    '@Labels.Remarks',
+                    '@Labels.Approve'
+                ],
+                colModel: [{
+                    name: 'yearOfFlagDay',
+                    width: 1
+                }, {
+                    name: 'applicationReceivedNum',
+                    width: 2
+                }, {
+                    name: 'applicationApprovedNum',
+                    width: 2
+                }, {
+                    name: 'applicationWithdrawNum',
+                    width: 2
+                }, {
+                    name: 'postOfApprover',
+                    width: 2
+                }, {
+                    name: 'approverId',
+                    width: 2
+                }, {
+                    name: 'approvalDate',
+                    template: dateTemplate,
+                    width: 2
+                }, {
+                    name: 'summaryRemarks',
+                    width: 4
+                }, {
+                    name: 'approved',
+                    hidden: true
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    scrollTo("anchorDetails");
+                    onEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: false,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            });
+
+            function onEditRecord(data) {
+                $('#fdEventApproveForm').removeClass('hide');
+                gblFdYear = data.yearOfFlagDay;
+
+                if (data.approved == "true")
+                    $('#btnApprove').addClass('hide')
+                else
+                    $('#btnApprove').removeClass('hide')
+
+                var $eveGrid = $('#approvalGridtable');
+                $eveGrid.jqGrid('setGridParam', {
+                    url: listFdApplicationUrl.replace("placeholder", gblFdYear),
+                    datatype: 'json'
+                });
+                $eveGrid.trigger("reloadGrid", [{ current: true }]);
+            };
+        };
+
+        function initApproveFdEventGrid() {
+            //var actionUrl = listFdApplicationUrl.replace("placeholder", gblFdYear);
+            var $grid = $("#approvalGridtable");
+            var grid_pager_selector = "#approvalGridPager";
+
+            if ($grid.isJqGrid()) {
+                $grid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $grid.jqGrid({
+                caption: "",
+                pager: grid_pager_selector,
+                datatype: "local",
+                colNames: [
+                            '@Labels.FD_ReferenceNumber',
+                            '@Labels.FD_OrgRef',
+                            '@Labels.FD_FlagDay',
+                            '@Labels.FD_TerritoryRegion',
+                            '@Labels.FD_District',
+                            '@Labels.FD_PermitNo',
+                            '@Labels.FdRead_PermitRevokeIndicator',
+                            '@Labels.Remarks',
+                            'FRAS Response',
+                            'Action',
+                            '',
+                            'FdEventId',
+                            'FdMasterId',
+                            'RowVersion'
+                ],
+                colModel: [{
+                    name: 'fdRef',
+                    width: 1
+                }, {
+                    name: 'orgName',
+                    width: 3,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'flagDay',
+                    template: dateTemplate,
+                    width: 1
+                }, {
+                    name: 'twr',
+                    width: 1
+                }, {
+                    name: 'twrDistrict',
+                    width: 1
+                }, {
+                    name: 'permitNo',
+                    width: 1
+                }, {
+                    name: 'permitRevokeIndicator',
+                    width: 1,
+                    template: yesNoTemplate,
+                }, {
+                    name: 'approveRemarks',
+                    width: 4,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'frasResponse',
+                    width: 4,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'rowAction',
+                    width: 120,
+                    template: rowActionTemplate,
+                    delbutton: false
+                }, {
+                    name: 'approve',
+                    hidden: 'true'
+                }, {
+                    name: 'fdEventId',
+                    hidden: 'true'
+                }, {
+                    name: 'fdMasterId',
+                    hidden: 'true'
+                }, {
+                    name: 'rowVersion',
+                    hidden: 'true'
+                }],
+
+                loadComplete: function () {
+                    defaultGridLoadComplete;
+                    var iCol = getColumnIndexByName($grid, 'rowAction');
+                    $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            var $this = $(this);
+                            var rowId = $this.closest("tr.jqgrow").attr("id");
+                            var data = $grid.jqGrid('getRowData', rowId);
+
+                            // Checking only create 'Resubmit' button when the record is aproved and conatins Permit No
+                            if (data.approve == "true" && (data.permitNo != '' && data.permitNo != null)) {
+                                //re-submit button event
+                                $("<div>", {
+                                    title: "Re-submit",
+                                    mouseover: function () {
+                                        $this.addClass('ui-state-hover');
+                                    },
+                                    mouseout: function () {
+                                        $this.removeClass('ui-state-hover');
+                                    },
+                                    click: function (e) {
+                                        submitFRAS(data);
+                                    }
+                                }).css({
+                                    "margin-right": "5px",
+                                    float: "left",
+                                    cursor: "pointer",
+                                }).addClass("ui-pg-div ui-inline-custom")
+                                    .append('<span class="btn btn-sm btn-primary">&nbsp;Re-Submit</span>')
+                                    .prependTo($this.children("div"));
+                            }
+                        });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    //alert(data.actingId);
+                    openEditPage(data.fdMasterId);
+                }
+            });
+
+            function openEditPage(fdMasterId) {
+                var returnUrl = window.location.pathname;
+                var url = '@Url.RouteUrl("EditFdMaster", new { fdMasterId = -1 })';
+                window.location.href = url.replace('-1', fdMasterId) + "?ReturnUrl=" + returnUrl;
+            };
+
+            function submitFRAS(data) {
+                confirm("@Html.Raw(ViewData["SUBMIT_GOV_HK"])", function (result) {
+                    if (result) {
+                        ajaxPost(submitFRASUrl, data, function (response) {
+                            $("#approvalGridtable").trigger("reloadGrid", [{ current: true }]);
+                            notifSuccess(response.message);
+                        }, function (response) {
+                            $("#approvalGridtable").trigger("reloadGrid", [{ current: true }]);
+                            notifError(response.message);
+                        });
+                    };
+                });
+            }
+
+            //navButtons
+            $grid.jqGrid('navGrid', grid_pager_selector, {
+                //navbar options
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+            };
+    </script>
+}

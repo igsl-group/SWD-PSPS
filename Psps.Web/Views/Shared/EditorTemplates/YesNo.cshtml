@@ -1,0 +1,17 @@
+﻿@model bool
+@using Psps.Core;
+
+@{
+    // get the name of the ID - this is to support multiple fields
+    var htmlField = ViewData.TemplateInfo.HtmlFieldPrefix.ToCamelCase();
+    var isChecked = Model ? "checked" : string.Empty;
+    var htmlAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
+    var id = htmlAttributes != null && htmlAttributes.ContainsKey("id") ? htmlAttributes["id"].ToString() : htmlField;
+    var onclick = "javascript:if(!$('#" + id.Replace(".", "\\\\") + "').is('[readonly]')) { $('#" + id.Replace(".", "\\\\") + "').val(this.checked); $('#" + id.Replace(".", "\\\\") + "').trigger('change'); } else { return false; }";
+}
+
+<label class="checkbox-inline" for="@htmlField">
+    @Html.HiddenFor(model => model, htmlAttributes: ViewData["htmlAttributes"])
+    <input type="checkbox" @isChecked onclick="@onclick">
+    <span class="lbl">&nbsp;</span>
+</label>

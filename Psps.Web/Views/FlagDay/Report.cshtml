@@ -1,0 +1,170 @@
+﻿@model Psps.Web.ViewModels.FlagDay.FlagDayReportViewModel
+
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.FlagDay_Report_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .form-inline .inline {
+        vertical-align: middle;
+    }
+</style>
+<form class="form-inline" id="reportForm">
+    <fieldset></fieldset>
+    <table id="reports-data-table" class="table table-bordered table-hover table-condensed data-table">
+        <thead>
+            <tr>
+                <th style="width: 50px">File</th>
+                <th style="width: 320px">Description</th>
+                <th>Parameters</th>
+                <th style="width: 100px">Action</th>
+            </tr>
+        </thead>
+        <tbody id="FlagDayTbody">
+            <tr>
+                <td>R02</td>
+                <td>Statistical Summary of Public Subscription Permit (Including Flag Day)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R2_YearFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R2_YearFrom, true, htmlAttributes: new { @id = "R2_YearFrom", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                            @Html.LabelFor(m => m.R2_YearTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R2_YearTo, true, htmlAttributes: new { @id = "R2_YearTo", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 2)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R03</td>
+                <td>FD Statistical Summary</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R3FromYear, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R3FromYear, true, htmlAttributes: new { @id = "R3FromYear", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+
+                            @Html.LabelFor(m => m.R3ToYear, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R3ToYear, true, htmlAttributes: new { @id = "R3ToYear", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 3)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R04</td>
+                <td>No. of Applications/ Enquiries/ Complaints in Public Place</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R4_YearFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R4_YearFrom, true, htmlAttributes: new { @id = "R4_YearFrom", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                            @Html.LabelFor(m => m.R4_YearTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R4_YearTo, true, htmlAttributes: new { @id = "R4_YearTo", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 4)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>R24</td>
+                <td>Benchmark Statistics</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R24_Year, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.R24_Year, true, new SelectList(Model.R24_FdYears, "Key", "Value", Model.R24_Year),
+                                                  htmlAttributes: new { @id = "R24_YearFrom", @class = "form-control jqgrid-colmodel", @data_provide = "select2", @style = "width: 170px" })
+
+                            @*@Html.TextBoxFor(m => m.R24_Year, true, htmlAttributes: new { @id = "R24_YearFrom", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })*@
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 24)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>RawData1</td>
+                <td>Raw Data of Organisation</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.Raw1_OrgRef, new { @class = "control-label" })
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Raw1_OrgRef, true, htmlAttributes: new { @id = "raw1_OrgRef", @class = "form-control", @maxlength = 8, @style = "width:600px" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 'awData1')">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>RawData3</td>
+                <td>Raw Data of FD (Applicant List - Account Records)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.Raw3_Year, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Raw3_Year, true, new SelectList(Model.FdYears, "Key", "Value", Model.Raw3_Year),
+                                                  htmlAttributes: new { @id = "Raw3_YearFrom", @class = "form-control jqgrid-colmodel", @data_provide = "select2" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 'awData3')">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<script>
+    var searchOrganisationUrl = '@Url.RouteUrl("SearchOrganisation")';
+    var getOrganisationUrl = '@Url.RouteUrl("GetOrganisation", new { orgRef = "orgRef" })';
+    var pageSize = 10;
+
+    $(function () {
+        $("#raw1_OrgRef").initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+
+        $('input.form-control').addClass("data-val-ignore");
+        $('select.form-control').addClass("data-val-ignore");
+    });
+
+    function Generate_Click(e, moduleNum) {
+        var $inputs = $(e.target || e.srcElement).parents("tr").find('input.form-control, select.form-control');
+        $inputs.removeClass("data-val-ignore");
+
+        var $form = $("#reportForm");
+        if ($form.valid()) {
+            var actionUrl = '/api/report/r' + moduleNum + '/generate';
+            $form.ajaxPostForm(actionUrl,
+                function (response) {
+                    if (response.success)
+                        window.location.href = response.data;
+                    else
+                        notifError("No record found")
+                }
+            );
+        }
+
+        $inputs.addClass("data-val-ignore");
+    }
+</script>

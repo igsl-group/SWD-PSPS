@@ -1,0 +1,81 @@
+﻿@model Psps.Web.ViewModels.FlagDayList.FlagDayListImportViewModel
+
+<form id="importFlagDayListXlsFileForm">
+    <div id="importFlagDayListXlsFileModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="btnImportClose" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Import Excel File</h4>
+                </div>
+                <fieldset>
+                    <div data-valmsg-summary="true" class="alert alert-block alert-warning validation-summary-errors" id="errorMsgDiv" style="">
+                        <div>
+                            <strong>Please fix the following errors.</strong>
+                        </div>
+                        <div id="errorMsg"></div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ImportFile, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.FileFor(m => m.ImportFile, htmlAttributes: new { @id = "importFlagDayListXlsFile", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="modal-footer">
+                    <button type="button" id="btnImport" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.ImportXlsFile</button>
+                    <button type="button" id="btnImportCancel" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    var importFlagDayListUrl = '@Url.RouteUrl("ImportFlagDayList")';
+    $(function () {
+        clearErrorMsg();
+        $('#btnImport').click(function () {
+            var $form = $("#importFlagDayListXlsFileForm");
+            if ($form.valid()) {
+                var actionUrl = importFlagDayListUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#importFlagDayListXlsFileModal').modal('hide');
+                         $('#importPspEventXlsFile').val('');
+                         clearErrorMsg();
+                         $("#flagDayListGridTable").trigger("reloadGrid", [{ current: true }]);
+                         reloadSelect2('flagDayYears', response.data);
+                         notifSuccess(response.message);
+                     },
+                     function (response) {
+                         $('#errorMsgDiv').show();
+                         $('#errorMsg').html(convertStringToHtml(response.message));
+
+                     }
+                );
+
+            }
+        });
+
+        $('#btnImportCancel').click(function () {
+            clearErrorMsg();
+            $('#importFlagDayListXlsFileModal').modal('hide');
+        });
+
+        $('#btnImportClose').click(function () {
+            clearErrorMsg();
+            $('#importFlagDayListXlsFileModal').modal('hide');
+        });
+        
+    });
+
+    function clearErrorMsg() {
+        $('#errorMsgDiv').hide();
+        $('#errorMsg').html('');
+    }
+</script>

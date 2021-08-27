@@ -1,0 +1,830 @@
+﻿@model Psps.Web.ViewModels.FlagDay.FlagDayViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.FlagDay_Search_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="flagDaySearchForm" class="form-horizontal" role="form">
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.OrgRef, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            <table>
+                <tr>
+                    <td>
+                    ORG<td>
+                    <td>
+                        @Html.TextBoxFor(m => m.OrgRef, true,
+                                        htmlAttributes: new { @id = "orgRef", @class = "form-control jqgrid-colmodel", @maxlength = 4, @style = "width: 221px;", data_jqgrid_colmodel_name = "orgRef", data_jqgrid_op = "cn" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @Html.LabelFor(m => m.OrgName, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.OrgName, true,
+                                        htmlAttributes: new { @id = "orgName", @class = "form-control jqgrid-colmodel", @maxlength = 256, data_jqgrid_colmodel_name = "EngOrgName,ChiOrgName", data_jqgrid_op = "cn" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ReferenceNumber, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.ReferenceNumber, true, htmlAttributes: new { @id = "referenceNumber", @class = "form-control jqgrid-colmodel", @maxlength = 12, data_jqgrid_colmodel_name = "fdRef", data_jqgrid_op = "cn" })
+        </div>
+        @Html.LabelFor(m => m.DateofReceivingApplication, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.FromDateofReceiveingApplication, true,
+                                        htmlAttributes: new { @id = "fromDateofReceiveingApplication", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", data_jqgrid_colmodel_name = "applicationReceiveDate", data_jqgrid_op = "ge" })
+            <label class="control-label" for="applicationReceivDateEnd">to</label>
+            @Html.TextBoxFor(m => m.ToDateofReceiveingApplication, true,
+                                        htmlAttributes: new { @id = "toDateofReceiveingApplication", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", data_jqgrid_colmodel_name = "applicationReceiveDate", data_jqgrid_op = "le" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PermitNo, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.PermitNo, true,
+                                        htmlAttributes: new { @id = "permitNo", @class = "form-control jqgrid-colmodel", @maxlength = 12, data_jqgrid_colmodel_name = "permitNum", data_jqgrid_op = "cn" })
+        </div>
+        @Html.LabelFor(m => m.FromFlagDay, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.FromFlagDay, true,
+                    htmlAttributes: new { @id = "fromFlagDay", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", data_jqgrid_colmodel_name = "flagDay", data_jqgrid_op = "ge" })
+            <label class="control-label" for="flagDayEnd">to</label>
+            @Html.TextBoxFor(m => m.ToFlagDay, true,
+                    htmlAttributes: new { @id = "toFlagDay", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", data_jqgrid_colmodel_name = "flagDay", data_jqgrid_op = "le" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.OrgStatus, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.OrgStatusId, true, new SelectList(Model.OrgStatus, "Key", "Value", Model.OrgStatusId),
+                    htmlAttributes: new { @id = "orgStatus", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "disableIndicator", data_jqgrid_op = "eq" })
+        </div>
+        @Html.LabelFor(m => m.Subvented, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.Subvented, true, new SelectList(Model.Subventeds, "Key", "Value", Model.Subvented),
+                    htmlAttributes: new { @id = "subvented", @class = "form-control jqgrid-colmodel", @data_provide = "select2", @Value = "", data_jqgrid_colmodel_name = "subventedIndicator", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ContactPersonName, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.ContactPersonName, true,
+                    htmlAttributes: new { @id = "contactPersonName", @class = "form-control jqgrid-colmodel", @maxlength = 150, data_jqgrid_colmodel_name = "contactPersonName,contactPersonChiName", data_jqgrid_op = "cn" })
+        </div>
+        @Html.LabelFor(m => m.NewApplicant, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.NewApplicant, true, new SelectList(Model.NewApplicants, "Key", "Value", Model.NewApplicant),
+                    htmlAttributes: new { @id = "newApplicant", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "newApplicantIndicator", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ApplyForTWR, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.ApplyForTWR, true, new SelectList(Model.TerritoryRegion, "Key", "Value", Model.ApplyForTWR),
+                    htmlAttributes: new { @id = "applyForTWR", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "applyForTWR", data_jqgrid_op = "eq" })
+        </div>
+        @Html.LabelFor(m => m.GroupingId, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.GroupingId, true, new SelectList(Model.Groupings, "Key", "Value", Model.GroupingId),
+                    htmlAttributes: new { @id = "fdGroup", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "fdGroup", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.TerritoryRegion, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.TWR, true, new SelectList(Model.TerritoryRegion, "Key", "Value", Model.TWR),
+                    htmlAttributes: new { @id = "twr", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "twr", data_jqgrid_op = "eq" })
+        </div>
+        @Html.LabelFor(m => m.DistrictId, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.DistrictId, true, new SelectList(Model.Districts, "Key", "Key", Model.DistrictId),
+                    htmlAttributes: new { @id = "districtId", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "twrDistrict", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.FdYear, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.FdYear, true, new SelectList(Model.FdYears.Reverse(), "Key", "Value", Model.FdYear),
+                    htmlAttributes: new { @id = "fdYear", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "fdYear", data_jqgrid_op = "eq", @multiple = "multiple" })
+        </div>
+        @Html.LabelFor(m => m.LanguageUseds, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.LanguageUsedId, true, new SelectList(Model.LanguageUseds, "Key", "Value", Model.LanguageUsedId),
+                    htmlAttributes: new { @id = "languageUsedId", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "usedLanguage", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.FdLotResult, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.FdLotResult, true, new SelectList(Model.FdLotResults, "Key", "Value", Model.FdLotResult),
+                    htmlAttributes: new { @id = "fdLotResult", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "fdLotResult", data_jqgrid_op = "eq" })
+        </div>
+        @Html.LabelFor(m => m.ApplicationResultId, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.ApplicationResultId, true, new SelectList(Model.ApplicationResults, "Key", "Value", Model.ApplicationResultId),
+                                    htmlAttributes: new { @id = "applicationResultId", @class = "form-control jqgrid-colmodel", data_jqgrid_colmodel_name = "applicationResult", @data_provide = "select2" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ApplyPledgingMechanismIndicator, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.SearchApplyPledgingMechanismIndicator, true, new SelectList(Model.PermitRevokeIndicators, "Key", "Value", Model.SearchApplyPledgingMechanismIndicator),
+                    htmlAttributes: new { @id = "applyPledgingMechanismIndicator", @class = "form-control jqgrid-colmodel", @data_provide = "select2", @Value = "", data_jqgrid_colmodel_name = "ApplyPledgingMechanismIndicator", data_jqgrid_op = "eq" })
+        </div>
+        @Html.LabelFor(m => m.PermitRevokeIndicators, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.SearchPermitRevokeIndicator, true, new SelectList(Model.PermitRevokeIndicators, "Key", "Value", Model.SearchPermitRevokeIndicator),
+                    htmlAttributes: new { @id = "permitRevokeIndicator", @class = "form-control jqgrid-colmodel", @data_provide = "select2", @Value = "", data_jqgrid_colmodel_name = "permitRevokeIndicator", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnSearch" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-search"></span>&nbsp;Search</button>
+                <button type="button" id="btnClear" class="btn btn-sm btn-default">
+                    <span class="icon-eraser"></span>&nbsp;Clear</button>
+            </div>
+        </div>
+    </div>
+</form>
+<form id="createFlagDaySearchForm" class="form-horizontal" role="form">
+    <div id="editModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Flag Day Details</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        @Html.BootstrapValidationSummary()
+
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                        <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                    <button id="btnCreateFlagDay" type="button" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>@Labels.Create</button>
+                    <button id="btnCancel" type="button" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <span class="icon-remove"></span>@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<form id="innerOrgSearchForm" class="form-horizontal" role="form">
+    <div id="orgModal" class="modal fade" style="z-index: 1060">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search Organisation</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="orgIdGridTable"></table>
+                                <div id="orgIdGridPager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <span class="icon-remove"></span>@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<form id="gridForm" class="form-horizontal" role="form">
+    @Html.HiddenFor(m => m.PermitNo, htmlAttributes: new { @id = "expModPermitNum" })
+    @* @Html.AntiForgeryToken()*@
+    <div class="vspace-6"></div>
+    <fieldset>
+        <legend>Flag Day Application Search Result</legend>
+    </fieldset>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="flagDaySearchGridTable" class="searchGrid"></table>
+                <div id="flagDaySearchGridPager"></div>
+            </div>
+        </div>
+    </div>
+    <div class="vspace-6"></div>
+    <div class="row">
+        <div class="col-xs-6">
+            @Html.DropDownListFor(m => m.PermitList, true, new SelectList(Model.PermitLists, "Key", "Value", Model.PermitList),
+                    htmlAttributes: new { @id = "permitList", @width = "300", @class = "form-control jqgrid-colmodel", @data_provide = "select2" })
+        </div>
+        <div class="col-xs-3">
+            <button id="btnGenerate" type="button" class="btn btn-primary btn-sm">
+                <span class="icon-download"></span>&nbsp;@Labels.Generate</button>
+        </div>
+        <div class="col-xs-3">
+            <div class="pull-right">
+                <button id="btnImpModal" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-upload"></span>&nbsp;Import</button>
+                <button id="btnExportRec" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-download"></span>&nbsp;Export</button>
+            </div>
+        </div>
+    </div>
+    <div class="vspace-10"></div>
+</form>
+
+<form id="fdImportForm" class="form-horizontal" role="form">
+    <div id="importFdFileModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Import Excel File</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ImportFile, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.FileFor(m => m.ImportFile, htmlAttributes: new { @id = "importFile", @class = "form-control" })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnImport" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.ImportXlsFile</button>
+                    <button type="button" id="btnImpFileCancel" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listFlagDaySearchUrl = '@Url.RouteUrl("ListFlagDaySearch")';
+        var listOrganisationUrl = '@Url.RouteUrl("ListFlagDayOrganisation")';
+        var newFdMasterUrl = '@Url.RouteUrl("NewFdMaster", new { createMode = "placeholder", fdMasterId = "-1" })';
+        var exportFlagDayUrl = '@Url.RouteUrl("ExportFlagDay", new { gridRecCnt = "-1" })';
+        var insertFdMasterByImportXls = '@Url.RouteUrl("ImportFlagDay")';
+        var exportFlagDayGridDataUrl = '@Url.RouteUrl("ExportFlagDayGridData")';
+        var exportFlagDayMergedTempalteUrl = '@Url.RouteUrl("GenerateMergedFlagDayTemplate", new { fdDocId = -1 })';
+
+        var isFdApprover = @Html.Raw(Json.Encode(@Model.IsFdApprover));
+        var flagDayEnableImport = new Date(@Html.Raw(Json.Encode(@Model.FlagDayEnableImport)));
+
+        $(function () {
+            initFlagDayGrid();
+
+            if (!(isFdApprover || Date.now() >= flagDayEnableImport)) {
+                $('#btnImpModal').addClass('hide');
+                $('#navAddNewBtn').addClass('hide');
+            }
+
+            $('#engSalauteDDB').on('change', function (e) {
+                $engDDB = $('#engSalauteDDB');
+                var value = $engDDB.val();
+                $chiDDB = $('#chiSalauteDDB');
+                $chiDDB.select2('val', value);
+            });
+
+            $('#btnSearch').on('click', function (e) {
+                $form = $('#flagDaySearchForm');
+                $grid = $('#flagDaySearchGridTable');
+
+                resetPostData($form, $grid);
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, queryStringToJson($form.serialize()))
+                if (clearFilter)
+                    $.extend(postData, { filters: "" });
+
+                //Clear the multiple select2 when nothing selected
+                if ($("#fdYear").val() == null) {
+                    delete postData["FdYear"];
+                }
+
+                $grid.jqGrid('setGridParam', {
+                    url: listFlagDaySearchUrl,
+                    datatype: 'json',
+                    postData: postData,
+                    search: !clearFilter
+                });
+
+                if (clearFilter) {
+                    var filters = $form.buildFilters();
+                    res = JSON.stringify(filters);
+                    $grid.jqGridFilter(res);
+                } else {
+                    $grid.trigger("reloadGrid", [{ current: true }]);
+                }
+            });
+
+            $('#btnExportRec').on('click', function (e) {
+                var grid = $('#flagDaySearchGridTable');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifError("Flag Day Search Result has no Record");
+                    return;
+                }
+
+                grid.exportGrid(exportFlagDayUrl,
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+            });
+
+            $('#btnGenerate').on('click', function (e) {
+                var grid = $('#flagDaySearchGridTable');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifError("Flag Day Search Result has no Record");
+                    return;
+                }
+
+                grid.exportGrid(exportFlagDayMergedTempalteUrl.replace("-1", $("#permitList").val()),
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+            });
+
+            $('#btnImpModal').on('click', function (e) {
+                $('#importFile').val('');
+                $('#importFdFileModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            });
+
+            $('#btnImport').on('click', function (e) {
+                $form = $('#fdImportForm');
+                if ($form.valid()) {
+                    var actionUrl = insertFdMasterByImportXls;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             if (response.data) {
+                                 window.location.href = response.data;
+                                 if (response.message != '')
+                                     notifSuccess(response.message + ', see log file');
+                                 else
+                                     notifSuccess('Update unsuccessful, see log file');
+
+                                 $('#importFile').replaceWith($('#importFile').clone(true))
+                             }
+                             else {
+                                 $("#flagDaySearchGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 notifSuccess(response.message);
+                                 $('#importFile').replaceWith($('#importFile').clone(true))
+                                 $('#importFdFileModal').modal('hide');
+                             }
+                         }
+                    );
+
+                }
+            })
+
+            $('#btnClear').on('click', function (e) {
+                clearForm($('#flagDaySearchForm'));
+            });
+
+            initSearchForm();
+        });
+
+        $('#btnOrganSearch').click(function (e) {
+            $('#orgModal').modal({
+                backdrop: 'static', show: true,
+                keyboard: false
+            });
+            initOrganisationGrid();
+        });
+
+        function initFlagDayGrid() {
+            var $grid = $('#flagDaySearchGridTable');
+            var pager_selector = '#flagDaySearchGridPager';
+            $grid.jqGrid({
+                pager: pager_selector,
+                url: listFlagDaySearchUrl,
+                datatype: "local",
+                sortname: 'FdYear desc, WithPermit desc, FlagDay, TWR, TWRDistrict',
+                sortorder: 'asc',
+                mtype: 'post',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.OrgRef)',
+                    '@Html.DisplayNameFor(m => m.OrgName)',
+                    '@Html.DisplayNameFor(m => m.Subvented)',
+                    '@Html.DisplayNameFor(m => m.ReferenceNumber)',
+                    '@Html.DisplayNameFor(m => m.PermitNo)',
+                    'Flag Year',
+                    '@Html.DisplayNameFor(m => m.FlagDay)',
+                    'Category (Application Stage)',
+                    '@Html.DisplayNameFor(m => m.TWR)',
+                    '@Html.DisplayNameFor(m => m.Districts)',
+                    '@Html.DisplayNameFor(m => m.NewApplicant)',
+                    '@Html.DisplayNameFor(m => m.ApplicationResultId)',
+                    '@Labels.FD_ApplicationResultInLastYear',
+                    '@Labels.FD_LotGroupInLastYear',
+                    '@Labels.FD_RefLotGroup',
+                    'Name of Organisation in English',
+                    'Name of Organisation in Chinese',
+                    'Mailing Address in English',
+                    'Mailing Address in Chinese',
+                    'Contact Person',
+                    'Contact Person’s Email',
+                    'Organisation’s Email Address',
+                    '@Html.DisplayNameFor(m => m.DateofReceivingApplication)',
+                    'Organisation Status',
+                    '@Html.DisplayNameFor(m => m.ContactPersonName)',
+                    '@Html.DisplayNameFor(m => m.ContactPersonChiName)',
+                    'fdMasterId',
+                    '@Html.DisplayNameFor(m => m.FdLotResult)',
+                    '@Html.DisplayNameFor(m => m.PermitRevokeIndicator)',
+                    '@Html.DisplayNameFor(m => m.LanguageUsedId)',
+                    '@Html.DisplayNameFor(m => m.GroupingId)',
+                    '@Html.DisplayNameFor(m => m.ApplyPledgingMechanismIndicator)'
+                ],
+                colModel: [{
+                    name: 'orgRef',
+                    width: '4'
+                }, {
+                    name: 'orgName',
+                    index: 'EngOrgNameSorting',
+                    search: false,
+                    width: '6'
+                }, {
+                    name: 'subventedIndicator',
+                    width: '4',
+                    template: yesNoTemplate
+                }, {
+                    name: 'fdRef',
+                    width: '4'
+                }, {
+                    name: 'permitNum',
+                    jsonmap: 'permitNum',
+                    width: '4'
+                }, {
+                    name: 'fdYear',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.FdYears))
+                    }
+                }, {
+                    name: 'flagDay',
+                    template: dateTemplate,
+                    width: '4'
+                }, {
+                    name: 'applyForTWR',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.TerritoryRegion))
+                    }
+                }, {
+                    name: 'twr',
+                    width: '4',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.TerritoryRegion))
+                        }
+                }, {
+                    name: 'twrDistrict',
+                    width: '4',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.Districts.ToDictionary(k => k.Key, v => v.Key)))
+                        }
+                }, {
+                    name: 'newApplicantIndicator',
+                    width: '4',
+                    template: yesNoTemplate
+                }, {
+                    name: 'applicationResult',
+                    width: '4',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ApplicationResults))
+                        }
+                }, {
+                    name: 'applicationResultInLastYear',
+                    width: '4',
+                    search : false,
+                }, {
+                    name: 'lotGroupInLastYear',
+                    width: '4',
+                    search : false,
+                }, {
+                    name: 'refLotGroup',
+                    width: '4',
+                    search: false
+                }, {
+                    name: 'engOrgName',
+                    hidden: true,
+                    exporthidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'chiOrgName',
+                    hidden: true,
+                    exporthidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'engMailingAddress',
+                    index: 'engMailingAddress1',
+                    hidden: true,
+                    exporthidden: true,
+                    width: 0
+                }, {
+                    name: 'chiMailingAddress',
+                    index: 'chiMailingAddress1',
+                    hidden: true,
+                    exporthidden: true,
+                    width: 0
+                }, {
+                    name: 'contactPerson',
+                    index: 'contactPersonSalute',
+                    hidden: true,
+                    exporthidden: true,
+                    width: 0
+                }, {
+                    name: 'contactPersonEmailAddress',
+                    hidden: true,
+                    exporthidden: true,
+                    width: 0
+                }, {
+                    name: 'emailAddress',
+                    index: 'emailAddress',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'applicationReceiveDate',
+                    template: dateTemplate,
+                    hidden: true,
+                    template: dateTemplate,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'disableIndicator',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.OrgStatus))
+                    }
+                }, {
+                    name: 'contactPersonName',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'contactPersonChiName',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'fdMasterId',
+                    hidden: true,
+                    search : false                    
+                }, {
+                    name: 'fdLotResult',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.FdLotResults))
+                    }
+                }, {
+                    name: 'permitRevokeIndicator',
+                    hidden: true,
+                    template: yesNoTemplate,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'usedLanguage',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.LanguageUseds))
+                    }
+                }, {
+                    name: 'fdGroup',
+                    hidden: true,
+                    exporthidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.Groupings))
+                        }
+                }, {
+                    name: 'newApplicantIndicator',
+                    hidden: true,
+                    template: yesNoTemplate,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }],
+                loadComplete: function(grid) {
+                    defaultGridLoadComplete(grid);
+                    $(this).setGridParam({ datatype: "json" });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    //alert(data.actingId);
+                    openEditPage(data.fdMasterId);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+                beforeRefresh: function() { resetPostData($('#flagDaySearchForm'), $(this)) }
+            }, {}, {}, {}, {
+                //search form
+                recreateFilter: true,
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                id: 'navAddNewBtn',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function displayInput() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                $('#editModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function onExportRecord() {
+                var grid = $('#flagDaySearchGridTable');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifError("Flag Day Search Result has no Record");
+                    return;
+                }
+
+                grid.exportGrid(exportFlagDayGridDataUrl,
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+            };
+
+            function doNewRecord() {
+                window.location.href = newFdMasterUrl.replace("placeholder", "new");
+                //window.location.href = newFdMasterUrl;
+            };
+
+            function openEditPage(fdMasterId) {
+                var url = '@Url.RouteUrl("EditFdMaster", new { fdMasterId = -1 })';
+                window.location.href = url.replace('-1', fdMasterId);
+            };
+
+            };
+
+            function initOrganisationGrid() {
+                var $organisationGrid = $("#orgIdGridTable");
+                var pager_selector = "#orgIdGridPager";
+
+                if ($organisationGrid.hasClass('ui-jqgrid-btable')) {
+                    $organisationGrid.trigger("reloadGrid", [{ current: true }]);
+                    return;
+                }
+
+                $organisationGrid.jqGrid({
+                    pager: pager_selector,
+                    sortname: 'orgRef',
+                    sortorder: 'asc',
+                    datatype: "json",
+                    url: listOrganisationUrl,
+                    colNames: [
+                    '@Html.DisplayNameFor(m => m.OrgRef)',
+                    '@Html.DisplayNameFor(m => m.OrgName)',
+                    '@Html.DisplayNameFor(m => m.Subvented)',
+                    ''
+                    ],
+                    colModel: [{
+                        name: 'orgRef',
+                        width: 100,
+                    }, {
+                        name: 'orgName',
+                        width: 650,
+                    }, {
+                        name: 'subventedIndicator',
+                        width: 100,
+                        template: yesNoTemplate,
+                        align: 'center'
+                    },
+                    {
+                        name: 'orgEngName',
+                        hidden: true
+                    }],
+                    loadComplete: defaultGridLoadComplete,
+                    ondblClickRow: function (rowId, iRow, iCol, e) {
+                        var data = $organisationGrid.jqGrid('getRowData', rowId);
+                        $('#orgId').val(data.orgRef);
+                        $('#CreateModelOrgName').text(data.orgEngName);
+
+                        $('#orgModal').modal('hide');
+                    },
+                });
+
+                //navButtons
+                $organisationGrid.jqGrid('navGrid', pager_selector, {
+                    //navbar options
+                    search: true,
+                    refresh: true,
+                }, {}, {}, {}, {
+                    //search form
+                    recreateForm: true,
+                    afterShowSearch: defaultSearchFormAfterShowSearch,
+                    afterRedraw: defaultSearchFormAfterRedraw
+                }, {})
+            };
+
+            var clearFilter = true;
+            function initSearchForm() {
+                var isFirst = @Html.Raw(Json.Encode(@Model.isFirstSearch));
+
+                if(!isFirst){
+                    var fdYear = @Html.Raw(Json.Encode(@Model.FdYear));
+
+                    if (fdYear != null && fdYear[0] != "")
+                        $('#fdYear').select2('val', fdYear);
+
+                    $('#flagDaySearchGridTable').jqGrid('setGridParam',  { search: false, postData: { "filters": localStorage.getItem('flagDaySearchGridTable')} });
+                    clearFilter = false || (localStorage.getItem('flagDaySearchGridTable') == "" || localStorage.getItem('flagDaySearchGridTable') == undefined);
+                    $('#btnSearch').click();
+                    clearFilter = true;
+                }
+                else{
+                    $('#subvented').select2('val', '');
+                    $('#newApplicant').select2('val', '');
+                    $('#orgStatus').select2('val', '');
+                    $('#twr').select2('val', '');
+                    $('#districtId').select2('val', '');
+                    $('#permitRevokeIndicator').select2('val', '');
+                }
+            }
+    </script>
+}

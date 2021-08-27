@@ -1,0 +1,324 @@
+﻿@model Psps.Web.ViewModels.FlagDay.FlagDayViewModel
+@using Psps.Resources;
+
+<div class="form-group">
+    @Html.LabelFor(m => m.YearofFlagDay, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.DropDownListFor(m => m.YearofFlagDay, true, new SelectList(Model.YearofFlagDays, "Key", "Value", Model.YearofFlagDay),
+                                    htmlAttributes: new { @id = "yearofFlagDay", @class = "form-control", @data_provide = "select2" })
+    </div>
+    @Html.LabelFor(m => m.DateofReceivingApplication, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.DateofReceivingApplication, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "DateofReceivingApplication", @class = "form-control", @data_provide = "datepicker" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ReferenceNumber, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.ReferenceNumber, true, htmlAttributes: new { @id = "referenceNumber", @class = "form-control ", @maxlength = 12, @readOnly = true })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.CreateModelOrgRef, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextBoxFor(m => m.CreateModelOrgRef, true, htmlAttributes: new { @id = "createModelOrgRef", @class = "form-control", @maxlength = 8 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.TWR, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.DropDownListFor(m => m.TWR, true, new SelectList(Model.TerritoryRegion, "Key", "Value", Model.TWR),
+                                    htmlAttributes: new { @id = "twr", @class = "form-control", @data_provide = "select2" })
+    </div>
+</div>
+<legend>Particulars of the Organisation Contact Person</legend>
+<div class="form-group">
+    @Html.LabelFor(m => m.ContactPersonName, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.DropDownListFor(m => m.EngSalute, true, new SelectList(Model.EngSalutes, "Key", "Value", Model.EngSalute),
+                                                                                    htmlAttributes: new { @id = "engSalute", @class = "form-control", @data_provide = "select2" })
+    </div>
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.ContactPersonFirstName, true, htmlAttributes: new { @id = "contactPersonFirstName", @class = "form-control", @maxlength = 100, @placeholder = "First Name" })
+    </div>
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.ContactPersonLastName, true, htmlAttributes: new { @id = "contactPersonLastName", @class = "form-control", @maxlength = 50, @placeholder = "Last Name" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ContactPersonChiName, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.ContactPersonChiLastName, true, htmlAttributes: new { @id = "contactPersonChiLastName", @class = "form-control", @maxlength = 10, @placeholder = "姓氏" })
+    </div>
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.ContactPersonChiFirstName, true, htmlAttributes: new { @id = "contactPersonChiFirstName", @class = "form-control", @maxlength = 5, @placeholder = "名字" })
+    </div>
+    <div class="col-xs-3">
+        @Html.DropDownListFor(m => m.ChiSalute, true, new SelectList(Model.ChiSalutes, "Key", "Value", Model.ChiSalute),
+                                                                                    htmlAttributes: new { @id = "chiSalute", @class = "form-control", @disabled = true, @data_provide = "select2" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ContactPersonPost, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextBoxFor(m => m.ContactPersonPost, true, htmlAttributes: new { @id = "contactPersonPost", @class = "form-control", @maxlength = 100 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.TelNo, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.TelNo, true, htmlAttributes: new { @id = "telNo", @class = "form-control", @maxlength = 50 })
+    </div>
+    @Html.LabelFor(m => m.FaxNo, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.FaxNo, true, htmlAttributes: new { @id = "faxNo", @class = "form-control", @maxlength = 50 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ContactPersonEmailAddress, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextBoxFor(m => m.ContactPersonEmailAddress, true, htmlAttributes: new { @id = "contactPersonEmailAddress", @class = "form-control", @maxlength = 100 })
+    </div>
+</div>
+<legend>Application Details </legend>
+<div class="form-group">
+    @Html.LabelFor(m => m.JointApplicationIndicator, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.EditorFor(m => m.JointApplicationIndicator, new { htmlAttributes = new { @id = "jointApplicationIndicator", @class = "form-control" } })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Section88Indicator, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.EditorFor(m => m.Section88Indicator, new { htmlAttributes = new { @id = "section88Indicator", @class = "form-control" } })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.CommunityChest, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.EditorFor(m => m.CommunityChest, new { htmlAttributes = new { @id = "communityChest", @class = "form-control" } })
+    </div>
+    @Html.LabelFor(m => m.ConsentLetter, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.EditorFor(m => m.ConsentLetter, new { htmlAttributes = new { @id = "consentLetter", @class = "form-control" } })
+    </div>
+</div>
+
+<div class="form-group" id="divCreateModelNewApplicant">
+    @Html.LabelFor(m => m.CreateModelNewApplicant, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.EditorFor(m => m.CreateModelNewApplicant, new { htmlAttributes = new { @id = "createModelNewApplicant", @class = "form-control" } })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.TrackRecordStartDate, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.TrackRecordStartDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "trackRecordStartDate", @class = "form-control", @data_provide = "datepicker" })
+    </div>
+    @Html.LabelFor(m => m.TrackRecordEndDate, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.TrackRecordEndDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "trackRecordEndDate", @class = "form-control", @data_provide = "datepicker" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.TrackRecordDetails, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.TrackRecordDetails, 4, 100, htmlAttributes: new { @id = "trackRecordDetails", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.AfsRecordStartDate, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.AfsRecordStartDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "afsRecordStartDate", @class = "form-control", @data_provide = "datepicker" })
+    </div>
+    @Html.LabelFor(m => m.AfsRecordEndDate, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.AfsRecordEndDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "afsRecordEndDate", @class = "form-control", @data_provide = "datepicker" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.AfsRecordDetails, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.AfsRecordDetails, 4, 100, htmlAttributes: new { @id = "afsRecordDetails", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.TargetIncome, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.EditorFor(m => m.TargetIncome, true, htmlAttributes: new { @id = "targetIncome", @class = "form-control", @data_decimalFormat = "8,2" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.FundRaisingPurpose, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.FundRaisingPurpose, 4, 100, htmlAttributes: new { @id = "fundRaisingPurpose", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ChiFundRaisingPurpose, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.ChiFundRaisingPurpose, 4, 100, htmlAttributes: new { @id = "chiFundRaisingPurpose", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.LanguageUseds, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.DropDownListFor(m => m.LanguageUsedId, true, new SelectList(Model.LanguageUseds, "Key", "Value", Model.LanguageUsedId),
+                                                                                    htmlAttributes: new { @id = "languageUsedId", @class = "form-control", @data_provide = "select2" })
+    </div>
+</div>
+<legend>Vetting Results</legend>
+<div class="form-group">
+    @Html.LabelFor(m => m.Groupings, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.DropDownListFor(m => m.GroupingId, true, new SelectList(Model.Groupings, "Key", "Value", Model.GroupingId),
+                                                                                htmlAttributes: new { @id = "groupingId", @class = "form-control", @data_provide = "select2" })
+    </div>
+    @Html.LabelFor(m => m.PercentageForGrouping, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.PercentageForGrouping, true, htmlAttributes: new { @id = "percentageForGrouping", @class = "form-control", @maxlength = 8 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.GroupingResult, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.GroupingResult, 4, 100, htmlAttributes: new { @id = "groupingResult", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.VettingPanelCaseIndicator, new { @class = "col-xs-3 control-label" })
+
+    <div class="col-xs-3">
+        @Html.EditorFor(m => m.VettingPanelCaseIndicator, new { htmlAttributes = new { @id = "vettingPanelCaseIndicator", @class = "form-control" } })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ReviewCaseIndicator, new { @class = "col-xs-3 control-label" })
+
+    <div class="col-xs-3">
+        @Html.EditorFor(m => m.ReviewCaseIndicator, new { htmlAttributes = new { @id = "reviewCaseIndicator", @class = "form-control" } })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ApplicationRemark, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.ApplicationRemark, 4, 100, htmlAttributes: new { @id = "applicationRemark", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<legend>Application Result</legend>
+<div class="form-group">
+    @Html.LabelFor(m => m.ApplicationResultId, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.DropDownListFor(m => m.ApplicationResultId, true, new SelectList(Model.ApplicationResults, "Key", "Value", Model.ApplicationResultId),
+                                    htmlAttributes: new { @id = "applicationResultId", @class = "form-control", @data_provide = "select2" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ResultApplicationRemark, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.ResultApplicationRemark, 4, 100, htmlAttributes: new { @id = "resultApplicationRemark", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.FdLotNum, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.FdLotNum, true, htmlAttributes: new { @id = "fdLotNum", @class = "form-control", @maxlength = 10 })
+    </div>
+    @Html.LabelFor(m => m.GroupingwithNoofLot, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.GroupingwithNoofLot, true, htmlAttributes: new { @id = "groupingwithNoofLot", @class = "form-control", @maxlength = 4 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.FdLotResult, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.DropDownListFor(m => m.FdLotResult, true, new SelectList(Model.FdLotResults, "Key", "Value", Model.FdLotResult), htmlAttributes: new { @id = "fdLotResult", @class = "form-control", @data_provide = "select2" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.PriorityNum, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.PriorityNum, true, htmlAttributes: new { @id = "priorityNum", @class = "form-control", @maxlength = 100 })
+    </div>
+</div>
+
+@* colour of flags, colour of bags, with octopus,  *@
+<legend>Pledging Application Result</legend>
+<div class="form-group">
+    @Html.LabelFor(m => m.PledgingAmt, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.PledgingAmt, true, htmlAttributes: new { @id = "pledgingAmt", @class = "form-control", @maxlength = 15 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.PledgingProposal, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.PledgingProposal, 4, 100, htmlAttributes: new { @id = "pledgingProposal", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ChiPledgingProposal, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.ChiPledgingProposal, 4, 100, htmlAttributes: new { @id = "chiPledgingProposal", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.PledgingApplicationRemark, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.PledgingApplicationRemark, 4, 100, htmlAttributes: new { @id = "pledgingApplicationRemark", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ApplyPledgingMechanismIndicator, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.EditorFor(m => m.ApplyPledgingMechanismIndicator, new { htmlAttributes = new { @id = "applyPledgingMechanismIndicator", @class = "form-control" } })
+    </div>
+</div>
+
+@*<div class="form-group">
+    @Html.LabelFor(m => m.OutstandingEmailReminderIssueDate, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.OutstandingEmailReminderIssueDate, true, htmlAttributes: new { @id = "outstandingEmailReminderIssueDate", @class = "form-control", @data_provide = "datepicker" })
+    </div>
+    @Html.LabelFor(m => m.OutstandingEmailReminderReplyDate, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.OutstandingEmailReminderReplyDate, true, htmlAttributes: new { @id = "outstandingEmailReminderReplyDate", @class = "form-control", @data_provide = "datepicker" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.ProposalDetail, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.ProposalDetail, 4, 100, htmlAttributes: new { @id = "proposalDetail", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ChiProposalDetail, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.ChiProposalDetail, 4, 100, htmlAttributes: new { @id = "chiProposalDetail", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.FlagSalePurpose, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.FlagSalePurpose, 4, 100, htmlAttributes: new { @id = "flagSalePurpose", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ChiFlagSalePurpose, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-9">
+        @Html.TextAreaFor(m => m.ChiFlagSalePurpose, 4, 100, htmlAttributes: new { @id = "chiFlagSalePurpose", @class = "form-control", @maxlength = 4000 })
+    </div>
+</div>*@
+
+@*<div class="form-group">
+    @Html.LabelFor(m => m.OutstandingEmailIssueDate, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.OutstandingEmailIssueDate, true, htmlAttributes: new { @id = "outstandingEmailIssueDate", @class = "form-control", @data_provide = "datepicker" })
+    </div>
+    @Html.LabelFor(m => m.OutstandingEmailReplyDate, new { @class = "col-xs-3 control-label" })
+    <div class="col-xs-3">
+        @Html.TextBoxFor(m => m.OutstandingEmailReplyDate, true, htmlAttributes: new { @id = "outstandingEmailReplyDate", @class = "form-control", @data_provide = "datepicker" })
+    </div>
+</div>*@

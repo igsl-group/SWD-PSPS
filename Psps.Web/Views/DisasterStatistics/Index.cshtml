@@ -1,0 +1,575 @@
+﻿@model Psps.Web.ViewModels.DisasterStatistics.DisasterStatisticsViewModel
+@using Psps.Core;
+@using Psps.Core.Infrastructure;
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Disaster_DisasterStatistcs;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
+
+}
+<div class="form-horizontal">
+    <div class="form-group">
+        <label for="@Html.IdFor(m => m.DisasterName)" class="col-xs-2 control-label">@Labels.Disaster_DisasterNames</label>
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.DisasterName, true, new SelectList(Model.DisasterNames, "Key", "Value", Model.DisasterName), htmlAttributes: new { @id = "disasterNames", @class = "form-control", @data_provide = "select2" })
+        </div>
+        <label for="@Html.IdFor(m => m.RecordPostIdForDropDown)" class="col-xs-3 control-label">@Labels.Disaster_RecordPostIdType</label>
+        <div class="col-xs-2">
+            @Html.DropDownListFor(m => m.RecordPostIdForDropDown, true, new SelectList(Model.RecordPostIds, "Key", "Value", Model.RecordPostIdForDropDown), htmlAttributes: new { @id = "recordPostIds", @class = "form-control", @data_provide = "select2" })
+        </div>
+        <div class="col-xs-1"></div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="disasterStatisticsGridTable"></table>
+                <div id="disasterStatisticsGridPager"></div>
+            </div>
+        </div>
+    </div>
+    <form id="disasterStatisticsForm" class="form-horizontal" role="form">
+        <div id="editModal" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" id="btnClose" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">@Labels.Disaster_DisasterStatistcs</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Html.BootstrapValidationSummary()
+
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+
+                        <fieldset>
+
+                            <div class="form-group">
+                                @*<label for="@Html.IdFor(m => m.DisasterNameForPopUp)" class="col-xs-3 control-label">@Labels.Disaster_DisasterNames</label>*@
+                                @Html.LabelFor(m => m.DisasterNameForPopUp, new { @class = "col-xs-3 control-label" })
+                                <div class="col-xs-5">
+                                    @*@Html.LabelFor(m => m.DisasterNameForPopUp, new { @id = "popUpdisasterName", @class = "col-xs-4 control-label" })*@
+                                    @Html.TextBoxFor(m => m.DisasterNameForPopUp, true, htmlAttributes: new { @id = "popUpdisasterName", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="beginEndDateFormGrp">
+                                @*<label for="@Html.IdFor(m => m.DisasterNameForPopUp)" class="col-xs-3 control-label">@Labels.Disaster_DisasterNames</label>*@
+                                <label class="col-xs-3" id="lblBeginEndDate">@Labels.Disaster_BeginEndDate</label>
+                                <div class="col-xs-5">
+
+                                    @*@Html.TextBoxFor(m => m.BeginDate, true, htmlAttributes: new { @id = "beginEndDate", @class = "form-control", @readonly = "readonly" })*@
+                                    @Html.TextBox("beginEndDate", null, htmlAttributes: new { @id = "beginEndDate", @class = "form-control", @readonly = "readonly" })
+                                    @*<label class="col-xs-4 " id="beginEndDate">""</label>*@
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="disasterStatisticsIdfrm">
+
+                                @Html.LabelFor(m => m.RecordPostId, new { @class = "col-xs-3 control-label" })
+
+                                <div class="col-xs-4">
+                                    @*@Html.DropDownListFor(m => m.RecordPostId, true, new SelectList(Model.RecordPostIds, "Key", "Value", Model.RecordPostIds.First().Key), htmlAttributes: new { @id = "popUpRecordPostId", @class = "form-control", @data_provide = "select2" })*@
+                                    @Html.TextBoxFor(m => m.RecordPostId, true, htmlAttributes: new { @id = "popUpRecordPostId", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                @Html.LabelFor(m => m.RecordDate, new { @class = "col-xs-3 control-label" })
+                                <div class="col-xs-4">
+                                    @Html.TextBoxFor(m => m.RecordDate, true, htmlAttributes: new { @id = "recordDate", @class = "form-control", @data_provide = "datepicker" })
+                                </div>
+                            </div>
+
+                            <div class="col-xs-10">
+
+                                <div class="form-group" hidden="true">
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.DisasterStatisticsId, true, htmlAttributes: new { @id = "disasterStatisticsId", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                </div>
+
+                                <div class="form-group" hidden="true">
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.DisasterMasterId, true, htmlAttributes: new { @id = "disasterMasterId", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                </div>
+
+                                <div class="vspace-6"></div>
+
+                                <div class="form-group">
+                                    <div class="col-xs-4"></div>
+                                    <label class="col-xs-4 ">@Labels.DisasterStatistics_NoOfEnquiries</label>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-xs-4"></div>
+                                    <div class="col-xs-2">
+                                        <label for="@Html.IdFor(m => m.PspApplicationProcedurePublicCount)" class="col-xs-4 control-label" >@Labels.Public</label>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <label for="@Html.IdFor(m => m.PspApplicationProcedurePublicCount)" class="col-xs-4 control-label" >@Labels.Others</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="@Html.IdFor(m => m.PspApplicationProcedurePublicCount)" class="col-xs-4 control-label" >@Labels.Disaster_PspApplicationProcedure</label>
+
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.PspApplicationProcedurePublicCount, true, htmlAttributes: new { @id = "pspApplicationProcedurePublicCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.PspApplicationProcedureOtherCount, true, htmlAttributes: new { @id = "pspApplicationProcedureOtherCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="@Html.IdFor(m => m.PspScopePublicCount)" class="col-xs-4 control-label" >@Labels.Disaster_PspScope</label>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.PspScopePublicCount, true, htmlAttributes: new { @id = "pspScopePublicCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.PspScopeOtherCount, true, htmlAttributes: new { @id = "pspScopeOtherCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                </div>
+
+                                <div class="vspace-6"></div>
+
+                                <div class="form-group">
+                                    <label for="@Html.IdFor(m => m.PspApplicationStatusPublicCount)" class="col-xs-4 control-label" >@Labels.Disaster_PspApplicationStatus</label>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.PspApplicationStatusPublicCount, true, htmlAttributes: new { @id = "pspApplicationStatusPublicCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.PspApplicationStatusOthersCount, true, htmlAttributes: new { @id = "pspApplicationStatusOthersCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="@Html.IdFor(m => m.PspPermitConditionCompliancePublicCount)" class="col-xs-4 control-label" >@Labels.Disaster_PspPermitConditionCompliance</label>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.PspPermitConditionCompliancePublicCount, true, htmlAttributes: new { @id = "pspPermitConditionCompliancePublicCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.PspPermitConditionComplianceOtherCount, true, htmlAttributes: new { @id = "pspPermitConditionComplianceOtherCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="@Html.IdFor(m => m.OtherEnquiryPublicCount)" class="col-xs-4 control-label" >@Labels.Others</label>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.OtherEnquiryPublicCount, true, htmlAttributes: new { @id = "otherEnquiryPublicCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(m => m.OtherEnquiryOtherCount, true, htmlAttributes: new { @id = "otherEnquiryOtherCount", @class = "form-control", @maxlength = 2 })
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="modal-footer">
+                            <button id="btnCreateDisasterStatistics" name="create" type="button" class="btn btn-sm btn-primary hide">
+                                <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                            <button id="btnUpdateDisasterStatistics" type="button" class="btn btn-sm btn-primary hide">
+                                <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                            <button id="btnCancel" type="button" class="btn btn-sm btn-default">
+                                <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listDisasterStatisticsUrl = '@Url.RouteUrl("ListDisasterStatistics", new { disasterMasterId = -1, recordPostId = "placeholder" })';
+        var listDisasterFilterNameOnlyStatisticsUrl = '@Url.RouteUrl("ListDisasterStatisticsFilterNameOnly", new { disasterMasterId = -1 })';
+        var newDisasterStatisticsUrl = '@Url.RouteUrl("NewDisasterStatistics", new { recordPostId = "placeholder" })';
+        var editDisasterStatisticsUrl = '@Url.RouteUrl("EditDisasterStatistics", new { disasterStatisticsId = -1 })';
+        var getDisasterStatisticsUrl = '@Url.RouteUrl("GetDisasterStatistics", new { disasterStatisticsId = -1 })';
+        var getDisasterStatisticsBeginEndDateUrl = '@Url.RouteUrl("GetDisasterStatisticsBeginEndDate", new { disasterMasterId = -2 })';
+
+        $(function () {
+
+            $('#disasterNames').select2('val', '');
+            $('#recordPostIds').select2('val', '');
+            $('#disasterStatisticsGridTable').addClass('hide');
+
+            initDisasterstatisticsGrid();
+
+            $('#disasterNames, #recordPostIds').on('change', function (e) {
+                dropDownOnChange();
+            });
+
+            $('#btnCreateDisasterStatistics').click(function () {
+                var $form = $("#disasterStatisticsForm");
+                var d = new Date;
+                $form.beginDate = d;
+
+                if ($form.valid()) {
+
+                    var actionUrl = newDisasterStatisticsUrl.replace("placeholder", '@currentUser.PostId');
+                    //                    var actionUrl = newDisasterStatisticsUrl;
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#editModal').modal('hide');
+                             $("#disasterStatisticsGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnUpdateDisasterStatistics').click(function () {
+                var $form = $("#disasterStatisticsForm");
+                if ($form.valid()) {
+                    var actionUrl = editDisasterStatisticsUrl.replace('-1', $('#disasterStatisticsId').val());
+                    //var actionUrl = editDisasterUrl;
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#editModal').modal('hide');
+                             $("#disasterStatisticsGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                        clearForm('#disasterStatisticsForm');
+                    }
+                });
+            });
+
+            $('#btnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                        clearForm('#disasterStatisticsForm');
+                    }
+                });
+            });
+        });
+
+        function dropDownOnChange() {
+            var $selected = $('#disasterNames').find(':selected'),
+                $selected2 = $('#recordPostIds').find(':selected'),
+                $grid = $('#disasterStatisticsGridTable');
+
+            $grid.jqGrid('clearGridData');
+            $grid.jqGrid('setGridParam');
+            var postData = $grid.jqGrid('getGridParam', 'postData');
+            $.extend(postData, { filters: "" });
+
+            if ($selected.val() && $selected2.val()) {
+                $grid.removeClass('hide');
+                $grid.jqGrid('setGridParam', {
+                    url: listDisasterStatisticsUrl.replace('-1', $selected.val()).replace('placeholder', $selected2.val()),
+                    datatype: 'json',
+                });
+            } else if ($selected.val()) {
+                $grid.removeClass('hide');
+                $grid.jqGrid('setGridParam', {
+                    url: listDisasterFilterNameOnlyStatisticsUrl.replace('-1', $selected.val()),
+                    datatype: 'json',
+                });
+            } else {
+                $grid.addClass('hide');
+                $grid.jqGrid('setGridParam', {
+                    datatype: 'local'
+                });
+            };
+            //$grid.jqGrid('setGridParam', { footerrow: true });
+            $grid.trigger("reloadGrid", [{ page: 1 }]);
+        }
+
+        function initDisasterstatisticsGrid() {
+            var actionUrl = listDisasterStatisticsUrl;
+            var $grid = $('#disasterStatisticsGridTable');
+            var pager_selector = '#disasterStatisticsGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                width: 600,
+                rownumbers: false,
+                headertitles: true,
+                //FalseFit: false,
+                sortname: 'disasterStatisticsId',
+                sortorder: 'asc',
+                datatype: 'local',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.DisasterStatisticsId)',
+                    '@Html.DisplayNameFor(m => m.DisasterMasterId)',
+                    '@Html.DisplayNameFor(m => m.RecordPostId)',
+                    '@Html.DisplayNameFor(m => m.RecordDate)',
+                    '@Html.DisplayNameFor(m => m.PspApplicationProcedurePublicCount)',
+                    '@Html.DisplayNameFor(m => m.PspApplicationProcedureOtherCount)',
+                    '@Html.DisplayNameFor(m => m.PspScopePublicCount)',
+                    '@Html.DisplayNameFor(m => m.PspScopeOtherCount)',
+                    '@Html.DisplayNameFor(m => m.PspApplicationStatusPublicCount)',
+                    '@Html.DisplayNameFor(m => m.PspApplicationStatusOthersCount)',
+                    '@Html.DisplayNameFor(m => m.PspPermitConditionCompliancePublicCount)',
+                    '@Html.DisplayNameFor(m => m.PspPermitConditionComplianceOtherCount)',
+                    '@Html.DisplayNameFor(m => m.OtherEnquiryPublicCount)',
+                    '@Html.DisplayNameFor(m => m.OtherEnquiryOtherCount)',
+                    '@Html.DisplayNameFor(m => m.SubTotal)'
+                ],
+                colModel: [{
+                    name: 'disasterStatisticsId',
+                    jsonmap: 'disasterStatisticsId',
+                    width: '4',
+                    hidden: true
+                }, {
+                    name: 'disasterMasterId',
+                    jsonmap: 'disasterMasterId',
+                    width: '4',
+                    hidden: true
+                }, {
+                    name: 'recordPostId',
+                    jsonmap: 'recordPostId',
+                    width: '3'
+                }, {
+                    name: 'recordDate',
+                    jsonmap: 'recordDate',
+                    template: dateTemplate,
+                    width: '3'
+                }, {
+                    name: 'pspApplicationProcedurePublicCount',
+                    jsonmap: 'pspApplicationProcedurePublicCount',
+                    width: '3',
+                    //summaryType: 'sum',
+                    //summaryTpl: '<b>{0}</b>'
+                    //align: 'center',
+                }, {
+                    name: 'pspApplicationProcedureOtherCount',
+                    jsonmap: 'pspApplicationProcedureOtherCount',
+                    width: '3',
+                }, {
+                    name: 'pspScopePublicCount',
+                    jsonmap: 'pspScopePublicCount',
+                    width: '3'
+                }, {
+                    name: 'pspScopeOtherCount',
+                    jsonmap: 'pspScopeOtherCount',
+                    width: '3'
+                }, {
+                    name: 'pspApplicationStatusPublicCount',
+                    jsonmap: 'pspApplicationStatusPublicCount',
+                    width: '3'
+                }, {
+                    name: 'pspApplicationStatusOthersCount',
+                    jsonmap: 'pspApplicationStatusOthersCount',
+                    width: '3'
+                }, {
+                    name: 'pspPermitConditionCompliancePublicCount',
+                    jsonmap: 'pspPermitConditionCompliancePublicCount',
+                    width: '3'
+                }, {
+                    name: 'pspPermitConditionComplianceOtherCount',
+                    jsonmap: 'pspPermitConditionComplianceOtherCount',
+                    width: '3'
+                }, {
+                    name: 'otherEnquiryPublicCount',
+                    jsonmap: 'otherEnquiryPublicCount',
+                    width: '3'
+                }, {
+                    name: 'otherEnquiryOtherCount',
+                    jsonmap: 'otherEnquiryOtherCount',
+                    width: '3'
+                }, {
+                    name: 'subTotal',
+                    jsonmap: 'subTotal',
+                    width: '3'
+                }],
+                footerrow: true,
+                loadComplete: function () {
+                    defaultGridLoadComplete(this);
+                    pspApplicationProcedurePublicCountSum = $grid.jqGrid("getCol", "pspApplicationProcedurePublicCount", false, "sum");
+                    pspApplicationProcedureOtherCountSum = $grid.jqGrid("getCol", "pspApplicationProcedureOtherCount", false, "sum");
+                    pspScopePublicCountSum = $grid.jqGrid("getCol", "pspScopePublicCount", false, "sum");
+                    pspScopeOtherCountSum = $grid.jqGrid("getCol", "pspScopeOtherCount", false, "sum");
+                    pspApplicationStatusPublicCountSum = $grid.jqGrid("getCol", "pspApplicationStatusPublicCount", false, "sum");
+                    pspApplicationStatusOthersCountSum = $grid.jqGrid("getCol", "pspApplicationStatusOthersCount", false, "sum");
+                    pspPermitConditionCompliancePublicCountSum = $grid.jqGrid("getCol", "pspPermitConditionCompliancePublicCount", false, "sum");
+                    pspPermitConditionComplianceOtherCountSum = $grid.jqGrid("getCol", "pspPermitConditionComplianceOtherCount", false, "sum");
+                    otherEnquiryPublicCountsum = $grid.jqGrid("getCol", "otherEnquiryPublicCount", false, "sum");
+                    otherEnquiryOtherCountsum = $grid.jqGrid("getCol", "otherEnquiryOtherCount", false, "sum");
+                    subTotalsum = $grid.jqGrid("getCol", "subTotal", false, "sum");
+                    $grid.jqGrid("footerData", "set", {
+                        recordDate: "Grand Total:",
+                        pspApplicationProcedurePublicCount: pspApplicationProcedurePublicCountSum,
+                        pspApplicationProcedureOtherCount: pspApplicationProcedureOtherCountSum,
+                        pspScopePublicCount: pspScopePublicCountSum,
+                        pspScopeOtherCount: pspScopeOtherCountSum,
+                        pspApplicationStatusPublicCount: pspApplicationStatusPublicCountSum,
+                        pspApplicationStatusOthersCount: pspApplicationStatusOthersCountSum,
+                        pspPermitConditionCompliancePublicCount: pspPermitConditionCompliancePublicCountSum,
+                        pspPermitConditionComplianceOtherCount: pspPermitConditionComplianceOtherCountSum,
+                        otherEnquiryPublicCount: otherEnquiryPublicCountsum,
+                        otherEnquiryOtherCount: otherEnquiryOtherCountsum,
+                        subTotal: subTotalsum
+                    });
+                    var recCnt = $grid.jqGrid('getGridParam', 'reccount');
+                    if (recCnt > 0)
+                        $('#gbox_disasterStatisticsGridTable .ui-jqgrid-ftable').show()
+                    else
+                        $('#gbox_disasterStatisticsGridTable .ui-jqgrid-ftable').hide()
+
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //group headers
+            $grid.jqGrid('setGroupHeaders', {
+
+                groupHeaders: [
+                    {
+                        startColumnName: 'pspApplicationProcedurePublicCount',
+                        numberOfColumns: 2, titleText: '@Labels.Disaster_PspApplicationProcedure',
+                    },
+                    {
+                        startColumnName: 'pspScopePublicCount',
+                        numberOfColumns: 2, titleText: '@Labels.Disaster_PspScope',
+                    },
+                    {
+                        startColumnName: 'pspApplicationStatusPublicCount',
+                        numberOfColumns: 2, titleText: '@Labels.Disaster_PspApplicationStatus',
+                    },
+                    {
+                        startColumnName: 'pspPermitConditionCompliancePublicCount',
+                        numberOfColumns: 2, titleText: '@Labels.Disaster_PspPermitConditionCompliance',
+                    },
+                    {
+                        startColumnName: 'otherEnquiryPublicCount',
+                        numberOfColumns: 2, titleText: '@Labels.Others',
+                    }
+                ],
+                useColSpanStyle: true
+            });
+
+            //navButtons
+                $grid.jqGrid('navGrid', pager_selector, {
+                    //navbar options
+                    search: true,
+                    refresh: true,
+                }, {}, {}, {}, {
+                    //search form
+                    recreateForm: true,
+                    afterShowSearch: defaultSearchFormAfterShowSearch,
+                    afterRedraw: defaultSearchFormAfterRedraw
+                }, {}).jqGrid('navButtonAdd', pager_selector, {
+                    caption: '',
+                    buttonicon: 'icon-plus',
+                    onClickButton: doNewRecord,
+                    position: 'first',
+                    title: '@Labels.NewRecord',
+                    cursor: 'pointer'
+                });
+
+                $grid.jqGrid({ footerrow: true, });
+                sum = $grid.jqGrid("getCol", "pspApplicationProcedurePublicCount", false, "sum");
+                $grid.jqGrid("footerData", "set", { disasterStatisticsId: "Grand Total:", pspApplicationProcedurePublicCount: sum });
+
+                function doShowModal() {
+                    $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                    $('#lblBeginEndDate').css('text-align', 'right');
+
+                    $('#valBeginEndDate').css('vertical-align', 'middle');
+
+                    $('#editModal').modal({
+                        backdrop: 'static',
+                        show: true,
+                        keyboard: false
+                    });
+
+                    if ($('#disasterNames').find(':selected').val()) {
+                        var actionUrl = getDisasterStatisticsBeginEndDateUrl.replace("-2", $('#disasterNames').find(':selected').val());
+
+                        ajaxGet(actionUrl,
+                                function (response) {
+
+                                    if (response.data.endDate) {
+                                        $('#beginEndDate').prop('readonly', true).val(toDDMMYYYY(response.data.beginDate) + ' - ' + toDDMMYYYY(response.data.endDate));
+                                    }
+                                    else { $('#beginEndDate').prop('readonly', true).val(toDDMMYYYY(response.data.beginDate) + ' - N/A'); }
+
+                                }
+                                );
+                    }
+                };
+
+                function doEditRecord(data) {
+                    var actionUrl = getDisasterStatisticsUrl.replace("-1", data.disasterStatisticsId);
+
+                    ajaxGet(actionUrl,
+                            function (response) {
+
+                                var recordDate = toDDMMYYYY(response.data.recordDate);
+                                //var indate = date1.getDate() + '/' + (date1.getMonth() + 1) + '/' + date1.getFullYear();
+
+                                @*@Html.ValueFor(m => m.RecordPostId,  '@currentUser.PostId');*@
+                                $('#rowVersion').val(response.data.rowVersion);
+                                $('#popUpdisasterName').prop('readonly', true).val($('#disasterNames').find(':selected').text());
+                                $('#disasterStatisticsId').val(response.data.disasterStatisticsId);
+                                $('#disasterMasterId').val($('#disasterNames').find(':selected').val());
+                                $('#popUpRecordPostId').prop('readonly', true).val(response.data.recordPostId);
+                                $('#recordDate').prop('readonly', true).val(recordDate);
+                                $('#pspApplicationProcedurePublicCount').val(response.data.pspApplicationProcedurePublicCount);
+                                $('#pspApplicationProcedureOtherCount').val(response.data.pspApplicationProcedureOtherCount);
+                                $('#pspScopePublicCount').val(response.data.pspScopePublicCount);
+                                $('#pspScopeOtherCount').val(response.data.pspScopeOtherCount);
+                                $('#pspApplicationStatusPublicCount').val(response.data.pspApplicationStatusPublicCount);
+                                $('#pspApplicationStatusOthersCount').val(response.data.pspApplicationStatusOthersCount);
+                                $('#pspPermitConditionCompliancePublicCount').val(response.data.pspPermitConditionCompliancePublicCount);
+                                $('#pspPermitConditionComplianceOtherCount').val(response.data.pspPermitConditionComplianceOtherCount);
+                                $('#otherEnquiryPublicCount').val(response.data.otherEnquiryPublicCount);
+                                $('#otherEnquiryOtherCount').val(response.data.otherEnquiryOtherCount);
+                                $('#btnCreateDisasterStatistics').addClass('hide');
+                                $('#btnUpdateDisasterStatistics').removeClass('hide');
+
+                                doShowModal();
+                            }
+                    );
+                };
+
+                function doNewRecord(data) {
+
+                    $('#rowVersion').val('');
+                    $('#popUpdisasterName').prop('readonly', true).val($('#disasterNames').find(':selected').text());
+                    $('#disasterMasterId').val($('#disasterNames').find(':selected').val());
+                    $('#popUpRecordPostId').prop('readonly', true).val('@currentUser.PostId');
+                    $('#recordDate').prop('readonly', false).val('');
+                    $('#pspApplicationProcedurePublicCount').val('');
+                    $('#pspApplicationProcedureOtherCount').val('');
+                    $('#pspScopePublicCount').val('');
+                    $('#pspScopeOtherCount').val('');
+                    $('#pspApplicationStatusPublicCount').val('');
+                    $('#pspApplicationStatusOthersCount').val('');
+                    $('#pspPermitConditionCompliancePublicCount').val('');
+                    $('#pspPermitConditionComplianceOtherCount').val('');
+                    $('#otherEnquiryPublicCount').val('');
+                    $('#otherEnquiryOtherCount').val('');
+                    $('#btnCreateDisasterStatistics').removeClass('hide');
+                    $('#btnUpdateDisasterStatistics').addClass('hide');
+
+                    doShowModal();
+                };
+            }
+    </script>
+}

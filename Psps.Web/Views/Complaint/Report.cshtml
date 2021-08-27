@@ -1,0 +1,67 @@
+﻿@model Psps.Web.ViewModels.Complaint.ComplaintDocViewModel
+
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Complaint_Report_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form class="form-inline">
+    <table id="reports-data-table" class="table table-bordered table-hover table-condensed data-table">
+        <thead>
+            <tr>
+                <th style="width: 50px">File</th>
+                <th style="width: 320px">Description</th>
+                <th>Parameters</th>
+                <th style="width: 100px">Action</th>
+            </tr>
+        </thead>
+        <tbody id="suggestionTbody">
+        </tbody>
+    </table>
+</form>
+<script>
+    $(document).ready(function () {
+        initSuggesionReportTable();
+    });
+    function initSuggesionReportTable() {
+        var urlaction = '@Url.RouteUrl("ListComplaintReport")';
+        $.getJSON(urlaction, function (data) {
+            for (i = 0; i < data.data.data.length; i++) {
+                addTr(data.data.data[i].fileRefNum, data.data.data[i].description);
+            }
+        });
+    }
+
+    function addTr(fileRefNum, description) {
+        var trsuggesion =
+            "<tr>"
+                + "<td>" + fileRefNum + "</td>"
+                + "<td>" + description + "</td>"
+                + "<td>"
+                    + "<div class='row'>"
+                        + "<div class='form-group'>"
+                            + "<div class='col-xs-12'>"
+                                + "<label class='control-label' for='r1-report-period-start'>Report Period&nbsp;</label>"
+                                + "<input type='text' class='form-control date-range' id='r1-report-period-start' data-provide='datepicker' maxlength='10' />"
+                                + "<label class='control-label' for='r1-report-period-end'>&nbsp;to&nbsp;</label>"
+                                + "<input type='text' class='form-control date-range' id='r1-report-period-end' data-provide='datepicker' maxlength='10' />"
+                            + "</div>"
+                        + "</div>"
+                    + "</div>"
+                + "</td>"
+                + "<td>"
+                    + "<button type='button' class='btn btn-sm btn-primary'>"
+                        + "<span class='icon-print'></span>&nbsp;Generate</button>"
+                + "</td>"
+            + "</tr>";
+        $("#suggestionTbody").append(trsuggesion);
+    }
+
+    function generateLetter(data) {
+        var actionUrl = generateLetterUrl.replace("-1", data.letterId).replace("-2", serialNo);
+        var win = window.open(actionUrl);
+    };
+</script>
+

@@ -1,0 +1,186 @@
+﻿@model Psps.Web.ViewModels.Complaint.ComplaintOtherDepartmentEnquiryViewModel
+@using Psps.Resources;
+
+<form action="" id="otherDepartmentEnquiryForm" name="otherDepartmentEnquiryForm" class="form-horizontal">
+    <div id="edit-otherDepartmentEnquiry-modal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="btnOtherDepartmentEnquiryClose" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Enquiry from Other Departments / Authorities Details</h4>
+                </div>
+                @Html.TextBoxFor(m => m.ComplaintOtherDeptEnquiryId, true, htmlAttributes: new { @id = "complaintOtherDeptEnquiryId", @class = "form-control", @style = "display:none" })
+                @Html.TextBoxFor(m => m.ComplaintMasterId, true, htmlAttributes: new { @id = "otherDepartmentEnquiryComplaintMasterId", @class = "form-control", @style = "display:none" })
+                <fieldset></fieldset>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherDepartmentEnquiryRefNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.OtherDepartmentEnquiryRefNum, true, htmlAttributes: new { @id = "otherDepartmentEnquiryRefNum", @class = "form-control", @disabled = "disabled", @maxlength = 50 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherDepartmentEnquiryReferralDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.OtherDepartmentEnquiryReferralDate, true, htmlAttributes: new { @id = "otherDepartmentEnquiryReferralDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.OtherDepartmentEnquiryMemoDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.OtherDepartmentEnquiryMemoDate, true, htmlAttributes: new { @id = "otherDepartmentEnquiryMemoDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherDepartmentEnquiryMemoFromPoliceDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.OtherDepartmentEnquiryMemoFromPoliceDate, true, htmlAttributes: new { @id = "otherDepartmentEnquiryMemoFromPoliceDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EnquiryDepartment, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                @Html.DropDownListFor(m => m.EnquiryDepartment, true, new SelectList(Model.EnquiryDepartments, "Key", "Value", Model.EnquiryDepartment), htmlAttributes: new { @id = "enquiryDepartment", @class = "form-control", @data_provide = "select2", @style = "width: 250px;" })
+                                @Html.TextBoxFor(m => m.OtherEnquiryDepartment, true, htmlAttributes: new { @id = "otherEnquiryDepartment", @class = "form-control", @maxlength = 100, @disabled = "disabled", @style = "width: 250px;" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherDepartmentEnquiryOrgInvolved, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OtherDepartmentEnquiryOrgInvolved, true, htmlAttributes: new { @id = "otherDepartmentEnquiryOrgInvolved", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherDepartmentEnquiryEnquiryContent, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.OtherDepartmentEnquiryEnquiryContentHtml, true, rows: 4, htmlAttributes: new { @id = "otherDepartmentEnquiryEnquiryContentHtml", @class = "form-control wysiwyg-editor", @owner = "otherDepartmentEnquiryEnquiryContent" })
+                            @Html.HiddenFor(m => m.OtherDepartmentEnquiryEnquiryContent, htmlAttributes: new { @id = "otherDepartmentEnquiryEnquiryContent", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherDepartmentEnquiryEnclosureNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.OtherDepartmentEnquiryEnclosureNum, true, htmlAttributes: new { @id = "otherDepartmentEnquiryEnclosureNum", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherDepartmentEnquiryRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.OtherDepartmentEnquiryRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "otherDepartmentEnquiryRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "otherDepartmentEnquiryRemark" })
+                            @Html.HiddenFor(m => m.OtherDepartmentEnquiryRemark, htmlAttributes: new { @id = "otherDepartmentEnquiryRemark", @maxlength = 4000 })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSpellCheckOtherDepartmentEnquiry" class="btn btn-primary btn-sm">
+                        <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                    <button type="button" id="btnSaveOtherDepartmentEnquiry" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Save</button>
+                    <button type="button" id="btnUpdateOtherDepartmentEnquiry" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="btnDeleteOtherDepartmentEnquiry" class="btn btn-sm btn-primary">
+                        <span class="icon-trash"></span>@Labels.Delete</button>
+                    <button type="button" id="btnOtherDepartmentEnquiryCancel" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var createOtherDepartmentEnquiryUrl = '@Url.RouteUrl("CreateOtherDepartmentEnquiry")';
+    var updateOtherDepartmentEnquiryUrl = '@Url.RouteUrl("UpdateOtherDepartmentEnquiry")';
+    var deleteOtherDepartmentEnquiryUrl = '@Url.RouteUrl("DeleteOtherDepartmentEnquiry")';
+
+    $(function () {
+        initEditOtherDepartmentEnquiryForm();
+        $('#btnSaveOtherDepartmentEnquiry').click(function () {
+            $('#otherDepartmentEnquiryComplaintMasterId').val($('#complaintMasterId').val());
+            var $form = $("#otherDepartmentEnquiryForm");
+            if ($form.valid()) {
+                var actionUrl = createOtherDepartmentEnquiryUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#edit-otherDepartmentEnquiry-modal').modal('hide');
+                         $("#otherDepartmentEnquiry-grid-table").trigger("reloadGrid", [{ current: true }]);
+                         calRelevantRecordsAmount();
+                         notifSuccess(response.message);
+                         initEditOtherDepartmentEnquiryForm();
+                     }
+                );
+            }
+        });
+
+        $('#btnUpdateOtherDepartmentEnquiry').click(function () {
+            var $form = $("#otherDepartmentEnquiryForm");
+            if ($form.valid()) {
+                var actionUrl = updateOtherDepartmentEnquiryUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#edit-otherDepartmentEnquiry-modal').modal('hide');
+                         $("#otherDepartmentEnquiry-grid-table").trigger("reloadGrid", [{ current: true }]);
+                         notifSuccess(response.message);
+                         initEditOtherDepartmentEnquiryForm();
+                     }
+                );
+            }
+        });
+
+        $('#btnDeleteOtherDepartmentEnquiry').click(function () {
+            var $form = $("#otherDepartmentEnquiryForm");
+            confirmDelete(function (result) {
+                if (result) {
+                    var actionUrl = deleteOtherDepartmentEnquiryUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#edit-otherDepartmentEnquiry-modal').modal('hide');
+                             $("#otherDepartmentEnquiry-grid-table").trigger("reloadGrid", [{ current: true }]);
+                             calRelevantRecordsAmount();
+                             notifSuccess(response.message);
+                             initEditOtherDepartmentEnquiryForm();
+                         }
+                    );
+                }
+            })
+        });
+
+        $('#btnOtherDepartmentEnquiryCancel').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    initEditOtherDepartmentEnquiryForm();
+                    $('#edit-otherDepartmentEnquiry-modal').modal('hide');
+                }
+            });
+        });
+
+        $('#btnOtherDepartmentEnquiryClose').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    initEditOtherDepartmentEnquiryForm();
+                    $('#edit-otherDepartmentEnquiry-modal').modal('hide');
+                }
+            });
+        });
+
+        $("#enquiryDepartment").change(function () {
+            var enquiryDepartment = $("#enquiryDepartment option:selected").text();
+            if (enquiryDepartment.toLowerCase() == "others") {
+                $("#otherEnquiryDepartment").removeAttr("disabled");
+            } else {
+                $("#otherEnquiryDepartment").val("");
+                $("#otherEnquiryDepartment").attr("disabled", true);
+            }
+        });
+    });
+
+    function initEditOtherDepartmentEnquiryForm() {
+        $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+        clearForm('#otherDepartmentEnquiryForm');
+        $("#otherEnquiryDepartment").val("");
+        $("#otherEnquiryDepartment").attr("disabled", true);
+        $("#btnSaveOtherDepartmentEnquiry").show();
+        $("#btnUpdateOtherDepartmentEnquiry").hide();
+        $("#btnDeleteOtherDepartmentEnquiry").hide();
+    }
+</script>

@@ -1,0 +1,484 @@
+﻿@model Psps.Web.ViewModels.Complaint.EditEnquiryComplaintViewModel
+@using Psps.Resources;
+<div class="tab-pane active" id="overview">
+    <fieldset>
+        <legend>Enquiry / Complaint Details</legend>
+        @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+        @Html.TextBoxFor(m => m.ComplaintMasterId, true, htmlAttributes: new { @id = "complaintMasterId", @class = "form-control", @style = "display:none" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintRef, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextBoxFor(m => m.ComplaintRef, true, htmlAttributes: new { @id = "complaintRef", @class = "form-control", @maxlength = 10, @readonly = "true" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintRecordType, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.DropDownListFor(m => m.ComplaintRecordType, true, new SelectList(Model.ComplaintRecordTypes, "Key", "Value", Model.ComplaintRecordType), htmlAttributes: new { @id = "complaintRecordType", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintSource, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.DropDownListFor(m => m.ComplaintSource, true, new SelectList(Model.ComplaintSources, "Key", "Value", Model.ComplaintSource), htmlAttributes: new { @id = "complaintSource", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintSourceRemark, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextBoxFor(m => m.ComplaintSourceRemark, true, htmlAttributes: new { @id = "complaintSourceRemark", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ActivityConcern, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                <div class="input-group">
+                    @Html.DropDownListFor(m => m.ActivityConcern, true, new SelectList(Model.ActivityConcerns, "Key", "Value", Model.ActivityConcern), htmlAttributes: new { @id = "activityConcern", @class = "form-control", @data_provide = "select2", @style = "width: 350px;" })
+                    @Html.TextBoxFor(m => m.OtherActivityConcern, true, htmlAttributes: new { @id = "otherActivityConcern", @class = "form-control", @maxlength = 100, @style = "width: 285px;", @disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintDate, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-3">
+                @Html.TextBoxFor(m => m.ComplaintDate, true, htmlAttributes: new { @id = "complaintDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+            @Html.LabelFor(m => m.FirstComplaintDate, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-3">
+                @Html.TextBoxFor(m => m.FirstComplaintDate, true, htmlAttributes: new { @id = "firstComplaintDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.SwdUnit, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextBoxFor(m => m.SwdUnit, true, htmlAttributes: new { @id = "swdUnit", @class = "form-control", @maxlength = 100 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ReplyDueDate, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-3">
+                @Html.TextBoxFor(m => m.ReplyDueDate, true, htmlAttributes: new { @id = "replyDueDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+            @Html.LabelFor(m => m.LfpsReceiveDate, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-3">
+                @Html.TextBoxFor(m => m.LfpsReceiveDate, true, htmlAttributes: new { @id = "lfpsReceiveDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.FundRaisingDate, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-3">
+                @Html.TextBoxFor(m => m.FundRaisingDate, true, htmlAttributes: new { @id = "fundRaisingDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+            @Html.LabelFor(m => m.FundRaisingTime, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-3">
+                @Html.TextBoxFor(m => m.FundRaisingTime, true, htmlAttributes: new { @id = "fundRaisingTime", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FundRaisingLocation, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextBoxFor(m => m.FundRaisingLocation, true, htmlAttributes: new { @id = "fundRaisingLocation", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FundRaiserInvolve, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.FundRaiserInvolve, true, htmlAttributes: new { @id = "fundRaiserInvolve", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.CollectionMethod, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.DropDownListFor(m => m.CollectionMethod, true, new SelectList(Model.CollectionMethods, "Key", "Value", Model.CollectionMethod), htmlAttributes: new { @id = "collectionMethod", @class = "form-control", @data_provide = "select2" })
+                @Html.TextBoxFor(m => m.OtherCollectionMethod, true, htmlAttributes: new { @id = "otherCollectionMethod", @class = "form-control", @style = "width: 250px", @disabled = "disabled" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.OrgRef, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.OrgRef, true, htmlAttributes: new { @id = "orgRef", @class = "form-control", @maxlength = 8 })
+                    <span class="input-group-addon" style="padding: 0 0; border-width: 0px;">
+                        <button type="button" id="btnRedirectOrgRef" class="btn btn-primary btn-sm">
+                            <span class="icon-arrow-right"></span>&nbsp;@Labels.Redirect
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConcernedOrgName, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextAreaFor(model => model.ConcernedOrgName, true, rows: 4, htmlAttributes: new { @id = "concernedOrgName", @class = "form-control", @maxlength = 1000 })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplainantName, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextAreaFor(model => model.ComplainantName, true, rows: 4, htmlAttributes: new { @id = "complainantName", @class = "form-control", @maxlength = 400 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.PspPermitNum, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextBoxFor(m => m.PspApprovalHistoryId, true, htmlAttributes: new { @id = "pspApprovalHistoryId", @class = "form-control", @maxlength = 100 })
+                @*<div class="input-group">
+                    @Html.TextBoxFor(m => m.PspPermitNum, true, htmlAttributes: new { @id = "pspPermitNum", @class = "form-control", @style = "width: 100px", @maxlength = 100, @disabled = "disabled" })
+                    <span class="input-group-btn pull-left">
+                        <button type="button" id="btnPspPermitNumModal" class="btn btn-sm">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>*@
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FdPermitNum, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextBoxFor(m => m.FdEventId, true, htmlAttributes: new { @id = "fdEventId", @class = "form-control", @maxlength = 100 })
+                @*<div class="input-group">
+                    @Html.TextBoxFor(m => m.FdPermitNum, true, htmlAttributes: new { @id = "fdPermitNum", @class = "form-control", @style = "width: 100px", @maxlength = 100, @disabled = "disabled" })
+                    <span class="input-group-btn pull-left">
+                        <button type="button" id="btnFdPermitNumModal" class="btn btn-sm">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>*@
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.DcLcContent, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextAreaFor(model => model.DcLcContentHtml, true, rows: 4, htmlAttributes: new { @id = "dcLcContentHtml", @class = "form-control wysiwyg-editor", @owner = "dcLcContent" })
+                @Html.HiddenFor(model => model.DcLcContent, htmlAttributes: new { @id = "dcLcContent", @maxlength = 4000 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintEnclosureNum, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-5">
+                @Html.TextBoxFor(m => m.ComplaintEnclosureNum, true, htmlAttributes: new { @id = "complaintEnclosureNum", @class = "form-control", @placeholder = "Encl. No.", @maxlength = 50 })
+            </div>
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.ComplaintPartNum, true, htmlAttributes: new { @id = "complaintPartNum", @class = "form-control", @placeholder = "Part No.", @maxlength = 20 })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ProcessStatusId, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-3">
+                @Html.DropDownListFor(m => m.ProcessStatusId, true, new SelectList(Model.ProcessStatus, "Key", "Value", Model.ProcessStatusId), htmlAttributes: new { @id = "processStatusId", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintResultRemark, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextAreaFor(model => model.ComplaintResultRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "complaintResultRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "complaintResultRemark" })
+                @Html.HiddenFor(model => model.ComplaintResultRemark, htmlAttributes: new { @id = "complaintResultRemark", @maxlength = 4000 })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.WithholdingListIndicator, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.EditorFor(model => model.WithholdingListIndicator, new { htmlAttributes = new { @id = "withholdingListIndicator" } })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.WithholdingBeginDate, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-3">
+                @Html.TextBoxFor(m => m.WithholdingBeginDate, true, htmlAttributes: new { @id = "withholdingBeginDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+            @Html.LabelFor(m => m.WithholdingEndDate, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-3">
+                @Html.TextBoxFor(m => m.WithholdingEndDate, true, htmlAttributes: new { @id = "withholdingEndDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ActionFileEnclosureNum, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-5">
+                @Html.TextBoxFor(m => m.ActionFileEnclosureNum, true, htmlAttributes: new { @id = "actionFileEnclosureNum", @class = "form-control", @placeholder = "Encl. No.", @maxlength = 50 })
+            </div>
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.ActionFilePartNum, true, htmlAttributes: new { @id = "actionFilePartNum", @class = "form-control", @placeholder = "Part No.", @maxlength = 20 })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.RelatedComplaintRef, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextBoxFor(m => m.RelatedComplaintMasterId, true, htmlAttributes: new { @id = "relatedComplaintMasterId", @class = "form-control", @maxlength = 12 })
+                @*                <div class="input-group">
+                    @Html.TextBoxFor(m => m.RelatedComplaintMasterId, true, htmlAttributes: new { @id = "relatedComplaintMasterId", @class = "form-control", @maxlength = 12 })
+                    <span class="input-group-addon" style="padding: 0 0; border-width: 0px;">
+                        <button type="button" id="btnComplaintCaseModal" class="btn btn-sm" data-toggle="modal" data-target="#complaintCase-modal">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>*@
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.WithholdingRemark, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.WithholdingRemark, true, new SelectList(Model.WithholdingRemarks, "Key", "Value", Model.WithholdingRemark), htmlAttributes: new { @id = "withholdingRemark", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.OtherWithholdingRemark, new { @class = "col-xs-3 control-label" })
+            <div class="col-xs-9">
+                @Html.TextAreaFor(model => model.OtherWithholdingRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "otherWithholdingRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "otherWithholdingRemark" })
+                @Html.HiddenFor(model => model.OtherWithholdingRemark, htmlAttributes: new { @id = "otherWithholdingRemark", @maxlength = 4000 })
+            </div>
+        </div>
+    </fieldset>
+    <div class="vspace-6"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                    <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                <button type="button" id="btnGenReport" class="btn btn-primary btn-sm">
+                    <span class="icon-print"></span>&nbsp;Print R17</button>
+                <button type="button" id="btnUpdate" class="btn btn-primary btn-sm">
+                    <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                <button id="btnDelete" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-trash"></span>&nbsp;@Labels.Delete</button>
+                <button id="btnCancel" type="button" class="btn btn-default btn-sm">
+                    <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- inline scripts related to this page -->
+
+<script type="text/javascript">
+
+    var editEnquiryComplaintDetailUrl = '@Url.RouteUrl("EditEnquiryComplaintDetail")';
+    var deleteComplaintMasterUrl = '@Url.RouteUrl("DeleteComplaintMaster", new { complaintMasterId = -1 })';
+    var searchPageUrl = '@Url.RouteUrl("EnquiryComplaintSearchPage")';
+    var getEnquiryComplaintDetailUrl = '@Url.RouteUrl("GetEnquiryComplaintDetail")';
+    var getOrgMasterIdByRef = '@Url.RouteUrl("GetOrgMasterIdByRef", new { orgRef = -1 })';
+    var editOrgMasterUrl = '@Url.RouteUrl("EditOrgMaster", new { code = -1, ReturnUrl = -2 })';
+
+    $(function () {
+        $('#btnGenReport').click(function () {
+            var actionUrl = '/api/report/-1/r17/generate'.replace(-1, $('#complaintMasterId').val());
+            var $form = $("#editEnquiryComplaintForm");
+            $form.ajaxPostForm(actionUrl,
+                function (response) {
+                    if (response.data)
+                        window.location.href = response.data;
+                    else
+                        notifSuccess("No record Find.")
+                }
+            );
+        });
+
+        $('#btnUpdate').click(function () {
+            var $form = $("#editEnquiryComplaintForm");
+            if ($form.valid()) {
+                var actionUrl = editEnquiryComplaintDetailUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                         notifSuccess(response.message);
+
+                         $("#lblOrgRef").text(response.data.orgRef || "");
+                         $("#lblEngOrgName").html(response.data.orgEngName || "");
+                         $("#lblChiOrgName").html(response.data.orgChiName || "");
+                         if (response.data.lblWithholdingBeginDate != null && response.data.lblWithholdingBeginDate != "") {
+                             $("#lblWithholdingBeginDate").text("From " + response.data.lblWithholdingBeginDate);
+                         }
+
+                         if (response.data.lblWithholdingEndDate != null && response.data.lblWithholdingEndDate != "") {
+                             $("#lblWithholdingEndDate").text("To " + response.data.lblWithholdingEndDate);
+                         }
+
+                         $("#lblPspRef").text(response.data.lblPspRef || "");
+                         $("#lblPspContactPersonName").text(response.data.lblPspContactPersonName || "");
+                         $("#lblPspContactPersonEmailAddress").text(response.data.lblPspContactPersonEmailAddress || "");
+                         $("#lblFdRef").text(response.data.lblFdRef || "");
+                         $("#lblFdContactPersonName").text(response.data.lblFdContactPersonName || "");
+                         $("#lblFdContactPersonEmailAddress").text(response.data.lblFdContactPersonEmailAddress || "");
+
+                         $('#rowVersion').val(response.data.rowVersion);
+                     }
+                );
+            }
+        });
+
+        $('#btnDelete').click(function () {
+            var actionUrl = deleteComplaintMasterUrl.replace('-1', $('#complaintMasterId').val());
+            confirmDelete(function (result) {
+                if (result) {
+                    ajaxPost(actionUrl,
+                         function (response) {
+                             notifSuccess(response.message);
+                             setTimeout('returnSearchPage()', 3000);
+                         },
+                         function (response) {
+                             notifError(response.message);
+                         }
+                    )
+                }
+            });
+        });
+
+        $('#btnCancel').click(function () {
+            confirm("Unsaved change will be discarded. Click OK to proceed. Click Cancel to resume editing.", function (result) {
+                if (result) {
+                    if (prePage == null) {
+                        redirectTo(searchPageUrl);
+                    } else {
+                        redirectTo(prePage);
+                    }
+                }
+            });
+        });
+
+        $('#btnRedirectOrgRef').click(function () {
+            var orgMasterId = $("#orgRef").val();
+            //var complaintMasterId = $('#complaintMasterId').val();
+            //editOrgMasterUrl = editOrgMasterUrl.replace("-3", complaintMasterId)
+
+            if (orgMasterId != "") {
+                var actionUrl = getOrgMasterIdByRef.replace(-1, orgMasterId);
+
+                //var $form = $("#editEnquiryComplaintForm");
+
+                ajaxGet(actionUrl,
+                    function (response) {
+                        if (response.data)
+                            doEditOrgMasterRecord(response.data);
+                        else
+                            notifSuccess("Invalid Organsation Reference Code!")
+                    }
+                );
+
+            }
+        });
+
+        $("#activityConcern").change(function () {
+            var activityConcern = $("#activityConcern option:selected").text();
+            if (activityConcern == "Others") {
+                $("#otherActivityConcern").removeAttr("disabled");
+            } else {
+                $("#otherActivityConcern").val("");
+                $("#otherActivityConcern").attr("disabled", true);
+            }
+        });
+
+        $("#collectionMethod").change(function () {
+            var collectionMethod = $("#collectionMethod option:selected").text();
+            if (collectionMethod.toLowerCase() == "others") {
+                $("#otherCollectionMethod").removeAttr("disabled");
+            } else {
+                $("#otherCollectionMethod").val("");
+                $("#otherCollectionMethod").attr("disabled", true);
+            }
+        });
+
+    });
+
+    function initEditEnquiryComplaintForm() {
+        var $form = $("#editEnquiryComplaintForm");
+        var actionUrl = getEnquiryComplaintDetailUrl;
+
+        $form.ajaxPostForm(actionUrl,
+             function (response) {
+                 onEditRecord(response.data);
+             }
+        );
+    }
+
+    function onEditRecord(data) {
+        $("#complaintMasterId").val(data.complaintMasterId);
+        $("#complaintRef").val(data.complaintRef);
+        $('#complaintRecordType').select2("val", data.complaintRecordType);
+        $('#complaintSource').select2("val", data.complaintSource);
+        showHideTab(data.complaintSource);
+
+        $('#complaintSourceRemark').val(data.complaintSourceRemark);
+
+        $('#activityConcern').select2("val", data.activityConcern);
+        var txtActivityConcern = $("#activityConcern option:selected").text();
+        if (txtActivityConcern.toLowerCase() == "others") {
+            $("#otherActivityConcern").removeAttr("disabled");
+            $("#otherActivityConcern").val(data.otherActivityConcern);
+        }
+        $("#complaintDate").datepicker('update', toDDMMYYYY(data.complaintDate));
+        $("#firstComplaintDate").datepicker('update', toDDMMYYYY(data.firstComplaintDate));
+        $("#replyDueDate").datepicker('update', toDDMMYYYY(data.replyDueDate));
+        $("#lfpsReceiveDate").datepicker('update', toDDMMYYYY(data.lfpsReceiveDate));
+        $("#swdUnit").val(data.swdUnit);
+        $("#orgId").val(data.orgId);
+        $("#orgRef").select2("val", data.orgRef);
+        //$("#concernedOrgEngName").text(data.engOrgName);
+        //$("#concernedOrgChiName").text(data.chiOrgName);
+
+        $("#concernedOrgName").val(data.concernedOrgName);
+
+        $("#complainantName").val(data.complainantName);
+        $('#governmentHotlineIndicator').checkboxVal(data.governmentHotlineIndicator);
+        $("#pspApprovalHistoryId").select2("val", data.pspApprovalHistoryId);
+        //$("#pspPermitNum").val(data.pspPermitNum);
+
+        $("#fdEventId").select2("val", data.fdEventId);
+        //$("#fdPermitNum").val(data.fdPermitNum);
+        $("#dcLcContent").val(data.dcLcContent);
+        $("#dcLcContentHtml").summernote('code', data.dcLcContentHtml);
+
+        $("#complaintPartNum").val(data.complaintPartNum);
+        $("#complaintEnclosureNum").val(data.complaintEnclosureNum);
+        $('#processStatusId').select2("val", data.processStatusId);
+        $('#withholdingListIndicator').checkboxVal(data.withholdingListIndicator);
+        $("#withholdingBeginDate").datepicker('update', toDDMMYYYY(data.withholdingBeginDate));
+        $("#withholdingEndDate").datepicker('update', toDDMMYYYY(data.withholdingEndDate));
+        $("#actionFilePartNum").val(data.actionFilePartNum);
+        $("#actionFileEnclosureNum").val(data.actionFileEnclosureNum);
+        $("#relatedComplaintMasterId").select2("val", data.relatedComplaintMasterId);
+        $("#fundRaisingDate").datepicker('update', toDDMMYYYY(data.fundRaisingDate));
+        $("#fundRaisingTime").val(data.fundRaisingTime);
+        $("#fundRaisingLocation").val(data.fundRaisingLocation);
+        $("#fundRaiserInvolve").val(data.fundRaiserInvolve);
+        $('#collectionMethod').select2("val", data.collectionMethod);
+        if (data.otherCollectionMethod != null && data.otherCollectionMethod != "") {
+            $("#otherCollectionMethod").val(data.otherCollectionMethod);
+            $("#otherCollectionMethod").removeAttr("disabled");
+        }
+
+        $('#complaintResult').select2("val", data.complaintResult);
+        $("#complaintResultRemark").val(data.complaintResultRemark);
+        $("#complaintResultRemarkHtml").summernote('code', data.complaintResultRemarkHtml);
+        $('#withholdingRemark').select2("val", data.withholdingRemark);
+        $("#otherWithholdingRemark").val(data.otherWithholdingRemark);
+        $("#otherWithholdingRemarkHtml").summernote('code', data.otherWithholdingRemarkHtml);
+        if (data.otherNonComplianceNature != null && data.otherNonComplianceNature != "") {
+            $("#otherCollectionMethod").val(data.otherCollectionMethod);
+            $("#otherCollectionMethod").removeAttr("disabled");
+        }
+
+        $("#nonComplianceNature").select2("val", array);
+
+        $('#rowVersion').val(data.rowVersion);
+    }
+
+    function returnSearchPage() {
+        window.location = searchPageUrl;
+    }
+
+    function doEditOrgMasterRecord(orgMasterId) {
+
+        //var currentUrl = window.location.href;
+        //var returnUrl = currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation") - 1);
+        var returnUrl = window.location.pathname;
+        var actionUrl = editOrgMasterUrl.replace("-1", orgMasterId).replace("-2", returnUrl);
+        //var actionUrl = editOrgMasterUrl.replace("-1", orgMasterId).replace("-2", returnUrl).replace("-3", $('#complaintMasterId').val());
+        window.location = actionUrl;
+
+    };
+</script>

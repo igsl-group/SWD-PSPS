@@ -1,0 +1,342 @@
+body.orange-skin {
+    line-height: 1.2;
+    min-width: 1260px;
+}
+.orange-skin input, .orange-skin textarea {
+    color: #000;
+}
+.orange-skin textarea.form-control {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.orange-skin .btn-group > .btn-sm, .orange-skin .btn-group + .btn-sm {
+    border-width: 4px;
+}
+.orange-skin .form-group {
+    margin-bottom: 0.2em;
+}
+.orange-skin .page-content {
+    padding: 55px 15px 24px;
+}
+.orange-skin .sidebar {
+    position: absolute;
+    top: 45px;
+}
+.orange-skin .sidebar, .orange-skin .sidebar:before {
+    width: 160px;
+}
+.orange-skin .main-content {
+    margin-left: 160px;
+}
+.orange-skin, .orange-skin .main-container:after, .orange-skin .page-content {
+    background-color: #faf7f0!important;
+}
+.orange-skin .dropdown-menu li a:hover, .orange-skin .dropdown-menu li a:focus, .orange-skin .dropdown-menu li a:active, .orange-skin .dropdown-menu li.active a, .orange-skin .dropdown-menu li.active a:hover, .orange-skin .dropdown-menu .dropdown-submenu:hover > a, .orange-skin .nav-tabs .dropdown-menu li > a:focus {
+    background: #97310e;
+}
+.orange-skin .navbar {
+    background: #dd4814;
+    /*background: #FF8644;*/
+    /*background: #F9B088;*/
+}
+.orange-skin .navbar-default, .orange-skin .navbar .nav > li > a {
+    /*background: #dd4814;*/
+    /*background: #FF8644;*/
+    background: #F9B088;
+}
+.orange-skin .navbar .nav > li > a:hover, .orange-skin .navbar .nav > li > a:focus {
+    background-color: #97310e!important;
+}
+.orange-skin .nav-list > li > a:hover, .orange-skin .nav-list > li > a:focus {
+    background-color: #fff;
+    color: #97310e;
+}
+.orange-skin .nav > li.open > a {
+    color: #97310e;
+}
+.orange-skin .nav-list > li.active > a {
+    color: #97310e;
+}
+.orange-skin .nav-list > li a:hover > .arrow, .orange-skin .nav-list > li.active > a > .arrow, .orange-skin .nav-list > li.open > a > .arrow {
+    color: #97310e;
+}
+.orange-skin .nav-list > li > a:hover:before {
+    background-color: #97310e;
+}
+.orange-skin .nav-list > li.active:after {
+    border: 1px solid #97310e;
+}
+.orange-skin .nav-list li.active>a:after {
+    display: block;
+    content:"";
+    position: absolute!important;
+    right: 0;
+    top: 4px;
+    border: 8px solid transparent;
+    border-width: 14px 10px;
+    border-right-color: #97310e;
+}
+.orange-skin .nav-list li.open>a:after {
+    display: none;
+}
+.orange-skin .nav-list > li .submenu > li > a:hover, .orange-skin .nav-list > li .submenu > li.active > a {
+    color: #97310e;
+}
+.orange-skin .page-header {
+    border-bottom: #c4c4c4 1px dotted;
+}
+.orange-skin .page-header h1 {
+    color: #444444;
+}
+.orange-skin .table-header {
+    background-color: transparent;
+    color: #000;
+    font-weight: bold;
+}
+.orange-skin .dataTable th.sorting_desc, .orange-skin .dataTable th.sorting_asc, .orange-skin th[aria-selected=true] {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe3e7ed', endColorstr='#ffe3e7ed', GradientType=0);
+}
+.orange-skin .data-table, .orange-skin .datatable {
+    background-color: #fff;
+}
+.orange-skin .dataTables_wrapper .row:first-child {
+    padding: 0;
+    background-color: transparent;
+}
+.orange-skin .dataTables_wrapper .row:last-child {
+    border: 0;
+    padding-top: 15px;
+    background-color: transparent;
+}
+.orange-skin .dataTable th[class*=sort]:hover {
+    color: #97310e;
+}
+.orange-skin .dataTable th[class*=sorting_], .orange-skin .dataTable th.sorting_desc:after, .orange-skin .dataTable th.sorting_asc:after {
+    color: #dd4814;
+}
+.orange-skin .pagination > li.active > a, .orange-skin .pagination > li.active > a:hover {
+    background-color: #97310e;
+    border-color: #97310e;
+    color: #fff;
+}
+.orange-skin .pagination > li > a, .orange-skin .pager > li > a {
+    color: #dd4814;
+}
+.orange-skin .pagination>.disabled>span, .orange-skin .pagination>.disabled>a, .orange-skin .pagination>.disabled>a:hover, .orange-skin .pagination>.disabled>a:focus {
+    color: #999;
+}
+.orange-skin .dataTable th.sorting_desc, .orange-skin .dataTable th.sorting_asc, .orange-skin th[aria-selected=true] {
+    background-color: #eff3f8;
+    background-image: none;
+}
+.orange-skin th[aria-selected=true] .ui-jqgrid-sortable, .orange-skin .ui-jqgrid-sortable:hover {
+    color: #97310e;
+}
+.orange-skin .ui-icon {
+    color: #dd4814;
+}
+.orange-skin .ui-state-disabled {
+    color: #bbb;
+}
+.orange-skin .ui-jqgrid-btable {
+    background-color: #fff;
+}
+.orange-skin .ui-dialog, .ui-jqdialog {
+    border: 0;
+    z-index: 1060!important;
+}
+.orange-skin .widget-header, .orange-skin .ui-jqdialog .ui-jqdialog-titlebar {
+    color: white;
+    background: #dd4814!important;
+    filter: none;
+}
+.orange-skin .ui-jqgrid .ui-jqgrid-pager, .orange-skin .EditTable, .orange-skin .ui-jqgrid .ui-jqgrid-labels, .orange-skin .ui-jqgrid .ui-jqgrid-hdiv, .orange-skin .table thead tr {
+    background: #ececec!important;
+    background-color: #ececec!important;
+}
+.orange-skin .ui-jqgrid-view > .ui-jqgrid-titlebar {
+    color: #000;
+    background: transparent;
+    font-size: 16px;
+    font-weight: bold;
+}
+.orange-skin .ui-jqgrid .ui-jqgrid-labels, .orange-skin .ui-jqgrid .ui-jqgrid-hdiv {
+    background: #ececec!important;
+}
+.orange-skin .ui-jqgrid-btable .ui-state-highlight.ui-widget-content {
+    background: #d1d5d8!important;
+}
+.orange-skin .ui-pg-table > tbody > tr > .ui-pg-button > .ui-icon:hover {
+    color: #97310e;
+    border-color: #97310e;
+}
+.orange-skin .nav-tabs {
+    border-color: #ececec;
+}
+.orange-skin .nav-tabs > li.active > a, .orange-skin .nav-tabs > li.active > a:hover, .orange-skin .nav-tabs > li.active > a:focus {
+    background-color: transparent;
+    border-color: #97310e #acacac #faf7f0;
+    color: #97310e;
+}
+.orange-skin .nav-tabs > li > a:hover {
+    background-color: #fff;
+    color: #97310e;
+    border-color: #acacac;
+}
+.orange-skin .nav-tabs > li > a, .orange-skin .nav-tabs > li > a:focus {
+    border-color: #acacac;
+}
+.orange-skin .tab-content {
+    border: 1px solid #acacac;
+}
+.orange-skin .btn-primary, .orange-skin .btn-primary:focus {
+    border-color: #dd4814;
+    background-color: #dd4814!important;
+}
+.orange-skin .btn-primary:hover, .orange-skin .open .btn-primary.dropdown-toggle {
+    border-color: #dd4814;
+    background-color: #97310e!important;
+}
+.orange-skin select.form-control {
+    padding: 4px 0px;
+}
+.orange-skin .select2-container .select2-choice, .orange-skin select.form-control {
+    color: #000;
+}
+.orange-skin .select2-drop {
+    border: 1px solid #f59942;
+    border-top-style: none;
+}
+.orange-skin .select2-search input.select2-input:focus {
+    border-color: #b5b5b5;
+}
+.orange-skin .select2-search input {
+    min-height: 21px;
+}
+.orange-skin .select2-results .select2-highlighted {
+    background: #97310e;
+}
+.orange-skin .select2-drop-above.select2-dropdown-open .select2-choice {
+    border-color: transparent;
+}
+.orange-skin .select2-drop.select2-drop-above {
+    border-bottom-style: none;
+}
+.orange-skin .select2-drop.select2-drop-above.select2-drop-active {
+    border-top-color: #f59942;
+}
+.orange-skin .select2-container-active {
+    border: 1px solid #f59942;
+}
+.orange-skin .select2-container-active.select2-drop-above {
+    border-top-style: none;
+}
+.orange-skin .select2-container .select2-choices {
+    border: none;
+    background: #fff;
+}
+.orange-skin .select2-container.select2-container-disabled .select2-choices, .orange-skin .select2-container.select2-container-disabled .select2-choice {
+    border: none;
+    background: #eee!important;
+}
+.orange-skin .select2-container.select2-container-disabled .select2-choices .select2-arrow, .orange-skin .select2-container.select2-container-disabled .select2-choice .select2-arrow {
+    background: #eee;
+}
+.orange-skin .select2-container.select2-container-disabled {
+    background: #eee;
+}
+.orange-skin .ui-jqdialog-content .CaptionTD {
+    text-align: left;
+    font-weight: bold;
+    vertical-align: middle;
+    font-size: 14px;
+    color: #000;
+}
+.orange-skin .ui-jqdialog-content .searchFilter table:first-child {
+    min-width: 80%;
+    margin: 0 4px 0 4px;
+}
+.orange-skin .ui-jqdialog-content .searchFilter table table {
+    margin-left: 1em;
+}
+.orange-skin .ui-jqdialog-content .searchFilter .input-elm {
+    line-height: 1em;
+}
+.orange-skin .fm-button {
+    color: #dd4814;
+}
+.orange-skin .datepicker td.active, .daterangepicker td.active, .orange-skin .datepicker td.active:hover, .daterangepicker td.active:hover {
+    background: #97310e!important;
+}
+.orange-skin .datepicker-years .active.year, .orange-skin .datepicker-months .active.month {
+    background: #97310e!important;
+}
+.orange-skin .bootbox .modal-dialog {
+    width: 50%;
+}
+.orange-skin .bootbox-body {
+    font-size: 14px;
+}
+.orange-skin .ui-jqdialog-content .searchFilter select {
+    /*max-width: 100%;*/
+}
+.orange-skin th.ui-th-column div {
+    white-space: normal !important;
+    height: auto !important;
+}
+.orange-skin .modal-header {
+    background: #dd4814;
+    color: white;
+}
+.orange-skin .modal-footer {
+    background: #eff3f8;
+}
+.orange-skin .ui-dialog .ui-dialog-titlebar-close, .ui-jqdialog .ui-dialog-titlebar-close, .ui-dialog .ui-jqdialog-titlebar-close, .ui-jqdialog .ui-jqdialog-titlebar-close {
+    color: black;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    filter: alpha(opacity=20); LINE-HEIGHT: 1;
+}
+.orange-skin .ui-dialog .ui-dialog-titlebar-close:hover, .ui-jqdialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-jqdialog-titlebar-close:hover, .ui-jqdialog .ui-jqdialog-titlebar-close:hover {
+    opacity: 0.5;
+    filter: alpha(opacity=50); LINE-HEIGHT: 1;
+}
+.orange-skin .navbar-brand {
+    height: auto;
+}
+.orange-skin .validation-summary-errors a.alert-warning {
+    color: #A94442;
+    text-decoration: underline;
+}
+.orange-skin .validation-summary-errors a.alert-warning:hover {
+    color: #A94442;
+    text-decoration: none;
+}
+
+/* Start of WYSIWYG */
+.orange-skin .note-toolbar .btn-group>.btn, .orange-skin .note-toolbar .btn-group>.inline>.btn {
+    margin: 0 1px 0 0!important;
+    background: #F5F5F5!important;
+    border: none!important;
+    color: #8D939E!important;
+    text-shadow: none!important;
+}
+
+.orange-skin .note-toolbar .btn-group>.btn>.caret {
+    border-top-color: #8D939E!important;
+}
+
+.orange-skin .note-editor.note-frame.panel {
+    margin-bottom: 0px!important;
+}
+
+.orange-skin .note-editable.panel-body {
+    font-size: 14px!important;
+    min-height: 80px!important;
+    padding-left: 4px!important;
+}
+
+.orange-skin .note-editable.panel-body p, .orange-skin .note-editable.panel-body div {
+    margin: 0 0 4px!important;
+}
+/* End of WYSIWYG */

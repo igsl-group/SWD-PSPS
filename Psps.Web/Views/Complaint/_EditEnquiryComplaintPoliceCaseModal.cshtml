@@ -1,0 +1,207 @@
+﻿@model Psps.Web.ViewModels.Complaint.ComplaintPoliceCaseViewModel
+@using Psps.Resources;
+<div class="tab-pane" id="policeCase">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="policeCase-grid-table"></table>
+                <div id="policeCase-grid-pager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var listPoliceCaseUrl = '@Url.RouteUrl("ListPoliceCase", new { complaintMasterId = -1 })';
+    var getPoliceCaseUrl = '@Url.RouteUrl("GetPoliceCase", new { ComplaintPoliceCaseId = -1 })';
+    var exportComplaintPoliceCaseUrl = '@Url.RouteUrl("ExportComplaintPoliceCase", new { complaintMasterId = -1 })';
+
+    function initPoliceCaseGrid() {
+        var actionUrl = listPoliceCaseUrl.replace("-1", $("#complaintMasterId").val());
+        var $grid = $("#policeCase-grid-table");
+        var pager_selector = "#policeCase-grid-pager";
+
+        if ($grid.isJqGrid()) {
+            $grid.reloadJqGrid();
+            return;
+        }
+
+        $grid.jqGrid({
+            pager: pager_selector,
+            sortname: 'caseInvestigateRefNum',
+            sortorder: 'asc',
+            url: actionUrl,
+            datatype: 'json',
+            colModel: [{
+                name: 'caseInvestigateRefNum',
+                label: 'Reference No.',
+                index: 'caseInvestigateRefNum',
+                width: 80,
+            }, {
+                name: 'referralDate',
+                label: 'Date of Referral',
+                index: 'referralDate',
+                template: dateTemplate,
+                width: 90,
+            }, {
+                name: 'memoDate',
+                label: 'Date of Memo from Police',
+                index: 'memoDate',
+                template: dateTemplate,
+                width: 90,
+            }, {
+                name: 'concernOrgName',
+                label: 'Name of NGO involved',
+                index: 'orgMaster.OrgNameEngChi',
+                width: 300,
+            }, {
+                name: 'concernOrgRef',
+                label: 'Org Ref',
+                index: 'concernOrgRef',
+                hidden: true,
+                width: 300,
+            }, {
+                name: 'investigationResult',
+                label: 'Result of Investigation',
+                index: 'investigationResult',
+                stype: 'select',
+                searchoptions: {
+                    sopt: ['eq', 'ne'],
+                    value: @Html.Raw(Json.Encode(@Model.PoliceCaseInvestigationResults))
+                    },
+                width: 200,
+            }, {
+                name: 'policeRefNum',
+                label: 'Police Reference',
+                index: 'policeRefNum',
+                width: 120,
+            }, {
+                name: 'enclosureNum',
+                label: 'E',
+                index: 'enclosureNum',
+                width: 80,
+            }, {
+                name: 'partNum',
+                label: 'Part',
+                index: 'partNum',
+                width: 80,
+            }, {
+                name: 'complaintPoliceCaseId',
+                hidden: true,
+            }],
+            editurl: "/dummy.html", //nothing is saved
+            loadComplete: defaultGridLoadComplete,
+            ondblClickRow: function (rowId, iRow, iCol, e) {
+                var data = $grid.jqGrid('getRowData', rowId);
+                var actionUrl = getPoliceCaseUrl.replace("-1", data.complaintPoliceCaseId);
+                ajaxGet(actionUrl,
+                    function (response) {
+                        onEditRecord(response.data);
+                    }
+                );
+            },
+            onSelectRow: function (rowId) {
+                $grid.setGridParam('editurl', 'organisation-edit?' + rowId);
+            }
+        });
+
+        //navButtons
+        $grid.jqGrid('navGrid', pager_selector, {
+            //navbar options
+            search: true,
+            refresh: true,
+        }, {}, {}, {}, {
+            //search form
+            recreateForm: true,
+            afterShowSearch: defaultSearchFormAfterShowSearch,
+            afterRedraw: defaultSearchFormAfterRedraw
+        }, {}).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-download-alt",
+            onClickButton: onExportRecord,
+            position: "first",
+            title: "Export Data",
+            cursor: "pointer"
+        }).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-plus",
+            onClickButton: onNewRecord,
+            position: "first",
+            title: "New Record",
+            cursor: "pointer"
+        });
+
+        $grid.jqGrid('setGroupHeaders', {
+            groupHeaders: [
+                {
+                    startColumnName: 'enclosureNum',
+                    numberOfColumns: 2, titleText: 'Encl. in Action File ', align:'center',
+                }
+            ],
+            useColSpanStyle: true
+        });
+
+        function displayPoliceCaseInput() {
+            $('#policeCaseComplaintMasterId').val($('#complaintMasterId').val());
+            $('#edit-policeCase-modal').modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            });
+        }
+
+        function onExportRecord() {
+            var grid = $('#policeCase-grid-table');
+            var data = grid.jqGrid('getRowData');
+
+            if (data.length == 0) {
+                notifSuccess("Case Investigated by Police Search Result is no Record");
+                return;
+            }
+            var actionUrl=exportComplaintPoliceCaseUrl.replace("-1", $("#complaintMasterId").val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        }
+
+        function onEditRecord(data) {
+            $("#btnUpdatePoliceCase").show();
+            $("#btnDeletePoliceCase").show();
+            $("#btnSavePoliceCase").hide();
+            displayPoliceCaseInput();
+            $('#complaintPoliceCaseId').val(data.complaintPoliceCaseId);
+            $('#policeCaseCaseInvestigateRefNum').val(data.policeCaseCaseInvestigateRefNum);
+            $('#policeCaseReferralDate').val(toDDMMYYYY(data.policeCaseReferralDate));
+            $('#policeCaseMemoDate').val(toDDMMYYYY(data.policeCaseMemoDate));
+            $('#policeCaseConcernOrgName').select2('val', data.policeCaseConcernOrgRef);
+            $('#policeCaseCorrespondenceEnclosureNum').val(data.policeCaseCorrespondenceEnclosureNum);
+            $('#policeCaseCorrespondencePartNum').val(data.policeCaseCorrespondencePartNum);
+            $('#policeCaseInvestigationResult').select2('val', data.policeCaseInvestigationResult);
+            $('#policeCasePoliceRefNum').val(data.policeCasePoliceRefNum);
+            $("#policeCaseCaseNatureHtml").summernote('code', data.policeCaseCaseNatureHtml);
+            $("#policeCaseResultDetailHtml").summernote('code', data.policeCaseResultDetailHtml);
+            $('#policeCaseEnclosureNum').val(data.policeCaseEnclosureNum);
+            $('#policeCasePartNum').val(data.policeCasePartNum);
+            $('#policeCaseFundRaisingDate').val(toDDMMYYYY(data.policeCaseFundRaisingDate));
+            $('#policeCaseFundRaisingTime').val(data.policeCaseFundRaisingTime);
+            $('#policeCaseFundRaisingLocation').val(data.policeCaseFundRaisingLocation);
+            $('#policeCaseConvictedPersonName').val(data.policeCaseConvictedPersonName);
+            $('#policeCaseConvictedPersonPosition').val(data.policeCaseConvictedPersonPosition);
+            $("#policeCaseOffenceDetailHtml").summernote('code', data.policeCaseOffenceDetailHtml);
+            $("#policeCaseSentenceDetailHtml").summernote('code', data.policeCaseSentenceDetailHtml);
+            $('#policeCaseCourtRefNum').val(data.policeCaseCourtRefNum);
+            $('#policeCaseCourtHearingDate').val(toDDMMYYYY(data.policeCaseCourtHearingDate));
+            $("#remarkHtml").summernote('code', data.remarkHtml);
+        };
+
+        function onNewRecord() {
+            $("#btnSavePoliceCase").show();
+            $("#btnUpdatePoliceCase").hide();
+            clearForm('#edit-policeCase-modal');
+            $('#edit-policeCase-modal').find('.wysiwyg-editor').each(function () { $(this).summernote('reset'); });
+            displayPoliceCaseInput();
+            $("#policeCaseConcernOrgName").select2('val', $("#orgRef").val());
+        };
+    };
+</script>

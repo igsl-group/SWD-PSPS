@@ -1,0 +1,563 @@
+﻿@model Psps.Web.ViewModels.Organisation.OrganisationViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="OrgGuideEditFrom" class="form-horizontal">
+    <div class="">
+        @Html.BootstrapValidationSummary()
+        @Html.AntiForgeryToken()
+        <div id="organisation" class="tab-pane active">
+            <fieldset>
+                <legend>Organisation Details</legend>
+                <div id="details">
+                    @Html.HiddenFor(m => m.OrgMasterId, htmlAttributes: new { @id = "orgMasterId" })
+                    @Html.HiddenFor(m => m.PrePage, htmlAttributes: new { @id = "prePage" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationReference, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-4">
+                            @Html.TextBoxFor(m => m.OrganisationReference, true, htmlAttributes: new { @id = "organisationReference", @class = "form-control", @maxlength = 8 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationDisabled, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.EditorFor(model => model.OrganisationDisabled, new { htmlAttributes = new { @id = "organisationDisabled" } })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OrganisationName, true, htmlAttributes: new { @id = "organisationName", @class = "form-control", @maxlength = 255 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationChiName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OrganisationChiName, true, htmlAttributes: new { @id = "organisationChiName", @class = "form-control", @maxlength = 255 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationSimpliChiName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OrganisationSimpliChiName, true, htmlAttributes: new { @id = "organisationSimpliChiName", @class = "form-control", @maxlength = 255 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EngOrgNameSorting, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.EngOrgNameSorting, true, htmlAttributes: new { @id = "engOrgNameSorting", @class = "form-control", @maxlength = 256 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherEngOrgName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OtherEngOrgName, true, htmlAttributes: new { @id = "otherEngOrgName", @class = "form-control", @maxlength = 256 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OtherChiOrgName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OtherChiOrgName, true, htmlAttributes: new { @id = "otherChiOrgName", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EngRegisteredAddress1, new { @class = "col-xs-3 control-label", @style = "height:34px;" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress1, true, htmlAttributes: new { @id = "engRegisteredAddress1", @class = "form-control", @maxlength = 400 })
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress2, true, htmlAttributes: new { @id = "engRegisteredAddress2", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress3, true, htmlAttributes: new { @id = "engRegisteredAddress3", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress4, true, htmlAttributes: new { @id = "engRegisteredAddress4", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngRegisteredAddress5, true, htmlAttributes: new { @id = "engRegisteredAddress5", @class = "form-control", @maxlength = 200 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ChiRegisteredAddress1, new { @class = "col-xs-3 control-label", @style = "height:34px;" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress1, true, htmlAttributes: new { @id = "chiRegisteredAddress1", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress2, true, htmlAttributes: new { @id = "chiRegisteredAddress2", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress3, true, htmlAttributes: new { @id = "chiRegisteredAddress3", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress4, true, htmlAttributes: new { @id = "chiRegisteredAddress4", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiRegisteredAddress5, true, htmlAttributes: new { @id = "chiRegisteredAddress5", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EngMailingAddress1, new { @class = "col-xs-3 control-label", @style = "height:34px;" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.EngMailingAddress1, true, htmlAttributes: new { @id = "engMailingAddress1", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngMailingAddress2, true, htmlAttributes: new { @id = "engMailingAddress2", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngMailingAddress3, true, htmlAttributes: new { @id = "engMailingAddress3", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngMailingAddress4, true, htmlAttributes: new { @id = "engMailingAddress4", @class = "form-control", @maxlength = 200 })
+                            @Html.TextBoxFor(m => m.EngMailingAddress5, true, htmlAttributes: new { @id = "engMailingAddress5", @class = "form-control", @maxlength = 200 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ChiMailingAddress1, new { @class = "col-xs-3 control-label", @style = "height:34px;" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.ChiMailingAddress1, true, htmlAttributes: new { @id = "chiMailingAddress1", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiMailingAddress2, true, htmlAttributes: new { @id = "chiMailingAddress2", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiMailingAddress3, true, htmlAttributes: new { @id = "chiMailingAddress3", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiMailingAddress4, true, htmlAttributes: new { @id = "chiMailingAddress4", @class = "form-control", @maxlength = 100 })
+                            @Html.TextBoxFor(m => m.ChiMailingAddress5, true, htmlAttributes: new { @id = "chiMailingAddress5", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OrganisationWebsite, new { @class = "col-xs-3 control-label", @style = "height:34px;" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.OrganisationWebsite, true, htmlAttributes: new { @id = "organisationWebsite", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TelNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.TelNum, true, htmlAttributes: new { @id = "telNum", @class = "form-control", @maxlength = 50 })
+                        </div>
+                        @Html.LabelFor(m => m.Fax, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.Fax, true, htmlAttributes: new { @id = "fax", @class = "form-control", @maxlength = 50 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.Email, true, htmlAttributes: new { @id = "email", @class = "form-control", @maxlength = 200 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ApplicantSaluteId, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-1">
+                            @Html.DropDownListFor(m => m.ApplicantSaluteId, true, new SelectList(Model.ApplicantSalutes, "Key", "Value", Model.ApplicantSaluteId), htmlAttributes: new { @id = "applicantSaluteId", @class = "form-control", @data_provide = "select2", @style = "width: 85px;" })
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.TextBoxFor(m => m.ApplicantFirstName, true, htmlAttributes: new { @id = "applicantFirstName", @class = "form-control", @style = "width: 85px;", @maxlength = 100 })
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(m => m.ApplicantLastName, true, htmlAttributes: new { @id = "applicantLastName", @class = "form-control", @maxlength = 50 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ApplicantChiSaluteId, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(m => m.ApplicantChiLastName, true, htmlAttributes: new { @id = "applicantChiLastName", @class = "form-control", @maxlength = 10 })
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.TextBoxFor(m => m.ApplicantChiFirstName, true, htmlAttributes: new { @id = "applicantChiFirstName", @class = "form-control", @style = "width: 85px;", @maxlength = 5 })
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.DropDownListFor(m => m.ApplicantChiSaluteId, true, new SelectList(Model.ApplicantChiSalutes, "Key", "Value", Model.ApplicantSaluteId), htmlAttributes: new { @id = "applicantChiSaluteId", @class = "form-control", @data_provide = "select2", @style = "width: 85px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ApplicantPosition, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.ApplicantPosition, true, htmlAttributes: new { @id = "applicantPosition", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ApplicantTelNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.ApplicantTelNum, true, htmlAttributes: new { @id = "applicantTelNum", @class = "form-control", @maxlength = 50 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.President, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.President, true, htmlAttributes: new { @id = "president", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Secretary, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.Secretary, true, htmlAttributes: new { @id = "secretary", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Treasurer, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.Treasurer, true, htmlAttributes: new { @id = "treasurer", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Objectives, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.Objectives, true, htmlAttributes: new { @id = "objectives", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Subvented, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-4">
+                            @Html.EditorFor(model => model.Subvented, new { htmlAttributes = new { @id = "subvented" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Section88, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(model => model.Section88, new { htmlAttributes = new { @id = "section88" } })
+                        </div>
+                        @Html.LabelFor(m => m.Section88Date, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.Section88Date, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "section88Date", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.RegistrationType1, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.RegistrationType1, true, new SelectList(Model.RegistrationTitles, "Key", "Value", Model.RegistrationType1), htmlAttributes: new { @id = "registrationType1", @class = "form-control", @data_provide = "select2" })
+
+                            @Html.TextBoxFor(m => m.RegistrationOtherName1, true, htmlAttributes: new { @id = "registrationOtherName1", @class = "form-control", @maxlength = 100, @disabled = "disabled" })
+                        </div>
+                        @Html.LabelFor(m => m.RegistrationDate1, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.RegistrationDate1, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "registrationDate1", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.RegistrationType2, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.RegistrationType2, true, new SelectList(Model.RegistrationTitles, "Key", "Value", Model.RegistrationType2), htmlAttributes: new { @id = "registrationType2", @class = "form-control", @data_provide = "select2" })
+
+                            @Html.TextBoxFor(m => m.RegistrationOtherName2, true, htmlAttributes: new { @id = "registrationOtherName2", @class = "form-control", @maxlength = 100, @disabled = "disabled" })
+                        </div>
+                        @Html.LabelFor(m => m.RegistrationDate2, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.RegistrationDate2, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "registrationDate2", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                @Html.LabelFor(m => m.BrNum1, new { @class = "col-xs-3 control-label" })
+                <div class="col-xs-1">
+                    @Html.TextBoxFor(m => m.BrNum1, true, htmlAttributes: new { @id = "brNum1", @class = "form-control", @maxlength = 8,@style="width:90px;" })
+                </div>
+                <div class="col-xs-3">
+                    @Html.TextBoxFor(m => m.BrNum2, true, htmlAttributes: new { @id = "brNum2", @class = "form-control", @maxlength = 3 })
+                </div>
+                @Html.LabelFor(m => m.CrNum, new { @class = "col-xs-3 control-label" })
+                <div class="col-xs-2">
+                    @Html.TextBoxFor(m => m.CrNum, true, htmlAttributes: new { @id = "crNum", @class = "form-control", @maxlength = 20 })
+                </div>
+            </div>*@
+                </div>
+
+                <legend>Promulgation of Good Practice Guide</legend>
+                @Html.HiddenFor(m => m.OrgRefGuidePromulgationId, htmlAttributes: new { @id = "orgRefGuidePromulgationId" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FileRef, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-9">
+                        @Html.TextBoxFor(m => m.FileRef, true, htmlAttributes: new { @id = "fileRef", @class = "form-control", @maxlength = 12 })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.SendDate, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(m => m.SendDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "sendDate", @class = "form-control", @data_provide = "datepicker" })
+                    </div>
+                    <div class="col-xs-2 control-label">
+                        <label id="lblFileNum" class="control-label" style="padding-right: 20px;">@Model.OrgRefGuideFileNum</label>
+                        @Html.LabelFor(m => m.PartNum, new { @class = "control-label" })
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(m => m.PartNum, true, htmlAttributes: new { @id = "partNum", @class = "form-control", @maxlength = 20 })
+                    </div>
+                    @Html.LabelFor(m => m.EnclosureNum, new { @class = "col-xs-1 control-label" })
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(m => m.EnclosureNum, true, htmlAttributes: new { @id = "enclosureNum", @class = "form-control", @maxlength = 50 })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ReplySlipReceiveDate, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-3">
+                        @Html.TextBoxFor(m => m.ReplySlipReceiveDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "replySlipReceiveDate", @class = "form-control", @data_provide = "datepicker" })
+                    </div>
+                    @Html.LabelFor(m => m.ReplySlipDate, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-3">
+                        @Html.TextBoxFor(m => m.ReplySlipDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "replySlipDate", @class = "form-control", @data_provide = "datepicker" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ReplySlipPartNum, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-3">
+                        @Html.TextBoxFor(m => m.ReplySlipPartNum, true, htmlAttributes: new { @id = "replySlipPartNum", @class = "form-control", @maxlength = 20 })
+                    </div>
+                    @Html.LabelFor(m => m.ReplySlipEnclosureNum, new { @class = "col-xs-2 control-label" })
+                    <div class="col-xs-3">
+                        @Html.TextBoxFor(m => m.ReplySlipEnclosureNum, true, htmlAttributes: new { @id = "replySlipEnclosureNum", @class = "form-control", @maxlength = 20 })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.LanguageUsedId, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-3">
+                        @Html.DropDownListFor(m => m.LanguageUsedId, true, new SelectList(Model.LanguageUseds, "Key", "Value", Model.LanguageUsedId), htmlAttributes: new { @id = "languageUsedId", @class = "form-control", @data_provide = "select2" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ReplyFromId, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-3">
+                        @Html.DropDownListFor(m => m.ReplyFromId, true, new SelectList(Model.ReplyFroms, "Key", "Value", Model.ReplyFromId), htmlAttributes: new { @id = "replyFromId", @class = "form-control", @data_provide = "select2" })
+                    </div>
+
+                    @Html.LabelFor(m => m.ReferenceGuideActivityConcern, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-3">
+                        @Html.DropDownListFor(model => model.ReferenceGuideActivityConcern, true, new SelectList(Model.ActivityConcerns, "Key", "Value", Model.ReferenceGuideActivityConcern), htmlAttributes: new { @id = "activityConcern", @class = "form-control", @data_provide = "select2" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ProvisionsNotBeAdopted, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-9">
+                        @Html.ListBoxFor(model => model.ProvisionsNotBeAdopted, true, new MultiSelectList(Model.ProvisionsNotBeAdopteds, "Key", "Value", Model.ProvisionsNotBeAdopted), htmlAttributes: new { @id = "provisionsNotBeAdopteds", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.PromulgationReason, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-9">
+                        @Html.TextAreaFor(m => m.PromulgationReason, true, rows: 4, htmlAttributes: new { @id = "promulgationReason", @class = "form-control", @maxlength = 4000 })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Remarks, new { @class = "col-xs-3 control-label" })
+                    <div class="col-xs-9">
+                        @Html.TextAreaFor(m => m.Remarks, true, rows: 4, htmlAttributes: new { @id = "remarks", @class = "form-control", @maxlength = 4000 })
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="pull-right">
+                        <button type="button" id="btnCreate" class="btn btn-sm btn-primary">
+                            <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                        <button type="button" id="btnUpdate" class="btn btn-sm btn-primary">
+                            <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                        <button type="button" id="btnCancel" class="btn btn-sm btn-default" data-dismiss="modal">
+                            <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+
+        var editOrgGuideUrl = '@Url.RouteUrl("UpdateOrgGuide", new { orgRefGuidePromulgationId = "-1" })';
+        var getOrgGuideUrl = '@Url.RouteUrl("GetOrgGuide", new { orgRefGuidePromulgationId = "-1" })';
+        var editOrgMasterUrl = '@Url.RouteUrl("EditOrgMaster", new { code = -1 })';
+        var saveOrgRefGuideUrl = '@Url.RouteUrl("InsertOrgGuide", new { orgId = "-1" })';
+        var searchOrg = '@Url.RouteUrl("OrgSearch")';
+
+        var indexUrl = '@Url.RouteUrl("ReturnSearchOrgGuide")';
+
+        $(function () {
+            var array = @Html.Raw(Json.Encode(@Model.ProvisionsNotBeAdopted))
+            //$('#provisionsNotBeAdopteds').select2('val', array);
+
+            //var $div = $('#tabs');
+            //$div.removeClass('hide');
+
+            //$('#tab1').trigger("click");
+
+            $('#details').readonly(true);
+
+            if ($("#orgRefGuidePromulgationId").val() == "") {
+                $('#btnCreate').removeClass('hide');
+                $('#btnUpdate').addClass('hide');
+            }
+            else {
+                $('#btnCreate').addClass('hide');
+                $('#btnUpdate').removeClass('hide');
+            }
+
+            //$div.find('.read-mode-only').removeClass('hide');
+
+            var $form = $("#OrgGuideEditFrom");
+            //var actionUrl = getOrgGuideUrl.replace("-1", $('#orgRefGuidePromulgationId').val());
+            //$form.ajaxPostForm(actionUrl,
+            //     function (response) {
+            //         onEditRecord(response.data);
+            //     }
+            //);
+
+            $('#btnCreate').click(function () {
+                var $form = $("#OrgGuideEditFrom");
+                if ($form.valid()) {
+                    var actionUrl = saveOrgRefGuideUrl.replace("-1", $("#orgMasterId").val());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             notifSuccess(response.message);
+
+                             // Redirect to Organisation Edit after insert success
+                             actionUrl = editOrgMasterUrl.replace("-1", $("#orgMasterId").val());
+                             window.location = actionUrl;
+
+                         }
+                    );
+                }
+            });
+
+            $('#btnUpdate').click(function () {
+                var $form = $("#OrgGuideEditFrom");
+                if ($form.valid()) {
+                    var actionUrl = editOrgGuideUrl.replace("-1", $('#orgRefGuidePromulgationId').val());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             // Redirect to Organisation Edit after update success
+                             actionUrl = editOrgMasterUrl.replace("-1", $("#orgMasterId").val());
+
+                             notifSuccess(response.message, function () { window.location.href = actionUrl; });
+                         }
+                    );
+                }
+            });
+
+            $('#btnCancel').click(function () {
+
+                // Check the Referrer (Pervious page)
+                var confirmCancel = false;
+                var prePage = $("#prePage").val();
+
+                if (prePage != "" && prePage.match("." + searchOrg + "$")) {
+                    //PIR #: 100  20161118
+                    confirm('The record regarding the promulgation of the Good Practice Guide has NOT been created yet. Are you sure to proceed?', function (result) {
+                        if (result) {
+                            // If found,
+                            //if (prePage != "" && !prePage.endsWith("/ReferenceGuide")) {
+                            if (prePage != "" && !prePage.match(/.+ReferenceGuide$/)) {
+                                // Back to the Pervious page
+                                window.location = prePage;
+                            }
+                            else {
+                                // Back to the Reference Guide search page as default
+                                window.location = indexUrl;
+                            }
+                        }
+                    });
+                } else {
+                    // If found,
+                    //if (prePage != "" && !prePage.endsWith("/ReferenceGuide")) {
+                    if (prePage != "" && !prePage.match(/.+ReferenceGuide$/)) {                    
+                        // Back to the Pervious page
+                        window.location = prePage;
+                    }                
+                    else {
+                        // Back to the Reference Guide search page as default
+                        window.location = indexUrl;
+                    }
+                }
+            });
+
+            //TIR #: PSUAT00042-9
+            $("#sendDate").datepicker().on('changeDate', function () {
+                $this = $(this);
+                $reply = $("#replyFromId");
+
+                if ($this.val() && !$("#replySlipDate").val() && !$reply.select2("val")) {
+                    $reply.select2("val", ($reply.find("option").filter(function () { return $(this).html().indexOf("Not Reply") > -1 }).val()));
+                }
+            });
+        });
+
+        function onEditRecord(data) {
+            $('#btnUpdate').removeClass('hide');
+            $('#btnCreate').addClass('hide');
+
+            $("#organisationReference").prop('readonly', true).val(data.organisationReference);
+            $("#organisationDisabled").prop('readonly', true).checkboxVal(data.organisationDisabled);
+            $("#organisationName").prop('readonly', true).val(data.organisationName);
+            $("#organisationChiName").prop('readonly', true).val(data.organisationChiName);
+            $("#organisationSimpliChiName").prop('readonly', true).val(data.organisationSimpliChiName);
+            $("#engOrgNameSorting").prop('readonly', true).val(data.engOrgNameSorting);
+            $("#otherEngOrgName").prop('readonly', true).val(data.otherEngOrgName);
+            $("#otherChiOrgName").prop('readonly', true).val(data.otherChiOrgName);
+
+            $("#engRegisteredAddress1").prop('readonly', true).val(data.engRegisteredAddress1);
+            $("#engRegisteredAddress2").prop('readonly', true).val(data.engRegisteredAddress2);
+            $("#engRegisteredAddress3").prop('readonly', true).val(data.engRegisteredAddress3);
+            $("#engRegisteredAddress4").prop('readonly', true).val(data.engRegisteredAddress4);
+            $("#engRegisteredAddress5").prop('readonly', true).val(data.engRegisteredAddress5);
+            $("#chiRegisteredAddress1").prop('readonly', true).val(data.chiRegisteredAddress1);
+            $("#chiRegisteredAddress2").prop('readonly', true).val(data.chiRegisteredAddress2);
+            $("#chiRegisteredAddress3").prop('readonly', true).val(data.chiRegisteredAddress3);
+            $("#chiRegisteredAddress4").prop('readonly', true).val(data.chiRegisteredAddress4);
+            $("#chiRegisteredAddress5").prop('readonly', true).val(data.chiRegisteredAddress5);
+            $("#engMailingAddress1").prop('readonly', true).val(data.engMailingAddress1);
+            $("#engMailingAddress2").prop('readonly', true).val(data.engMailingAddress2);
+            $("#engMailingAddress3").prop('readonly', true).val(data.engMailingAddress3);
+            $("#engMailingAddress4").prop('readonly', true).val(data.engMailingAddress4);
+            $("#engMailingAddress5").prop('readonly', true).val(data.engMailingAddress5);
+            $("#chiMailingAddress1").prop('readonly', true).val(data.chiMailingAddress1);
+            $("#chiMailingAddress2").prop('readonly', true).val(data.chiMailingAddress2);
+            $("#chiMailingAddress3").prop('readonly', true).val(data.chiMailingAddress3);
+            $("#chiMailingAddress4").prop('readonly', true).val(data.chiMailingAddress4);
+            $("#chiMailingAddress5").prop('readonly', true).val(data.chiMailingAddress5);
+
+            $("#organisationWebsite").prop('readonly', true).val(data.organisationWebsite);
+            $("#telNum").prop('readonly', true).val(data.telNum);
+            $("#fax").prop('readonly', true).val(data.fax);
+            $("#email").prop('readonly', true).val(data.email);
+            $("#applicantSaluteId").select2("enable", false).select2("val", data.applicantSaluteId);
+            $("#applicantFirstName").prop('readonly', true).val(data.applicantFirstName);
+            $("#applicantLastName").prop('readonly', true).val(data.applicantLastName);
+            $("#applicantChiSaluteId").select2("enable", false).select2("val", data.applicantChiSaluteId);
+            $("#applicantChiFirstName").prop('readonly', true).val(data.applicantChiFirstName);
+            $("#applicantChiLastName").prop('readonly', true).val(data.applicantChiLastName);
+            $("#applicantPosition").prop('readonly', true).val(data.applicantPosition);
+            $("#applicantTelNum").prop('readonly', true).val(data.applicantTelNum);
+            $("#president").prop('readonly', true).val(data.president);
+            $("#secretary").prop('readonly', true).val(data.secretary);
+            $("#treasurer").prop('readonly', true).val(data.treasurer);
+            $("#objectives").prop('readonly', true).val(data.objectives);
+            $("#subvented").prop('readonly', true).checkboxVal(data.subvented);
+            $("#section88").attr("disabled", "disabled").checkboxVal(data.section88);
+            $("#section88Date").prop('readonly', true).val(toDDMMYYYY(data.section88Date));
+            $("#registrationType1").select2("enable", false).select2("val", data.registrationType1);
+            $("#registrationOtherName1").prop('readonly', true).val(data.registrationOtherName1);
+            $("#registrationDate1").prop('readonly', true).val(data.registrationDate1);
+            $("#registrationType2").select2("enable", false).select2("val", data.registrationType2);
+            $("#registrationOtherName2").prop('readonly', true).val(data.registrationOtherName2);
+            $("#registrationDate2").prop('readonly', true).val(toDDMMYYYY(data.registrationDate2));
+            //$("#brNum1").prop('readonly', true).val(data.brNum1);
+            //$("#brNum2").prop('readonly', true).val(data.brNum2);
+            //$("#crNum").prop('readonly', true).val(data.crNum);
+
+            $("#sendDate").val(toDDMMYYYY(data.sendDate));
+            $("#replySlipReceiveDate").val(toDDMMYYYY(data.replySlipReceiveDate));
+            $("#replySlipDate").val(toDDMMYYYY(data.replySlipDate));
+            $("#languageUsedId").select2("val", data.languageUsedId);
+            $("#replyFromId").select2("val", data.replyFromId);
+            $("#activityConcern").select2("val", data.referenceGuideActivityConcern);
+            $("#fileRef").val("val", data.fileRef);
+            $("#promulgationReason").val(data.promulgationReason);
+            $("#partNum").val(data.partNum);
+            $("#enclosureNum").val(data.enclosureNum);
+            $("#remarks").val(data.remarks);
+
+        }
+    </script>
+}

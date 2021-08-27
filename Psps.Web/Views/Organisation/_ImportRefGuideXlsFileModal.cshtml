@@ -1,0 +1,81 @@
+﻿@model Psps.Web.ViewModels.Organisation.OrganisationViewModel
+
+<form id="importRefGuideXlsFileModalForm">
+    <div id="importRefGuideXlsFileModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="btnImportClose" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Import Excel File</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        <div data-valmsg-summary="true" class="alert alert-block alert-warning validation-summary-errors" id="importErrorMsgDiv" style="">
+                            <div>
+                                <strong>Please fix the following errors.</strong>
+                            </div>
+                            <div id="errorMsg"></div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ImportFile, new { @class = "col-xs-2 control-label" })
+                        <div class="col-xs-8">
+                            @Html.FileFor(m => m.ImportFile, htmlAttributes: new { @id = "importRefGuideXlsFile", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnImport" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.ImportXlsFile</button>
+                    <button type="button" id="btnImportCancel" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    var importRefGuideXlsFileUrl = '@Url.RouteUrl("ImportRefGuideXlsFile")';
+
+    $(function () {
+        clearErrorMsg();
+        $('#btnImport').click(function () {
+            var $form = $("#importRefGuideXlsFileModalForm");
+            if ($form.valid()) {
+                var actionUrl = importRefGuideXlsFileUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#importRefGuideXlsFileModal').modal('hide');
+                         $('#importRefGuideXlsFile').val('');
+                         clearErrorMsg();
+                         notifSuccess(response.message);
+                         $("#orgGuideGridTable").trigger("reloadGrid", [{ current: true }]);
+                     },
+                     function (response) {
+                         $('#importErrorMsgDiv').show();
+                         $('#importErrorMsgDiv').removeClass('hide');
+                         $('#errorMsg').html(convertStringToHtml(response.message));
+                     }
+                );
+
+            }
+        });
+
+        $('#btnImportCancel').click(function () {
+            clearErrorMsg();
+            $('#importRefGuideXlsFileModal').modal('hide');
+        });
+
+        $('#btnImportClose').click(function () {
+            clearErrorMsg();
+            $('#importRefGuideXlsFileModal').modal('hide');
+        });
+
+    });
+
+    function clearErrorMsg() {
+        $('#importErrorMsgDiv').addClass('hide');
+        $('#errorMsg').html('');
+    }
+</script>

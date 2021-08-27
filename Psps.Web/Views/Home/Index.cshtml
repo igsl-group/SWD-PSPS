@@ -1,0 +1,635 @@
+﻿@model Psps.Web.ViewModels.Home.HomeViewModel
+@using Psps.Core;
+@using Psps.Core.Infrastructure;
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
+}
+
+<style type="text/css">
+    tr.bold td {
+        color: red;
+        font-weight: bold !important;
+    }
+</style>
+
+@section pageHeader {
+    <!--
+    <h1>This system contains RESTRICTED information.</h1>
+    <br />
+    -->
+}
+
+@if (Model.PostIdToBeActed.Count > 0)
+{
+    <form id="changePostForm" class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(m => m.ChangedPostId, new { @class = "col-xs-2 control-label align-left" })
+            <div class="col-xs-2">
+                @Html.DropDownListFor(m => m.ChangedPostId, true, new SelectList(Model.PostIdToBeActed, "Key", "Value", Model.ChangedPostId), htmlAttributes: new { @id = "changedPostId", @class = "form-control" })
+            </div>
+        </div>
+        <div class="vspace-16"></div>
+    </form>
+}
+
+<form id="homeForm" class="form-horizontal" role="form">
+    <div class="vspace-6"></div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="pspBringUpGridTable"></table>
+                <div id="pspBringUpGridPager"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+
+            <div class="grid-stretch-container">
+                <table id="fdBringUpGridTable"></table>
+                <div id="fdBringUpGridPager"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+
+            <div class="grid-stretch-container">
+                <table id="complaintBringUpGridTable"></table>
+                <div id="complaintBringUpGridPager"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="pspFdGridTable"></table>
+                <div id="pspFdGridPager"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="ssafGridTable"></table>
+                <div id="ssafFdGridPager"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="pspFdStatusGridTable"></table>
+                <div id="pspFdStatusGridPager"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="ui-jqgrid-view">
+                <div class="ui-jqgrid-titlebar ui-jqgrid-caption ui-widget-header ui-corner-top ui-helper-clearfix">
+                    <span class="ui-jqgrid-title">@Labels.Home_CompEnqGridTitle</span>
+                </div>
+            </div>
+            <table id="dynamCompEnqTable" class="table table-bordered table-condensed ui-jqgrid-btable">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        @foreach (var header in Model.DynCompEnqHeaders)
+                        {
+                            <th>@header.Value</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.CompEnqRowData)
+                    {
+                        <tr>
+                            <td>@row.Year</td>
+                            @foreach (var header in Model.DynCompEnqHeaders)
+                            {
+                                <td>@if (row.CountList.ContainsKey(header.Key))
+                                    {
+                                    @row.CountList[header.Key]
+                                    }
+                                    else
+                                    {
+                                    @:0
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="ui-jqgrid-view">
+                <div class="ui-jqgrid-titlebar ui-jqgrid-caption ui-widget-header ui-corner-top ui-helper-clearfix">
+                    <span class="ui-jqgrid-title">@Labels.Home_SuggestionGridTitle</span>
+                </div>
+            </div>
+
+            <table id="dynamSuggestionTable" class="table table-bordered table-condensed ui-jqgrid-btable ui-state-default ui-jqgrid-hdiv">
+                <thead class="ui-jqgrid-htable">
+                    <tr class="ui-jqgrid-labels ">
+                        <th>Year</th>
+                        @foreach (var header in Model.SuggestionHeaders)
+                        {
+                            <th>@header.Value</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.SuggestionRowData)
+                    {
+                        <tr>
+                            <td>@row.Year</td>
+                            @foreach (var header in Model.SuggestionHeaders)
+                            {
+                                <td>@if (row.CountList.ContainsKey(header.Key))
+                                    {
+                                    @row.CountList[header.Key]
+                                    }
+                                    else
+                                    {
+                                    @:0
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+
+        var listPspFdUrl = '@Url.RouteUrl("ListPspFd")';
+        var listSsafUrl  = '@Url.RouteUrl("ListSsaf")';
+        // var listCompEnqUrl = 'Url.RouteUrl("ListCompEnq")';
+        var listSuggestionUrl = '@Url.RouteUrl("ListSuggestion")';
+        var listPspBringUpUrl = '@Url.RouteUrl("ListPspBringUp")';
+        var listComplaintBringUpUrl = '@Url.RouteUrl("ListComplaintBringUp")';
+        //var listDynamCompEnqUrl = 'Url.RouteUrl("ListDynamCompEnq")';
+        var listFdStatusUrl = '@Url.RouteUrl("ListFdStatus")';
+        var EditPspUrl = '@Url.RouteUrl("EditPsp", new { pspMasterId = -1 })';
+        var EditComplaintUrl = '@Url.RouteUrl("EditEnquiryComplaint", new { complaintId = -1 })';
+        var changePostUrl = '@Url.RouteUrl("ChangePost", new { postId = "postId" })';
+        var $changePostForm = $('#changePostForm');
+
+        $(function ($) {
+            initListPspBringUpGrid();
+            initListComplaintBringUpGrid();
+            initListPspFdGrid();
+            initListSsafGrid();
+            initListFdStatusGrid();
+            //initListSugGrid();
+            //initListCompEnqGrid();
+            //initListDynamCompEnqGrid();
+
+            $('#changedPostId').on('change', function (e) {
+                var $selected = $(':selected', this);
+
+                if ($changePostForm.valid()) {
+                    var actionUrl = changePostUrl.replace("postId", $selected.val());
+                    $changePostForm.ajaxPostForm(actionUrl, function (response) {
+                        if (response.success) {
+                            alert("Post has been changed successfully and the page is going to reload to take effect.", function () {
+                                redirectTo("@Url.Home()");
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        function initListPspBringUpGrid() {
+            var actionUrl = listPspBringUpUrl;
+            var $grid = $('#pspBringUpGridTable');
+            var pager_selector = '#pspBringUpGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                width: 600,
+                rownumbers: false,
+                sortname: 'resubmit desc, pspEventDate asc, pspRef',
+                sortorder: 'asc',
+                datatype: 'json',
+                url: actionUrl,
+                caption: '@Labels.Home_PspBringUpGridTitle',
+                colNames: [
+                    'Re-submit FRAS',
+                    'PspMasterId',
+                    '@Labels.PspBringUp_PspRef',
+                    '@Labels.PspBringUp_EngOrgName',
+                    '@Labels.PspBringUp_ApplicationReceiveDate',
+                    '@Labels.PspBringUp_PspEventDate',
+                    '@Labels.PspBringUp_ProcessingOfficerPost',
+                    '@Labels.PspBringUp_SpecialRemark'
+                ],
+                colModel: [
+                    {
+                        name: 'resubmit',
+                        hidden: true
+                    }, {
+                        name: 'pspMasterId',
+                        hidden: true,
+                        width: '4',
+                    }, {
+                        name: 'pspRef',
+                        jsonmap: 'pspRef',
+                        width: '4'
+                    }, {
+                        name: 'engOrgName',
+                        jsonmap: 'engOrgName',
+                        width: '4'
+                    }, {
+                        name: 'applicationReceiveDate',
+                        template: dateTemplate,
+                        jsonmap: 'applicationReceiveDate',
+                        width: '4'
+                    }, {
+                        name: 'pspEventDate',
+                        template: dateTemplate,
+                        jsonmap: 'pspEventDate',
+                        width: '4'
+                    }, {
+                        name: 'processingOfficerPost',
+                        jsonmap: 'processingOfficerPost',
+                        width: '4'
+                    }, {
+                        name: 'specialRemark',
+                        jsonmap: 'specialRemark',
+                        width: '4'
+                    }
+                ],
+                afterInsertRow : function(rowid, rowdata) {
+                    if (rowdata.resubmit > 0)
+                        $grid.jqGrid('setRowData', rowid, false, "bold");
+                        //$grid.jqGrid('setRowData', rowid, false, { "color": "red", "font-weight": "bold" });
+                },
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    openEditPage(data.pspMasterId);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+
+            function openEditPage(pspMasterId) {
+                var url = EditPspUrl.replace('-1', pspMasterId);
+                window.location.href = url;
+            };
+        };
+
+        function initListComplaintBringUpGrid() {
+            var actionUrl = listComplaintBringUpUrl;
+            var $grid = $('#complaintBringUpGridTable');
+            var pager_selector = '#complaintBringUpGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                width: 600,
+                rownumbers: false,
+                sortname: 'orgRef asc, complaintDate',
+                sortorder: 'desc',
+                datatype: 'json',
+                url: actionUrl,
+                caption: '@Labels.Home_ComplaintBringUpGridTitle',
+                colNames: [
+                    '@Labels.ComplaintBringUp_OrgRef',
+                    '@Labels.ComplaintBringUp_EngChiOrgName',
+                    '@Labels.ComplaintBringUp_ComplaintRef',
+                    '@Labels.ComplaintBringUp_DateOfComplaint',
+                    '@Labels.ComplaintBringUp_Source',
+                    '@Labels.ComplaintBringUp_PermitConcerned',
+                    '@Labels.ComplaintBringUp_EnclosedNumberActionFile',
+                    'complaintMasterId'
+                ],
+                colModel: [
+                    {
+                        name: 'orgRef',
+                        jsonmap: 'orgRef',
+                        width: '4',
+                    }, {
+                        name: 'engChiOrgName',
+                        index: 'otherEngOrgName',
+                        width: '4',
+                    }, {
+                        name: 'complaintRef',
+                        jsonmap: 'complaintRef',
+                        width: '4',
+                    }, {
+                        name: 'complaintDate',
+                        template: dateTemplate,
+                        jsonmap: 'complaintDate',
+                        width: '4',
+                    }, {
+                        name: 'source',
+                        index: 'engDescription',
+                        width: '4',
+                    }, {
+                        name: 'permitConcern',
+                        jsonmap: 'permitConcern',
+                        width: '4',
+                    }, {
+                        name: 'actionFileEnclosureNum',
+                        jsonmap: 'actionFileEnclosureNum',
+                        width: '4',
+                    }, {
+                        name: 'complaintMasterId',
+                        hidden: true,
+                        width: '4',
+                    }
+                ],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    openEditPage(data.complaintMasterId);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+
+            function openEditPage(complaintMasterId) {
+                var url = EditComplaintUrl.replace('-1', complaintMasterId);
+                window.location.href = url;
+            };
+        }
+
+        function initListPspFdGrid() {
+            var actionUrl = listPspFdUrl;
+            var $grid = $('#pspFdGridTable');
+            //var pager_selector = '#pspFdGridPager';
+
+            $grid.jqGrid({
+                //pager: pager_selector,
+                width: 600,
+                rowNum: 5,
+                rownumbers: false,
+                sortname: 'year',
+                sortorder: 'desc',
+                datatype: 'json',
+                url: actionUrl,
+                caption: '@Labels.Home_PspFdGridTitle',
+                colModel: [
+                    {
+                        name: 'year',
+                        label: '@Labels.Year',
+                        width: '4',
+                    }, {
+                        name: 'applicationReceived',
+                        label: '@Labels.PspFdStatus_ApplicationReceived',
+                        width: '4',
+                    }, {
+                        name: 'pspIssued',
+                        label: '@Labels.PspFdStatus_PSPIssued',
+                        width: '4',
+                    }, {
+                        name: 'rejectedApplication',
+                        label: '@Labels.PspFdStatus_RejectedApplication',
+                        width: '4',
+                    }, {
+                        name: 'applicationWithdrawn',
+                        label: '@Labels.PspFdStatus_ApplicationWithdrawn',
+                        width: '4',
+                    }, {
+                        name: 'twoBatchApplication',
+                        label: '@Labels.PspFdStatus_TwoBatchApplication',
+                        width: '4',
+                    }, {
+                        name: 'overdueAC',
+                        label: '@Labels.PspFdStatus_OverdueAC',
+                        width: '4',
+                    }
+                ],
+                loadComplete: defaultGridLoadComplete
+            });
+        };
+
+        function initListSsafGrid() {
+            var actionUrl = listSsafUrl;
+            var $grid = $('#ssafGridTable');
+
+            $grid.jqGrid({
+                width: 600,
+                rowNum: 5,
+                rownumbers: false,
+                sortname: 'year',
+                sortorder: 'desc',
+                datatype: 'json',
+                url: actionUrl,
+                caption: '@Labels.Home_SsafGridTitle',
+                colModel: [
+                    {
+                        name: 'year',
+                        label: '@Labels.Year',
+                        width: '4',
+                    }, {
+                        name: 'applicationReceived',
+                        label: '@Labels.PspFdStatus_ApplicationReceived',
+                        width: '4',
+                    }, {
+                        name: 'pspIssued',
+                        label: '@Labels.PspFdStatus_PSPIssued',
+                        width: '4',
+                    }, {
+                        name: 'rejectedApplication',
+                        label: '@Labels.PspFdStatus_RejectedApplication',
+                        width: '4',
+                    }, {
+                        name: 'applicationWithdrawn',
+                        label: '@Labels.PspFdStatus_ApplicationWithdrawn',
+                        width: '4',
+                    }, {
+                        name: 'twoBatchApplication',
+                        label: '@Labels.PspFdStatus_TwoBatchApplication',
+                        width: '4',
+                    }, {
+                        name: 'overdueAC',
+                        label: '@Labels.PspFdStatus_OverdueAC',
+                        width: '4',
+                    }
+                ],
+                loadComplete: defaultGridLoadComplete
+            });
+        };
+
+        function initListFdStatusGrid() {
+                var actionUrl = listFdStatusUrl;
+                var $grid = $('#pspFdStatusGridTable');
+                var pager_selector = '#pspFdStatusGridPager';
+
+                if ($grid.isJqGrid()) {
+                    $grid.reloadJqGrid();
+                    return;
+                }
+
+                $grid.jqGrid({
+                    width: 600,
+                    rowNum: 5,
+                    rownumbers: false,
+                    sortname: 'fdYear',
+                    sortorder: 'desc',
+                    datatype: 'json',
+                    url: actionUrl,
+                    caption: '@Labels.Home_PspFdStatusGridTitle',
+                    colNames: ['@Labels.Year','TWFD','RFD','TWFD','RFD','Group A','Group B','Group A','Group B','TWFD','RFD','TWFD','RFD'],
+                    colModel: [
+                        {
+                            name: 'fdYear'
+                        }, {
+                            name: 'orgTWR'
+                        }, {
+                            name: 'orgRFD'
+                        }, {
+                            name: 'applyTWR'
+                        }, {
+                            name: 'applyRFD'
+                        }, {
+                            name: 'eligibleTWR_A'
+                        }, {
+                            name: 'eligibleTWR_B'
+                        }, {
+                            name: 'eligibleRFD_A'
+                        }, {
+                            name: 'eligibleRFD_B'
+                        }, {
+                            name: 'ineligibleTWR'
+                        }, {
+                            name: 'ineligibleRFD'
+                        }, {
+                            name: 'lateTWR'
+                        }, {
+                            name: 'lateRFD'
+                        }
+                    ],
+                    loadComplete: defaultGridLoadComplete
+                });
+
+                $grid.jqGrid('setGroupHeaders', {
+                    useColSpanStyle: true,
+                    groupHeaders: [{ startColumnName: 'orgTWR', numberOfColumns: 2, titleText: 'Number of Flag Selling Occasion' },
+                                   { startColumnName: 'applyTWR', numberOfColumns: 2, titleText: 'Number of Application' },
+                                   {
+                                       startColumnName: 'eligibleTWR_A', numberOfColumns: 4,
+                                       titleText:
+                                           '<table style="width:100%;border-spacing:0px;">' +
+                                           '<tr><td id="h0" colspan="2"><div>Number of Eligible Application</div></td></tr>' +
+                                           '<tr>' +
+                                           '<td style="width: 50%;"><div>TWFD</div></td>' +
+                                           '<td style="width: 50%;"><div>RFD</div></td>' +
+                                           '</tr>' +
+                                           '</table>'
+                                   },
+                                   { startColumnName: 'ineligibleTWR', numberOfColumns: 2, titleText: 'Ineligible Application' },
+                                   { startColumnName: 'lateTWR', numberOfColumns: 2, titleText: 'Not Considered' }]
+                });
+        };
+
+        function initListSugGrid() {
+            var actionUrl = listSuggestionUrl;
+            var $grid = $('#suggestionGridTable');
+            //var pager_selector = '#suggestionGridPager';
+
+            $grid.jqGrid({
+                //pager: pager_selector,
+                width: 600,
+                rownumbers: false,
+                //FalseFit: false,
+                //sortname: 'year',
+                //sortorder: 'asc',
+                datatype: 'json',
+                url: actionUrl,
+                caption: '@Labels.Home_SuggestionGridTitle',
+                colNames: [
+                    '@Labels.Year',
+                    '@Labels.Suggestion_SuggestionRecieved',
+                    '@Labels.Suggestion_ComplimentRecieved',
+                    '@Labels.Suggestion_NARecieved',
+                    '@Labels.Suggestion_NullRecieved',
+                ],
+                colModel: [
+                    {
+                        name: 'year',
+                        jsonmap: 'year',
+                        width: '4',
+                    }, {
+                        name: 'suggestionRecieved',
+                        jsonmap: 'suggestionRecieved',
+                        width: '4',
+                    }, {
+                        name: 'complimentRecieved',
+                        jsonmap: 'complimentRecieved',
+                        width: '4',
+                    }, {
+                        name: 'naRecieved',
+                        jsonmap: 'naRecieved',
+                        width: '4',
+                    }, {
+                        name: 'nullRecieved',
+                        jsonmap: 'nullRecieved',
+                        width: '4',
+                    }
+                ],
+                loadComplete: defaultGridLoadComplete
+            })
+        };
+    </script>
+}

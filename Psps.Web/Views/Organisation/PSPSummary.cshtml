@@ -1,0 +1,920 @@
+﻿@model Psps.Web.ViewModels.Organisation.PSPAccountSummaryViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.PSP_Account_Summary;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .ui-jqgrid-bdiv {
+        overflow-x: auto!important;
+    }
+
+    .frozen-div {
+        overflow: hidden;
+    }
+
+    .ui-jqgrid tr.jqgrow td {
+        height: auto;
+        /*white-space: normal;*/
+    }
+
+</style>
+<form id="summaryForm" name="summaryForm" class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(m => m.OrgRef, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            <table>
+                <tr>
+                    <td>
+                        ORG
+                    <td>
+                    <td>
+                        @Html.TextBoxFor(m => m.OrgRef, true, htmlAttributes: new { @id = "orgRef", @class = "form-control", @maxlength = 4, @style = "width: 100px;" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        @Html.LabelFor(m => m.OrgName, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.OrgName, true, htmlAttributes: new { @id = "orgName", @class = "form-control", @maxlength = 256 })
+        </div>
+    </div>
+    <div class="form-group">
+
+        @Html.LabelFor(m => m.OrgStatusId, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.OrgStatusId, true, new SelectList(Model.OrgStatus, "Key", "Value", Model.OrgStatusId), htmlAttributes: new { @id = "orgStatus", @class = "form-control", @data_provide = "select2" })
+        </div>
+
+        @Html.LabelFor(m => m.SubventedIndicatorId, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.SubventedIndicatorId, true, new SelectList(Model.SubventedIndicators, "Key", "Value", Model.SubventedIndicatorId), htmlAttributes: new { @id = "subventedIndicators", @class = "form-control", @data_provide = "select2" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.RegistrationId, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-9">
+            <div class="input-group">
+                @Html.DropDownListFor(m => m.RegistrationId, true, new SelectList(Model.Registrations, "Key", "Value", Model.RegistrationId), htmlAttributes: new { @id = "registrations", @class = "form-control", @data_provide = "select2", @style = "width: 270px;" })
+                @Html.TextBoxFor(m => m.RegistrationOtherName, true, htmlAttributes: new { @id = "registrationOtherName", @class = "form-control", @style = "width: 350px;", @disabled = "disabled" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.SectionId, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.SectionId, true, new SelectList(Model.Sections, "Key", "Value", Model.SectionId), htmlAttributes: new { @id = "sections", @class = "form-control", @data_provide = "select2" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PSPRef, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.PSPRef, true, htmlAttributes: new { @id = "pspRef", @class = "form-control", @maxlength = 10 })
+        </div>
+
+        @Html.LabelFor(m => m.PermitNo, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.PermitNo, true, htmlAttributes: new { @id = "permitNo", @class = "form-control", @maxlength = 10 })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.WithholdingBeginDate, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.WithholdingBeginDate, true, htmlAttributes: new { @id = "WithholdingBeginDate", @class = "form-control", @data_provide = "datepicker" })
+        </div>
+
+        @Html.LabelFor(m => m.WithholdingEndDate, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.WithholdingEndDate, true, htmlAttributes: new { @id = "WithholdingEndDate", @class = "form-control", @data_provide = "datepicker" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.WithholdingListIndicator, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.WithholdingListIndicator, true, new SelectList(Model.YesNo, "Key", "Value", Model.WithholdingListIndicator), htmlAttributes: new { @id = "withholdingListIndicator", @class = "form-control", @data_provide = "select2" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Overdue, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.Overdue, true, new SelectList(Model.Overdues, "Key", "Value", Model.Overdue), htmlAttributes: new { @id = "overdue", @class = "form-control", @data_provide = "select2" })
+        </div>
+        @Html.LabelFor(m => m.Late, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.Late, true, new SelectList(Model.YesNo, "Key", "Value", Model.Late), htmlAttributes: new { @id = "late", @class = "form-control", @data_provide = "select2" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.EventYear, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.EventYear, true, new SelectList(Model.EventYears.Reverse(), "Key", "Value", Model.EventYear), htmlAttributes: new { @id = "eventYear", @class = "form-control", @data_provide = "select2" })
+        </div>
+        @Html.LabelFor(m => m.DateofApplicationDisposal, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.DateofApplicationDisposalFr, true, htmlAttributes: new { @id = "applicationDisposalFr", @class = "form-control", @data_provide = "datepicker" })
+            <label class="control-label" style="padding-top: 5px; vertical-align: top;">to</label>
+            @Html.TextBoxFor(m => m.DateofApplicationDisposalTo, true, htmlAttributes: new { @id = "applicationDisposalTo", @class = "form-control", @data_provide = "datepicker" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.EventStartDate, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.EventStartDate, true, htmlAttributes: new { @id = "eventStartDate", @class = "form-control", @data_provide = "datepicker" })
+        </div>
+
+        @Html.LabelFor(m => m.EventEndDate, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.EventEndDate, true, htmlAttributes: new { @id = "eventEndDate", @class = "form-control", @data_provide = "datepicker" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.DisasterNames, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.DisasterMasterId, true, new SelectList(Model.DisasterNames, "Key", "Value", Model.DisasterMasterId), htmlAttributes: new { @id = "disasterMasterId", @class = "form-control", @data_provide = "select2" })
+        </div>
+
+        @Html.LabelFor(m => m.EventCancel, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.EventCancel, true, new SelectList(Model.YesNo, "Key", "Value", Model.EventCancel), htmlAttributes: new { @id = "eventsCancel", @class = "form-control", @data_provide = "select2" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.IsSsaf, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.IsSsaf, true, new SelectList(Model.YesNo, "Key", "Value", Model.IsSsaf),
+                    htmlAttributes: new { @id = "isSsaf", @class = "form-control", @data_provide = "select2" })
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnSearch" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-search"></span>&nbsp;@Labels.Search
+                </button>
+                <button id="btnClear" type="button" class="btn btn-sm btn-default">
+                    <span class="icon-eraser"></span>&nbsp;@Labels.Clear
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+<form class="form-horizontal">
+    <div class="vspace-6"></div>
+    <fieldset></fieldset>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="pspAccountSummary-grid-table" class ="searchGrid"></table>
+                <div id="pspAccountSummary-grid-pager"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var retrieveAccountSummaryUrl = '@Url.RouteUrl("RetrievePSPAccountSummary")';
+        var editPSPAccountSummaryUrl = '@Url.RouteUrl("EditPSPAccountSummary")';
+        var exportPSPAccountSummaryUrl = '@Url.RouteUrl("ExportPSPAccountSummary")';
+        var editPspUrl = '@Url.RouteUrl("EditPsp", new { pspMasterId = -1 })';
+
+        $(function ($) {
+            $('#btn-cancel').on('click', function () {
+                $('#details').addClass('hide');
+            });
+
+            $("#registrations").change(function () {
+                var registrationTitle = $("#registrations option:selected").text();
+                registrationTitle = registrationTitle.substring(registrationTitle.indexOf("-") + 1, registrationTitle.length)
+                if (!registrationTitle.toLowerCase().indexOf("other")) {
+                    $("#registrationOtherName").removeAttr("disabled");
+                } else {
+                    $("#registrationOtherName").val("");
+                    $("#registrationOtherName").attr("disabled", true);
+                }
+            });
+
+            initPspAccountSummaryGrid();
+            $('#btnSearch').on('click', function () {
+                var $form = $('#summaryForm');
+                var $grid = $('#pspAccountSummary-grid-table');
+                $grid.jqGrid('clearGridData');                
+                //$grid.jqGrid('setGridParam', { search: false });
+                //var postData = $grid.jqGrid('getGridParam', 'postData');
+                //$.extend(postData, { filters: "" });
+                //$grid.jqGrid('setGridParam', {
+                //    url: retrieveAccountSummaryUrl + "?1=1&" + $('#summaryForm').serialize(),
+                //    datatype: 'json',
+                //    postData: postData,
+                //    mtype: "POST",
+                //});               
+                
+                resetPostData($form, $grid);
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, queryStringToJson($form.serialize()))
+                if (clearFilter)
+                    $.extend(postData, { filters: "" });
+
+                $grid.jqGrid('setGridParam', {
+                    search: false,
+                    postData: postData,
+                    //url: retrieveAccountSummaryUrl,
+                    datatype: 'json',
+                    mtype: "POST",
+                    search: !clearFilter,
+                    //serializeGridData: function(postData) {
+                    //    var newPostData = $.extend(postData, queryStringToJson($('#summaryForm').serialize()));
+                    //    return $.param(newPostData);
+                    //}
+                });
+
+                $grid.trigger("reloadGrid", [{ page: 1 }]);
+            });
+
+            $('#btnClear').click(function () {
+                clearForm("#summaryForm");
+                $("#registrations").change();
+            });
+
+            initSearchForm();
+
+        });
+
+        var clearFilter = true;
+        function initSearchForm() {
+            var isFirst = @Html.Raw(Json.Encode(@Model.isFirstSearch));
+
+            if(!isFirst){
+                 
+                $('#pspAccountSummary-grid-table').jqGrid('setGridParam',  { postData: { "filters": localStorage.getItem('pspAccountSummary-grid-table')} });
+                //$('#organisationStatusId').select2("val", response.data.organisationStatusId);
+                //$('#subventedId').select2("val", response.data.subventedId);
+                //$('#registrationTitleId').select2("val", response.data.registrationTitleId);
+                //$('#sectionId').select2("val", response.data.sectionId);
+                clearFilter = false || (localStorage.getItem('pspAccountSummary-grid-table') == "" || localStorage.getItem('pspAccountSummary-grid-table') == undefined);
+                $('#btnSearch').click();
+                clearFilter = true;
+            }
+            else{
+                $('#organisationStatusId,#subventedId,#registrationTitleId,#sectionId,#eventYear,#disasterNames').select2("val", '');
+            }
+        }
+
+        function updateSize() {
+            //getting all lines in two tables by they id
+            var lines = $("tr", this),
+                flines = $("tr", "#" + $(this).attr("id") + "_frozen"),
+                parent = $("#" + $(this).attr("id") + "_frozen").parent();
+
+            var height = 0;
+
+            //setting in all frozen lines height equel to grid
+            flines.each(function (i, item) {
+                //i%2 check because of border collapse
+                $(item).height($(lines[i]).innerHeight());// - (i % 2 ? 1 : 0));
+                height += $(lines[i]).innerHeight();
+            });
+
+            parent.height(height);
+
+            $(this).setGridParam({ datatype: "json" });
+            defaultGridLoadComplete(this);
+        };
+
+        var editParameters = {
+            oneditfunc: updateSize
+        };
+
+        var saveParameters = {
+            successfunc: function (response) {
+                var isSuccess = JSON.parse(response.responseText).success;
+                if (isSuccess) {
+                    $("#pspAccountSummary-grid-table").trigger("reloadGrid", [{ current: true }]);
+                    notifSuccess(JSON.parse(response.responseText).message);
+                } else {
+                    notifError(JSON.parse(response.responseText).errors);
+                }
+
+            },
+        };
+
+        var restoreParameters = {
+            afterrestorefunc: updateSize
+        };
+
+        var lastSel;
+
+        function initPspAccountSummaryGrid() {
+            var $pspAccountSummaryGrid = $("#pspAccountSummary-grid-table");
+            var pager_selector = "#pspAccountSummary-grid-pager";
+
+            $pspAccountSummaryGrid.jqGrid({
+                pager: pager_selector,
+                url: retrieveAccountSummaryUrl,
+                datatype: "local",
+                mtype: "post",
+                autowidth: true,
+                rowNum: 8,
+                rowList: [8, 15],
+                formatter: {
+                    integer: { thousandsSeparator: " ", defaultValue: "" },
+                    number: { decimalSeparator: "*", thousandsSeparator: " ", decimalPlaces: 2, defaultValue: "" },
+                    currency: { decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: "" },
+                    baseLinkUrl: '',
+                    showAction: '',
+                    target: '',
+                    checkbox: { disabled: true },
+                    idName: 'id'
+                },
+
+                shrinkToFit: false,
+                sortname: 'pspYear desc, pspRef',
+                sortorder: 'desc',
+                colNames: ['Organisation Reference', 'Organisation Name (Eng.)', 'Organisation Name (Chi.)', 'Eng & Chi Organisation Name', 'Organisation Status', 'Subvented', 'Registration (1)', 'Registration (2)', 'Section 88',
+                           'File Ref.', 'Permit No.', 'Fund to be used in HK / Overseas', 'Action', 'Is SSAF', 'Event Year', 'Processing Officer', 'Date of Application Disposal', 'First Event Date', 'Last Event Date', 'Related Permit No.', 'Purpose of Fund-raising', 'Purpose of Fund-raising (Eng)', 'Purpose of Fund-raising (Chi)',
+                           'Due Date for Submission of AR / Publication / Newspaper Cuttings / Official Receipt',
+                           'Date of 1st Reminder Issued', 'Deadline for 1st Reminder', 'Date of 2nd Reminder Issued', 'Deadline for 2nd Reminder', 'Overdue','Late', 'Date of Receiving Audited Report',
+                           'Date of Receiving Publication', 'Date of Receiving Newspaper Cutting / Website Publications', 'Date of Receiving Official Receipt', 'Audited Report Received & Checked OK', 'Publication / WebSite Received & Checked OK',
+                           'Official Receipt Received & Checked OK', 'Newspaper Cuttings Received & Checked OK', 'Gross Proceeds<br /> (a)',
+                           'Expenditure<br /> (b)', 'Net Proceeds <br />(a) - (b)', '% (Expenditure / Gross Proceeds)', 'Document Remarks',
+                           'Qualified Opinion of Audited Report', 'Details of Qualified Opinion', 'Add to Withholding List', "Withholding Start Date", "Withholding End Date", "Withholding Remarks", '@Html.DisplayNameFor(m => m.DisasterNames)',
+                           'PspMasterId','@Html.DisplayNameFor(m => m.EventCancel)'],
+                colModel: [{
+                    name: 'OrgRef',
+                    index: 'OrgMaster.OrgRef',
+                    frozen: true,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'EngOrgName',
+                    index: 'orgMaster.EngOrgName',
+                    frozen: true,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                    }
+                }, {
+                    name: 'ChiOrgName',
+                    index: 'orgMaster.ChiOrgName',
+                    frozen: true,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                    }
+                }, {
+                    name: 'engChiOrgName',
+                    index: 'orgMaster.EngOrgNameSorting',
+                    width: 250,
+                    frozen: true,
+                    search: false
+                }, {
+                    name: 'DisableIndicator',
+                    index: 'OrgMaster.DisableIndicator',
+                    frozen: true,
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.OrgStatus))
+                    }
+                }, {
+                    name: 'SubventedIndicator',
+                    index: 'OrgMaster.SubventedIndicator',
+                    frozen: true,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                    },
+                    template: yesNoTemplate
+                }, {
+                    name: 'RegistrationType1',
+                    index: 'OrgMaster.RegistrationType1',
+                    frozen: true,
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.Registrations))
+                        }
+                }, {
+                    name: 'RegistrationType2',
+                    index: 'OrgMaster.RegistrationType2',
+                    frozen: true,
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.Registrations))
+                        }
+                }, {
+                    name: 'Section88Indicator',
+                    index: 'Section88Indicator',
+                    frozen: true,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true,
+                    },
+                    template: yesNoTemplate
+                }, {
+                    name: 'fileRef',
+                    index: 'pspRef',
+                    sortindex: 'pspYear asc, pspRef',
+                    width: 80,
+                    frozen: true,
+                }, {
+                    name: 'permitNo',
+                    index: 'permitNo',
+                    width: 85,
+                    frozen: true,
+                },{
+                    name: 'fundUsed',
+                    index: 'fundUsed',
+                    width: 85,
+                    frozen: true,
+                }, {
+                    name: 'act',
+                    index: 'act',
+                    hidedlg: 'true',                    
+                    sortable: false,
+                    frozen: true,
+                    width: 120,
+                    search: false
+                }, {
+                    name: 'isSsaf',
+                    editable: false,
+                    edittype: 'select',
+                    width: 100,
+                    template: yesNoTemplate,
+                    formatter: yesNoFormatter
+                    //    formatter: function (cellvalue, options, rowObject) {
+                    //        if (true === cellvalue || "True" == cellvalue ) {
+                    //        return "Yes";
+                    //        } else if (false === cellvalue || "False" == cellvalue) {
+                    //        return "No";
+                    //    } else {
+                    //        return "";
+                    //    }
+                    //}
+                }, {
+                    name: 'pspYear',
+                    index: 'pspYear',
+                    frozen: false,
+                    hidden: true,
+                    stype: 'select',
+                    sorttype: 'integer',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne', 'ge', 'le'],
+                        value: @Html.Raw(Json.Encode(@Model.EventYears))
+                    }
+                }, {
+                    name: 'processingOfficer',
+                    index: 'processingOfficerPost',
+                    width: 100,
+                }, {
+                    name: 'applicationDisposalDate',
+                    template: dateTemplate,
+                    width: 85,
+                }, {
+                    name: 'eventPeriodFrom',
+                    template: dateTemplate,
+                    width: 85,
+                }, {
+                    name: 'eventPeriodTo',
+                    template: dateTemplate,
+                    width: 85,
+                }, {
+                    name: 'relatedPermitNo',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    },
+                    width: 1
+                    //width: 85,
+                }, {
+                    name: 'fundRaisingPurpose',
+                    index: 'engFundRaisingPurpose',
+                    search: false,
+                    width: 250,
+                }, {
+                    name: 'engFundRaisingPurpose',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'chifundRaisingPurpose',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'submissionDueDate',
+                    minwidth: '1',
+                    //editable: true,
+                    template: dateTemplate,
+                    width: 125,
+                }, {
+                    name: 'firstReminderIssueDate',
+                    minwidth: '1',
+                    editable: true,
+                    template: dateTemplate,
+                    width: 85,
+                }, {
+                    name: 'firstReminderDeadline',
+                    minwidth: '1',
+                    //editable: true,
+                    template: dateTemplate,
+                    width: 85,
+                }, {
+                    name: 'secondReminderIssueDate',
+                    minwidth: '1',
+                    editable: true,
+                    template: dateTemplate,
+                    width: 85,
+                }, {
+                    name: 'secondReminderDeadline',
+                    minwidth: '1',
+                    //editable: true,
+                    template: dateTemplate,
+                    width: 85,
+                }, {
+                    name: 'overdue',
+                    minwidth: '1',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (true === cellvalue) {
+                            return "Overdue";
+                        } else if (false === cellvalue) {
+                            return "";
+                        } else {
+                            return "";
+                        }
+                    },
+                    unformat: jqGridUnformatYesNo,
+                    @*stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: @Html.Raw(Json.Encode(@Model.YesNo))
+                        },*@
+                    template: yesNoTemplate,
+                    cellattr: function addCellAttr(rowId, val, rawObject, cm, rdata) {
+                        if (val!="") {
+                            return ' style="color:red;font-weight:bold;"';
+                        }
+                    },
+                    width: 80,
+                }, {
+                    name: 'late',
+                    minwidth: '1',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (true === cellvalue) {
+                            return "Late";
+                        } else if (false === cellvalue) {
+                            return "";
+                        } else {
+                            return "";
+                        }
+                    },
+                    unformat: jqGridUnformatYesNo,
+                    @*stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: @Html.Raw(Json.Encode(@Model.YesNo))
+                        },*@
+                    template: yesNoTemplate,
+                    cellattr: function addCellAttr(rowId, val, rawObject, cm, rdata) {
+                        if (val!="") {
+                            return ' style="color:red;font-weight:bold;"';
+                        }
+                    },
+                    width: 80,
+                }, {
+                    name: 'auditedReportReceivedDate',
+                    minwidth: '1',
+                    editable: true,
+                    //template: dateTemplate,
+                    width: 125,
+                }, {
+                    name: 'publicationReceivedDate',
+                    minwidth: '1',
+                    editable: true,
+                    //template: dateTemplate,
+                    width: 125,
+                }, {
+                    name: 'newspaperCuttingReceivedDate',
+                    minwidth: '1',
+                    editable: true,
+                    //template: dateTemplate,
+                    width: 125,
+                }, {
+                    name: 'officialReceiptReceivedDate',
+                    minwidth: '1',
+                    editable: true,
+                    //template: dateTemplate,
+                    width: 125,
+                }, {
+                    name: 'arCheckIndicator',
+                    minwidth: '1',
+                    editable: true,
+                    edittype: 'select',
+                    width: 110,
+                    editoptions: { value: @Html.Raw(Json.Encode(@Model.CheckIndicator))},
+                    cellattr: function addCellAttr(rowId, val, rawObject, cm, rdata) {
+                        if (val != "") {
+                            return "style='color:blue'";
+                        }
+                    },
+                }, {
+                    name: 'publicationCheckIndicator',
+                    minwidth: '1',
+                    editable: true,
+                    edittype: 'select',
+                    width: 110,
+                    editoptions: { value: @Html.Raw(Json.Encode(@Model.CheckIndicator))},
+                    cellattr: function addCellAttr(rowId, val, rawObject, cm, rdata) {
+                        if (val != "") {
+                            return "style='color:blue'";
+                        }
+                    },
+                }, {
+                    name: 'officialReceiptCheckIndicator',
+                    minwidth: '1',
+                    editable: true,
+                    edittype: 'select',
+                    width: 110,
+                    editoptions: { value: @Html.Raw(Json.Encode(@Model.CheckIndicator))},
+                    cellattr: function addCellAttr(rowId, val, rawObject, cm, rdata) {
+                        if (val != "") {
+                            return "style='color:blue'";
+                        }
+                    },
+                }, {
+                    name: 'newspaperCheckIndicator',
+                    minwidth: '1',
+                    editable: true,
+                    edittype: 'select',
+                    width: 110,
+                    editoptions: { value: @Html.Raw(Json.Encode(@Model.CheckIndicator))},
+                    cellattr: function addCellAttr(rowId, val, rawObject, cm, rdata) {
+                        if (val != "") {
+                            return "style='color:blue'";
+                        }
+                    },
+                }, {
+                    name: 'grossProceed',
+                    editable: true,
+                    edittype: 'text',
+                    formatter: 'number',
+                    formatoptions: { defaultValue: '' },
+                    template: numTemplate,
+                    width: 125,
+                }, {
+                    name: 'expenditure',
+                    editable: true,
+                    edittype: 'text',
+                    formatter: 'number',
+                    formatoptions: { defaultValue: '' },
+                    template: numTemplate,
+                    width: 125,
+                }, {
+                    name: 'netProceed',
+                    edittype: 'text',
+                    formatter: 'number',
+                    formatoptions: { defaultValue: '' },
+                    cellattr: function addCellAttr(rowId, val, rawObject, cm, rdata) {
+                        if (val != "" && val == 0 && (rawObject.expenditure > rawObject.grossProceed)) {                            
+                            return ' style="color:red;font-weight:bold;"';                            
+                        }
+                    },
+                    template: numTemplate,
+                    width: 125,
+                }, {
+                    name: 'pspPercent',
+                    minwidth: '1',
+                    edittype: 'text',
+                    template:numTemplate,
+                    width: 125
+                }, {
+                    name: 'docReceivedRemark',
+                    editable: true,
+                    edittype: 'textarea',
+                    editoptions: { rows: "4", cols: "40" },
+                    width: 200,
+                }, {
+                    name: 'qualifyOpinionIndicator',
+                    editable: true,
+                    edittype: 'select',
+                    width: 100,
+                    editoptions: { value: ":;1:Yes;0:No"},
+                    cellattr: function addCellAttr(rowId, val, rawObject, cm, rdata) {
+                        if (val != "") {
+                            return "style='color:blue'";
+                        }
+                    },
+                    formatter: yesNoFormatter
+                    //formatter: function (cellvalue, options, rowObject) {
+                    //    if (true === cellvalue) {
+                    //        return "Yes";
+                    //    } else if (false === cellvalue) {
+                    //        return "No";
+                    //    } else {
+                    //        return "";
+                    //    }
+                    //},
+                }, {
+                    name: 'qualityOpinionDetail',
+                    editable: true,
+                    edittype: 'textarea',
+                    editoptions: { rows: "4", cols: "40" },
+                    width: 200,
+                }, {
+                    name: 'withholdingListIndicator',
+                    editable: true,
+                    edittype: 'select',
+                    width: 100,
+                    editoptions: { value: ":;1:Yes;0:No"},
+                    cellattr: function addCellAttr(rowId, val, rawObject, cm, rdata) {
+                        if (val != "") {
+                            return "style='color:blue'";
+                        }
+                    },
+                    template: yesNoTemplate,
+                    formatter: yesNoFormatter
+                    //formatter: function (cellvalue, options, rowObject) {
+                    //    if (true === cellvalue) {
+                    //        return "Yes";
+                    //    } else if (false === cellvalue) {
+                    //        return "No";
+                    //    } else {
+                    //        return "";
+                    //    }
+                    //},
+                }, {
+                    name: 'withholdingBeginDate',
+                    editable: true,
+                    template: dateTemplate,
+                    width: 85,
+                }, {
+                    name: 'withholdingEndDate',
+                    editable: true,
+                    template: dateTemplate,
+                    width: 85,
+                }, {
+                    name: 'withholdingRemark',
+                    editable: true,
+                    edittype: 'textarea',
+                    editoptions: { rows: "4", cols: "40" },
+                    width: 200,
+                },{
+                    name: 'disasterMasterId',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.DisasterNames))
+                        }
+                }, {
+                    name: 'pspMasterId',
+                    hidden: true,
+                    search: false,
+                }, {
+                    name: 'cancelIndicator',
+                    hidden: true,
+                    searchoptions: {searchhidden: true},
+                    template: yesNoTemplate
+                }],
+                gridComplete: function () {
+                    var ids = $pspAccountSummaryGrid.jqGrid('getDataIDs');
+                    for (var i = 0; i < ids.length; i++) {
+                        var cl = ids[i];
+                        be = "<input style='height:22px;width:28px;' type='button' value='Edit' onclick=\"$('#pspAccountSummary-grid-table').restoreRow(lastSel,restoreParameters); $('#pspAccountSummary-grid-table').editRow('" + cl + "', editParameters); lastSel = '" + cl + "';\"  />";
+                        se = "<input style='height:22px;width:32px;' type='button' value='Save' onclick=\"$('#pspAccountSummary-grid-table').saveRow('" + cl + "',saveParameters);\"  />";
+                        ce = "<input style='height:22px;width:42px;' type='button' value='Cancel' onclick=\"$('#pspAccountSummary-grid-table').restoreRow('" + cl + "',restoreParameters);\" />";
+                        $pspAccountSummaryGrid.jqGrid('setRowData', ids[i], { act: be + se + ce });
+                    }
+
+                },
+                editurl: editPSPAccountSummaryUrl,
+                loadComplete: updateSize,
+                afterRestoreFunc: updateSize,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $pspAccountSummaryGrid.jqGrid('getRowData', rowId);
+                    //var currentUrl = window.location.href;
+                    //var returnUrl = currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation") - 1);
+                    var returnUrl = window.location.pathname;
+                    var actionUrl = editPspUrl.replace("-1", data.pspMasterId) + "?ReturnUrl=" + returnUrl;
+                    window.location = actionUrl;
+                },
+                onSelectRow: function (rowId) {
+                    $pspAccountSummaryGrid.setGridParam('editurl', 'organisation-edit?' + rowId);
+                }
+            });
+
+
+
+            $pspAccountSummaryGrid.jqGrid('setFrozenColumns');
+            //navButtons
+            $pspAccountSummaryGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+                beforeRefresh: function() { resetPostData($('#summaryForm'), $(this)) }
+            }, {}, {}, {}, {
+                //search form        
+                recreateFilter: true,
+                recreateForm: true,
+                //onSearch: advanceSearch,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw,
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            });
+
+            function advanceSearch() {
+                $grid = $("#pspAccountSummary-grid-table");
+
+                postData = $grid.jqGrid('getGridParam', 'postData'),
+                filters = postData.filters;
+
+                $grid.jqGrid('setGridParam', {serializeGridData: null, postData: null});
+                $grid.jqGrid('setGridParam', {postData: {filters: filters}});
+            }
+
+            function displayInput() {
+                $('#edit-modal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            }
+
+            function onExportRecord() {
+                var grid = $('#pspAccountSummary-grid-table');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifError("PSP A/C Summary Search Result has no Record");
+                    return;
+                }
+
+                grid.exportGrid(exportPSPAccountSummaryUrl,
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+            }
+            function onEditRecord(data) {
+                /*
+                            displayInput();
+
+                            $('#organisationRef').val(data.organisationRef);
+                            $('#organisationSource').select2('val',data.organisationSourceCode);
+                            $('#organisationActivityConcern').select2('val',data.organisationActivityConcernCode);
+                            $('#organisationNature').select2('val',data.organisationNatureCode);
+                            $('#organisationDate').val(data.organisationDate);
+                            $('#organisationSenderName').val(data.organisationSenderName);
+                            $('#organisationContent').val(data.organisationContent);
+                            $('#fileRefNum').val(data.fileRefNum);
+                            $('#acknowledgementSentDate').val(data.acknowledgementSentDate);
+                */
+                //            window.location = 'organisation-edit.html';
+            };
+
+            function onNewRecord() {
+                displayInput();
+                clearForm('#edit-modal');
+            };
+
+            function yesNoFormatter (cellvalue, options, rowObject) {
+                if (true === cellvalue || "True" == cellvalue) {
+                    return "Yes";
+                } else if (false === cellvalue || "False" == cellvalue) {
+                    return "No";
+                } else {
+                    return "";
+                }
+            }
+        };
+
+    </script>
+}

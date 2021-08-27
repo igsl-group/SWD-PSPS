@@ -1,0 +1,254 @@
+﻿@model Psps.Web.ViewModels.FlagDay.FlagDayDocViewModel
+@using Psps.Resources;
+@{
+    ViewBag.Title = Labels.FlagDay_Template_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form id="FlagDayDocForm" class="form-horizontal" role="form" enctype="multipart/form-data">
+    <div class="form-group">
+        <div class="col-xs-12">
+            <table id="FlagDayDocTable"></table>
+            <div id="somplaintDocGridPager"></div>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@Labels.Letter_Details</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.BootstrapValidationSummary()
+
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+                    @Html.HiddenFor(m => m.FlagDayDocId, htmlAttributes: new { @id = "flagDayDocId" })
+
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DocNum, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.DocNum, true, htmlAttributes: new { @id = "docNum", @class = "form-control", @maxlength = 6 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Version, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.Version, true, htmlAttributes: new { @id = "version", @class = "form-control", @maxlength = 10 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Description, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(m => m.Description, true, htmlAttributes: new { @id = "description", @class = "form-control", @maxlength = 256 })
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="div-IsActive" hidden="hidden">
+                            @Html.LabelFor(m => m.IsActive, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-2">
+                                @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @id = "isActive" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.File, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.FileFor(m => m.File, htmlAttributes: new { @id = "file", @class = "form-control" })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCreateFlagDayDoc" name="create" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    @*<button id="btnUpdateFlagDayDoc" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>*@
+                    <button id="btnCancel" type="button" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listLetterUrl = '@Url.RouteUrl("ListFlagDayTemplate")';
+        var newFlagDayDocUrl = '@Url.RouteUrl("NewFlagDayDoc")';
+        var getFlagDayDocUrl = '@Url.RouteUrl("GetFlagDayDoc", new { flagDayDocId = -1 })';
+        @*var editFlagDayDocUrl = '@Url.RouteUrl("EditFlagDayVersion", new { flagDayDocId = -1 })';*@
+        var FlagDayVersionUrl = '@Url.RouteUrl("FlagDayVersion", new { flagDayDocId = -1 })';
+
+        $(function () {
+            initFlagDayDocGrid();
+
+            $('#btnCreateFlagDayDoc').click(function () {
+                var $form = $("#FlagDayDocForm");
+                if ($form.valid()) {
+                    var actionUrl = newFlagDayDocUrl;
+                    $form.ajaxPostForm(actionUrl,
+                        function (response) {
+                            $form.resetForm();
+                            $('#editModal').modal('hide');
+                            $("#FlagDayDocTable").trigger("reloadGrid", [{ current: true }]);
+                            notifSuccess(response.message);
+                        }
+                    );
+                }
+            });
+
+            //$('#btnUpdateFlagDayDoc').click(function () {
+            //    var $form = $("#FlagDayDocForm");
+            //    var actionUrl = editFlagDayDocUrl.replace('-1', $('#flagDayDocId').val());
+            //    $form.ajaxPostForm(actionUrl,
+            //         function (response) {
+            //             $('#editModal').modal('hide');
+            //             $("#FlagDayDocTable").trigger("reloadGrid", [{ current: true }]);
+            //             notifSuccess(response.message);
+            //         }
+            //    );
+
+            //    if ($form.valid()) {
+
+            //    }
+            //});
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                        clearForm('#FlagDayDocForm');
+                        $('FlagDayDocForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                    }
+                });
+            });
+
+            $('#btnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                        clearForm('#FlagDayDocForm');
+                        $('FlagDayDocForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                    }
+                });
+            });
+
+        });
+
+        function initFlagDayDocGrid() {
+            var actionUrl = listLetterUrl;
+            var $grid = $('#FlagDayDocTable');
+            var pager_selector = '#somplaintDocGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                sortname: 'DocNum',
+                sortorder: 'asc',
+                url: actionUrl,
+                datatype: 'json',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.DocNum)',
+                    '@Html.DisplayNameFor(m => m.Description)',
+                    '@Html.DisplayNameFor(m => m.Version)',
+                    'Enabled',
+                    '@Html.DisplayNameFor(m => m.RowVersion)',
+                    '@Html.DisplayNameFor(m => m.FlagDayDocId)'
+                ],
+                colModel: [{
+                    name: 'docNum',
+                    width: '25'
+                }, {
+                    name: 'docName',
+                    width: ''
+                }, {
+                    name: 'versionNum',
+                    width: '25'
+                }, {
+                    name: 'enabled',
+                    template: yesNoTemplate,
+                    width: '25'
+                }, {
+                    name: 'rowVersion',
+                    hidden: true
+
+                }, {
+                    name: 'flagDayDocId',
+                    hidden: true
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    var actionUrl = FlagDayVersionUrl.replace('-1', data.flagDayDocId);
+                    window.location = actionUrl;
+
+                }
+            });
+
+            function doEditRecord(data) {
+                var actionUrl = getFlagDayDocUrl.replace("-1", data.flagDayDocId);
+                ajaxGet(actionUrl,
+                    function (response) {
+                        $('#docNum').val(response.data.docNum);
+                        $('#description').val(response.data.description);
+                        $('#version').val(response.data.version);
+                        $('#flagDayDocId').val(response.data.flagDayDocId);
+                        $("#div-IsActive").show();
+                        $('#isActive').checkboxVal(response.data.isActive);
+                        $('#btnCreateFlagDayDoc').addClass('hide');
+                        //$('#btnUpdateFlagDayDoc').removeClass('hide');
+
+                        doShowModal();
+                    }
+                );
+            };
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function doShowModal() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                $('#editModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+
+            };
+
+            function doNewRecord() {
+                $('#rowVersion').val('');
+                $('#name').prop('readonly', false).val('');
+                $('#path').val('');
+                $('#version').val('');
+                $('#description').val('');
+                $('#isActive').checkboxVal(true);
+                $('#btnCreateFlagDayDoc').removeClass('hide');
+                //$('#btnUpdateFlagDayDoc').addClass('hide');
+                doShowModal();
+            };
+        };
+    </script>
+}

@@ -1,0 +1,704 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FA962D99-0CD3-4118-9E8E-048A8D01BD1D}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Psps.Web</RootNamespace>
+    <AssemblyName>Psps.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=3.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.Mvc5.3.3.3\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CsvHelper.2.10.0\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah.Mvc">
+      <HintPath>..\packages\Elmah.MVC.2.1.1\lib\net40\Elmah.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation, Version=5.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.5.6.2.0\lib\Net45\FluentValidation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentValidation.Mvc, Version=5.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.MVC5.5.6.2.0\lib\Net45\FluentValidation.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="ModelMetadataExtensions">
+      <HintPath>..\packages\ModelMetadataExtensions.0.1.2\lib\net40\ModelMetadataExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcSiteMapProvider, Version=4.6.18.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.Core.4.6.18\lib\net45\MvcSiteMapProvider.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvcSiteMapProvider.WebActivator, Version=4.6.18.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.4.6.18\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebActivatorEx.2.0.6\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\assets\ace\1.1.2\css\ace-ie.css" />
+    <Content Include="Content\assets\ace\1.1.2\css\ace-mq.css" />
+    <Content Include="Content\assets\ace\1.1.2\css\ace.css" />
+    <Content Include="Content\assets\ace\1.1.2\js\ace-elements.min.js" />
+    <Content Include="Content\assets\ace\1.1.2\js\ace-extra.min.js" />
+    <Content Include="Content\assets\ace\1.1.2\js\ace.min.js" />
+    <Content Include="Content\assets\blockUI\2.66.0\js\jquery.blockUI.js" />
+    <Content Include="Content\assets\blockUI\2.70.0\js\jquery.blockUI.js" />
+    <Content Include="Content\assets\bootbox\4.1.0\js\bootbox.js" />
+    <Content Include="Content\assets\bootstrap-timepicker\0.2.3\css\bootstrap-datetimepicker.css" />
+    <Content Include="Content\assets\bootstrap-timepicker\0.2.3\js\bootstrap-datetimepicker.js" />
+    <Content Include="Content\assets\bootstrap\3.1.1\css\bootstrap-theme.css" />
+    <Content Include="Content\assets\bootstrap\3.1.1\css\bootstrap-theme.min.css" />
+    <Content Include="Content\assets\bootstrap\3.1.1\css\bootstrap.css" />
+    <Content Include="Content\assets\bootstrap\3.1.1\css\bootstrap.min.css" />
+    <Content Include="Content\assets\bootstrap\3.1.1\js\bootstrap.js" />
+    <Content Include="Content\assets\bootstrap\3.1.1\js\bootstrap.min.js" />
+    <Content Include="Content\assets\dataTables.bootstrap\0.0.0\js\dataTables.bootstrap.js" />
+    <Content Include="Content\assets\datepicker\1.3.1\css\datepicker3.css" />
+    <Content Include="Content\assets\datepicker\1.3.1\js\bootstrap-datepicker.js" />
+    <Content Include="Content\assets\datepicker\1.4.0\css\bootstrap-datepicker3.standalone.css" />
+    <Content Include="Content\assets\datepicker\1.4.0\js\bootstrap-datepicker.js" />
+    <Content Include="Content\assets\font-awesome\3.2.1\css\font-awesome.min.css" />
+    <Content Include="Content\assets\html5shiv\3.7.0\js\html5shiv.js" />
+    <Content Include="Content\assets\jqGrid\4.6.0\css\ui.jqgrid.css" />
+    <Content Include="Content\assets\jqGrid\4.6.0\js\i18n\grid.locale-en.js" />
+    <Content Include="Content\assets\jqGrid\4.6.0\js\jquery.jqGrid.min.js" />
+    <Content Include="Content\assets\jqGrid\4.6.0\js\jquery.jqGrid.src.js" />
+    <Content Include="Content\assets\jquery-goup\0.1.6\js\jquery.goup.min.js" />
+    <Content Include="Content\assets\jquery-placeholder\2.0.7\js\jquery.placeholder.js" />
+    <Content Include="Content\assets\jquery-s2t\0.1.0\js\jquery.s2t.js" />
+    <Content Include="Content\assets\jquery-slimScroll\1.3.1\js\jquery.slimscroll.js" />
+    <Content Include="Content\assets\jquery-ui\1.10.3\css\jquery-ui-1.10.3.custom.min.css" />
+    <Content Include="Content\assets\jquery-ui\1.10.3\css\jquery-ui-1.10.3.full.min.css" />
+    <Content Include="Content\assets\jquery-ui\1.10.3\js\jquery-ui-1.10.3.custom.min.js" />
+    <Content Include="Content\assets\jquery-ui\1.10.3\js\jquery-ui-1.10.3.full.min.js" />
+    <Content Include="Content\assets\jquery-validation\1.11.1\js\additional-methods.min.js" />
+    <Content Include="Content\assets\jquery-validation\1.11.1\js\jquery.validate.min.js" />
+    <Content Include="Content\assets\jquery.form\3.51.0\js\jquery.form.js" />
+    <Content Include="Content\assets\jquery.inputmask\3.2.7\inputmask\inputmask.date.extensions.js" />
+    <Content Include="Content\assets\jquery.inputmask\3.2.7\inputmask\inputmask.dependencyLib.jquery.js" />
+    <Content Include="Content\assets\jquery.inputmask\3.2.7\inputmask\inputmask.extensions.js" />
+    <Content Include="Content\assets\jquery.inputmask\3.2.7\inputmask\inputmask.js" />
+    <Content Include="Content\assets\jquery.inputmask\3.2.7\inputmask\inputmask.numeric.extensions.js" />
+    <Content Include="Content\assets\jquery.inputmask\3.2.7\inputmask\inputmask.phone.extensions.js" />
+    <Content Include="Content\assets\jquery.inputmask\3.2.7\inputmask\inputmask.regex.extensions.js" />
+    <Content Include="Content\assets\jquery.inputmask\3.2.7\inputmask\jquery.inputmask.js" />
+    <Content Include="Content\assets\jquery.inputmask\3.2.7\jquery.inputmask.bundle.js" />
+    <Content Include="Content\assets\jquery\1.10.2\js\jquery-1.10.2.js" />
+    <Content Include="Content\assets\jquery\1.11.2\js\jquery-1.11.2.js" />
+    <Content Include="Content\assets\jquery\1.11.2\js\jquery-1.11.2.min.js" />
+    <Content Include="Content\assets\moment\2.8.4\js\moment.js" />
+    <Content Include="Content\assets\notifIt\1.1.0\css\notifIt.css" />
+    <Content Include="Content\assets\notifIt\1.1.0\js\notifIt.js" />
+    <Content Include="Content\assets\respond\1.4.2\js\respond.min.js" />
+    <Content Include="Content\assets\select2\3.4.5\css\select2-spinner.gif" />
+    <Content Include="Content\assets\select2\3.4.5\css\select2.css" />
+    <Content Include="Content\assets\select2\3.4.5\css\select2.png" />
+    <Content Include="Content\assets\select2\3.4.5\css\select2x2.png" />
+    <Content Include="Content\assets\select2\3.4.5\js\select2.js" />
+    <Content Include="Content\assets\select2\3.5.0\css\select2-spinner.gif" />
+    <Content Include="Content\assets\select2\3.5.0\css\select2.css" />
+    <Content Include="Content\assets\select2\3.5.0\css\select2.png" />
+    <Content Include="Content\assets\select2\3.5.0\css\select2x2.png" />
+    <Content Include="Content\assets\select2\3.5.0\js\select2.js" />
+    <Content Include="Content\assets\spellchecker\0.2.4\css\jquery.spellchecker.css" />
+    <Content Include="Content\assets\spellchecker\0.2.4\js\jquery.spellchecker.js" />
+    <Content Include="Content\assets\summernote\0.8.1\css\summernote.css" />
+    <Content Include="Content\assets\summernote\0.8.1\js\summernote-ext-editor.js" />
+    <Content Include="Content\assets\summernote\0.8.1\js\summernote.js" />
+    <Content Include="Content\assets\tongwen\tongwen_core.js" />
+    <Content Include="Content\assets\tongwen\tongwen_table_t2s.js" />
+    <Content Include="Content\css\main.css" />
+    <Content Include="Content\css\non-responsive.css" />
+    <Content Include="Content\css\orange-skin.css" />
+    <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\js\data.js" />
+    <Content Include="Content\js\ie8-fallback.js" />
+    <Content Include="Content\js\jqGrid.columnTemplates.js" />
+    <Content Include="Content\js\main.js" />
+    <Content Include="Global.asax" />
+    <Content Include="ConnectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DummyApiController.cs" />
+    <Compile Include="Controllers\DataExportController.cs" />
+    <Compile Include="Controllers\DisasterStatisticsController.cs" />
+    <Compile Include="Controllers\FileDownloadControllerController.cs" />
+    <Compile Include="Controllers\FlagDayListController.cs" />
+    <Compile Include="Controllers\LegalAdviceController.cs" />
+    <Compile Include="Controllers\SuggestionController.cs" />
+    <Compile Include="Controllers\EnquiryController.cs" />
+    <Compile Include="Controllers\FlagDayController.cs" />
+    <Compile Include="Controllers\OrganisationController.cs" />
+    <Compile Include="Controllers\PSPController.cs" />
+    <Compile Include="Controllers\DisasterController.cs" />
+    <Compile Include="Controllers\DocumentLibraryController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\PostController.cs" />
+    <Compile Include="Controllers\UserLogController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LookupController.cs" />
+    <Compile Include="Controllers\SystemMessageController.cs" />
+    <Compile Include="Controllers\SystemParameterController.cs" />
+    <Compile Include="Controllers\ComplaintController.cs" />
+    <Compile Include="Infrastructure\DI\Autofac\Modules\MvcModule.cs" />
+    <Compile Include="Infrastructure\DI\Autofac\Modules\MvcSiteMapProviderModule.cs" />
+    <Compile Include="Infrastructure\DI\CommonConventions.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
+    <Compile Include="Infrastructure\DependencyRegistrar.cs" />
+    <Compile Include="Infrastructure\DI\DiModelBinder.cs" />
+    <Compile Include="Mappings\AutoMapperConfiguration.cs" />
+    <Compile Include="Mappings\ComplaintMappingProfile.cs" />
+    <Compile Include="Mappings\AccountMappingProfile.cs" />
+    <Compile Include="Mappings\SuggestionMappingProfile.cs" />
+    <Compile Include="Mappings\PSPMappingProfile.cs" />
+    <Compile Include="Mappings\FlagDayMappingProfile.cs" />
+    <Compile Include="Mappings\OrganisationMappingProfile.cs" />
+    <Compile Include="Mappings\CsvComplaintMasterMap.cs" />
+    <Compile Include="Mappings\CsvLegalAdviceMasterMap.cs" />
+    <Compile Include="Mappings\CsvSuggestionMap.cs" />
+    <Compile Include="Mappings\DMYDateConverter.cs" />
+    <Compile Include="Mappings\DtoToDomainMappingProfile.cs" />
+    <Compile Include="Mappings\DomainToDtoMappingProfile.cs" />
+    <Compile Include="Mappings\DtoToViewModelMappingProfile.cs" />
+    <Compile Include="Mappings\ViewModelToDtoMappingProfile.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\R20.cs">
+      <DependentUpon>R20.rpt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Validators\ChangePasswordViewModelValidator.cs" />
+    <Compile Include="Validators\ComplaintResultViewModelValidator.cs" />
+    <Compile Include="Validators\ComplaintTelRecordViewModelValidator.cs" />
+    <Compile Include="Validators\ComplaintOtherDepartmentEnquiryViewModelValidator.cs" />
+    <Compile Include="Validators\ComplaintPoliceCaseViewModelValidator.cs" />
+    <Compile Include="Validators\ComplaintFollowUpActionViewModelValidator.cs" />
+    <Compile Include="Validators\HomeViewModelValidator.cs" />
+    <Compile Include="Validators\LoginViewModelValidator.cs" />
+    <Compile Include="Validators\OrgNameChangeHistoryViewModelValidator.cs" />
+    <Compile Include="Validators\EditEnquiryComplaintViewModelValidator.cs" />
+    <Compile Include="Validators\EnquiryComplaintSearchViewModelValidator.cs" />
+    <Compile Include="Validators\FlagDayApproveViewModelValidator.cs" />
+    <Compile Include="Validators\FlagDayListViewModelValidator.cs" />
+    <Compile Include="Validators\ComplaintMasterViewModelValidator.cs" />
+    <Compile Include="Validators\DisasterStatisticsValidator.cs" />
+    <Compile Include="Validators\FlagDayReportViewModelValidator.cs" />
+    <Compile Include="Validators\FlagDayViewModelValidator.cs" />
+    <Compile Include="Validators\LegalAdviceViewModelValidator.cs" />
+    <Compile Include="Validators\OrganisationDocViewModelValidator.cs" />
+    <Compile Include="Validators\OrganisationViewModelValidator.cs" />
+    <Compile Include="Validators\PspApproveViewModelValidator.cs" />
+    <Compile Include="Validators\PspEventViewModelValidator.cs" />
+    <Compile Include="Validators\PspRecommendEventsViewModelValidator.cs" />
+    <Compile Include="Validators\PSPViewModelValidator.cs" />
+    <Compile Include="Validators\SuggestionDocViewModelValidator.cs" />
+    <Compile Include="Validators\SuggestionMasterViewModelValidator.cs" />
+    <Compile Include="Validators\DisasterValidator.cs" />
+    <Compile Include="Validators\DocumentViewModelValidator.cs" />
+    <Compile Include="Validators\DocumentLibraryViewModelValidator.cs" />
+    <Compile Include="Validators\PostValidators.cs" />
+    <Compile Include="Validators\ProfileViewModelValidator.cs" />
+    <Compile Include="Validators\RoleViewModelValidator.cs" />
+    <Compile Include="Validators\UserLogViewModelValidator.cs" />
+    <Compile Include="Validators\SystemMessageViewModelValidator.cs" />
+    <Compile Include="Validators\SystemParameterViewModelValidator.cs" />
+    <Compile Include="Validators\UserViewModelValidator.cs" />
+    <Compile Include="Validators\LookupValidators.cs" />
+    <Compile Include="Validators\ComplaintDocViewModelValidator.cs" />
+    <Compile Include="Validators\FlagDayDocViewModelValidator.cs" />
+    <Compile Include="Validators\PspDocViewModelValidator.cs" />
+    <Compile Include="Validators\PspReportViewModelValidator.cs" />
+    <Compile Include="Validators\EnquiryReportViewModelValidator.cs" />
+    <Compile Include="ViewModels\Account\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModels\Account\LoginViewModel.cs" />
+    <Compile Include="ViewModels\Account\ProfileViewModel.cs" />
+    <Compile Include="ViewModels\Account\UserViewModel.cs" />
+    <Compile Include="ViewModels\Complaint\ComplaintMasterViewModel.cs" />
+    <Compile Include="ViewModels\Complaint\ComplaintDocViewModel.cs" />
+    <Compile Include="ViewModels\Complaint\ComplaintResultViewModel.cs" />
+    <Compile Include="ViewModels\Complaint\ComplaintTelRecordViewModel.cs" />
+    <Compile Include="ViewModels\Complaint\ComplaintFollowUpActionViewModel.cs" />
+    <Compile Include="ViewModels\Complaint\ComplaintOtherDepartmentEnquiryViewModel.cs" />
+    <Compile Include="ViewModels\Complaint\ComplaintPoliceCaseViewModel.cs" />
+    <Compile Include="ViewModels\Complaint\EditEnquiryComplaintViewModel.cs" />
+    <Compile Include="ViewModels\Complaint\EnquiryComplaintSearchViewModel.cs" />
+    <Compile Include="ViewModels\DataExport\DataExportModel.cs" />
+    <Compile Include="ViewModels\DisasterStatistics\DisasterStatisticsViewModel.cs" />
+    <Compile Include="ViewModels\Disaster\DisasterViewModel.cs" />
+    <Compile Include="ViewModels\DocumentLibraries\DocumentLibraryViewModel.cs" />
+    <Compile Include="ViewModels\DocumentLibraries\DocumentViewModel.cs" />
+    <Compile Include="ViewModels\Enquiry\EnquiryComplaintSearchViewModel.cs" />
+    <Compile Include="ViewModels\Enquiry\EnquiryViewModel.cs" />
+    <Compile Include="ViewModels\Enquiry\EnquiryReportViewModel.cs" />
+    <Compile Include="ViewModels\FlagDayList\FlagDayListImportViewModel.cs" />
+    <Compile Include="ViewModels\FlagDay\FlagDayApproveViewModel.cs" />
+    <Compile Include="ViewModels\FlagDay\FlagDayAttachmentViewModel.cs" />
+    <Compile Include="ViewModels\FlagDay\FlagDayDocViewModel.cs" />
+    <Compile Include="ViewModels\FlagDayList\FlagDayListViewModel.cs" />
+    <Compile Include="ViewModels\FlagDay\FlagDayEventViewModel.cs" />
+    <Compile Include="ViewModels\FlagDay\FlagDayReportViewModel.cs" />
+    <Compile Include="ViewModels\FlagDay\FlagDayViewModel.cs" />
+    <Compile Include="ViewModels\LegalAdvice\LegalAdviceViewModel.cs" />
+    <Compile Include="ViewModels\LegalAdvice\LegalAdviceReportViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\OrgNameChangeHistoryViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\OrganisationDocViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\OrganisationViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\FDAccountSummaryViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\PSPAccountSummaryViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\OrganisationReportViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostActingViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostViewModel.cs" />
+    <Compile Include="ViewModels\PspApprove\PspRecommendApproveEventsViewModel.cs" />
+    <Compile Include="ViewModels\PspApprove\PspRecommendCancelEventsViewModel.cs" />
+    <Compile Include="ViewModels\PspApprove\PspRecommendEventsViewModel.cs" />
+    <Compile Include="ViewModels\PSP\PspAttachmentViewModel.cs" />
+    <Compile Include="ViewModels\PSP\PspEventViewModel.cs" />
+    <Compile Include="ViewModels\PspApprove\PspApproveViewModel.cs" />
+    <Compile Include="ViewModels\PSP\PspReportViewModel.cs" />
+    <Compile Include="ViewModels\PSP\PspDocViewModel.cs" />
+    <Compile Include="ViewModels\PSP\PSPViewModel.cs" />
+    <Compile Include="ViewModels\Role\RoleViewModel.cs" />
+    <Compile Include="ViewModels\Suggestion\SuggestionDocViewModel.cs" />
+    <Compile Include="ViewModels\Suggestion\SuggestionMasterViewModel.cs" />
+    <Compile Include="ViewModels\UserLogs\UserLogViewModel.cs" />
+    <Compile Include="ViewModels\Error\ErrorViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeViewModel.cs" />
+    <Compile Include="ViewModels\Lookups\LookupViewModel.cs" />
+    <Compile Include="ViewModels\SystemMessages\SystemMessageViewModel.cs" />
+    <Compile Include="ViewModels\SystemParameters\SystemParameterViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Account\AccessDenied.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Error\AccessDenied.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\BootstrapMenuHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\BootstrapSiteMapPathHelperModel.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Shared\_PageLayout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Mvc.sitemap">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\assets\bootstrap\3.1.1\config.json" />
+    <Content Include="Content\assets\bootstrap\3.1.1\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\assets\bootstrap\3.1.1\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\assets\bootstrap\3.1.1\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\assets\bootstrap\3.1.1\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\assets\font-awesome\3.2.1\font\fontawesome-webfont.svg" />
+    <Content Include="Content\assets\font-awesome\3.2.1\font\fontawesome-webfontd41d.eot" />
+    <Content Include="Content\assets\font-awesome\3.2.1\font\fontawesome-webfontf77b.eot" />
+    <Content Include="Content\assets\font-awesome\3.2.1\font\fontawesome-webfontf77b.ttf" />
+    <Content Include="Content\assets\font-awesome\3.2.1\font\fontawesome-webfontf77b.woff" />
+    <Content Include="log4net.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Code\Common.cshtml" />
+    <Content Include="Content\assets\summernote\0.8.1\css\font\summernote.eot" />
+    <Content Include="Content\assets\summernote\0.8.1\css\font\summernote.ttf" />
+    <Content Include="Content\assets\summernote\0.8.1\css\font\summernote.woff" />
+    <None Include="MvcSiteMapSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RadioButtonListEnum.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\YesNo.cshtml" />
+    <Content Include="Views\Lookup\Index.cshtml" />
+    <Content Include="Views\SystemMessage\Index.cshtml" />
+    <Content Include="Views\SystemParameter\Index.cshtml" />
+    <Content Include="Views\UserLog\Index.cshtml" />
+    <Content Include="Views\Post\Index.cshtml" />
+    <Content Include="Views\Post\Detail.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Role\Index.cshtml" />
+    <Content Include="Views\DocumentLibrary\Index.cshtml" />
+    <Content Include="Views\DocumentLibrary\_DocumentModal.cshtml" />
+    <Content Include="Views\Account\MyProfile.cshtml" />
+    <Content Include="Views\Disaster\Index.cshtml" />
+    <Content Include="Views\PSP\Search.cshtml" />
+    <Content Include="Views\FlagDay\Search.cshtml" />
+    <Content Include="Views\Organisation\Search.cshtml" />
+    <Content Include="Views\Enquiry\Search.cshtml" />
+    <Content Include="Views\Complaint\Search.cshtml" />
+    <Content Include="Views\Suggestion\Search.cshtml" />
+    <Content Include="Views\LegalAdvice\Search.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <None Include="Properties\PublishProfiles\FA6000003645.pubxml" />
+    <None Include="Properties\PublishProfiles\local test.pubxml" />
+    <None Include="Properties\PublishProfiles\Psps-testing.pubxml" />
+    <Content Include="Views\DisasterStatistics\Index.cshtml" />
+    <Content Include="Views\Complaint\New.cshtml" />
+    <Content Include="Views\Organisation\New.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Enquiry\New.cshtml" />
+    <Content Include="Views\Organisation\PSPSummary.cshtml" />
+    <Content Include="Views\Organisation\FDSummary.cshtml" />
+    <Content Include="Views\LegalAdvice\New.cshtml" />
+    <Content Include="Views\Suggestion\New.cshtml" />
+    <Content Include="Views\Suggestion\Report.cshtml" />
+    <Content Include="Views\LegalAdvice\Report.cshtml" />
+    <Content Include="Views\Suggestion\Template.cshtml" />
+    <Content Include="Views\Suggestion\Version.cshtml" />
+    <Content Include="Views\Organisation\Report.cshtml" />
+    <Content Include="Views\Organisation\Version.cshtml" />
+    <Content Include="Views\Organisation\Template.cshtml" />
+    <Content Include="Views\Complaint\Version.cshtml" />
+    <Content Include="Views\Complaint\Template.cshtml" />
+    <Content Include="Views\Complaint\Report.cshtml" />
+    <Content Include="Views\FlagDay\Version.cshtml" />
+    <Content Include="Views\FlagDay\Template.cshtml" />
+    <Content Include="Views\FlagDay\Report.cshtml" />
+    <Content Include="Views\PSP\Version.cshtml" />
+    <Content Include="Views\PSP\Template.cshtml" />
+    <Content Include="Views\FlagDayList\Index.cshtml" />
+    <Content Include="Views\PSP\Approve.cshtml" />
+    <Content Include="Views\Organisation\Detail.cshtml" />
+    <Content Include="Views\Organisation\ReferenceGuide.cshtml" />
+    <Content Include="Views\FlagDay\Edit.cshtml" />
+    <Content Include="Reports\R26.xlsx" />
+    <Content Include="Views\Enquiry\Report.cshtml" />
+    <Content Include="Reports\R14.xlsx" />
+    <Content Include="Views\PSP\Edit.cshtml" />
+    <Content Include="Reports\R25.xlsx" />
+    <Content Include="Reports\R15.xlsx" />
+    <Content Include="Reports\R23.xlsx" />
+    <Content Include="Views\PSP\Report.cshtml" />
+    <Content Include="Reports\R07.xlsx" />
+    <Content Include="Reports\R05.xlsx" />
+    <Content Include="Views\PSP\_PSPTemplateModal.cshtml" />
+    <Content Include="Reports\R16.xlsx" />
+    <Content Include="Views\FlagDay\_FlagDayTemplateModal.cshtml" />
+    <Content Include="Views\Organisation\_OrgTemplateModal.cshtml" />
+    <Content Include="Views\Suggestion\_SuggestionTemplateModal.cshtml" />
+    <Content Include="Reports\R06.xlsx" />
+    <Content Include="Views\Complaint\EditEnquiryComplaint.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintDetailsModal.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintLettersModal.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintAttachmentModal.cshtml" />
+    <Content Include="Reports\R08.xlsx" />
+    <Content Include="Views\Organisation\_OrgAttachmentModal.cshtml" />
+    <Content Include="Reports\R10.xlsx" />
+    <Content Include="Reports\R11.xlsx" />
+    <Content Include="Reports\R12.xlsx" />
+    <Content Include="Reports\R21.xlsx" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintTelRecordModal.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintTelRecordDetailsModal.cshtml" />
+    <Content Include="Reports\R18.xlsx" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintFollowUpActionModal.cshtml" />
+    <Content Include="Views\DataExport\Index.cshtml" />
+    <Content Include="Reports\R03.xlsx" />
+    <Content Include="Reports\R22.xlsx" />
+    <Content Include="Views\FlagDay\Approve.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Reports\R02.xlsx" />
+    <Content Include="Views\LegalAdvice\_RelatedLegalAdviceModal.cshtml" />
+    <Content Include="Reports\R04.xlsx" />
+    <Content Include="Reports\R09.xlsx" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintFollowUpActionDetailsModal.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintPoliceCaseModal.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintOtherDepartmentEnquiryModal.cshtml" />
+    <Content Include="Views\Suggestion\_SuggestionAttachmentDetailModal.cshtml" />
+    <Content Include="Reports\R01.xlsx" />
+    <Content Include="Reports\R19.xlsx" />
+    <Content Include="Reports\R24.xlsx" />
+    <Content Include="Reports\R9.xlsx" />
+    <Content Include="Views\PSP\_EditPspAttachmentModal.cshtml" />
+    <Content Include="Views\FlagDay\_EditFlagDayAttachmentModal.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintOtherDepartmentEnquiryDetailsModal.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintPoliceCaseDetailsModal.cshtml" />
+    <Content Include="Views\FlagDayList\_ImportFlagDayListXlsFileModal.cshtml" />
+    <Content Include="Views\Organisation\_OrgNameChangeHistoryModal.cshtml" />
+    <Content Include="Views\FlagDay\New.cshtml" />
+    <Content Include="Views\FlagDay\_FlagDayDetail.cshtml" />
+    <Content Include="Views\PSP\_PSPDetail.cshtml" />
+    <Content Include="Views\PSP\New.cshtml" />
+    <Content Include="Reports\R17.docx" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
+    <Content Include="Views\Organisation\_ImportRefGuideXlsFileModal.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintResultModal.cshtml" />
+    <Content Include="Views\Complaint\_EditEnquiryComplaintResultDetailsModal.cshtml" />
+    <Content Include="Reports\R13.xlsx" />
+    <Content Include="Views\Account\PasswordExpired.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MenuHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
+    <Content Include="Views\PSP\_EditPspEventModal.cshtml" />
+    <Content Include="Reports\R20.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\PSP\Fras.cshtml" />
+    <Content Include="Views\PSP\_SplitPspEventModal.cshtml" />
+    <Content Include="Reports\R27.xlsx" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\FileDownloadController\" />
+    <Folder Include="Views\Report\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Spelling\Common.Spelling.csproj">
+      <Project>{32485ec2-85be-4649-8169-01d18af7c878}</Project>
+      <Name>Common.Spelling</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DocxGenerator.Library\DocxGenerator.Library.csproj">
+      <Project>{c041c8c6-ac4e-4f74-a827-7f3d790e1ace}</Project>
+      <Name>DocxGenerator.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\jQuery.Validation.Unobtrusive.Native\jQuery.Validation.Unobtrusive.Native.csproj">
+      <Project>{975e8578-003a-463c-bb3d-b75974e7d6d8}</Project>
+      <Name>jQuery.Validation.Unobtrusive.Native</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Core\Psps.Core.csproj">
+      <Project>{54748c7e-20c2-401d-bbdf-9793aa8e1117}</Project>
+      <Name>Psps.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Data\Psps.Data.csproj">
+      <Project>{576d1314-a75a-4ff7-8e10-7580d0f6e237}</Project>
+      <Name>Psps.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Models\Psps.Models.csproj">
+      <Project>{ebdf4286-98c8-4af8-a307-dcb7e9eb6fcb}</Project>
+      <Name>Psps.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Resources\Psps.Resources.csproj">
+      <Project>{9f4d9a8d-2959-4309-a9c5-2e9b83cf1dcd}</Project>
+      <Name>Psps.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Services\Psps.Services.csproj">
+      <Project>{5cba9091-540a-4cde-b5a5-5343c617eaba}</Project>
+      <Name>Psps.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Web.Core\Psps.Web.Core.csproj">
+      <Project>{f22268f1-8579-44ea-8d1e-4884c12f4013}</Project>
+      <Name>Psps.Web.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Content Include="Reports\R20.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>R20.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56532</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44300/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

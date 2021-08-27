@@ -1,0 +1,51 @@
+﻿@model Psps.Web.ViewModels.Suggestion.SuggestionMasterViewModel
+@using Psps.Resources;
+
+<form id="attachmentForm" name="AttachmentForm" class="form-horizontal">
+    <div id="attachmentModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="attBtnClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Attachment Details</h4>
+                </div>
+
+                <div class="modal-body">
+                    <fieldset>
+                        @Html.TextBoxFor(m => m.AttachmentId, true, htmlAttributes: new { @id = "attachmentId", @class = "form-control", @maxlength = 200, @type = "hidden" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AttachmentName, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-6">
+                                @Html.TextBoxFor(m => m.AttachmentName, true, htmlAttributes: new { @id = "attachmentName", @class = "form-control", @maxlength = 200 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(m => m.AttachmentRemark, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.TextBoxFor(m => m.AttachmentRemark, true, htmlAttributes: new { @id = "attachmentRemark", @class = "form-control", @maxlength = 1000 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AttachmentDocument, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.FileFor(m => m.AttachmentDocument, htmlAttributes: new { @id = "attachmentDocument", @class = "form-control", @maxlength = 1000 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="attBtnCreate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button type="button" id="attBtnUpdate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="attBtnCancel" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{576D1314-A75A-4FF7-8E10-7580D0F6E237}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Psps.Data</RootNamespace>
+    <AssemblyName>Psps.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentNHibernate, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FluentNHibernate.2.0.1.0\lib\net40\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Envers, Version=2.0.0.500, Culture=neutral, PublicKeyToken=e2c5b946037fb7f8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.Envers.2.0.0\lib\Net40\NHibernate.Envers.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DB\Interceptors\InterceptorDecorator.cs" />
+    <Compile Include="DB\Listeners\AuditFlushEntityEventListener.cs" />
+    <Compile Include="Infrastructure\ConnectionHelper.cs" />
+    <Compile Include="Infrastructure\Disposable.cs" />
+    <Compile Include="Infrastructure\IRepository.cs" />
+    <Compile Include="Infrastructure\IUnitOfWork.cs" />
+    <Compile Include="Infrastructure\PagedResult.cs" />
+    <Compile Include="Infrastructure\BaseRepository.cs" />
+    <Compile Include="DB\Listeners\RevInfoListener.cs" />
+    <Compile Include="Infrastructure\UnitOfWork.cs" />
+    <Compile Include="DB\Interceptors\SqlStatementInterceptor.cs" />
+    <Compile Include="Mappings\ActivityLogMap.cs" />
+    <Compile Include="Mappings\BaseAuditEntityMap.cs" />
+    <Compile Include="Mappings\BinaryTimestamp.cs" />
+    <Compile Include="Mappings\ComplaintBringUpSummaryViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\ComplaintDocSummaryViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\ComplaintFdPermitNumSearchViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\ComplaintMasterSearchViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\ComplaintResultMap.cs" />
+    <Compile Include="Mappings\ComplaintTelRecordMap.cs" />
+    <Compile Include="Mappings\ComplaintFollowUpActionMap.cs" />
+    <Compile Include="Mappings\ComplaintPoliceCaseMap.cs" />
+    <Compile Include="Mappings\ComplaintOtherDepartmentEnquiryMap.cs" />
+    <Compile Include="Mappings\FdApproveApplicationListGridViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\FdExportViewMap.cs" />
+    <Compile Include="Mappings\FdMasterComputeViewMap.cs" />
+    <Compile Include="Mappings\OrgAfsTrViewMap.cs" />
+    <Compile Include="Mappings\OrgDocSummaryViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\OrgEditComplaintViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\OrgEditEnquiryViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\OrgEditLatestPspFdViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\OrgEditPspViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\OrgFdTabGridViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\OrgMasterSearchViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\PspAcSummaryViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\SsafApplicationStatusViewMap.cs" />
+    <Compile Include="Mappings\PspApplicationStatusViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\PspApprovedEventsMap.cs" />
+    <Compile Include="Mappings\PspBringUpSummaryViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\PspDocSummaryViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\PspDocViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\PspRecommendEventsViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\PspSearchViewMap.cs" />
+    <Compile Include="Mappings\FdAcSummaryViewMap.cs" />
+    <Compile Include="Mappings\PspEventsToProfomraMap.cs" />
+    <Compile Include="Mappings\ReferenceGuideSearchViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\RevChangeMap.cs" />
+    <Compile Include="Mappings\OrgDocViewMap.cs" />
+    <Compile Include="Mappings\FdDocViewMap.cs" />
+    <Compile Include="Mappings\FdListMap.cs" />
+    <Compile Include="Mappings\ComplaintAttachmentMap.cs" />
+    <Compile Include="Mappings\ComplaintDocMap.cs" />
+    <Compile Include="Mappings\ComplaintMasterMap.cs" />
+    <Compile Include="Mappings\Conventions.cs" />
+    <Compile Include="Mappings\BaseEntityMap.cs" />
+    <Compile Include="Mappings\ActingMap.cs" />
+    <Compile Include="Mappings\DisasterMasterMap.cs" />
+    <Compile Include="Mappings\DisasterStatisticsMap.cs" />
+    <Compile Include="Mappings\DocumentLibraryMap.cs" />
+    <Compile Include="Mappings\DocumentMap.cs" />
+    <Compile Include="Mappings\FdApprovalHistoryMap.cs" />
+    <Compile Include="Mappings\FdAttachmentMap.cs" />
+    <Compile Include="Mappings\FdDocMap.cs" />
+    <Compile Include="Mappings\FdEventMap.cs" />
+    <Compile Include="Mappings\FdMasterMap.cs" />
+    <Compile Include="Mappings\FunctionsInRolesMap.cs" />
+    <Compile Include="Mappings\LegalAdviceDocMap.cs" />
+    <Compile Include="Mappings\LegalAdviceMasterMap.cs" />
+    <Compile Include="Mappings\LetterMap.cs" />
+    <Compile Include="Mappings\OrgAttachmentMap.cs" />
+    <Compile Include="Mappings\OrgDocMap.cs" />
+    <Compile Include="Mappings\OrgMasterMap.cs" />
+    <Compile Include="Mappings\OrgNameChangeHistoryMap.cs" />
+    <Compile Include="Mappings\OrgProvisionNotAdoptMap.cs" />
+    <Compile Include="Mappings\OrgRefGuidePromulgationMap.cs" />
+    <Compile Include="Mappings\PspApprovalHistoryMap.cs" />
+    <Compile Include="Mappings\PspAttachmentMap.cs" />
+    <Compile Include="Mappings\PspCountEventsMap.cs" />
+    <Compile Include="Mappings\PspDocMap.cs" />
+    <Compile Include="Mappings\PspEventMap.cs" />
+    <Compile Include="Mappings\PspMasterMap.cs" />
+    <Compile Include="Mappings\PublicHolidayMap.cs" />
+    <Compile Include="Mappings\RevInfoMap.cs" />
+    <Compile Include="Mappings\RankMap.cs" />
+    <Compile Include="Mappings\FunctionMap.cs" />
+    <Compile Include="Mappings\SuggestionAttachmentMap.cs" />
+    <Compile Include="Mappings\SuggestionDocMap.cs" />
+    <Compile Include="Mappings\SuggestionDocSummaryViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\SuggestionDocViewMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mappings\SuggestionMasterMap.cs" />
+    <Compile Include="Mappings\SystemMessageMap.cs" />
+    <Compile Include="Mappings\LookupMap.cs" />
+    <Compile Include="Mappings\FilterDefinitions.cs" />
+    <Compile Include="Mappings\PostsInRolesMap.cs" />
+    <Compile Include="Mappings\PostMap.cs" />
+    <Compile Include="Mappings\RoleMap.cs" />
+    <Compile Include="Mappings\SystemParameterMap.cs" />
+    <Compile Include="Mappings\UserMap.cs" />
+    <Compile Include="Mappings\FdDocSummaryViewMap.cs" />
+    <Compile Include="Mappings\PspReportR14ViewMap.cs" />
+    <Compile Include="Mappings\WithholdingHistoryMap.cs" />
+    <Compile Include="NHibernateExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryTransformer.cs" />
+    <Compile Include="Repositories\ActingRepository.cs" />
+    <Compile Include="Repositories\ComplaintAttachmentRepository.cs" />
+    <Compile Include="Repositories\ComplaintResultRepository.cs" />
+    <Compile Include="Repositories\ComplaintTelRecordRepository.cs" />
+    <Compile Include="Repositories\ComplaintFollowUpActionRepository.cs" />
+    <Compile Include="Repositories\ComplaintPoliceCaseRepository.cs" />
+    <Compile Include="Repositories\ComplaintOtherDepartmentEnquiryRepository.cs" />
+    <Compile Include="Repositories\ComplaintBringUpSummaryViewRepository.cs" />
+    <Compile Include="Repositories\ComplaintMasterSearchViewRepository.cs" />
+    <Compile Include="Repositories\FdExportViewRepository.cs" />
+    <Compile Include="Repositories\OrgFdTabGridViewRepository.cs" />
+    <Compile Include="Repositories\FdApproveApplicationListGridViewRepository.cs" />
+    <Compile Include="Repositories\OrgAfsTrViewRepository.cs" />
+    <Compile Include="Repositories\OrgEditLatestPspFdViewRepository.cs" />
+    <Compile Include="Repositories\SsafApplicationStatusViewRepository.cs" />
+    <Compile Include="Repositories\PspApprovedEventsRepository.cs" />
+    <Compile Include="Repositories\PspBringUpSummaryViewRepository.cs" />
+    <Compile Include="Repositories\PspApplicationStatusViewRepository.cs" />
+    <Compile Include="Repositories\PspRecommendEventsViewRepository.cs" />
+    <Compile Include="Repositories\PspSearchViewRepository.cs" />
+    <Compile Include="Repositories\FdAcSummaryViewRepository.cs" />
+    <Compile Include="Repositories\PspAcSummaryViewRepository.cs" />
+    <Compile Include="Repositories\ReferenceGuideSearchViewRepository.cs" />
+    <Compile Include="Repositories\OrgEditEnquiryViewRepository.cs" />
+    <Compile Include="Repositories\FdAttachmentRepository.cs" />
+    <Compile Include="Repositories\OrgMasterSearchViewRepository.cs" />
+    <Compile Include="Repositories\OrgProvisionNotAdoptRepository.cs" />
+    <Compile Include="Repositories\PspAttachmentRepository.cs" />
+    <Compile Include="Repositories\PspEventsToProformaRepository.cs" />
+    <Compile Include="Repositories\SuggestionDocViewRepository.cs" />
+    <Compile Include="Repositories\OrgDocViewRepository.cs" />
+    <Compile Include="Repositories\FdDocViewRepository.cs" />
+    <Compile Include="Repositories\OrgEditComplaintViewRepository.cs" />
+    <Compile Include="Repositories\OrgEditPspViewRepository.cs" />
+    <Compile Include="Repositories\ComplaintFdPermitNumSearchViewRepository.cs" />
+    <Compile Include="Repositories\OrgRefGuidePromulgationRepository.cs" />
+    <Compile Include="Repositories\OrgDocSummaryViewRepository.cs" />
+    <Compile Include="Repositories\FdApprovalHistoryRepository.cs" />
+    <Compile Include="Repositories\FdEventRepository.cs" />
+    <Compile Include="Repositories\FlagDayListRepository.cs" />
+    <Compile Include="Repositories\ComplaintMasterRepository.cs" />
+    <Compile Include="Repositories\FDMasterRepository.cs" />
+    <Compile Include="Repositories\OrgAttachmentRepository.cs" />
+    <Compile Include="Repositories\OrgMasterRepository.cs" />
+    <Compile Include="Repositories\OrgNameChangeHistoryRepository.cs" />
+    <Compile Include="Repositories\PspApprovalHistoryRepostitory.cs" />
+    <Compile Include="Repositories\PspCountEventsRepository.cs" />
+    <Compile Include="Repositories\PspDocViewRepository.cs" />
+    <Compile Include="Repositories\PspEventRepository.cs" />
+    <Compile Include="Repositories\PSPMasterRepository.cs" />
+    <Compile Include="Repositories\SuggestionAttachmentRepository.cs" />
+    <Compile Include="Repositories\SuggestionMasterRepository.cs" />
+    <Compile Include="Repositories\DisasterMasterRepository.cs" />
+    <Compile Include="Repositories\DisasterStatisticsRepository.cs" />
+    <Compile Include="Repositories\DocumentLibraryRepository.cs" />
+    <Compile Include="Repositories\DocumentRepository.cs" />
+    <Compile Include="Repositories\FunctionsInRoleRepository.cs" />
+    <Compile Include="Repositories\LegalAdviceMasterRepository.cs" />
+    <Compile Include="Repositories\PostsInRolesRepository.cs" />
+    <Compile Include="Repositories\RankRepository.cs" />
+    <Compile Include="Repositories\UserLogRepository.cs" />
+    <Compile Include="Repositories\RoleRepository.cs" />
+    <Compile Include="Repositories\FunctionRepository.cs" />
+    <Compile Include="Repositories\PostRepository.cs" />
+    <Compile Include="Repositories\LookupRepository.cs" />
+    <Compile Include="Repositories\SystemMessageRepository.cs" />
+    <Compile Include="Repositories\SystemParameterRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Repositories\SuggestionDocRepository.cs" />
+    <Compile Include="Repositories\OrgDocRepository.cs" />
+    <Compile Include="Repositories\ComplaintDocRepository.cs" />
+    <Compile Include="Repositories\FdDocRepository.cs" />
+    <Compile Include="Repositories\SuggestionDocSummaryViewRepository.cs" />
+    <Compile Include="Repositories\ComplaintDocSummaryViewRepository.cs" />
+    <Compile Include="Repositories\FdDocSummaryViewRepository.cs" />
+    <Compile Include="Repositories\PspDocSummaryViewRepository.cs" />
+    <Compile Include="Repositories\ReportRepository.cs" />
+    <Compile Include="Repositories\WithholdingHistoryRepository.cs" />
+    <Compile Include="SchemaTool\SchemaTool.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <Compile Include="Repositories\PspDocRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Psps.Core\Psps.Core.csproj">
+      <Project>{54748c7e-20c2-401d-bbdf-9793aa8e1117}</Project>
+      <Name>Psps.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Models\Psps.Models.csproj">
+      <Project>{ebdf4286-98c8-4af8-a307-dcb7e9eb6fcb}</Project>
+      <Name>Psps.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,352 @@
+﻿@model Psps.Web.ViewModels.FlagDayList.FlagDayListViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.FdList_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form id="SearchFlagDayListForm" class="form-horizontal" role="form">
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.FlagDayYear, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-2">
+            @Html.DropDownListFor(m => m.FlagDayYear, true, new SelectList(Model.FlagDayYears.Reverse(), "Key", "Value", Model.FlagDayYear), htmlAttributes: new { @id = "flagDayYears", @class = "form-control", @data_provide = "select2" })
+        </div>
+        @Html.LabelFor(m => m.SearchFlagDayType, new { @class = "col-xs-3 control-label" })
+        <div class="col-xs-2">
+            @Html.DropDownListFor(m => m.SearchFlagDayType, true, new SelectList(Model.FlagDayTypes, "Key", "Value", Model.FlagDayType), htmlAttributes: new { @id = "flagDayTypes", @class = "form-control", @data_provide = "select2" })
+        </div>
+    </div>
+</form>
+<form id="flagDayListForm" class="form-horizontal" role="form">
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="flagDayListGridTable"></table>
+                <div id="flagDayListGridPager"></div>
+            </div>
+        </div>
+    </div>
+    <div id="editModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@Labels.FDL_FlagDayListTitle</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.BootstrapValidationSummary()
+
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+
+                    <fieldset>
+                        <div class="form-group hide" id="flagDayListIdfrm">
+                            @Html.LabelFor(m => m.FlagDayListId, new { @class = "col-xs-4 control-label" })
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.FlagDayListId, true, htmlAttributes: new { @id = "flagDayListId", @class = "form-control", @maxlength = 4 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="@Html.IdFor(m => m.FlagDayYear)" class="col-xs-4 control-label">@Labels.FDL_Year</label>
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FlagDayYear, true, htmlAttributes: new { @id = "FlagDayYearEdit", @class = "form-control", @maxlength = 5 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FlagDayType, new { @class = "col-xs-4 control-label" })
+                            <div class="col-xs-3">
+                                @Html.DropDownListFor(m => m.FlagDayType, true, new SelectList(Model.FlagDayTypes, "Key", "Value", Model.FlagDayType), htmlAttributes: new { @id = "flagDayTypes2", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FlagDayDate, new { @class = "col-xs-4 control-label" })
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.FlagDayDate, true, htmlAttributes: new { @id = "flagDayDate", @class = "form-control", @maxlength = 20, @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnDeleteFlagDayList" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Delete</button>
+                    <button id="btnCreateFlagDayList" name="create" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button id="btnUpdateFlagDayList" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button id="btnCancel" type="button" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@{Html.RenderAction("RenderImportFlagDayListXlsFileModal");}
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listFlagDayListUrl = '@Url.RouteUrl("ListFlagDayList")';
+        var newFlagDayListUrl = '@Url.RouteUrl("NewFlagDayList")';
+        var editFlagDayListUrl = '@Url.RouteUrl("EditFlagDayList", new { flagDayListId = -1 })';
+        var getFlagDayListUrl = '@Url.RouteUrl("GetFlagDayList", new { flagDayListId = -1 })';
+        var deleteFlagDayListUrl = '@Url.RouteUrl("DeleteFlagDayList", new { flagDayListId = -1 })';
+        var isFdApprover = @Html.Raw(Json.Encode(@Model.IsFdApprover));
+
+        $(function () {
+            $('#flagDayYears').select2('val', '');
+            $('#flagDayTypes').select2('val', '');
+            $('#flagDayListGridTable').addClass('hide');
+
+            initUserGrid();
+            if (!isFdApprover) {
+                $('#navAddNewBtn').addClass('hide');
+                $('#navImportBtn').addClass('hide');
+            }
+
+            $('#flagDayYears,#flagDayTypes').on('change', function (e) {
+                dropDownOnChange();
+            });
+
+            $('#btnCreateFlagDayList').click(function () {
+                var $form = $("#flagDayListForm");
+                if ($form.valid()) {
+                    var actionUrl = newFlagDayListUrl;
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#editModal').modal('hide');
+                             $("#flagDayListGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnUpdateFlagDayList').click(function () {
+                var $form = $("#flagDayListForm");
+                if ($form.valid()) {
+                    var actionUrl = editFlagDayListUrl.replace('-1', $('#flagDayListId').val());
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#editModal').modal('hide');
+                             $("#flagDayListGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnDeleteFlagDayList').click(function () {
+                var actionUrl = deleteFlagDayListUrl.replace('-1', $('#flagDayListId').val());
+                confirmDelete(function (result) {
+                    if (result) {
+                        ajaxPost(actionUrl,
+                             function (response) {
+                                 $('#editModal').modal('hide');
+                                 $("#flagDayListGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 notifSuccess(response.message);
+                             }
+                        )
+                    }
+                });
+            });
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                    }
+                });
+            });
+            $('#btnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                    }
+                });
+            });
+        });
+
+        function dropDownOnChange() {
+            var $selected1 = $('#flagDayYears').find(':selected'),
+                $selected2 = $('#flagDayTypes').find(':selected'),
+                $grid = $('#flagDayListGridTable');
+            $grid.jqGrid('clearGridData');
+            $grid.jqGrid('setGridParam');
+            var postData = $grid.jqGrid('getGridParam', 'postData');
+            $.extend(postData, { filters: "" });
+
+            if ($selected1.val() || $selected2.val()) {
+                $grid.removeClass('hide');
+                $grid.jqGrid('setGridParam', {
+                    url: listFlagDayListUrl + "?1=1&" + $('#SearchFlagDayListForm').serialize(),
+                    datatype: 'json',
+                });
+            } else {
+                $grid.addClass('hide');
+                $grid.jqGrid('setGridParam', {
+                    datatype: 'local'
+                });
+            };
+            //$grid.jqGrid('setGridParam', { footerrow: true });
+            $grid.trigger("reloadGrid", [{ page: 1 }]);
+        }
+
+        function initUserGrid() {
+            var actionUrl = listFlagDayListUrl;
+            var $grid = $('#flagDayListGridTable');
+            var pager_selector = '#flagDayListGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                width: 600,
+                rownumbers: false,
+                headertitles: true,
+                //FalseFit: false,
+                sortname: 'flagDayDate',
+                sortorder: 'asc',
+                url: actionUrl,
+                datatype: 'local',
+
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.FlagDayListId)',
+                     '@Html.DisplayNameFor(m => m.FlagDayYear)',
+                     '@Html.DisplayNameFor(m => m.FlagDayType)',
+                    '@Html.DisplayNameFor(m => m.FlagDayDate)'
+
+                ],
+                colModel: [{
+                    name: 'flagDayListId',
+                    jsonmap: 'flagDayListId',
+                    width: '4',
+                    hidden: true
+                }, {
+                    name: 'flagDayYear',
+                    jsonmap: 'flagDayYear',
+                    width: '4',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.FlagDayYears))
+                        }
+                }, {    
+                    name: 'flagDayType',
+                    jsonmap: 'flagDayType',
+                    width: '4',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.FlagDayTypes))
+                        }                    
+                }, {
+                    name: 'flagDayDate',
+                    jsonmap: 'flagDayDate',
+                    template: dateTemplate,
+                    width: '4'
+                }],
+                loadComplete: defaultGridLoadComplete,
+
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                id: "navImportBtn",
+                buttonicon: "icon-upload-alt",
+                onClickButton: onImportEvent,
+                position: "first",
+                title: "Import Flag Day List(s)",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                id: 'navAddNewBtn',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function doShowModal() {
+                $('#flagDayListForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                $('#editModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function doEditRecord(data) {
+                if (!isFdApprover)
+                    return;
+
+                var actionUrl = getFlagDayListUrl.replace("-1", data.flagDayListId);
+
+                ajaxGet(actionUrl,
+                        function (response) {
+                            $('#rowVersion').val(response.data.rowVersion);
+                            $('#flagDayListId').prop('readonly', true).val(response.data.flagDayListId);
+                            $('#FlagDayYearEdit').prop('readonly', true).val(response.data.flagDayYear);
+                            $('#flagDayDate').datepicker('setDate', (toDDMMYYYY(response.data.flagDayDate)));
+                            $('#flagDayTypes2').select2('val', response.data.flagDayType);
+                            $('#flagDayYear').val(response.data.flagDayYear);
+                            $('#btnCreateFlagDayList').addClass('hide');
+                            $('#btnUpdateFlagDayList').removeClass('hide');
+                            $('#btnDeleteFlagDayList').removeClass('hide');
+                            doShowModal();
+                        }
+                );
+            };
+
+            function doNewRecord() {
+                setDefaultYear();
+                $('#rowVersion').val('');
+                $('#flagDayListIdfrm').addClass('hide');
+                $('#flagDayDate').datepicker('setDate', '');
+                $('#flagDayTypes2').select2('val', '');
+                $('#flagDayYear').val('');
+                $('#flagDayListId').val('');
+                $('#btnCreateFlagDayList').removeClass('hide');
+                $('#btnUpdateFlagDayList').addClass('hide');
+                $('#btnDeleteFlagDayList').addClass('hide');
+                doShowModal();
+            };
+
+            function onImportEvent() {
+                $('#importFlagDayListXlsFile').val('');
+                $('#errorMsgDiv').hide();
+                $('#importFlagDayListXlsFileModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            }
+            function setDefaultYear() {
+                var date = new Date();
+                var currentYear = date.getFullYear();
+                var yearPrv = currentYear % 100;
+                var year = (yearPrv + 1) + '-' + (yearPrv + 2);
+                $('#FlagDayYearEdit').prop('readonly', true).val(year);
+            }
+        };
+    </script>
+}

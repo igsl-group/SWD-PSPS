@@ -1,0 +1,346 @@
+﻿@model Psps.Web.ViewModels.Account.ProfileViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.My_Profile;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="listProlideUserForm" name="listProlideUserForm" class="form-horizontal" role="form">
+
+    <fieldset>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-lf-code">Organisation Reference:</label>
+            <div class="col-xs-4">
+                <div class="input-group" style="float: left">
+                    <label class="control-label">ORG</label>
+                </div>
+                <div class="input-group">
+                    <input id="agency-lf-code" class="form-control" type="text">
+                </div>
+            </div>
+            <label class="col-xs-2 control-label" for="agency-lf-code">Organisation Name (Eng / Chi):</label>
+            <div class="col-xs-4">
+                <div class="input-group">
+                    <input id="agency-lf-code" class="form-control" type="text">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-head">Organisation Status:</label>
+            <div class="col-xs-4">
+                <div class="input-group">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost">
+                </div>
+            </div>
+            <label class="col-xs-2 control-label" for="post">Subvented:</label>
+            <div class="col-xs-4">
+                <div class="input-group">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-lf-code">Registration:</label>
+            <div class="col-xs-8">
+                <div class="input-group" style="float: left">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost" style="width: 200px">
+                </div>
+                <div class="input-group">
+                    <input id="agency-lf-code" class="form-control" type="text" style="width: 300px">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-lf-code">Record Type:</label>
+            <div class="col-xs-8">
+                <div class="input-group" style="float: left">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost" style="width: 200px">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-lf-code">Enquiry Reference No:</label>
+            <div class="col-xs-4">
+                <div class="input-group" style="float: left">
+                    <input id="agency-lf-code" class="form-control" type="text" required style="width: 80px;" value="2013">
+                    <label class="control-label">(YYYY)(</label>
+                </div>
+                <div class="input-group">
+                    <input id="agency-lf-code" class="form-control" type="text" required style="width: 120px;">
+                    <label class="control-label">)</label>
+                </div>
+            </div>
+            <label class="col-xs-1 control-label" for="agency-lf-code">Date of Enquiry:</label>
+            <div class="col-xs-5">
+                <div class="input-group">
+                    <input id="agency-lf-code" class="form-control" type="text" data-provide="datepicker">
+                    <label>to</label>
+                    <input id="agency-lf-code" class="form-control" type="text" data-provide="datepicker">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-lf-code">Source:</label>
+            <div class="col-xs-8">
+                <div class="input-group" style="float: left">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost" style="width: 200px">
+                </div>
+                <div class="input-group">
+                    <input id="agency-lf-code" class="form-control" type="text" style="width: 300px">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-lf-code">Activity Concerned:</label>
+            <div class="col-xs-8">
+                <div class="input-group" style="float: left">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost" style="width: 200px">
+                </div>
+                <div class="input-group">
+                    <input id="agency-lf-code" class="form-control" type="text" style="width: 300px">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="PermitNo">Location of Fund-Raising.:</label>
+            <div class="col-xs-4">
+                <input id="PermitNo" class="form-control" type="text">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-lf-code">Nature of Non-compliance:</label>
+            <div class="col-xs-8">
+                <div class="input-group" style="float: left">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost" style="width: 200px">
+                </div>
+                <div class="input-group">
+                    <input id="agency-lf-code" class="form-control" type="text" style="width: 300px">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-lf-code">Follow-up Action Taken:</label>
+            <div class="col-xs-8">
+                <div class="input-group" style="float: left">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost" style="width: 200px">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="agency-lf-code">Order By:</label>
+            <div class="col-xs-8">
+                <div class="input-group" style="float: left">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost" style="width: 200px">
+                </div>
+                <div class="input-group">
+                    <input id="post" class="form-control" data-provide="select2" data-select2-data="dataPost" style="width: 200px">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnSearch" type="button" class="btn btn-sm btn-primary">
+                    <span class="icon-ok"></span>Search PSP Application</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="vspace-6"></div>
+<fieldset>
+    <legend>Enquiry Search Result</legend>
+</fieldset>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="grid-stretch-container">
+            <table id="GridTable"></table>
+            <div id="GridPager"></div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var editUserUrl = '@Url.RouteUrl("ProfileEditUser", new { userId = "placeholder" })';
+        var createActingUrl = '@Url.RouteUrl("ProfileCreateActing")';
+        var updateActingUrl = '@Url.RouteUrl("ProfileUpdateActing", new { actingId = -1 })';
+        var listActingUrl = '@Url.RouteUrl("ProfileListActing")';
+        var deleteActingUrl = '@Url.RouteUrl("ProfileDeteteActing", new { actingId = -1 })';
+        var homeUrl = '@Url.RouteUrl("Home")';
+        $(function () {
+            initGrid();
+            $('#btnSearch').click(function () {
+
+            });
+        });
+
+        function initGrid() {
+            var $grid = $('#GridTable');
+            var pager_selector = '#GridPager';
+            //var actionUrl = getActing.replace('-1', $('#postId').val());
+            $grid.jqGrid({
+                pager: pager_selector,
+                datatype: "local",
+                sortorder: 'asc',
+                colNames: [
+                    'Organisation Reference(if Applicable)',
+                    'Eng & Chi Organisation Names(if Applicable)',
+                    'Subvented(if Applicable)',
+                    'Record Type',
+                    'Complaint / Enquiry Reference No.',
+                    'Source',
+                    'Date of Complaint / Enquiry',
+                    'Permit Concerned(if Applicable)',
+                    'Enclosure No.in Action File',
+                    'Processing Status',
+                    'Follow-up Action',
+                    'Action'
+                ],
+                colModel: [{
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'post',
+                    width: '6'
+                }, {
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'post',
+                    width: '4'
+                }, {
+                    name: 'rowAction',
+                    index: '',
+                    width: 70,
+                    fixed: true,
+                    sortable: false,
+                    search: false,
+                    resize: false,
+                    formatter: 'actions',
+                    formatoptions: {
+                        keys: true,
+                        delOptions: {
+                            recreateForm: true,
+                            beforeShowForm: beforeDeleteCallback,
+                            onclickSubmit: function (options, rowId) {
+                                var data = $grid.jqGrid('getRowData', rowId);
+                                options.url = deleteActingUrl.replace('-1', data.actingId);
+                                return {
+                                    "rowVersion": data.rowVersion
+                                };
+
+                            },
+                            afterSubmit: function (response, postData) {
+                                notifSuccess(response.responseJSON.message);
+                                return [true, '', "response.responseText"];
+                            }
+                        },
+                        editbutton: false
+                    }
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    //alert(data.actingId);
+                    //doEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function doShowModal() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                $('#editModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+            function displayInput() {
+                $('#editModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function doEditRecord(data) {
+                $('#actingId').val(data.actingId);
+
+                $('#btnUpdateActing').removeClass('hide');
+                $('#btnCreateActing').addClass('hide');
+                $('#rowVersion').val(data.rowVersion);
+
+                $("#assignTos").select2("val", data.assignToUserId);
+                $('#effectivefrom').val(data.effectiveFrom);
+                $('#effectiveto').val(data.effectiveTo);
+
+                doShowModal();
+
+            };
+
+            function doNewRecord() {
+                displayInput();
+                clearForm('#editModal');
+                $('#rowVersion').val('');
+                $('#assignto').val('');
+                $('#effectivefrom').val('');
+                $('#effectiveto').val('');
+                $('#btnCreateActing').removeClass('hide');
+                $('#btnUpdateActing').addClass('hide');
+                doShowModal();
+            };
+        };
+    </script>
+}

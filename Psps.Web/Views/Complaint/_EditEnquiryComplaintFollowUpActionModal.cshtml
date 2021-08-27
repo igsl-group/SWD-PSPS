@@ -1,0 +1,225 @@
+﻿<div class="tab-pane" id="followUpAction">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="followUpAction-grid-table"></table>
+                <div id="followUpAction-grid-pager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var listFollowUpActionUrl = '@Url.RouteUrl("ListFollowUpAction", new { complaintMasterId = -1 })';
+    var getComplaintFollowUpActionUrl = '@Url.RouteUrl("GetComplaintFollowUpAction", new { complaintFollowUpActionId = -1 })';
+    var exportComplaintFollowUpActionUrl = '@Url.RouteUrl("ExportComplaintFollowUpAction", new { complaintMasterId = -1 })';
+
+    function initFollowUpActionGrid() {
+        var actionUrl = listFollowUpActionUrl.replace("-1", $("#complaintMasterId").val());
+        var $grid = $("#followUpAction-grid-table");
+        var pager_selector = "#followUpAction-grid-pager";
+
+        if ($grid.isJqGrid()) {
+            $grid.reloadJqGrid();
+            return;
+        }
+
+        $grid.jqGrid({
+            pager: pager_selector,
+            url: actionUrl,
+            sortname: 'enclosureNum',
+            sortorder: 'asc',
+            datatype: 'json',
+            colModel: [{
+                name: 'enclosureNum',
+                label: 'Enclosure Number',
+                index: 'enclosureNum',
+                width: 60,
+            }, {
+                name: 'verbalReportDate',
+                label: 'Date',
+                index: 'verbalReportDate',
+                template: dateTemplate,
+                width: 60,
+            }, {
+                name: 'followUpActionType',
+                label: 'Follow-up Action',
+                sortable: false,
+                width: 450,
+            }, {
+                name: 'complaintFollowUpActionId',
+                hidden: true,
+            }],
+            editurl: "/dummy.html", //nothing is saved
+            loadComplete: defaultGridLoadComplete,
+            ondblClickRow: function (rowId, iRow, iCol, e) {
+                var data = $grid.jqGrid('getRowData', rowId);
+                var actionUrl = getComplaintFollowUpActionUrl.replace("-1", data.complaintFollowUpActionId);
+                ajaxGet(actionUrl,
+                    function (response) {
+                        onEditRecord(response.data);
+                    }
+                );
+            },
+            onSelectRow: function (rowId) {
+                $grid.setGridParam('editurl', 'organisation-edit?' + rowId);
+            }
+        });
+
+        //navButtons
+        $grid.jqGrid('navGrid', pager_selector, {
+            //navbar options
+            search: true,
+            refresh: true,
+        }, {}, {}, {}, {
+            //search form
+            recreateForm: true,
+            afterShowSearch: defaultSearchFormAfterShowSearch,
+            afterRedraw: defaultSearchFormAfterRedraw
+        }, {}).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-download-alt",
+            onClickButton: onExportRecord,
+            position: "first",
+            title: "Export Data",
+            cursor: "pointer"
+        }).jqGrid('navButtonAdd', pager_selector, {
+            caption: "",
+            buttonicon: "icon-plus",
+            onClickButton: onNewRecord,
+            position: "first",
+            title: "New Record",
+            cursor: "pointer"
+        });
+
+        function displayFollowUpActionInput() {
+            $('#followUpComplaintMasterId').val($('#complaintMasterId').val());
+            $('#edit-followUpAction-modal').modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            });
+        }
+
+        function onExportRecord() {
+            var grid = $('#followUpAction-grid-table');
+            var data = grid.jqGrid('getRowData');
+
+            if (data.length == 0) {
+                notifSuccess("Follow-up Action Taken Search Result is no Record");
+                return;
+            }
+            var actionUrl = exportComplaintFollowUpActionUrl.replace("-1", $("#complaintMasterId").val());
+            grid.exportGrid(actionUrl,
+                function (response) {
+                    window.location.href = response.data;
+                }
+            );
+        };
+
+        function onEditRecord(data) {
+            $("#btnSaveFollowUp").hide();
+            $("#btnUpdateFollowUp").show();
+            $("#btnDeleteFollowUp").show();
+            displayFollowUpActionInput();
+
+            $('#complaintFollowUpActionId').val(data.complaintFollowUpActionId);
+            $('#followUpContactDate').datepicker('update', toDDMMYYYY(data.followUpContactDate));
+            $('#followUpContactOrgName').val(data.followUpContactOrgName);
+            $('#followUpContactPersonName').val(data.followUpContactPersonName);
+            $('#followUpEnclosureNum').val(data.followUpEnclosureNum);
+            $('#followUpFollowUpLetterType').select2('val', data.followUpFollowUpLetterType);
+            $('#followUpIndicator').checkboxVal(data.followUpIndicator);
+            $('#followUpEnclosureNum').val(data.followUpEnclosureNum);
+            $('#followUpLetterActionFileRefEnclosureNum').val(data.followUpLetterActionFileRefEnclosureNum);
+            $('#followUpLetterActionFileRefPartNum').val(data.followUpLetterActionFileRefPartNum);
+            $("#followUpLetterActionFileRefRemarkHtml").summernote('code', data.followUpLetterActionFileRefRemarkHtml);
+
+            $("#followUpLetterActionFollowUpOrgReplyHtml").summernote('code', data.followUpLetterActionFollowUpOrgReplyHtml);
+            
+            $('#followUpLetterActionFollowUpOrgReplyDate').datepicker('update', toDDMMYYYY(data.followUpLetterActionFollowUpOrgReplyDate));
+            $('#followUpLetterActionFollowUpOfficerName').val(data.followUpLetterActionFollowUpOfficerName);
+            $('#followUpLetterActionFollowUpOfficerPosition').val(data.followUpLetterActionFollowUpOfficerPosition);
+            $('#followUpLetterIssueDate').datepicker('update', toDDMMYYYY(data.followUpLetterIssueDate));
+            $('#followUpLetterReceiver').val(data.followUpLetterReceiver);
+            $("#followUpLetterRemarkHtml").summernote('code', data.followUpLetterRemarkHtml);
+            
+            $("#followUpOrgRemarkHtml").summernote('code', data.followUpOrgRemarkHtml);
+
+            $('#followUpPoliceOfficerName').val(data.followUpPoliceOfficerName);
+            $('#followUpActionFileRefEnclosureNum').val(data.followUpActionFileRefEnclosureNum);
+            $('#followUpActionFileRefPartNum').val(data.followUpActionFileRefPartNum);
+            $('#followUpPoliceStation').val(data.followUpPoliceStation);
+            $('#followUpReferralPoliceStation').val(data.followUpReferralPoliceStation);
+            $('#followUpReportPoliceIndicator').checkboxVal(data.followUpReportPoliceIndicator);
+            $('#followUpLetterActionPoliceInvestigation').select2('val', data.followUpLetterActionPoliceInvestigation);
+            $("#followUpLetterActionPoliceInvestigationResultHtml").summernote('code', data.followUpLetterActionPoliceInvestigationResultHtml);
+            
+            $('#followUpLetterActionPoliceReplyDate').datepicker('update', toDDMMYYYY(data.followUpLetterActionPoliceReplyDate));
+            $('#followUpConvictedPersonName').val(data.followUpConvictedPersonName);
+            $('#followUpConvictedPersonPosition').val(data.followUpConvictedPersonPosition);
+            $("#followUpOffenceDetailHtml").summernote('code', data.followUpOffenceDetailHtml);
+            
+            $("#followUpSentenceDetailHtml").summernote('code', data.followUpSentenceDetailHtml);
+            
+            $('#followUpCourtRefNum').val(data.followUpCourtRefNum);
+            $('#followUpCourtHearingDate').datepicker('update', toDDMMYYYY(data.followUpCourtHearingDate));
+            $("#followUpPoliceRemarkHtml").summernote('code', data.followUpPoliceRemarkHtml);
+            
+            $('#followUpLetterActionReferralPoliceOfficerName').val(data.followUpLetterActionReferralPoliceOfficerName);
+            $('#followUpLetterActionReferralPoliceOfficerPosition').val(data.followUpLetterActionReferralPoliceOfficerPosition);
+
+            $('#followUpRnNum').val(data.followUpRnNum);
+            $("#followUpRnRemarkHtml").summernote('code', data.followUpRnRemarkHtml);
+            
+            $('#followUpVerbalReportDate').datepicker('update', toDDMMYYYY(data.followUpVerbalReportDate));
+            $('#followUpWrittenReferralDate').datepicker('update', toDDMMYYYY(data.followUpWrittenReferralDate));
+            $('#followUpLetterActionOtherFollowUpIndicator').checkboxVal(data.followUpLetterActionOtherFollowUpIndicator);
+            $('#followUpLetterActionOtherFollowUpPartyName').val(data.followUpLetterActionOtherFollowUpPartyName);
+            $('#followUpLetterActionOtherFollowUpContactDate').datepicker('update', toDDMMYYYY(data.followUpLetterActionOtherFollowUpContactDate));
+            $("#followUpLetterActionOtherFollowUpRemarkHtml").summernote('code', data.followUpLetterActionOtherFollowUpRemarkHtml);
+            
+            $('#followUpLetterActionOtherFollowUpFileRefEnclosureNum').val(data.followUpLetterActionOtherFollowUpFileRefEnclosureNum);
+            $('#followUpLetterActionOtherFollowUpFileRefPartNum').val(data.followUpLetterActionOtherFollowUpFileRefPartNum);
+            $('#followUpLetterActionOtherFollowUpOfficerName').val(data.followUpLetterActionOtherFollowUpOfficerName);
+            $('#followUpLetterActionOtherFollowUpOfficerPosition').val(data.followUpLetterActionOtherFollowUpOfficerPosition);
+
+            if (data.followUpIndicator == true) {
+                var $div = $("#orgFollowUpDiv");
+                $div.find('input').attr("disabled", false);
+                $div.find('textarea').attr("disabled", false);
+                $("#followUpFollowUpLetterType").attr("disabled", false);
+                $div.find('.wysiwyg-editor').each(function () { $(this).summernote('enable'); });
+            }
+            if (data.followUpReportPoliceIndicator == true) {
+                var $div = $("#rptPoliceDiv");
+                $div.find('input').attr("disabled", false);
+                $div.find('textarea').attr("disabled", false);
+                $("#followUpLetterActionPoliceInvestigation").attr("disabled", false);
+                $div.find('.wysiwyg-editor').each(function () { $(this).summernote('enable'); });
+            }
+            if (data.followUpLetterActionOtherFollowUpIndicator == true) {
+                var $div = $("#otherFollowUpDiv");
+                $div.find('input').attr("disabled", false);
+                $div.find('textarea').attr("disabled", false);
+                $div.find('.wysiwyg-editor').each(function () { $(this).summernote('enable'); });
+            }
+        };
+
+        function onNewRecord() {
+            clearForm('#edit-followUpAction-modal');
+            displayFollowUpActionInput();
+            var orgName = $("#orgRef").select2("val") ? $("#orgRef").select2("data").text : $("#concernedOrgName").val();
+            $("#followUpContactOrgName").val(orgName);
+            $("#followUpLetterReceiver").val(orgName);
+            $('#followUpLetterActionFollowUpOfficerName').val('@CurrentUser.Name');
+            $('#followUpLetterActionFollowUpOfficerPosition').val('@CurrentUser.PostId');
+            $('#followUpLetterActionReferralPoliceOfficerName').val('@CurrentUser.Name');
+            $('#followUpLetterActionReferralPoliceOfficerPosition').val('@CurrentUser.PostId');
+            $('#followUpLetterActionOtherFollowUpOfficerName').val('@CurrentUser.Name');
+            $('#followUpLetterActionOtherFollowUpOfficerPosition').val('@CurrentUser.PostId');
+            $('#followUpActionForm').find('.wysiwyg-editor').each(function () { $(this).summernote('reset'); });
+            $('#followUpActionForm').find('.wysiwyg-editor').each(function () { $(this).summernote('disable'); });
+        };
+    };
+</script>

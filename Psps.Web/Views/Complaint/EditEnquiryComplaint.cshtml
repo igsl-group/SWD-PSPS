@@ -1,0 +1,904 @@
+﻿@model Psps.Web.ViewModels.Complaint.EditEnquiryComplaintViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Enquiry_And_Complaint;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-header">
+    <h1>Enquiry and Complaint
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Edit
+        </small>
+    </h1>
+</div>
+<form id="editEnquiryComplaintForm" class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="orange-skin ui-jqgrid">
+                <div class="ui-jqgrid-hdiv" style="width: 100%;">
+                    <table id="funcTable" class="ui-jqgrid-htable" style="width: 100%;">
+                        <thead>
+                            <tr id="tableHead" class="ui-jqgrid-labels">
+                                <th class="ui-th-column ui-th-ltr" style="width: 10%">
+                                    <div class="ui-jqgrid-sortable">Org.Ref.</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 35%">
+                                    <div class="ui-jqgrid-sortable">Org.Name (Eng. and Chinese)</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 15%">
+                                    <div class="ui-jqgrid-sortable">Withholding Status</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 20%">
+                                    <div class="ui-jqgrid-sortable">
+                                        Contact Person<br>
+                                        (Latest PSP: <span id="lblPspRef"></span>)
+                                    </div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 20%">
+                                    <div class="ui-jqgrid-sortable">
+                                        Contact Person<br>
+                                        (Latest FD: <span id="lblFdRef"></span>)
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="ui-jqgrid-btable" style="color: #393939;">
+                            <tr id="tableHeadDataRow" class="ui-widget-content ui-row-ltr">
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblOrgRef"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblEngOrgName"></label>
+                                    <br />
+                                    <label id="lblChiOrgName"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblWithholdingBeginDate"></label>
+                                    <label id="lblWithholdingEndDate"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblPspContactPersonName"></label>
+                                    <br />
+                                    <label id="lblPspContactPersonEmailAddress"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblFdContactPersonName"></label>
+                                    <br />
+                                    <label id="lblFdContactPersonEmailAddress"></label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hr hr-10"></div>
+    <div id="details">
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a href="#overview" data-toggle="tab">Enquiry / Complaint Details</a>
+            </li>
+            <li>
+                <a href="#telRecord" data-toggle="tab">Telephone Record&nbsp;<span id="complaintTelRecordAmt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#followUpAction" data-toggle="tab">Follow-up Action Taken&nbsp;<span id="followupActionAmt" class="badge">0</span></a>
+            </li>
+            <li id="policeCaseTab" class="hide">
+                <a href="#policeCase" data-toggle="tab">Case Investigated by Police&nbsp;<span id="policeCaseAmt" class="badge">0</span></a>
+            </li>
+            <li id="otherDepartmentEnquiryTab" class="hide">
+                <a href="#otherDepartmentEnquiry" data-toggle="tab">Enquiry from Other Dept./Authorities&nbsp;<span id="otherDepartmentEnquiryAmt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#complaintResultTab" data-toggle="tab">Complaint Result&nbsp;<span id="complaintResultAmt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#letters" data-toggle="tab">Template&nbsp;<span id="complaintDocAmt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#attachment" data-toggle="tab">Attachment&nbsp;<span id="complaintAttachmentAmt" class="badge">0</span></a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            @{Html.RenderAction("RenderEditEnquiryComplaintDetailsModal");}
+            @{Html.RenderAction("RenderEditEnquiryComplaintLettersModal");}
+            @{Html.RenderAction("RenderEditEnquiryComplaintAttachmentModal");}
+            @{Html.RenderAction("RenderEditEnquiryComplaintTelRecordModal");}
+            @{Html.RenderAction("RenderEditEnquiryComplaintFollowUpActionModal");}
+            @{Html.RenderAction("RenderEditEnquiryComplaintPoliceCaseModal");}
+            @{Html.RenderAction("RenderEditEnquiryComplaintOtherDepartmentEnquiryModal");}
+            @{Html.RenderAction("RenderEditEnquiryComplaintResultModal");}
+        </div>
+    </div>
+</form>
+@*<form class="form-horizontal">
+    <div id="orgId-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnCloseOrgIdModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search Organisation</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="orgId-grid-table"></table>
+                                <div id="orgId-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelOrgIdModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>*@
+@*<form class="form-horizontal">
+    <div id="pspPermitNum-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnClosePspPermitNumModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search PSP Permit Number</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="pspPermitNum-grid-table"></table>
+                                <div id="pspPermitNum-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelPspPermitNumModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<form class="form-horizontal">
+    <div id="fdPermitNum-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnCloseFdPermitNumModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search FD Permit Number</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="fdPermitNum-grid-table"></table>
+                                <div id="fdPermitNum-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelFdPermitNumModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>*@
+<form class="form-horizontal">
+    <div id="complaintCase-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnCloseComplaintCaseModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search Related Enquiry / Complaint Case</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="complaintCase-grid-table"></table>
+                                <div id="complaintCase-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelComplaintCaseModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="attachmentForm" name="attachmentForm" class="form-horizontal">
+    <div class="form-group">
+        <div class="col-xs-12">
+            <table id="SuggestionDocTable"></table>
+            <div id="suggestionDocGridPager"></div>
+        </div>
+    </div>
+
+    <div id="attachmentModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="attBtnClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Attachment Details</h4>
+                </div>
+
+                <div class="modal-body">
+                    <fieldset>
+                        @Html.TextBoxFor(m => m.complaintAttachmentId, true, htmlAttributes: new { @id = "complaintAttachmentId", @class = "form-control", @maxlength = 200, @type = "hidden" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FileName, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-6">
+                                @Html.TextBoxFor(m => m.FileName, true, htmlAttributes: new { @id = "fileName", @class = "form-control", @maxlength = 200 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(m => m.FileDescription, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.TextBoxFor(m => m.FileDescription, true, htmlAttributes: new { @id = "fileDescription", @class = "form-control", @maxlength = 1000 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AttachmentFile, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.FileFor(m => m.AttachmentFile, htmlAttributes: new { @id = "attachmentFile", @class = "form-control", @maxlength = 1000 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="attBtnCreate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button type="button" id="attBtnUpdate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="attBtnCancel" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@{Html.RenderAction("RenderEditEnquiryComplaintTelRecordDetailsModal");}
+@{Html.RenderAction("RenderEditEnquiryComplaintFollowUpActionDetailsModal");}
+@{Html.RenderAction("RenderEditEnquiryComplaintOtherDepartmentEnquiryDetailsModal");}
+@{Html.RenderAction("RenderEditEnquiryComplaintPoliceCaseDetailsModal");}
+@{Html.RenderAction("RenderEditEnquiryComplaintResultDetailsModal");}
+@section scripts {
+    <script type="text/javascript">
+        var enquiryComplaintListOrgMasterUrl = '@Url.RouteUrl("EnquiryComplaintListOrgMaster")';
+        var enquiryComplaintListPspApprovalHistoryUrl = '@Url.RouteUrl("EnquiryComplaintListPspApprovalHistory")';
+        var enquiryComplaintListFdApprovalHistoryUrl = '@Url.RouteUrl("EnquiryComplaintListFdApprovalHistory")';
+        var enquiryComplaintListComplaintCaseUrl = '@Url.RouteUrl("EnquiryComplaintListComplaintCase")';
+
+        var editEnquiryComplaintDetailUrl = '@Url.RouteUrl("EditEnquiryComplaintDetail")';
+
+        var createComplaintAttachmentUrl = '@Url.RouteUrl("CreateComplaintAttachment", new { complaintMasterId = "placeholder" })';
+        var updateComplaintAttachmentUrl = '@Url.RouteUrl("UpdateComplaintAttachment")';
+
+        var searchOrganisationUrl = '@Url.RouteUrl("SearchOrganisation")';
+        var getOrganisationUrl = '@Url.RouteUrl("GetOrganisation", new { orgRef = "orgRef" })';
+
+        var searchComplaintRefUrl = '@Url.RouteUrl("SearchComplaintRef")';
+        var getComplaintRefUrl = '@Url.RouteUrl("GetComplaintRef", new { complaintMasterId = "complaintMasterId" })';
+
+        var searchPspPermitNumUrl = '@Url.RouteUrl("SearchComplaintListPspApprovalHistory")';
+        var getPspApprovalHistoryUrl = '@Url.RouteUrl("GetComplaintListPspApprovalHistory", new { pspApprovalHistoryId = -1 })';
+
+        var searchFdPermitNumUrl = '@Url.RouteUrl("SearchComplaintListFdApprovalHistory")';
+        var getFdEventUrl = '@Url.RouteUrl("GetFdEventFromGrid", new { fdEventId = -1 })';
+
+        var editOrgMasterUrl = '@Url.RouteUrl("EditOrgMaster", new { code = -1, ReturnUrl = -2 })';
+
+        var pageSize = 10;
+
+        var calEditEnquiryComplaintRelevantRecordsAmountUrl = '@Url.RouteUrl("CalEditEnquiryComplaintRelevantRecordsAmount", new { complaintMasterId = -1 })';
+        var prePage;
+        var array;
+        $(function ($) {
+            array = @Html.Raw(Json.Encode(@Model.NonComplianceNature))
+            $(".page-header:first").remove();
+            $("#complaintMasterId").val(@Html.Raw(Json.Encode(@Model.ComplaintMasterId)));
+            $("#cpResultComMasterId").val($("#complaintMasterId").val());
+            prePage =@Html.Raw(Json.Encode(@Model.PrePage))
+            initEditEnquiryComplaintForm();
+            //initOrgIdGrid();
+            //initPspPermitNumGrid();
+            //initFdPermitNumGrid();
+            initComplaintCaseGrid();
+            calRelevantRecordsAmount();
+
+            $("#complaintSource").change(function () {
+                showHideTab($(this).select2('val'));
+            });
+
+            $('#orgRef').initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+            $('#relatedComplaintMasterId').initComplaintRefSearchBox(searchComplaintRefUrl, getComplaintRefUrl, pageSize, "EDIT");
+
+            $('#policeCaseConcernOrgName').initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+            $('#pspApprovalHistoryId').initPspPermitSearchBox(searchPspPermitNumUrl, getPspApprovalHistoryUrl, pageSize, $("#orgRef"));
+            $('#fdEventId').initFdPermitSearchBox(searchFdPermitNumUrl, getFdEventUrl, pageSize, $("#orgRef"));
+
+            $('#pspApprovalHistoryId').change(function () {
+                if ($(this).select2('val'))
+                    $('#fdEventId').prop('readonly', true);
+                else
+                    $('#fdEventId').prop('readonly', false);
+            });
+
+            $('#fdEventId').change(function () {
+                if ($(this).select2('val'))
+                    $('#pspApprovalHistoryId').prop('readonly', true);
+                else
+                    $('#pspApprovalHistoryId').prop('readonly', false);
+            });
+
+            $('#attBtnCreate').click(function () {
+                var $form = $("#attachmentForm");
+                if ($form.valid()) {
+                    var actionUrl = createComplaintAttachmentUrl.replace("placeholder", $('#complaintMasterId').val());;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#attachmentModal').modal('hide');
+                             $("#attachment-grid-table").trigger("reloadGrid", [{ current: true }]);
+                             //calRelevantRecordsAmount();
+                             calRelevantRecordsAmount();
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#attBtnUpdate').click(function () {
+                var $form = $("#attachmentForm");
+                if ($form.valid()) {
+                    var actionUrl = updateComplaintAttachmentUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#attachmentModal').modal('hide');
+                             $("#attachment-grid-table").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#attBtnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#attachmentModal').modal('hide');
+                        clearForm('#attachmentForm');
+                        $('attachmentForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                    }
+                });
+            });
+
+            $('#attBtnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#attachmentModal').modal('hide');
+                        clearForm('#attachmentForm');
+                        $('attachmentForm .alert.alert-block.alert-warning.validation-summary-errors').remove();
+                    }
+                });
+            });
+
+            $('#tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                switch (e.target.hash) {
+                    case "#attachment":
+                        initAttachmentGrid();
+                        break;
+                    case "#telRecord":
+                        initTelRecordGrid();
+                        break;
+                    case "#followUpAction":
+                        initFollowUpActionGrid();
+                        break;
+                    case "#policeCase":
+                        initPoliceCaseGrid();
+                        break;
+                    case "#otherDepartmentEnquiry":
+                        initOtherDepartmentEnquiryGrid();
+                        break;
+                    case "#complaintResultTab":
+                        initComplaintResultGrid();
+                        break;
+                    case "#letters":
+                        initTemplateGrid();
+                        break;
+                }
+            });
+
+            //$('#btnOrgIdModal').click(function () {
+            //    var actionUrl = enquiryComplaintListOrgMasterUrl;
+            //    var $grid = $('#orgId-grid-table');
+            //    $grid.jqGrid('clearGridData');
+            //    $grid.jqGrid('setGridParam', { search: false });
+            //    var postData = $grid.jqGrid('getGridParam', 'postData');
+            //    $.extend(postData, { filters: "" });
+            //    $grid.jqGrid('setGridParam', {
+            //        url: actionUrl,
+            //        datatype: 'json',
+            //    });
+            //    $grid.trigger("reloadGrid", [{ page: 1 }]);
+            //    $('#orgId-modal').modal({
+            //        backdrop: 'static',
+            //        show: true,
+            //        keyboard: false
+            //    });
+            //});
+
+            //$('#btnCloseOrgIdModal').click(function () {
+            //    $('#orgId-modal').modal('hide');
+            //});
+
+            //$('#btnCancelOrgIdModal').click(function () {
+            //    $('#orgId-modal').modal('hide');
+            //});
+
+            //$('#btnPspPermitNumModal').click(function () {
+            //    var actionUrl = enquiryComplaintListPspApprovalHistoryUrl;
+            //    var $grid = $('#pspPermitNum-grid-table');
+            //    $grid.jqGrid('clearGridData');
+            //    $grid.jqGrid('setGridParam', { search: false });
+            //    var postData = $grid.jqGrid('getGridParam', 'postData');
+            //    $.extend(postData, { filters: "" });
+            //    $grid.jqGrid('setGridParam', {
+            //        url: actionUrl,
+            //        datatype: 'json',
+            //    });
+            //    $grid.trigger("reloadGrid", [{ page: 1 }]);
+            //    $('#pspPermitNum-modal').modal({
+            //        backdrop: 'static',
+            //        show: true,
+            //        keyboard: false
+            //    });
+            //});
+
+            //$('#btnClosePspPermitNumModal').click(function () {
+            //    $('#pspPermitNum-modal').modal('hide');
+            //});
+
+            //$('#btnCancelPspPermitNumModal').click(function () {
+            //    $('#pspPermitNum-modal').modal('hide');
+            //});
+
+            //$('#btnFdPermitNumModal').click(function () {
+            //    var actionUrl = enquiryComplaintListFdApprovalHistoryUrl;
+            //    var $grid = $('#fdPermitNum-grid-table');
+            //    $grid.jqGrid('clearGridData');
+            //    $grid.jqGrid('setGridParam', { search: false });
+            //    var postData = $grid.jqGrid('getGridParam', 'postData');
+            //    $.extend(postData, { filters: "" });
+            //    $grid.jqGrid('setGridParam', {
+            //        url: actionUrl,
+            //        datatype: 'json',
+            //    });
+            //    $grid.trigger("reloadGrid", [{ page: 1 }]);
+            //    $('#fdPermitNum-modal').modal({
+            //        backdrop: 'static',
+            //        show: true,
+            //        keyboard: false
+            //    });
+            //});
+
+            //$('#btnCloseFdPermitNumModal').click(function () {
+            //    $('#fdPermitNum-modal').modal('hide');
+            //});
+
+            //$('#btnCancelFdPermitNumModal').click(function () {
+            //    $('#fdPermitNum-modal').modal('hide');
+            //});
+
+            $('#btnComplaintCaseModal').click(function () {
+                var actionUrl = enquiryComplaintListComplaintCaseUrl;
+                var $grid = $('#complaintCase-grid-table');
+                $grid.jqGrid('clearGridData');
+                $grid.jqGrid('setGridParam', { search: false });
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, { filters: "" });
+                $grid.jqGrid('setGridParam', {
+                    url: actionUrl,
+                    datatype: 'json',
+                });
+                $grid.trigger("reloadGrid", [{ page: 1 }]);
+                $('#complaintCase-modal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            });
+
+            $('#btnCloseComplaintCaseModal').click(function () {
+                $('#complaintCase-modal').modal('hide');
+            });
+
+            $('#btnCancelComplaintCaseModal').click(function () {
+                $('#complaintCase-modal').modal('hide');
+            });
+
+            $('#tableHeadDataRow').dblclick(function () {
+                if ('@Model.OrgMasterId' != "") {
+                    doEditOrgMasterRecord('@Model.OrgMasterId');
+                }
+            });
+
+            //initAttachmentGrid();
+            if ('@Model.OrgMasterId' != "") {
+                onEditTopTable();
+            }
+        });
+
+        function showHideTab(val) {
+            $('#policeCaseTab').addClass('hide');
+            $('#otherDepartmentEnquiryTab').addClass('hide');
+
+            if (val == '04')
+                $('#otherDepartmentEnquiryTab').removeClass('hide');
+            else if (val == '08')
+                $('#policeCaseTab').removeClass('hide');
+        }
+
+        function onEditTopTable() {
+            $("#lblOrgRef").text('@Model.OrgRef');
+            $("#lblEngOrgName").html('@Model.OrgEngName');
+            $("#lblChiOrgName").html('@Model.OrgChiName');
+            if ('@Model.LblWithholdingBeginDate' != null && '@Model.LblWithholdingBeginDate' != "") {
+                $("#lblWithholdingBeginDate").text("From " + '@Model.LblWithholdingBeginDate');
+            }
+            if ('@Model.LblWithholdingEndDate' != null && '@Model.LblWithholdingEndDate' != "") {
+                $("#lblWithholdingEndDate").text("To " + '@Model.LblWithholdingEndDate');
+            }
+            $("#lblPspRef").text('@Model.LblPspRef');
+            $("#lblPspContactPersonName").text('@Model.LblPspContactPersonName');
+            $("#lblPspContactPersonEmailAddress").text('@Model.LblPspContactPersonEmailAddress');
+            $("#lblFdRef").text('@Model.LblFdRef');
+            $("#lblFdContactPersonName").text('@Model.LblFdContactPersonName');
+            $("#lblFdContactPersonEmailAddress").text('@Model.LblFdContactPersonEmailAddress');
+        }
+
+        //var orgIdGridInited = false;
+        //function initOrgIdGrid() {
+        //    if (orgIdGridInited)
+        //        return;
+        //    orgIdGridInited = true;
+
+        //    var $orgIDGrid = $("#orgId-grid-table");
+        //    var orgID_pager_selector = "#orgId-grid-pager";
+
+        //    $orgIDGrid.jqGrid({
+        //        pager: orgID_pager_selector,
+        //        sortname: 'orgRef',
+        //        sortorder: 'asc',
+        //        datatype: "local",
+        //        colNames: ['Org. Reference', 'Eng & Chi Organisation Name', 'Organisation Master ID', 'Eng Organisation Name', ''],
+        //        colModel: [{
+        //            name: 'orgRef',
+        //            width: '200',
+        //        }, {
+        //            name: 'orgName',
+        //            index: 'engOrgName',
+        //            width: '600',
+        //        }, {
+        //            name: 'orgId',
+        //            width: '200',
+        //            hidden: 'true',
+        //        }, {
+        //            name: 'engOrgName',
+        //            width: '200',
+        //            hidden: 'true',
+        //        }, {
+        //            name: 'chiOrgName',
+        //            width: '200',
+        //            hidden: 'true',
+        //        }],
+        //        loadComplete: defaultGridLoadComplete,
+        //        ondblClickRow: function (rowId, iRow, iCol, e) {
+        //            var data = $orgIDGrid.jqGrid('getRowData', rowId);
+        //            onSelectOrgId(data);
+        //        }
+        //    });
+
+        //    //navButtons
+        //    $orgIDGrid.jqGrid('navGrid', orgID_pager_selector, {
+        //        //navbar options
+        //        search: true,
+        //        refresh: true,
+        //    }, {}, {}, {}, {
+        //        //search form
+        //        recreateForm: true,
+        //        afterShowSearch: defaultSearchFormAfterShowSearch,
+        //        afterRedraw: defaultSearchFormAfterRedraw
+        //    }, {});
+
+        //    function onSelectOrgId(data) {
+        //        $('#orgId').val(data.orgId);
+        //        $('#orgRef').val(data.orgRef);
+        //        $('#concernedOrgEngName').text(data.engOrgName);
+        //        $('#concernedOrgChiName').text(data.chiOrgName);
+        //        $('#orgId-modal').modal('hide');
+        //    }
+        //};
+
+        //var pspPermitNumGridInited = false;
+
+        //function initPspPermitNumGrid() {
+        //    if (pspPermitNumGridInited)
+        //        return;
+        //    pspPermitNumGridInited = true;
+
+        //    var $pspPermitNumGrid = $("#pspPermitNum-grid-table");
+        //    var pager_selector = "#pspPermitNum-grid-pager";
+
+        //    $pspPermitNumGrid.jqGrid({
+        //        pager: pager_selector,
+        //        //sortname: 'orgRef',
+        //        //sortorder: 'asc',
+        //        datatype: "local",
+        //        colNames: ['Organisation Reference',
+        //            'Eng & Chi Organisation Name',
+        //            'Subvented',
+        //            'PSP File Reference',
+        //            'Permit No.',
+        //            'PspApprovalHistoryId'
+        //        ],
+        //        colModel: [{
+        //            name: 'orgRef',
+        //            index: 'pspMaster.OrgMaster.OrgRef',
+        //            width: '100',
+        //        }, {
+        //            name: 'orgName',
+        //            index: 'pspMaster.OrgMaster.EngOrgName',
+        //            width: '350',
+        //        }, {
+        //            name: 'subvented',
+        //            index: 'pspMaster.OrgMaster.SubventedIndicator',
+        //            template: yesNoTemplate,
+        //            width: '80',
+        //        }, {
+        //            name: 'pspRef',
+        //            index: 'pspMaster.PspRef',
+        //            width: '150',
+        //        }, {
+        //            name: 'permitNum',
+        //            index: 'permitNum',
+        //            width: '150',
+        //        }, {
+        //            name: 'pspApprovalHistoryId',
+        //            width: '200',
+        //            hidden: 'true',
+        //        }],
+        //        loadComplete: defaultGridLoadComplete,
+        //        ondblClickRow: function (rowId, iRow, iCol, e) {
+        //            var data = $pspPermitNumGrid.jqGrid('getRowData', rowId);
+        //            onSelectPspPermitNum(data);
+        //        }
+        //    });
+
+        //    //navButtons
+        //    $pspPermitNumGrid.jqGrid('navGrid', pager_selector, {
+        //        //navbar options
+        //        search: true,
+        //        refresh: true,
+        //    }, {}, {}, {}, {
+        //        //search form
+        //        recreateForm: true,
+        //        afterShowSearch: defaultSearchFormAfterShowSearch,
+        //        afterRedraw: defaultSearchFormAfterRedraw
+        //    }, {});
+
+        //    function onSelectPspPermitNum(data) {
+        //        $('#pspApprovalHistoryId').val(data.pspApprovalHistoryId);
+        //        $('#pspPermitNum').val(data.permitNum);
+        //        $('#pspPermitNum-modal').modal('hide');
+        //    }
+        //};
+
+        //var fdPermitNumGridInited = false;
+
+        //function initFdPermitNumGrid() {
+        //    if (fdPermitNumGridInited)
+        //        return;
+        //    fdPermitNumGridInited = true;
+
+        //    var $fdPermitNumGrid = $("#fdPermitNum-grid-table");
+        //    var pager_selector = "#fdPermitNum-grid-pager";
+
+        //    $fdPermitNumGrid.jqGrid({
+        //        pager: pager_selector,
+        //        //sortname: 'orgRef',
+        //        //sortorder: 'asc',
+        //        datatype: "local",
+        //        colNames: ['Organisation Reference',
+        //            'Eng & Chi Organisation Name',
+        //            'Subvented',
+        //            'FD File Reference',
+        //            'Permit No.',
+        //            'Flag Day',
+        //            'TWR',
+        //            'TWR Region',
+        //            'FdEventId'
+        //        ],
+        //        colModel: [{
+        //            name: 'orgRef',
+        //            width: '100',
+        //        }, {
+        //            name: 'orgName',
+        //            width: '250',
+        //        }, {
+        //            name: 'subvented',
+        //            template: yesNoTemplate,
+        //            width: '80',
+        //        }, {
+        //            name: 'fdRef',
+        //            width: '100',
+        //        }, {
+        //            name: 'permitNum',
+        //            width: '80',
+        //        }, {
+        //            name: 'flagDay',
+        //            template: dateTemplate,
+        //            width: '80',
+        //        }, {
+        //            name: 'twr',
+        //            width: '80',
+        //        }, {
+        //            name: 'twrDistrict',
+        //            width: '80',
+        //        }, {
+        //            name: 'fdEventId',
+        //            hidden: 'true',
+        //        }],
+        //        loadComplete: defaultGridLoadComplete,
+        //        ondblClickRow: function (rowId, iRow, iCol, e) {
+        //            var data = $fdPermitNumGrid.jqGrid('getRowData', rowId);
+        //            onSelectFdPermitNum(data);
+        //        }
+        //    });
+
+        //    //navButtons
+        //    $fdPermitNumGrid.jqGrid('navGrid', pager_selector, {
+        //        //navbar options
+        //        search: true,
+        //        refresh: true,
+        //    }, {}, {}, {}, {
+        //        //search form
+        //        recreateForm: true,
+        //        afterShowSearch: defaultSearchFormAfterShowSearch,
+        //        afterRedraw: defaultSearchFormAfterRedraw
+        //    }, {});
+
+        //    function onSelectFdPermitNum(data) {
+        //        $('#fdEventId').val(data.fdEventId);
+        //        $('#fdPermitNum').val(data.permitNum);
+        //        $('#fdPermitNum-modal').modal('hide');
+        //    }
+        //};
+
+        var complaintCaseGridInited = false;
+
+        function initComplaintCaseGrid() {
+            if (complaintCaseGridInited)
+                return;
+            complaintCaseGridInited = true;
+
+            var $complaintCaseGrid = $("#complaintCase-grid-table");
+            var pager_selector = "#complaintCase-grid-pager";
+
+            $complaintCaseGrid.jqGrid({
+                pager: pager_selector,
+                //sortname: 'orgRef',
+                //sortorder: 'asc',
+                datatype: "local",
+                colNames: ['Organisation Reference',
+                    'Eng & Chi Organisation Name',
+                    'Subvented',
+                    'Record Type',
+                    'Complaint / Enquiry Reference No.',
+                    'Source',
+                    'Activity Concerned',
+                    'Date of Complaint / Enquiry',
+                    'Processing Status',
+                    'ComplaintMaster Id'
+                ],
+                colModel: [{
+                    name: 'orgRef',
+                    index: 'orgMaster.OrgRef',
+                    width: '100',
+                }, {
+                    name: 'orgName',
+                    index: 'orgMaster.EngOrgName',
+                    width: '180',
+                }, {
+                    name: 'subvented',
+                    index: 'orgMaster.SubventedIndicator',
+                    template: yesNoTemplate,
+                    width: '80',
+                }, {
+                    name: 'complaintRecordType',
+                    width: '80',
+                }, {
+                    name: 'complaintRef',
+                    width: '80',
+                }, {
+                    name: 'complaintSource',
+                    width: '80',
+                }, {
+                    name: 'activityConcern',
+                    width: '80',
+                }, {
+                    name: 'complaintDate',
+                    template: dateTemplate,
+                    width: '80',
+                }, {
+                    name: 'processStatus',
+                    width: '80',
+                }, {
+                    name: 'complaintMasterId',
+                    hidden: 'true',
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $complaintCaseGrid.jqGrid('getRowData', rowId);
+                    onSelectComplaintCase(data);
+                }
+            });
+
+            //navButtons
+            $complaintCaseGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+
+            function onSelectComplaintCase(data) {
+                $('#relatedComplaintMasterId').select2("val", data.complaintMasterId);
+                $('#complaintCase-modal').modal('hide');
+            }
+        };
+
+        function calRelevantRecordsAmount() {
+            ajaxGet(calEditEnquiryComplaintRelevantRecordsAmountUrl.replace("-1", $('#complaintMasterId').val()),
+                function (response) {
+                    $('#complaintTelRecordAmt').html(response.data.complaintTelRecordAmt);
+                    $('#followupActionAmt').html(response.data.complaintFollowUpActionAmt);
+                    $('#policeCaseAmt').html(response.data.complaintPoliceCaseAmt);
+                    $('#otherDepartmentEnquiryAmt').html(response.data.complaintOtherDepartmentEnquiryAmt);
+                    $('#complaintResultAmt').html(response.data.complaintResultAmt);
+                    $('#complaintDocAmt').html(response.data.complaintDocAmt);
+                    $('#complaintAttachmentAmt').html(response.data.complaintAttachmentAmt);
+                }
+            );
+        }
+
+        function doEditOrgMasterRecord(orgMasterId) {
+
+            var returnUrl = window.location.pathname;
+            var actionUrl = editOrgMasterUrl.replace("-1", orgMasterId).replace("-2", returnUrl);
+            window.location = actionUrl;
+
+        };
+    </script>
+}

@@ -1,0 +1,1414 @@
+﻿@model Psps.Web.ViewModels.FlagDay.FlagDayViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.FlagDay_Edit_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form id="flagDayEditForm" class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="orange-skin ui-jqgrid">
+                <div class="ui-jqgrid-hdiv" style="width: 100%;">
+                    <table id="funcTable" class="ui-jqgrid-htable" style="width: 100%;">
+                        <thead>
+                            <tr id="tableHead" class="ui-jqgrid-labels">
+                                <th class="ui-th-column ui-th-ltr" style="width: 7%">
+                                    <div class="ui-jqgrid-sortable">Org.Ref.</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 35%">
+                                    <div class="ui-jqgrid-sortable">Org.Name (Eng. and Chinese)</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 10%">
+                                    <div class="ui-jqgrid-sortable">Withholding Status</div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 19%">
+                                    <div class="ui-jqgrid-sortable">
+                                        Contact Person<br>
+                                        (Latest PSP: <span id="lblPspRef"></span>)
+                                    </div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 19%">
+                                    <div class="ui-jqgrid-sortable">
+                                        Contact Person<br>
+                                        (Latest FD: <span id="lblFdRef"></span>)
+                                    </div>
+                                </th>
+                                <th class="ui-th-column ui-th-ltr" style="width: 10%">
+                                    <div class="ui-jqgrid-sortable">
+                                        FD Benchmark Status<br>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="ui-jqgrid-btable" style="color: #393939;">
+                            <tr id="tableHeadDataRow" class="ui-widget-content ui-row-ltr">
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblOrgRef"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblEngOrgName"></label>
+                                    <br />
+                                    <label id="lblChiOrgName"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblWithholdingBeginDate"></label>
+                                    <label id="lblWithholdingEndDate"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblPspContactPersonName"></label>
+                                    <br />
+                                    <label id="lblPspContactPersonEmailAddress"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblFdContactPersonName"></label>
+                                    <br />
+                                    <label id="lblFdContactPersonEmailAddress"></label>
+                                </td>
+                                <td class="ui-state-default jqgrid-rownum">
+                                    <label id="lblFdBenchmarkStatusPast2nd"></label>
+                                    <br />
+                                    <label id="lblFdBenchmarkStatusPast1st"></label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hr hr-10"></div>
+    <div id="details">
+        <a class="anchor" id="anchor-details"></a>
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a href="#flagDay" data-toggle="tab">Flag Day</a>
+            </li>
+            <li>
+                <a href="#fdEvent" data-toggle="tab">Flag Day Event<span id="fdEventCnt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#enquiryList" data-toggle="tab">Enquiry&nbsp;<span id="enquiryListCnt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#complaint" data-toggle="tab">Complaint&nbsp;<span id="complaintCnt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#template" data-toggle="tab">Template&nbsp;<span id="templateCnt" class="badge">0</span></a>
+            </li>
+            <li>
+                <a href="#attachment" data-toggle="tab">Attachment&nbsp;<span id="attachmentCnt" class="badge">0</span></a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="flagDay">
+                <fieldset>
+                    <legend>Flag Day Details</legend>
+
+                    @Html.BootstrapValidationSummary()
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+                    @Html.HiddenFor(m => m.FdMasterId, htmlAttributes: new { @id = "fdMasterId" })
+                    @{ Html.RenderPartial("_FlagDayDetail", Model); }
+
+                    <br>
+                    <legend>Account Summary</legend>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DocSubmission, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.DocSubmission, true, new SelectList(Model.DocSubmissions, "Key", "Value", Model.DocSubmission),
+                                                     htmlAttributes: new { @id = "docSubmission", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                        @Html.LabelFor(m => m.SubmissionDueDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.SubmissionDueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "submissionDueDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstReminderIssueDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.FirstReminderIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "firstReminderIssueDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.FirstReminderDeadline, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.FirstReminderDeadline, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "firstReminderDeadline", @class = "form-control", @data_provide = "datepicker", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SecondReminderIssueDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.SecondReminderIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "secondReminderIssueDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.SecondReminderDeadline, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.SecondReminderDeadline, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "secondReminderDeadline", @class = "form-control", @data_provide = "datepicker", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AuditReportReceivedDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.AuditReportReceivedDate, true, htmlAttributes: new { @id = "auditReportReceivedDate", @class = "form-control", @maxlength = 100 })                            
+                        </div>
+                        @Html.LabelFor(m => m.PublicationReceivedDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.PublicationReceivedDate, true, htmlAttributes: new { @id = "publicationReceivedDate", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DocReceiveRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.DocReceiveRemark, 4, 100, htmlAttributes: new { @id = "docReceiveRemark", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DocRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.DocRemark, 4, 100, htmlAttributes: new { @id = "docRemark", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StreetCollection, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.StreetCollection, true, htmlAttributes: new { @id = "streetCollection", @class = "form-control", @data_decimalFormat = "10,2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.GrossProceed, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.GrossProceed, true, htmlAttributes: new { @id = "grossProceed", @class = "form-control", @data_decimalFormat = "10,2" })
+                        </div>
+                        @Html.LabelFor(m => m.Expenditure, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.Expenditure, true, htmlAttributes: new { @id = "expenditure", @class = "form-control", @data_decimalFormat = "10,2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.NetProceed, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.NetProceed, true, htmlAttributes: new { @id = "netProceed", @class = "form-control", @data_decimalFormat = "10,2", @readonly = true })
+                        </div>
+                        @Html.LabelFor(m => m.ExpPerGpPercentage, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.ExpPerGpPercentage, true, htmlAttributes: new { @id = "expPerGpPercentage", @class = "form-control", @data_decimalFormat = "4,2", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.NewspaperPublishDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.NewspaperPublishDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "newspaperPublishDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.PledgedAmt, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.EditorFor(m => m.PledgedAmt, true, htmlAttributes: new { @id = "pledgedAmt", @class = "form-control", @data_decimalFormat = "10,2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AcknowledgementEmailIssueDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.AcknowledgementEmailIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "acknowledgementEmailIssueDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WithholdingListIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.WithholdingListIndicator, true, new SelectList(Model.WithholdingListIndicators, "Key", "Value", Model.WithholdingListIndicator),
+                                                     htmlAttributes: new { @id = "withholdingListIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WithholdingBeginDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.WithholdingBeginDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "withholdingBeginDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.WithholdingEndDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.WithholdingEndDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "withholdingEndDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WithholdingRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.WithholdingRemark, 4, 100, htmlAttributes: new { @id = "withholdingRemark", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AfsReceiveIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.AfsReceiveIndicator, true, new SelectList(Model.AfsReceiveIndicators, "Key", "Value", Model.AfsReceiveIndicator),
+                                                     htmlAttributes: new { @id = "afsReceiveIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                        @Html.LabelFor(m => m.RequestPermitteeIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.RequestPermitteeIndicator, true, new SelectList(Model.RequestPermitteeIndicators, "Key", "Value", Model.RequestPermitteeIndicator),
+                                                     htmlAttributes: new { @id = "requestPermitteeIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AfsReSubmitIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.AfsReSubmitIndicator, true, new SelectList(Model.AfsReSubmitIndicators, "Key", "Value", Model.AfsReSubmitIndicator),
+                                                     htmlAttributes: new { @id = "afsReSubmitIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                        @Html.LabelFor(m => m.AfsReminderIssueIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.DropDownListFor(m => m.AfsReminderIssueIndicator, true, new SelectList(Model.AfsReminderIssueIndicators, "Key", "Value", Model.AfsReminderIssueIndicator),
+                                                     htmlAttributes: new { @id = "afsReminderIssueIndicator", @class = "form-control ", @data_provide = "select2" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Remark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(m => m.Remark, 4, 100, htmlAttributes: new { @id = "remark", @class = "form-control", @maxlength = 4000 })
+                        </div>
+                    </div>
+                </fieldset>
+                <br>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
+                            <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                                <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                            <button id="btnUpdateFlagDay" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-ok"></span>@Labels.Update</button>
+                            <button id="btnClone" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-file"></span>@Labels.CopyToNew</button>
+                            @*
+                            <button id="btnTwoBatch" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-file"></span>@Labels.TwoBatches</button>
+                            <button id="btnAmendment" type="button" class="btn btn-primary btn-sm">
+                                <span class="icon-file"></span>@Labels.Amendment</button>*@
+                            <button id="btnCancel" type="button" class="btn btn-default btn-sm">
+                                <span class="icon-remove"></span>@Labels.Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="fdEvent">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table id="eventsGridTable"></table>
+                        <div id="eventsGridPager"></div>
+                        <input id="eventsFile" type="file" class="hide" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="enquiryList">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="enquiryGridTable"></table>
+                            <div id="enquiryGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="complaint">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="grid-stretch-container">
+                            <table id="complaintGridTable"></table>
+                            <div id="complaintGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="template">
+                @{Html.RenderAction("RenderFlagDayTemplateModal");}
+            </div>
+
+            <div class="tab-pane" id="attachment">
+                @{Html.RenderAction("RenderFdAttachmentModal");}
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="attachmentForm" name="attachmentForm" class="form-horizontal">
+    <div id="attachmentModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="attBtnClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Attachment Details</h4>
+                </div>
+
+                <div class="modal-body">
+                    @Html.HiddenFor(m => m.FlagDayAttachmentViewModel.FdMasterId, htmlAttributes: new { @id = "attFdMasterId" })
+                    @Html.HiddenFor(m => m.FlagDayAttachmentViewModel.RowVersion, htmlAttributes: new { @id = "attRowVersion" })
+                    <fieldset>
+                        @*                        @Html.TextBoxFor(m => m.FlagDayAttachmentViewModel.FdAttachmentId, true, htmlAttributes: new { @id = "fdAttachmentId", @class = "form-control", @maxlength = 200, @type = "hidden" })*@
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FlagDayAttachmentViewModel.FileName, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-6">
+                                @Html.TextBoxFor(m => m.FlagDayAttachmentViewModel.FileName, true, htmlAttributes: new { @id = "fileName", @class = "form-control", @maxlength = 200 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(m => m.FlagDayAttachmentViewModel.FileDescription, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.TextBoxFor(m => m.FlagDayAttachmentViewModel.FileDescription, true, htmlAttributes: new { @id = "fileDescription", @class = "form-control", @maxlength = 1000 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FlagDayAttachmentViewModel.AttachmentFile, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.FileFor(m => m.FlagDayAttachmentViewModel.AttachmentFile, htmlAttributes: new { @id = "attachmentFile", @class = "form-control", @maxlength = 1000 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="attBtnCreate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button type="button" id="attBtnUpdate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="attBtnCancel" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="fdEventForm" name="fdEventForm" class="form-horizontal">
+    <div id="fdEventModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnEventClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Event Details</h4>
+                </div>
+
+                <div class="modal-body">
+                    @Html.BootstrapValidationSummary()
+                    @Html.HiddenFor(m => m.FdEventId, htmlAttributes: new { @id = "fdEventId" })
+                    @Html.HiddenFor(m => m.YearofFlagDay, htmlAttributes: new { @id = "eveYearofFlagDay" })
+                    @Html.HiddenFor(m => m.OrgRef, htmlAttributes: new { @id = "eveOrgRef" })
+                    @Html.HiddenFor(m => m.EventRowVersion, htmlAttributes: new { @id = "eveRowVersion" })
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FlagDay, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-6">
+                                @Html.TextBoxFor(m => m.FlagDay, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "eveflagDay", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Time, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.FlagTimeFrom, true, htmlAttributes: new { @id = "flagTimeFrom", @class = "form-control ", @maxlength = 4 })
+                            </div>
+                            <div class="col-xs-1">
+                                <label class="control-label">to</label>
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.FlagTimeTo, true, htmlAttributes: new { @id = "flagTimeTo", @class = "form-control", @maxlength = 4 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PermitNo, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.PermitNo, true, htmlAttributes: new { @id = "permitNo", @class = "form-control", @maxlength = 12, @readOnly = true })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PermitIssueDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-6">
+                                @Html.TextBoxFor(m => m.PermitIssueDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "permitIssueDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PermitAcknowledgementReceiveDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-6">
+                                @Html.TextBoxFor(m => m.PermitAcknowledgementReceiveDate, true, "{0:dd/MM/yyyy}", htmlAttributes: new { @id = "permitAcknowledgementReceiveDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EventTWR, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-2">
+                                @Html.DropDownListFor(m => m.EventTWR, true, new SelectList(Model.TerritoryRegion, "Key", "Value", Model.EventTWR),
+                                                                                    htmlAttributes: new { @id = "fdEventTwr", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.District, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-2">
+                                @Html.DropDownListFor(m => m.District, true, new SelectList(Model.Districts, "Key", "Key", Model.District),
+                                                                                    htmlAttributes: new { @id = "eventDistrict", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.MethodOfCollections, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.ListBoxFor(m => m.MethodOfCollection, new MultiSelectList(Model.MethodOfCollections, "Key", "Value", Model.MethodOfCollection),
+                                        htmlAttributes: new { @id = "methodOfCollection", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FlagColour, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(m => m.FlagColour, 4, 100, htmlAttributes: new { @id = "flagColour", @class = "form-control", @maxlength = 500 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.BagColour, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(m => m.BagColour, 4, 100, htmlAttributes: new { @id = "bagColour", @class = "form-control", @maxlength = 500 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PermitRevokeIndicator, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.EditorFor(m => m.PermitRevokeIndicator, new { htmlAttributes = new { @id = "permitRevokeIndicator" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EventRemarks, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.ListBoxFor(m => m.EventRemark, new MultiSelectList(Model.EventRemarks, "Key", "Value", Model.EventRemark),
+                                        htmlAttributes: new { @id = "eventRemark", @class = "form-control", @multiple = "multiple", @data_provide = "select2" })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="btnCreateEvent" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button type="button" id="btnUpdateEvent" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="btnEventDelete" class="btn btn-sm btn-primary">
+                        <span class="icon-trash"></span>@Labels.Delete</button>
+                    <button type="button" id="btnEventCancel" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <script type="text/javascript">
+        var listOrganisationUrl = '@Url.RouteUrl("ListFlagDayOrganisation")';
+        var editOrgMasterUrl = '@Url.RouteUrl("EditOrgMaster", new { code = -1, ReturnUrl = -2 })';
+        var updateFlagDayUrl = '@Url.RouteUrl("UpdateFlagDay")';
+        var listFdEventUrl = '@Url.RouteUrl("ListFdEventsByFdMasterId", new { fdMasterId = -1 })';
+        var listCreateFdUrl = '@Url.RouteUrl("CreateFlagDay")';
+        var listSearchFdMasterUrl = '@Url.RouteUrl("FlagDaySearchPage")';
+        var searchSummaryPageUrl = '@Url.RouteUrl("FDSummarySearchPage")';
+
+        var listFdEnquiryUrl = '@Url.RouteUrl("ListFdComplaintEnquiry", new { code = "placeholder", type = "01" })';
+        var listComplaintUrl = '@Url.RouteUrl("ListFdComplaintEnquiry", new { code = "placeholder", type = "02" })';
+        var editEnquiryComplaintUrl = '@Url.RouteUrl("EditEnquiryComplaint", new { complaintId = -1 })';
+
+        var updateFdAttachmentUrl = '@Url.RouteUrl("UpdateFdAttachment", new { fdAttachmentId = -1 })';
+        var createFdAttachmentUrl = '@Url.RouteUrl("CreateFdAttachment", new { fdMasterId = -1 })';
+        var calFdEditRecCntUrl = '@Url.RouteUrl("CalFdEditRecCnt", new { fdMasterId = -1 })';
+        var updateFdEventUrl = '@Url.RouteUrl("UpdateFdEvent")';
+        var createFdEventUrl = '@Url.RouteUrl("CreateFdEvent", new { fdMasterId = -1 })';
+        var getEventUrl = '@Url.RouteUrl("GetFdEventFromGrid", new { fdEventId = -1 })';
+        var deleteFdEventUrl = '@Url.RouteUrl("DeleteFdEvent", new { fdEventId = -1 })';
+        var newFdMasterUrl = '@Url.RouteUrl("NewFdMaster", new { createMode = "placeholder", fdMasterId = "-1" })';
+        var searchOrganisationUrl = '@Url.RouteUrl("SearchOrganisation")';
+        var getOrganisationUrl = '@Url.RouteUrl("GetOrganisation", new { orgRef = "orgRef" })';
+
+        var fdReminderDeadline = @Html.Raw(Json.Encode(ViewData["FD_REMINDER_DEADLINE"]));
+        var fdReminderDeadline2 = @Html.Raw(Json.Encode(ViewData["FD_REMINDER_DEADLINE2"]));
+        var isFdApprover = @Html.Raw(Json.Encode(ViewData["IS_FD_APPROVER"]));
+
+        var pageSize = 10;
+
+        var $form = $('#flagDayEditForm')
+        var currFdMasterId = $('#fdMasterId').val();
+        var prePage = '@Model.PrePage';
+        $(function () {
+
+            var tabs = $('#tabs');
+
+            $('#tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                if ('#overview' === e.target.hash) {
+                }
+                if ('#fdEvent' === e.target.hash) {
+                    initEventsGrid();
+                }
+
+                //if ('#approvalHistory' === e.target.hash)
+                //    initApprovalHistoryGrid();
+
+                //if ('#workProcesses' === e.target.hash)
+                //    initWorkProcessesGrid();
+
+                if ('#enquiryList' === e.target.hash)
+                    initEnquiryGrid();
+
+                if ('#complaint' === e.target.hash)
+                    initComplaintGrid();
+
+                if ('#template' == e.target.hash) {
+                    initTemplateGrid();
+                }
+
+                if ('#attachment' === e.target.hash)
+                    initAttachmentGrid();
+
+                //if ('#documents' === e.target.hash)
+                //    initDocumentsGrid();
+            });
+
+            //$('#referenceNumber').prop('readOnly',true)
+            /////////////////////////////////////////////////////////
+            @*$('#createModelOrgName').text('@Model.OrgEngName');
+            $('#createModelOrgChiName').text('@Model.OrgChiName');*@
+
+            /*
+            //PIR #104: 
+            //The default auto-fill for the fields “Purpose of Flag Sale (Pledging)” and “Purpose of Flag Sale (Pledging) in Chinese”, after clicking “Successful Pledging Application”, could be disabled.
+            
+            $('#applyPledgingMechanismIndicator').next('input[type=checkbox]').on('change', function() {
+                if (this.checked) {
+                    $('#pledgingProposal').val($('#fundRaisingPurpose').val());
+                    $('#chiPledgingProposal').val($('#chiFundRaisingPurpose').val());
+                }
+            });
+            */
+
+            //$('#applyPledgingMechanismIndicator').on('change', function() {
+            //    alert('change2!!!');
+            //});
+
+            $('#firstReminderIssueDate').datepicker().on('changeDate', function () {
+                $this = $(this);
+                if ($this.val()) {
+                    var firstReminderIssueDate = moment($this.val(), "DD/MM/YYYY");
+                    $('#firstReminderDeadline').val(firstReminderIssueDate.add(fdReminderDeadline, "days").format("DD/MM/YYYY"));
+                }
+            });
+
+            $('#secondReminderIssueDate').datepicker().on('changeDate', function () {
+                $this = $(this);
+                if ($this.val()) {
+                    var secondReminderIssueDate = moment($this.val(), "DD/MM/YYYY");
+                    $('#secondReminderDeadline').val(secondReminderIssueDate.add(fdReminderDeadline2, "days").format("DD/MM/YYYY"));
+                }
+            });
+
+            calRelevantRecordsAmount();
+            runButtonsLogic();
+
+            function runButtonsLogic() {
+                $('#engSalute').on('change', function (e) {
+                    $engDDB = $('#engSalute');
+                    var value = $engDDB.val();
+                    $chiDDB = $('#chiSalute');
+                    $chiDDB.select2('val', value);
+                });
+
+                $('#btnUpdateFlagDay').click(function () {
+                    if ($form.valid()) {
+
+                        var actionUrl = updateFlagDayUrl;
+
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 if (response.success) {
+                                     //window.location.href = listSearchFdMasterUrl;
+                                     $("#lblOrgRef").text(response.data.orgRef);
+                                     $("#lblEngOrgName").html(response.data.orgEngName);
+                                     $("#lblChiOrgName").html(response.data.orgChiName);
+                                     if (response.data.lblWithholdingBeginDate != null && response.data.lblWithholdingBeginDate != "") {
+                                         $("#lblWithholdingBeginDate").text("From " + response.data.lblWithholdingBeginDate);
+                                     }
+                                     
+                                     if (response.data.lblWithholdingEndDate != null && response.data.lblWithholdingEndDate != "") {
+                                         $("#lblWithholdingEndDate").text("To " + response.data.lblWithholdingEndDate);
+                                     }
+                                     
+                                     $("#lblPspRef").text(response.data.lblPspRef || "");
+                                     $("#lblPspContactPersonName").text(response.data.lblPspContactPersonName || "");
+                                     $("#lblPspContactPersonEmailAddress").text(response.data.lblPspContactPersonEmailAddress || "");
+                                     $("#lblFdRef").text(response.data.lblFdRef || "");
+                                     $("#lblFdContactPersonName").text(response.data.lblFdContactPersonName || "");
+                                     $("#lblFdContactPersonEmailAddress").text(response.data.lblFdContactPersonEmailAddress || "");
+                                     $("#lblFdBenchmarkStatusPast1st").text(response.data.lblFdBenchmarkStatusPast1st || "");
+                                     $("#lblFdBenchmarkStatusPast2nd").text(response.data.lblFdBenchmarkStatusPast2nd || "");
+
+
+                                     $('#rowVersion').val(response.data.rowVersion);
+                                 }
+                                 notifSuccess(response.message);
+                             }
+                        );
+                    }
+                });
+
+                $('#btnUpdateEvent').click(function () {
+                    var $form = $("#fdEventForm");
+
+                    if ($form.valid()) {
+
+                        var actionUrl = updateFdEventUrl;
+
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 if (response.success) {
+                                     notifSuccess(response.message);
+                                     $('#fdEventModal').modal('hide');
+                                     $('#rowVersion').val(response.data.rowVersion);
+                                     //clearForm('#pspEditEventForm');
+                                     $("#eventsGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 }
+                             }
+                        );
+                    }
+
+                });
+
+                $('#btnCreateEvent').click(function () {
+                    var $form = $("#fdEventForm");
+
+                    if ($form.valid()) {
+
+                        var actionUrl = createFdEventUrl.replace('-1', currFdMasterId);
+
+                        $form.ajaxPostForm(actionUrl,
+                             function (response) {
+                                 if (response.success) {
+                                     notifSuccess(response.message);
+                                     $('#fdEventModal').modal('hide');
+                                     $("#eventsGridTable").trigger("reloadGrid", [{ current: true }]);
+                                     $('#rowVersion').val(response.data.rowVersion);
+                                     calRelevantRecordsAmount();
+                                 }
+
+                             }
+                        );
+                    }
+
+                });
+
+                $('#btnEventDelete').click(function () {
+                    confirmDelete(function (result) {
+                        if (result) {
+                            var actionUrl = deleteFdEventUrl.replace("-1", $('#fdEventId').val());
+                            ajaxGet(actionUrl,
+                                        function (response) {
+                                            $('#fdEventModal').modal('hide');
+                                            clearForm('#fdEventModal');
+                                            $("#eventsGridTable").trigger("reloadGrid", [{ current: true }]);
+                                            calRelevantRecordsAmount();
+                                            notifSuccess(response.message);
+                                        });
+                        }
+                    })
+
+                });
+
+                $('#btnEventCancel').click(function () {
+                    confirm('@Labels.Cancel_Msg', function (result) {
+                        if (result) {
+                            $('#fdEventModal').modal('hide');
+                            clearForm('#fdEventModal');
+                        }
+                    });
+                });
+
+                $('#btnEventClose').click(function () {
+                    confirm('@Labels.Cancel_Msg', function (result) {
+                        if (result) {
+                            $('#fdEventModal').modal('hide');
+                            clearForm('#fdEventModal');
+                        }
+                    });
+                });
+
+                $('#btnCancel').click(function () {
+                    confirm('@Labels.Cancel_Msg', function (result) {
+                        if (result) {
+                            if (prePage != null && prePage != "") {
+                                if (prePage.indexOf("FDSummary") != -1) {
+                                    redirectTo(searchSummaryPageUrl);
+                                }
+                                else {
+                                    redirectTo(prePage);
+                                }
+                            } else {
+                                redirectTo(listSearchFdMasterUrl);
+                            }
+                        }
+                    });
+                });
+
+                $('#btnClone').click(function () {
+                    var dNow = new Date();
+                    $('#DateofReceivingApplication').val(parseDatetimeToDate(dNow));
+                    //$('#outstandingEmailIssueDate').val('');
+                    //$('#outstandingEmailReplyDate').val('');
+                    //$('#outstandingEmailReminderIssueDate').val('');
+                    //$('#outstandingEmailReminderReplyDate').val('');
+                    //$('#acknowledgementReceiveDate').val('');
+                    $('#submissionDueDate').val('');
+                    $('#firstReminderIssueDate').val('');
+                    $('#firstReminderDeadline').val('');
+                    $('#secondReminderIssueDate').val('');
+                    $('#secondReminderDeadline').val('');
+                    $('#auditReportReceivedDate').val('');
+                    $('#publicationReceivedDate').val('');
+                    $('#newspaperPublishDate').val('');
+                    $('#acknowledgementEmailIssueDate').val('');
+                    // Vetting Result
+                    $('#groupingId').select2('val', '');
+                    $('#percentageForGrouping').val('');
+                    $('#groupingResult').val('');
+                    $('#vettingPanelCaseIndicator').checkboxVal(false);
+                    $('#reviewCaseIndicator').checkboxVal(false);
+                    // Application Result
+                    $('#applicationResultId').select2('val', '');
+                    $('#resultApplicationRemark').val('');
+                    $('#applicationRemark').val('');
+                    $('#fdLotNum').val('');
+                    $('#groupingwithNoofLot').val('');
+                    $('#fdLotResult').select2('val', '');
+                    // Pledging Application Result
+                    $('#applyPledgingMechanismIndicator').checkboxVal(false);
+                    $('#pledgingAmt').val('');
+                    $('#pledgingProposal').val('');
+                    $('#chiPledgingProposal').val('');
+                    $('#pledgingApplicationRemark').val('');
+                    //Track Record and AFS information
+                    $('#trackRecordStartDate').val('');
+                    $('#trackRecordEndDate').val('');
+                    $('#trackRecordDetails').val('');
+                    $('#afsRecordStartDate').val('');
+                    $('#afsRecordEndDate').val('');
+                    $('#afsRecordDetails').val('');
+                    window.location.href = newFdMasterUrl.replace("placeholder", "copyToNew").replace("-1", currFdMasterId);
+                });
+
+                $('#tableHeadDataRow').dblclick(function () {
+
+                    doEditOrgMasterRecord('@Model.OrgMasterId');
+
+                });
+            }
+            //$("#contactPersonFirstName").val(($("#contactPersonFirstName").val()).toUpperCase());
+            $("#contactPersonLastName").val(($("#contactPersonLastName").val()).toUpperCase());
+            //$("#contactPersonFirstName").bind('keyup', function (e) {
+            //    $("#contactPersonFirstName").val(($("#contactPersonFirstName").val()).toUpperCase());
+            //});
+            $("#contactPersonLastName").bind('keyup', function (e) {
+
+                $("#contactPersonLastName").val(($("#contactPersonLastName").val()).toUpperCase());
+            });
+            if ($('#fdEventTwr').val() == "1") {
+                //$('#eventDistrict').prop('disabled', false);
+                $('#eventDistrict').select2("readonly", true);
+            }
+            else {
+                //$('#eventDistrict').prop('disabled', true);
+                $('#eventDistrict').select2("readonly", false);
+            }
+
+            $('#expPerGpPercentage').val('');
+            calExpPerGpPercent();
+            $('#grossProceed,#expenditure').change(function () {
+
+                calExpPerGpPercent();
+            });
+
+            onEditTopTable();
+        });
+
+        // Change Evenet of 'Category'
+        $('#fdEventTwr').change(function () {
+
+            fdEventTwrChangeEvent();
+        });
+
+        // Function for Disable / Enable dropdownlist of 'District', depends on the 'Category' value
+        // Called by Change Evenet of 'Category' and Form initial.
+        function fdEventTwrChangeEvent() {
+
+            if ($('#fdEventTwr').val() == "1") {
+                //$('#eventDistrict').prop('disabled', true);
+                $('#eventDistrict').select2("readonly", true);
+                $('#eventDistrict').select2("val", "");
+            }
+            else {
+                // $('#eventDistrict').prop('disabled', false);
+                $('#eventDistrict').select2("readonly", false);
+            }
+
+        }
+
+        function onEditTopTable() {
+            $("#lblOrgRef").text('@Model.OrgRef');
+            $("#lblEngOrgName").html('@Model.OrgEngName');
+            $("#lblChiOrgName").html('@Model.OrgChiName');
+            if ('@Model.LblWithholdingBeginDate' != null && '@Model.LblWithholdingBeginDate' != "") {
+                $("#lblWithholdingBeginDate").text("From " + '@Model.LblWithholdingBeginDate');
+            }
+            if ('@Model.LblWithholdingEndDate' != null && '@Model.LblWithholdingEndDate' != "") {
+                $("#lblWithholdingEndDate").text("To " + '@Model.LblWithholdingEndDate');
+            }
+            $("#lblPspRef").text('@Model.LblPspRef');
+            $("#lblPspContactPersonName").text('@Model.LblPspContactPersonName');
+            $("#lblPspContactPersonEmailAddress").text('@Model.LblPspContactPersonEmailAddress');
+            $("#lblFdRef").text('@Model.LblFdRef');
+            $("#lblFdContactPersonName").text('@Model.LblFdContactPersonName');
+            $("#lblFdContactPersonEmailAddress").text('@Model.LblFdContactPersonEmailAddress');
+            $("#lblFdBenchmarkStatusPast1st").text('@Model.LblFdBenchmarkStatusPast1st');
+            $("#lblFdBenchmarkStatusPast2nd").text('@Model.LblFdBenchmarkStatusPast2nd');
+        }
+
+        function calExpPerGpPercent() {
+            var grossProceed = $('#grossProceed').val().replace(/,/g, "");
+            var expenditure = $('#expenditure').val().replace(/,/g, "");
+
+            if (grossProceed != "" && expenditure != "" && $.isNumeric(grossProceed) && $.isNumeric(expenditure)) {
+                $('#netProceed').val((grossProceed - expenditure).toFixed(2));
+                $('#expPerGpPercentage').val((expenditure/ grossProceed * 100).toFixed(2));
+            }
+            else {
+                $('#netProceed').val('');
+                $('#expPerGpPercentage').val('');
+            }
+        }
+
+        $('#createModelOrgRef').initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+        $('#createModelOrgRef').change(function () {
+            var disable = $('#createModelOrgRef').select2('data') ? $('#createModelOrgRef').select2('data').disableIndicator : 0;
+            if (disable == 1)
+                alert("Organisation was disabled, are you sure want to update the Flag Day with this organisation?")
+        });
+
+        /////////////////////////////////////////////////////////////////////
+        function initEventsGrid() {
+            var actionUrl = listFdEventUrl.replace("-1", currFdMasterId);
+            var $eventsGrid = $("#eventsGridTable");
+            var pager_selector = "#eventsGridPager";
+
+            if ($eventsGrid.isJqGrid()) {
+                $eventsGrid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $eventsGrid.jqGrid({
+                pager: pager_selector,
+                rownumbers: false,
+                headertitles: true,
+                //multiselect: true,
+                sortname: 'fdEventId',
+                sortorder: 'asc',
+                url: actionUrl,
+                datatype: "json",
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.FdEventId)',
+                    '@Html.DisplayNameFor(m => m.FlagDay)',
+                    '@Html.DisplayNameFor(m => m.Time)',
+                    '@Html.DisplayNameFor(m => m.EventTWR)',
+                    '@Html.DisplayNameFor(m => m.District)',
+                    '@Html.DisplayNameFor(m => m.PermitNo)',
+                    '@Html.DisplayNameFor(m => m.BagColour)',
+                    '@Html.DisplayNameFor(m => m.FlagColour)',
+                    '@Html.DisplayNameFor(m => m.MethodOfCollection)',
+                    '@Html.DisplayNameFor(m => m.PermitRevokeIndicator)',
+                    '@Html.DisplayNameFor(m => m.EventRemarks)'
+                ],
+                colModel: [{
+                    name: 'fdEventId',
+                    sorttype: 'int',
+                    width: 3,
+                    hidden: true
+                }, {
+                    name: 'flagDay',
+                    sorttype: 'date',
+                    template: dateTemplate,
+                    width: 2
+                }, {
+                    name: 'time',
+                    width: 3
+                }, {
+                    name: 'twr',
+                    width: 3
+                }, {
+                    name: 'district',
+                    width: 2,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.Districts.ToDictionary(k => k.Key, v => v.Key)))
+                        }
+                },{
+                    name: 'permitNum',
+                    width: 2
+                },{
+                    name: 'bagColour',
+                    width: 3
+                },{
+                    name: 'flagColour',
+                    width: 3
+                }, {
+                    name: 'collectionMethod',
+                    width: 6,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'permitRevokeIndicator',
+                    template: yesNoTemplate,
+                    width: 2
+                }, {
+                    name: 'remark',
+                    width: 10,
+                    classes: 'wrappedJqGridCell'
+                }],
+                loadComplete: function () {
+                    var $grid = $(this);
+                    setTimeout(function () {
+                        updateActionIcons(this);
+                        updatePagerIcons(this);
+                        enableTooltips(this);
+                    }, 0);
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    editSelectedEvent(rowId);
+                }
+            });
+
+            //navButtons
+            $eventsGrid.jqGrid('navGrid', pager_selector, { //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {
+                //delete record form
+                recreateForm: true,
+                beforeShowForm: beforeDeleteCallback
+            }, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                id: "navCreateEventBtn",
+                buttonicon: "icon-plus",
+                onClickButton: onNewEvent,
+                position: "first",
+                title: "New Event",
+                cursor: "pointer"
+            })
+            ;
+
+            $(window).on('resize', function () {
+                $eventsGrid.setGridWidth($('#fdEvent').outerWidth());
+            }).trigger('resize');
+
+            if ($('#fdEventCnt').text() > 0)
+                $('#navCreateEventBtn').addClass('hide');
+            else
+                $('#navCreateEventBtn').removeClass('hide');
+
+            function onNewEvent() {
+                clearForm('#fdEventForm');
+                $('#flagTimeFrom').val('@Model.FlagDayEventStartTime');
+                $('#flagTimeTo').val('@Model.FlagDayEventEndTime');
+                $('#eveYearofFlagDay').val($('#yearofFlagDay').val());
+                $('#eveOrgRef').val($('#createModelOrgRef').val());
+                $('#methodOfCollection').select2('val', '1');
+                if ($('#twr').val()) {
+                    $('#fdEventTwr').select2('val', $('#twr').val());
+                    fdEventTwrChangeEvent();
+                }
+                $('#btnCreateEvent').removeClass('hide');
+                $('#btnUpdateEvent').addClass('hide');
+                $('#btnEventDelete').addClass('hide');
+
+                $('#permitRevokeIndicator').readonly(true);
+
+                showModal();
+            };
+
+            function editSelectedEvent(rowId) {
+
+                $('#btnCreateEvent').addClass('hide');
+                $('#btnUpdateEvent').removeClass('hide');
+                $('#btnEventDelete').removeClass('hide');
+                $('#permitRevokeIndicator').readonly(false);
+
+                clearForm('#fdEventForm');
+                var $form = $("#fdEventForm");
+                var actionUrl = getEventUrl.replace("-1", rowId);
+                //var actionUrl = getDisasterUrl.replace("-1", data.disasterMasterId);
+
+                ajaxGet(actionUrl,
+                            function (response) {
+                                $('#fdEventId').val(rowId);
+                                $('#eveRowVersion').val(response.data.eventRowVersion);
+                                $('#eveflagDay').val(toDDMMYYYY(response.data.flagDay));
+                                $('#flagTimeFrom').val(response.data.flagTimeFrom);
+                                $('#flagTimeTo').val(response.data.flagTimeTo);
+                                $('#permitNo').val(response.data.permitNo);
+                                $('#permitIssueDate').val(toDDMMYYYY(response.data.permitIssueDate));
+                                $('#permitAcknowledgementReceiveDate').val(toDDMMYYYY(response.data.permitAcknowledgementReceiveDate));
+                                $('#flagColour').val(response.data.flagColour);
+                                $('#bagColour').val(response.data.bagColour);
+                                $('#fdEventTwr').select2('val', response.data.eventTWR);
+                                $('#eventDistrict').select2('val', response.data.district);
+                                $('#methodOfCollection').select2('val', response.data.methodOfCollection);
+                                $('#eventRemark').select2('val', response.data.eventRemark);
+                                $('#permitRevokeIndicator').checkboxVal(response.data.permitRevokeIndicator);
+                                $('#eveYearofFlagDay').val(response.data.yearofFlagDay);
+
+                                // Call function for Disable / Enable the dropdownlist of District
+                                fdEventTwrChangeEvent();
+
+                                if (response.data.frasCharityEventId != null)
+                                    $('#btnEventDelete').addClass('hide');
+                                else
+                                    $('#permitRevokeIndicator').readonly(true);
+
+                                //TODO: Hide Update Button and set form to readonly when Permit Revoke Indicator is checked and already Re-submit to OGCIO
+                                if (response.data.permitRevokeIndicator == true &&  response.data.frasCharityEventId != null && response.data.frasStatus == "C") {
+                                    $('#btnUpdateEvent').addClass('hide');
+                                    $form.readonly(true);
+                                }
+                            }
+                    );
+
+                showModal();
+            };
+
+            function onImportEvent(data) {
+                $('#importFdEventXlsFile').val('');
+                $('#errorMsgDiv').addClass('hide');
+                $('#importFdEveXlsFileModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function showModal() {
+                if (!isFdApprover)
+                    $('#permitRevokeIndicator').parents('.form-group').hide();
+                else
+                    $('#permitRevokeIndicator').parents('.form-group').show();
+
+                $('#fdEventModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            }
+        };
+
+        function initEnquiryGrid() {
+            var actionUrl = listFdEnquiryUrl.replace("placeholder", encodeURIComponent($('#referenceNumber').val()));
+
+            var $enquiryGrid = $("#enquiryGridTable");
+            var pager_selector = "#enquiryGridPager";
+
+            if ($enquiryGrid.isJqGrid()) {
+                $enquiryGrid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $enquiryGrid.jqGrid({
+                pager: pager_selector,
+                datatype: "json",
+                url: actionUrl,
+                mtype: "POST",
+                sortname: 'complaintDate',
+                sortorder: 'desc',
+                colNames: ['Complaint Reference No.',
+                    'Source',
+                    'Activity Concerned',
+                    'Date of Complaint',
+                    'Processing Status' ,
+                    'Follow-up Action Taken',
+                    'Result of the Complaint',
+                    'Due Date',
+                    'Withholding Begin Date',
+                    'Withholding End Date',
+                    'Investigated by Police',
+                    'No. of Telephone Record',
+                    'No. of Enquiry from Other Department / Authorities',
+                    'ComplaintMasterId'],
+                colModel: [{
+                    name: 'complaintRef',
+                    width: 120,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintSource',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintSources))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'activityConcern',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ActivityConcerns))
+                        },
+                    width: 150,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'processStatus',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ProcessStatus))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'followUpAction',
+                    width: 250
+                },{
+                    name : 'complaintResult',
+                    width: 150,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintResults))
+                        },
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'replyDueDate',
+                    template: dateTemplate,
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingBeginDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingEndDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'policeCaseIndicator',
+                    width: 100,
+                    template: yesNoTemplate,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'telRecordNum',
+                    template:numTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'otherDepartmentEnquiryNum',
+                    template:numTemplate,
+                    width: 100,
+                    hidden : 'true',
+                }, {
+                    name : 'complaintMasterId',
+                    hidden : 'true',
+                    search: false,
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $enquiryGrid.jqGrid('getRowData', rowId);
+                    //var currentUrl = window.location.href;
+                    //var returnUrl = currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("flagday") - 1);
+                    var returnUrl = window.location.pathname;
+                    var actionUrl = editEnquiryComplaintUrl.replace("-1", data.complaintMasterId) + "?ReturnUrl=" + returnUrl;
+                    window.location = actionUrl;
+                }
+            });
+
+            $enquiryGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+        };
+
+        function initComplaintGrid() {
+            var actionUrl = listComplaintUrl.replace("placeholder", encodeURIComponent($('#referenceNumber').val()));
+            var $complaintGrid = $("#complaintGridTable");
+            var pager_selector = "#complaintGridPager";
+
+            if ($complaintGrid.isJqGrid()) {
+                $complaintGrid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $complaintGrid.jqGrid({
+                pager: pager_selector,
+                datatype: "json",
+                url: actionUrl,
+                mtype: "POST",
+                sortname: 'complaintDate',
+                sortorder: 'desc',
+                colNames: ['Complaint Reference No.',
+                    'Source',
+                    'Activity Concerned',
+                    'Date of Complaint',
+                    'Processing Status' ,
+                    'Follow-up Action Taken',
+                    'Result of the Complaint',
+                    'Due Date',
+                    'Withholding Begin Date',
+                    'Withholding End Date',
+                    'Investigated by Police',
+                    'No. of Telephone Record',
+                    'No. of Enquiry from Other Department / Authorities',
+                    'ComplaintMasterId'],
+                colModel: [{
+                    name: 'complaintRef',
+                    width: 120,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintSource',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintSources))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'activityConcern',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ActivityConcerns))
+                        },
+                    width: 150,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'complaintDate',
+                    template: dateTemplate,
+                    width: 100,
+                }, {
+                    name: 'processStatus',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ProcessStatus))
+                        },
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'followUpAction',
+                    width: 250
+                },{
+                    name : 'complaintResult',
+                    width: 150,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ComplaintResults))
+                        },
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'replyDueDate',
+                    template: dateTemplate,
+                    width: 80,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingBeginDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'withholdingEndDate',
+                    template: dateTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'policeCaseIndicator',
+                    width: 100,
+                    template: yesNoTemplate,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'telRecordNum',
+                    template:numTemplate,
+                    width: 100,
+                    classes: 'wrappedJqGridCell'
+                },{
+                    name : 'otherDepartmentEnquiryNum',
+                    template:numTemplate,
+                    width: 100,
+                    hidden : 'true',
+                }, {
+                    name : 'complaintMasterId',
+                    hidden : 'true',
+                    search: false,
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $complaintGrid.jqGrid('getRowData', rowId);
+                    //var currentUrl = window.location.href;
+                    //var returnUrl = currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("flagday") - 1);
+                    var returnUrl = window.location.pathname;
+                    var actionUrl = editEnquiryComplaintUrl.replace("-1", data.complaintMasterId) + "?ReturnUrl=" + returnUrl;
+                    window.location = actionUrl;
+                }
+            });
+
+            $complaintGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+        };
+
+        function calRelevantRecordsAmount() {
+            ajaxGet(calFdEditRecCntUrl.replace("-1", currFdMasterId),
+                function (response) {
+                    $('#fdEventCnt').html(response.data.fdEventCnt);
+                    $('#enquiryListCnt').html(response.data.fdEnquiryCnt);
+                    $('#complaintCnt').html(response.data.fdComplaintCnt);
+                    $('#templateCnt').html(response.data.fdLetterCnt);
+                    $('#attachmentCnt').html(response.data.fdAttachmentCnt);
+                    if (response.data.fdEventCnt > 0)
+                        $('#navCreateEventBtn').addClass('hide');
+                    else
+                        $('#navCreateEventBtn').removeClass('hide');
+                }
+            );
+        }
+
+        function doEditOrgMasterRecord(orgMasterId) {
+
+            //var currentUrl = window.location.href;
+            //var returnUrl = currentUrl.substring(currentUrl.toLocaleLowerCase().indexOf("organisation") - 1);
+            var returnUrl = window.location.pathname;
+            var actionUrl = editOrgMasterUrl.replace("-1", orgMasterId).replace("-2", returnUrl);
+            window.location = actionUrl;
+
+        };
+    </script>
+}

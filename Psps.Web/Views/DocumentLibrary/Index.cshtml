@@ -1,0 +1,505 @@
+﻿@model Psps.Web.ViewModels.DocumentLibraries.DocumentLibraryViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.DocumentLibrary_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="form-horizontal" role="form">
+    <form id="documentLibraryForm">
+        <div class="form-group">
+            @Html.LabelFor(m => m.SelectedDocumentLibraryId, new { @class = "col-xs-1 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.SelectedDocumentLibraryId, true, new SelectList(Model.DocumentLibraries, "Key", "Value", Model.SelectedDocumentLibraryId),
+                htmlAttributes: new { @id = "selectedDocumentLibraryId", @class = "form-control", @data_provide = "select2" })
+            </div>
+            <button id="btnNewDocumentLibrary" type="button" class="btn btn-primary btn-sm">
+                <span class="icon-plus"></span>&nbsp;@Labels.New</button>
+            <button id="btnDeleteDocumentLibrary" type="button" class="btn btn-primary btn-sm" disabled="disabled">
+                <span class="icon-trash"></span>&nbsp;@Labels.Delete</button>
+            <button id="btnEditDocumentLibrary" type="button" class="btn btn-primary btn-sm" disabled="disabled">
+                <span class="icon-plus"></span>&nbsp;@Labels.Update</button>
+        </div>
+
+        <div id="documentLibraryModal" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" id="btnCloseDocumentLibrary" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Document Library Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <fieldset>
+                            @Html.BootstrapValidationSummary()
+
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Name, new { @class = "col-xs-2 control-label" })
+                                <div class="col-xs-6">
+                                    @Html.TextBoxFor(m => m.Name, true, htmlAttributes: new { @id = "name", @class = "form-control", @maxlength = 100 })
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnCreateDocumentLibrary" type="button" class="btn btn-sm btn-primary">
+                            <span class="icon-ok"></span>&nbsp;Create</button>
+                        <button id="btnUpdateDocumentLibrary" type="button" class="btn btn-sm btn-primary" style="display:none">
+                            <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                        <button id="btnCancelDocumentLibrary" type="button" class="btn btn-sm btn-default">
+                            <span class="icon-remove"></span>&nbsp;Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="vspace-6"></div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <table id="documentGridTable"></table>
+            <div id="documentGridPager"></div>
+        </div>
+    </div>
+
+    <form id="editDocumentForm" enctype="multipart/form-data">
+        @{Html.RenderAction("RenderDocumentModal");}
+    </form>
+</div>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listDocumentUrl = '@Url.RouteUrl("ListDocument", new { documentLibraryId = -1 })';
+        var newDocumentLibraryUrl = '@Url.RouteUrl("NewDocumentLibrary")';
+        var deleteDocumentLibraryUrl = '@Url.RouteUrl("DeleteDocumentLibrary", new { selectedDocumentLibraryId = -1 })';
+        var getDocumentUrl = '@Url.RouteUrl("GetDocument", new { documentId = -1 })';
+        var newDocumentUrl = '@Url.RouteUrl("NewDocument")';
+        var editDocumentUrl = '@Url.RouteUrl("EditDocument", new { documentId = -1 })';
+        var downloadDocumentUrl = '@Url.RouteUrl("DownloadDocument", new { documentId = -1 })';
+        var deleteDocumentUrl = '@Url.RouteUrl("DeleteDocument", new { documentId = -1 })';
+        var getDocumentLibraryUrl = '@Url.RouteUrl("GetDocumentLibrary", new { documentLibraryId = -1 })';
+        var updateDocumentLibraryUrl = '@Url.RouteUrl("UpdateDocumentLibrary")';
+        $(function () {
+            initDocumentGrid();
+
+            $('#selectedDocumentLibraryId').on('change', function (e) {
+                var $selected = $(':selected', this),
+                    $grid = $('#documentGridTable');
+
+                $grid.jqGrid('clearGridData');
+                $grid.jqGrid('setGridParam', { search: false });
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, { filters: "" });
+
+                if ($selected.val()) {
+                    $grid.jqGrid('setGridParam', {
+                        url: listDocumentUrl.replace('-1', $selected.val()),
+                        datatype: 'json'
+                    });
+                    $('#btnDeleteDocumentLibrary').attr('disabled', false);
+                    $('#btnEditDocumentLibrary').attr('disabled', false);
+                } else {
+                    $grid.jqGrid('setGridParam', {
+                        datatype: 'local'
+                    });
+                    $('#btnDeleteDocumentLibrary').attr('disabled', true);
+                    $('#btnEditDocumentLibrary').attr('disabled', true);
+                };
+
+                $grid.trigger("reloadGrid", [{ page: 1 }]);
+
+            });
+
+            $("#btnNewDocumentLibrary").on("click", function (e) {
+                $("#btnCreateDocumentLibrary").show();
+                $("#btnUpdateDocumentLibrary").hide();
+                var $modal = $('#documentLibraryModal');
+                $('#name').val('');
+
+                $modal.find('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                $modal.modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            });
+
+            $("#btnCreateDocumentLibrary").on("click", function (e) {
+                $('#hiddenSelectedDocumentLibraryId').val($('#selectedDocumentLibraryId').select2('val'));
+                var $form = $("#documentLibraryForm");
+
+                if ($form.valid()) {
+                    var actionUrl = newDocumentLibraryUrl;
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#documentLibraryModal').modal('hide');
+                             rebuildDocumentLibraryDropdown(response.data, true);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $("#btnEditDocumentLibrary").on("click", function (e) {
+                var selectedDocumentLibraryId = $('#selectedDocumentLibraryId').val();
+
+                var actionUrl = getDocumentLibraryUrl.replace("-1", selectedDocumentLibraryId);
+                $("#btnUpdateDocumentLibrary").show();
+                $("#btnCreateDocumentLibrary").hide();
+                ajaxGet(actionUrl,
+                    function (response) {
+                        $("#name").val(response.data.name);
+                        var $modal = $('#documentLibraryModal');
+                        $modal.find('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                        $modal.modal({
+                            backdrop: 'static',
+                            show: true,
+                            keyboard: false
+                        });
+
+                    }
+                );
+                
+            });
+
+            $("#btnUpdateDocumentLibrary").on("click", function (e) {
+                var $form = $("#documentLibraryForm");
+
+                if ($form.valid()) {
+                    var actionUrl = updateDocumentLibraryUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#documentLibraryModal').modal('hide');
+                             rebuildDocumentLibraryDropdown(response.data, true);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $("#btnCancelDocumentLibrary").on("click", function (e) {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#documentLibraryModal').modal('hide');
+                    }
+                });
+            });
+
+            $("#btnCloseDocumentLibrary").on("click", function (e) {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#documentLibraryModal').modal('hide');
+                    }
+                });
+            });
+            
+            $("#btnDeleteDocumentLibrary").on("click", function (e) {
+                confirmDelete(function (result) {
+                    if (result) {
+                        var documentLibraryId = $('#selectedDocumentLibraryId').select2('val');
+                        var $form = $("#documentLibraryForm");
+
+                        if (documentLibraryId && $form.valid()) {
+                            var actionUrl = deleteDocumentLibraryUrl.replace('-1', documentLibraryId);
+
+                            ajaxPost(actionUrl,
+                                 function (response) {
+                                     rebuildDocumentLibraryDropdown(response.data, false);
+                                     notifSuccess(response.message);
+                                 },
+                                 function (response) {
+                                     if (response.message)
+                                         notifError(response.message);
+                                     else {
+                                         var messages = "";
+                                         $.each(response.errors, function (i, item) {
+                                             $.each(response.errors[i], function (i2, item2) {
+                                                 messages += item2;
+                                             });
+                                         });
+
+                                         notifError(messages);
+                                     }
+                                 }
+                            );
+                        }
+                    }
+                });
+            });
+
+            $("#btnCreateDocument").on("click", function (e) {
+                $('#document\\.documentLibraryId').val($('#selectedDocumentLibraryId').select2('val'));
+                var $form = $("#editDocumentForm");
+
+                if ($form.valid()) {
+                    var actionUrl = newDocumentUrl;
+
+                    $form.ajaxPostForm(actionUrl,
+                        function (response) {
+                            $form.resetForm();
+                            $('#editDocumentModal').modal('hide');
+                            $("#documentGridTable").trigger("reloadGrid", [{ current: true }]);
+                            notifSuccess(response.message);
+                        }
+                    );
+                }
+            });
+
+            $("#btnUpdateDocument").on("click", function (e) {
+                $('#document\\.documentLibraryId').val($('#selectedDocumentLibraryId').select2('val'));
+                var $form = $("#editDocumentForm");
+
+                if ($form.valid()) {
+                    var actionUrl = editDocumentUrl.replace("-1", $('#document\\.documentId').val());
+
+                    $form.ajaxPostForm(actionUrl,
+                        function (response) {
+                            $form.resetForm();
+                            $('#editDocumentModal').modal('hide');
+                            $("#documentGridTable").trigger("reloadGrid", [{ current: true }]);
+                            notifSuccess(response.message);
+                        }
+                    );
+                }
+            });
+
+            $("#btnCancelDocument").on("click", function (e) {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editDocumentModal').modal('hide');
+                    }
+                });
+            });
+
+            $("#btnCloseDocument").on("click", function (e) {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editDocumentModal').modal('hide');
+                    }
+                });
+            });
+            
+        });
+
+        function rebuildDocumentLibraryDropdown(data, retainValue) {
+            var $sel = $('#selectedDocumentLibraryId');
+            var selectedVals = $sel.val();
+            $sel.empty();
+            $sel.append($('<option></option>').prop({ 'value': '', 'selected': true }));
+            $.each(data, function (idx, val) {
+                $sel.append($('<option></option>').attr('value', val.key).text(val.value));
+            });
+            $sel.select2({
+                placeholder: "Please select",
+                allowClear: true,
+            });
+            if (retainValue)
+                $sel.select2('val', selectedVals);
+            else
+                $sel.trigger('change');
+        };
+
+        function initDocumentGrid() {
+            var actionUrl = listDocumentUrl;
+            var $grid = $('#documentGridTable');
+            var pager_selector = '#documentGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                sortname: 'name',
+                sortorder: 'asc',
+                datatype: 'local',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.Document.Name)',
+                    '@Html.DisplayNameFor(m => m.Document.Remark)',
+                    '@Html.DisplayNameFor(m => m.Document.UploadedBy)',
+                    '@Html.DisplayNameFor(m => m.Document.UploadedOn)',
+                    '@Labels.Action',
+                    '@Html.DisplayNameFor(m => m.Document.RowVersion)',
+                    '@Html.DisplayNameFor(m => m.Document.DocumentId)'
+                ],
+                colModel: [{
+                    name: 'name',
+                    width: '6'
+                }, {
+                    name: 'remark',
+                    width: '6'
+                }, {
+                    name: 'uploadedBy',
+                    width: '2'
+                }, {
+                    name: 'uploadedOn',
+                    template: dateTimeTemplate,
+                    width: '3'
+                }, {
+                    name: 'rowAction',
+                    template: rowActionTemplate,
+                    delbutton: false
+                }, {
+                    name: 'rowVersion',
+                    hidden: true
+                }, {
+                    name: 'documentId',
+                    hidden: true
+                }],
+                loadComplete: function () {
+                    var $grid = $(this);
+                    setTimeout(function () {
+                        updateActionIcons(this);
+                        updatePagerIcons(this);
+                        enableTooltips(this);
+                    }, 0);
+
+                    var iCol = getColumnIndexByName($grid, 'rowAction');
+                    $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            var $this = $(this);
+
+                            //delete document button
+                            $("<div>", {
+                                title: "Delete",
+                                mouseover: function () {
+                                    $this.addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $this.removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $grid.jqGrid('getRowData', rowId);
+                                    doDeleteRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-trash red"></span>')
+                                .prependTo($this.children("div"));
+
+                            //download document button
+                            $("<div>", {
+                                title: "Download",
+                                mouseover: function () {
+                                    $this.addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $this.removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $grid.jqGrid('getRowData', rowId);
+                                    doDownloadRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-download-alt red"></span>')
+                                .prependTo($this.children("div"));
+                        });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function doShowModal() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                $('#editDocumentModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function doEditRecord(data, tag) {
+                var actionUrl = getDocumentUrl.replace("-1", data.documentId);
+
+                ajaxGet(actionUrl,
+                    function (response) {
+                        $('#document\\.rowVersion').val(response.data.rowVersion);
+                        $('#document\\.documentId').val(response.data.documentId);
+                        $('#document\\.documentLibraryId').val(response.data.documentLibraryId);
+                        $('#document\\.name').val(response.data.name);
+                        $('#document\\.remark').val(response.data.remark);
+                        $('#btnCreateDocument').addClass('hide');
+                        $('#btnUpdateDocument').removeClass('hide');
+
+                        doShowModal();
+                    }
+                );
+            };
+
+            function doNewRecord() {
+                var $sel = $('#selectedDocumentLibraryId');
+
+                if ($sel.select2('val')) {
+                    $('#document\\.rowVersion').val('');
+                    $('#document\\.documentId').val('');
+                    $('#document\\.documentLibraryId').val('');
+                    $('#document\\.name').val('');
+                    $('#document\\.remark').val('');
+                    $('#btnUpdateDocument').addClass('hide');
+                    $('#btnCreateDocument').removeClass('hide');
+
+                    doShowModal();
+                }
+                else
+                    notifError("Please select a folder first.");
+            };
+
+            function doDeleteRecord(data) {
+                var actionUrl = deleteDocumentUrl.replace("-1", data.documentId);
+
+                confirmDelete(function (result) {
+                    if (result) {
+                        ajaxPost(actionUrl,
+                             data,
+                             function (response) {
+                                 $('#documentLibraryModal').modal('hide');
+                                 $("#documentGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 notifSuccess(response.message);
+                             },
+                             function (response) {
+                                 notifError(response.message);
+                             }
+                        )
+                    }
+                });
+            };
+
+            function doDownloadRecord(data) {
+                var actionUrl = downloadDocumentUrl.replace("-1", data.documentId);
+                window.open(actionUrl);
+            };
+        };
+    </script>
+}

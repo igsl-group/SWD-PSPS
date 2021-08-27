@@ -1,0 +1,266 @@
+﻿@model Psps.Web.ViewModels.Complaint.ComplaintTelRecordViewModel
+@using Psps.Resources;
+
+<form id="editTelRecordForm" class="form-horizontal">
+    <div id="edit-telRecord-modal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnCloseTelRecord" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Telephone Enquiry / Complaint Record Details</h4>
+                </div>
+                <fieldset></fieldset>
+                <div class="modal-body">
+                    @Html.TextBoxFor(m => m.ComplaintTelRecordId, true, htmlAttributes: new { @id = "complaintTelRecordId", @class = "form-control", @style = "display:none" })
+                    @Html.TextBoxFor(m => m.ComplaintMasterId, true, htmlAttributes: new { @id = "telRecordComplaintMasterId", @class = "form-control", @style = "display:none" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TelComplaintRef, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.TelComplaintRef, true, htmlAttributes: new { @id = "telComplaintRef", @class = "form-control", @disabled = "disabled", @maxlength = 8 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TelRecordComplaintDate, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.TelRecordComplaintDate, true, htmlAttributes: new { @id = "telRecordComplaintDate", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                        @Html.LabelFor(m => m.ComplaintTime, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.ComplaintTime, true, htmlAttributes: new { @id = "complaintTime", @class = "form-control", @style = "width: 150px;", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TelRecordComplainantName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextBoxFor(m => m.TelRecordComplainantName, true, htmlAttributes: new { @id = "telRecordComplainantName", @class = "form-control", @maxlength = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ComplainantTelNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.ComplainantTelNum, true, htmlAttributes: new { @id = "complainantTelNum", @class = "form-control", @maxlength = 50 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ComplaintTelRecordOrgName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(model => model.ComplaintTelRecordOrgName, true, rows: 4, htmlAttributes: new { @id = "complaintTelRecordOrgName", @class = "form-control", @maxlength = 1000 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="PspApprovalHistoryId">Permit Concerned (if Applicable):</label>
+                        <div class="col-xs-9">
+                            <table>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(m => m.PspApprovalHistoryId, new { @class = "col-xs-3 control-label" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(m => m.PspApprovalHistoryId, true, htmlAttributes: new { @id = "telRecordPspApprovalHistoryId", @class = "form-control", @style = "width: 500px;", @maxlength = 100 })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(m => m.FdEventId, new { @class = "col-xs-3 control-label" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(m => m.FdEventId, true, htmlAttributes: new { @id = "telRecordFdEventId", @class = "form-control", @style = "width: 500px;", @maxlength = 100 })
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ComplaintContentRemark, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.TextAreaFor(model => model.ComplaintContentRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "complaintContentRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "complaintContentRemark" })
+                            @Html.HiddenFor(model => model.ComplaintContentRemark, htmlAttributes: new { @id = "complaintContentRemark", @maxlength = 4000 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OfficerName, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.OfficerName, true, htmlAttributes: new { @id = "officerName", @class = "form-control", @maxlength = 256 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.OfficerPost, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.OfficerPost, true, htmlAttributes: new { @id = "officerPost", @class = "form-control", @maxlength = 256 })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSpellCheckTelRecord" class="btn btn-primary btn-sm">
+                        <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                    <button type="button" id="btnCreateTelRecord" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button type="button" id="btnUpdateTelRecord" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="btnDeleteTelRecord" class="btn btn-sm btn-primary">
+                        <span class="icon-trash"></span>@Labels.Delete</button>
+                    <button type="button" id="btnCancelTelRecord" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@*<form class="form-horizontal">
+    <div id="telRecord-pspPermitNum-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnCloseTelRecordPspPermitNumModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search PSP Permit Number</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="telRecord-pspPermitNum-grid-table"></table>
+                                <div id="telRecord-pspPermitNum-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelTelRecordPspPermitNumModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<form class="form-horizontal">
+    <div id="telRecord-fdPermitNum-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnCloseTelRecordFdPermitNumModal" type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search FD Permit Number</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="telRecord-fdPermitNum-grid-table"></table>
+                                <div id="telRecord-fdPermitNum-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelTelRecordFdPermitNumModal" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>*@
+<!-- inline scripts related to this page -->
+
+<script type="text/javascript">
+    var createComplaintTelRecordUrl = '@Url.RouteUrl("CreateComplaintTelRecord")';
+    var updateComplaintTelRecordUrl = '@Url.RouteUrl("UpdateComplaintTelRecord")';
+    var deleteComplaintTelRecordUrl = '@Url.RouteUrl("DeleteComplaintTelRecord")';
+    var listTelRecordPspApprovalHistory = '@Url.RouteUrl("ListTelRecordPspApprovalHistory")';
+    var listTelRecordFdApprovalHistory = '@Url.RouteUrl("ListTelRecordFdApprovalHistory")';
+
+    $(function () {
+        $('#telRecordPspApprovalHistoryId').initPspPermitSearchBox(searchPspPermitNumUrl, getPspApprovalHistoryUrl, pageSize);
+        $('#telRecordFdEventId').initFdPermitSearchBox(searchFdPermitNumUrl, getFdEventUrl, pageSize);
+
+        $('#telRecordPspApprovalHistoryId').change(function () {
+            if ($(this).select2('val'))
+                $('#telRecordFdEventId').prop('readonly', true);
+            else
+                $('#telRecordFdEventId').prop('readonly', false);
+        });
+
+        $('#telRecordFdEventId').change(function () {
+            if ($(this).select2('val'))
+                $('#telRecordPspApprovalHistoryId').prop('readonly', true);
+            else
+                $('#telRecordPspApprovalHistoryId').prop('readonly', false);
+        });
+
+        $('#btnCreateTelRecord').click(function () {
+            var $form = $("#editTelRecordForm");
+            if ($form.valid()) {
+                var actionUrl = createComplaintTelRecordUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#edit-telRecord-modal').modal('hide');
+                         $("#telRecord-grid-table").trigger("reloadGrid", [{ current: true }]);
+                         calRelevantRecordsAmount();
+                         notifSuccess(response.message);
+                         initEditTelRecordForm();
+                     }
+                );
+            }
+        });
+
+        $('#btnUpdateTelRecord').click(function () {
+            var $form = $("#editTelRecordForm");
+            if ($form.valid()) {
+                var actionUrl = updateComplaintTelRecordUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#edit-telRecord-modal').modal('hide');
+                         $("#telRecord-grid-table").trigger("reloadGrid", [{ current: true }]);
+                         notifSuccess(response.message);
+                         initEditTelRecordForm();
+                     }
+                );
+            }
+        });
+
+        $('#btnDeleteTelRecord').click(function () {
+            var $form = $("#editTelRecordForm");
+            confirmDelete(function (result) {
+                if (result) {
+                    var actionUrl = deleteComplaintTelRecordUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#edit-telRecord-modal').modal('hide');
+                             $("#telRecord-grid-table").trigger("reloadGrid", [{ current: true }]);
+                             calRelevantRecordsAmount();
+                             notifSuccess(response.message);
+                             initEditTelRecordForm();
+                         }
+                    );
+                }
+            })
+        });
+
+        $('#btnCancelTelRecord').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    $('#edit-telRecord-modal').modal('hide');
+                    initEditTelRecordForm();
+                }
+            });
+        });
+
+        $('#btnCloseTelRecord').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    $('#edit-telRecord-modal').modal('hide');
+                    initEditTelRecordForm();
+                }
+            });
+        });
+    });
+
+    function initEditTelRecordForm() {
+        $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+        clearForm('#editTelRecordForm');
+        $('#editTelRecordForm').find('.wysiwyg-editor').each(function () { $(this).summernote('reset'); });
+        $("#btnCreateTelRecord").show();
+        $("#btnDeleteTelRecord").hide();
+        $("#btnUpdateTelRecord").hide();
+    }
+</script>

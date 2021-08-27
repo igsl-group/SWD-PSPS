@@ -1,0 +1,50 @@
+﻿<div class="tab-pane" id="relatedLegalAdvice">
+    <div id="letters-result">
+        <table id="letters-result-data-table" class="table table-bordered table-hover table-condensed data-table">
+            <thead>
+                <tr id="tableHead">
+                    <th width="250px">Legal Advice Description</th>
+                    <th width="25px">Part No.</th>
+                    <th width="20px">Encl. No.</th>
+                    <th width="60px">Effective Date</th>
+                    <th width="60px">PSP Required</th>
+                    <th width="250px">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    var listByRelatedLegalAdviceIdUrl = '@Url.RouteUrl("ListByRelatedLegalAdviceId", new { selectedLegalAdviceId = -1 })';
+    $(function () {
+
+    });
+
+    function onClickRelatedLegalAdvice() {
+        var actionUrl = listByRelatedLegalAdviceIdUrl.replace("-1", $('#legalAdviceMasterId').val());
+        ajaxGet(actionUrl,
+                function (response) {
+                    $("#letters-result-data-table tr").not("#tableHead").remove();
+                    for (var i = 0; i < response.data.length; i++) {
+                        var r = response.data[i];
+                        var tr = createRelatedLegalAdviceTr(r);
+                        $("#letters-result-data-table").append(tr);
+
+                    }
+                }
+        );
+    }
+
+    function createRelatedLegalAdviceTr(relatedLegalAdvice) {
+        var tr = "<tr><td>" + relatedLegalAdvice.legalAdviceDescription + "</td>" +
+                     "<td align='center'>" + relatedLegalAdvice.partNum + "</td>" +
+                     "<td align='center'>" + relatedLegalAdvice.enclosureNum + "</td>" +
+                     "<td align='center'>" + relatedLegalAdvice.effectiveDate + "</td>" +
+                     "<td align='center'>" + relatedLegalAdvice.requirePspIndicator + "</td>" +
+                     "<td>" + relatedLegalAdvice.remarks + "</td></tr>";
+        return tr;
+    }
+</script>

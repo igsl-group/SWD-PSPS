@@ -1,0 +1,113 @@
+﻿@model Psps.Web.ViewModels.Organisation.OrganisationReportViewModel
+
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Organisation_Report_Titile;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-inline .inline {
+        vertical-align: middle;
+    }
+</style>
+<form class="form-inline" id="reportForm">
+    <table id="reports-data-table" class="table table-bordered table-hover table-condensed data-table">
+        <thead>
+            <tr>
+                <th width="50px">File</th>
+                <th width="250px">Description</th>
+                <th>Parameters</th>
+                <th width="100px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>R25</td>
+                <td>Statistical Summary on Promulgation of “Good Practice Guide”</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R25_DateFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R25_DateFrom, true, htmlAttributes: new { @id = "r25_DateFrom", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+                            @Html.LabelFor(m => m.R25_DateTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R25_DateTo, true, htmlAttributes: new { @id = "r25_DateTo", @class = "form-control", @data_provide = "datepicker", @maxlength = 10 })
+
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 25)">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+            <tr>
+                <td>RawData1</td>
+                <td>Raw Data of Organisation</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.Raw1_OrgRef, new { @class = "control-label" })
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Raw1_OrgRef, true, htmlAttributes: new { @id = "raw1_OrgRef", @class = "form-control", @maxlength = 8, @style = "width:600px" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 'awData1')">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>
+
+            @*            <tr>
+                <td>RawData1</td>
+                <td>Raw Data of Organisation</td>
+                <td>
+                    <div class="row">
+                        @Html.LabelFor(m => m.Raw1_OrgRef, new { @class = "control-label" })
+                        <div class="form-group">
+                            @Html.TextBoxFor(m => m.Raw1_OrgRef, true, htmlAttributes: new { @id = "raw1_OrgRef", @class = "form-control", @maxlength = 8, @style = "width:600px" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 'awData1')">
+                        <span class="icon-print"></span>&nbsp;Generate</button>
+                </td>
+            </tr>*@
+        </tbody>
+    </table>
+</form>
+<script>
+    var searchOrganisationUrl = '@Url.RouteUrl("SearchOrganisation")';
+    var getOrganisationUrl = '@Url.RouteUrl("GetOrganisation", new { orgRef = "orgRef" })';
+    var pageSize = 10;
+
+    $(function () {
+        $('input.form-control').addClass("data-val-ignore");
+        $('select.form-control').addClass("data-val-ignore");
+
+        $("#raw1_OrgRef").initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+    });
+
+    function Generate_Click(e, moduleNum) {
+        var $inputs = $(e.target || e.srcElement).parents("tr").find('input.form-control, select.form-control');
+        $inputs.removeClass("data-val-ignore");
+
+        var $form = $("#reportForm");
+        if ($form.valid()) {
+            var actionUrl = '/api/report/r' + moduleNum + '/generate';
+            $form.ajaxPostForm(actionUrl,
+                function (response) {
+                    if (response.success)
+                        window.location.href = response.data;
+                    else
+                        notifError("No record found")
+                }
+            );
+        }
+
+        $inputs.addClass("data-val-ignore");
+    }
+</script>

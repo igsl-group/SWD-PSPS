@@ -1,0 +1,1027 @@
+﻿@model Psps.Web.ViewModels.PSP.PSPViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.PSP;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="pspSearchForm" class="form-horizontal" role="form">
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        @Html.LabelFor(m => m.OrgRef, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            <table>
+                <tr>
+                    <td>
+                        ORG
+                    <td>
+                    <td>
+                        @Html.TextBoxFor(m => m.OrgRef, true,
+                                        htmlAttributes: new { @id = "orgRef", @class = "form-control jqgrid-colmodel", @maxlength = 4, @style = "width: 221px;", data_jqgrid_colmodel_name = "orgRef", data_jqgrid_op = "cn" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @Html.LabelFor(m => m.OrgName, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.OrgName, true,
+                                        htmlAttributes: new { @id = "orgName", @class = "form-control jqgrid-colmodel", @maxlength = 256, data_jqgrid_colmodel_name = "EngOrgName,ChiOrgName", data_jqgrid_op = "cn" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.OrgStatus, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.OrgStatusId, true, new SelectList(Model.OrgStatus, "Key", "Value", Model.OrgStatusId),
+                    htmlAttributes: new { @id = "orgStatus", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "disableIndicator", data_jqgrid_op = "eq" })
+        </div>
+        <label class="col-xs-2 control-label" for="subvented">Subvented:</label>
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.Subvented, true, new SelectList(Model.Subventeds, "Key", "Value", Model.Subvented),
+                    htmlAttributes: new { @id = "subvented", @class = "form-control jqgrid-colmodel", @data_provide = "select2", @Value = "", data_jqgrid_colmodel_name = "subventedIndicator", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+    <div class="form-group">
+        @*        @Html.LabelFor(m => m.ContactPersonName, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-3">
+                @Html.TextBoxFor(m => m.ContactPersonName, true,
+                        htmlAttributes: new { @id = "contactPersonName", @class = "form-control jqgrid-colmodel", @maxlength = 150, data_jqgrid_colmodel_name = "contactPersonName,contactPersonChiName", data_jqgrid_op = "cn" })
+            </div>*@
+        @Html.LabelFor(m => m.Section88, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.Section88, true, new SelectList(Model.Section88s, "Key", "Value", Model.Section88),
+                    htmlAttributes: new { @id = "section88", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "Section88Indicator", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.RegistrationType1, new { @class = "col-xs-2 control-label" })
+
+        <div class="col-xs-9">
+
+            <table>
+                <tr>
+                    <td>
+                        @Html.DropDownListFor(m => m.RegistrationType, true, new SelectList(Model.Registrations, "Key", "Value", Model.RegistrationType),
+                        htmlAttributes: new { @id = "registration1", @class = " form-control jqgrid-colmodel", @style = "width: 250px;", @data_provide = "select2", data_jqgrid_colmodel_name = "regType1", data_jqgrid_op = "eq" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.RegistrationOtherName, true,
+                        htmlAttributes: new { @id = "registrationOtherName1", @class = " form-control jqgrid-colmodel", @maxlength = 100, @style = "width: 560px;", @readonly = true, data_jqgrid_colmodel_name = "regOtherName1", data_jqgrid_op = "cn" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @*<div class="col-xs-6">
+            </div>*@
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.RegistrationType2, new { @class = "col-xs-2 control-label" })
+
+        <div class="col-xs-9">
+
+            <table>
+                <tr>
+                    <td>
+                        @Html.DropDownListFor(m => m.RegistrationType2, true, new SelectList(Model.Registrations, "Key", "Value", Model.RegistrationType2),
+                        htmlAttributes: new { @id = "registration2", @class = " form-control jqgrid-colmodel", @style = "width: 250px;", @data_provide = "select2", data_jqgrid_colmodel_name = "regType2", data_jqgrid_op = "eq" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.RegistrationOtherName2, true,
+                        htmlAttributes: new { @id = "registrationOtherName2", @class = " form-control jqgrid-colmodel", @maxlength = 100, @style = "width: 560px;", @readonly = true, data_jqgrid_colmodel_name = "regOtherName2", data_jqgrid_op = "cn" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @*<div class="col-xs-6">
+            </div>*@
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PSPRef, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.PSPRef, true,
+                                        htmlAttributes: new { @id = "pspRef", @class = "form-control jqgrid-colmodel", @maxlength = 10, data_jqgrid_colmodel_name = "pspRef", data_jqgrid_op = "cn" })
+        </div>
+        @Html.LabelFor(m => m.DateofReceivingApplication, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.RecevAppFromDate, true, "{0:dd/MM/yyyy}",
+                    htmlAttributes: new { @id = "recevAppFromDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @data_date_format = "dd/mm/yyyy", @data_date_min_view_mode = "days", data_jqgrid_colmodel_name = "applicationReceiveDate", data_jqgrid_op = "ge" })
+            <label class="control-label">to</label>
+            @Html.TextBoxFor(m => m.RecevAppToDate, true, "{0:dd/MM/yyyy}",
+                    htmlAttributes: new { @id = "recevAppToDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @data_date_format = "dd/mm/yyyy", @data_date_min_view_mode = "days", data_jqgrid_colmodel_name = "applicationReceiveDate", data_jqgrid_op = "le" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PermitNo, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.PermitNo, true,
+                                        htmlAttributes: new { @id = "permitNo", @class = "form-control jqgrid-colmodel", @maxlength = 12, data_jqgrid_colmodel_name = "permitNum", data_jqgrid_op = "cn" })
+        </div>
+        @Html.LabelFor(m => m.EvenStartDate, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4 ">
+            @Html.TextBoxFor(m => m.EvenStartFromDate, true, "{0:dd/MM/yyyy}",
+                                        htmlAttributes: new { @id = "evenStartFromDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @data_date_format = "dd/mm/yyyy", @data_date_min_view_mode = "days", data_jqgrid_colmodel_name = "eventStartDate", data_jqgrid_op = "ge" })
+            <label class="control-label" for="applicationReceivDateEnd">to</label>
+            @Html.TextBoxFor(m => m.EvenStartToDate, true, "{0:dd/MM/yyyy}",
+                                        htmlAttributes: new { @id = "evenStartToDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @data_date_format = "dd/mm/yyyy", @data_date_min_view_mode = "days", data_jqgrid_colmodel_name = "eventEndDate", data_jqgrid_op = "le" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PspApplicationResult, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.PspApplicationResult, true, new SelectList(Model.PspApplicationResults, "Key", "Value", Model.PspApplicationResult),
+                    htmlAttributes: new { @id = "pspApplicationResult", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "ApprovalStatus", data_jqgrid_op = "eq" })
+        </div>
+
+        @*        @Html.LabelFor(m => m.DateofApplicationDisposal, new { @class = "col-xs-2 control-label" })
+
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.DisposAppFromDate, true, "{0:dd/MM/yyyy}",
+                        htmlAttributes: new { @id = "disposAppFromDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @data_date_format = "dd/mm/yyyy", @data_date_min_view_mode = "days", data_jqgrid_colmodel_name = "applicationDisposalDate", data_jqgrid_op = "ge" })
+                <label class="control-label">to</label>
+                @Html.TextBoxFor(m => m.DisposAppToDate, true, "{0:dd/MM/yyyy}",
+                        htmlAttributes: new { @id = "disposAppToDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @data_date_format = "dd/mm/yyyy", @data_date_min_view_mode = "days", data_jqgrid_colmodel_name = "applicationDisposalDate", data_jqgrid_op = "le" })
+            </div>*@
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.DateofApplicationDisposal, new { @class = "col-xs-2 control-label" })
+
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.DisposAppFromDate, true, "{0:dd/MM/yyyy}",
+                    htmlAttributes: new { @id = "disposAppFromDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @data_date_format = "dd/mm/yyyy", @data_date_min_view_mode = "days", data_jqgrid_colmodel_name = "applicationDisposalDate", data_jqgrid_op = "ge" })
+            <label class="control-label">to</label>
+            @Html.TextBoxFor(m => m.DisposAppToDate, true, "{0:dd/MM/yyyy}",
+                    htmlAttributes: new { @id = "disposAppToDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @data_date_format = "dd/mm/yyyy", @data_date_min_view_mode = "days", data_jqgrid_colmodel_name = "applicationDisposalDate", data_jqgrid_op = "le" })
+        </div>
+
+        @Html.LabelFor(m => m.DateofCompletingApplication, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.TextBoxFor(m => m.ApplicationCompletionDateFromDate, true, "{0:dd/MM/yyyy}",
+                    htmlAttributes: new { @id = "applicationCompletionDateFromDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", data_jqgrid_colmodel_name = "applicationCompletionDate", data_jqgrid_op = "ge" })
+            <label class="control-label">to</label>
+            @Html.TextBoxFor(m => m.ApplicationCompletionDateToDate, true, "{0:dd/MM/yyyy}",
+                    htmlAttributes: new { @id = "applicationCompletionDateToDate", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", data_jqgrid_colmodel_name = "applicationCompletionDate", data_jqgrid_op = "le" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ProcessingOfficerPost, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.ProcessingOfficerPost, true,
+                                        htmlAttributes: new { @id = "processingOfficerPost", @class = "form-control jqgrid-colmodel", @maxlength = 12, data_jqgrid_colmodel_name = "processingOfficerPost", data_jqgrid_op = "cn" })
+        </div>
+
+        @Html.LabelFor(m => m.QualityOpinionDetail, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.TextBoxFor(m => m.QualityOpinionDetail, true,
+                                        htmlAttributes: new { @id = "qualityOpinionDetail", @class = "form-control jqgrid-colmodel", @maxlength = 12, data_jqgrid_colmodel_name = "qualityOpinionDetail", data_jqgrid_op = "cn" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.OverdueIndicator, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.OverdueIndicator, true, new SelectList(Model.OverdueIndicators, "Key", "Value", Model.OverdueIndicator),
+                    htmlAttributes: new { @id = "overdueIndicator", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "overdueIndicator", data_jqgrid_op = "eq" })
+        </div>
+        @Html.LabelFor(m => m.LateIndicator, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.LateIndicator, true, new SelectList(Model.LateIndicators, "Key", "Value", Model.LateIndicator),
+                    htmlAttributes: new { @id = "lateIndicator", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "lateIndicator", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.DisasterNames, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.DisasterId, true, new SelectList(Model.DisasterNames, "Key", "Value", Model.DisasterId),
+                    htmlAttributes: new { @id = "disasterNames", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "disasterId", data_jqgrid_op = "eq" })
+        </div>
+
+        @Html.LabelFor(m => m.IsSsaf, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.IsSsaf, true, new SelectList(Model.YesNos, "Key", "Value", Model.IsSsaf),
+                    htmlAttributes: new { @id = "isSsaf", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "isSsaf", data_jqgrid_op = "eq" })
+        </div>
+    </div>
+    
+    @*<div class="form-group">
+        @Html.LabelFor(m => m.IsSsaf, new { @class = "col-xs-2 control-label" })
+        <div class="col-xs-3">
+            @Html.DropDownListFor(m => m.IsSsaf, true, new SelectList(Model.YesNos, "Key", "Value", Model.IsSsaf),
+                    htmlAttributes: new { @id = "isSsaf", @class = "form-control jqgrid-colmodel", @data_provide = "select2", data_jqgrid_colmodel_name = "isSsaf", data_jqgrid_op = "eq" })
+        </div>
+    </div>*@
+
+    <div class="vspace-6"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnSearch" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-search"></span>@Labels.Search
+                </button>
+                <button id="btnClear" type="button" class="btn btn-sm btn-default">
+                    <span class="icon-eraser"></span>@Labels.Clear
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="pspSearchGridTable" class="searchGrid"></table>
+                <div id="pspSearchGridPager"></div>
+            </div>
+        </div>
+    </div>
+    <!--
+    <div class="vspace-6"></div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnImpModal" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-upload"></span>&nbsp;Import</button>
+                <button id="btnExportRec" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-download"></span>&nbsp;Export</button>
+            </div>
+        </div>
+    </div>
+    -->
+    @*<button id="btnExportRec" type="button" class="btn btn-primary btn-sm">
+            <span class="icon-download"></span>&nbsp;Export</button>
+        <div class="vspace-6"></div>*@
+</form>
+
+<form id="pspImportForm" class="form-horizontal" role="form">
+    @Html.BootstrapValidationSummary()
+    @Html.AntiForgeryToken()
+    <div id="importPspFileModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Import Excel File</h4>
+                </div>
+                <fieldset>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ImportFile, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.FileFor(m => m.ImportFile, htmlAttributes: new { @id = "importFile", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="modal-footer">
+                    <button type="button" id="btnImport" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.ImportXlsFile</button>
+                    <button type="button" id="btnImpFileCancel" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form class="form-horizontal" role="form">
+    <div id="orgModal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search Organisation</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="orgIdGridTable"></table>
+                                <div id="orgIdGridPager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <span class="icon-remove"></span>@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@*<style type="text/css">
+    .ul.select2-container.select2-choices {
+        min-height: 300px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+</style>*@
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listPspSearchUrl = '@Url.RouteUrl("ListPspSearch")';
+        var listOrganisationUrl = '@Url.RouteUrl("ListPSPOrganisation")';
+        var createPspUrl = '@Url.RouteUrl("CreatePsp")';
+        var EditPspUrl = '@Url.RouteUrl("EditPsp", new { pspMasterId = -1 })';
+        var exportPspGridDataUrl = '@Url.RouteUrl("ExportPspGridData")';
+        var exportPspUrl = '@Url.RouteUrl("ExportPsp")';
+        var newPspMasterUrl = '@Url.RouteUrl("NewPspMaster", new { createMode = "placeholder", pspMasterId = -1, orgId = -2 })';
+        var insertPspMasterByImportXls = '@Url.RouteUrl("ImportPsp")';
+
+        var varBenOrOrg = "";
+
+        $(function () {
+            initGrid();
+            initApplicationCompletionDate('ToYear');
+
+            function initApplicationCompletionDate(mode) {
+                // Get the inputted criteria ApplicationCompletion Year
+                var applicationCompletionDateFromDate = $('#applicationCompletionDateFromDate').val();
+                var applicationCompletionDateToDate = $('#applicationCompletionDateToDate').val();
+
+                if (mode == 'ToDate')
+                {
+                    // Reformat the input to Date format
+                    if (applicationCompletionDateFromDate != '' & applicationCompletionDateFromDate.length == 4)
+                    {
+                        $('#applicationCompletionDateFromDate').val('01/01/' + applicationCompletionDateFromDate);
+                    }
+                    if (applicationCompletionDateToDate != ''  & applicationCompletionDateToDate.length == 4)
+                    {
+                        $('#applicationCompletionDateToDate').val('31/12/' + applicationCompletionDateToDate);
+                    }
+                }
+                if (mode == 'ToYear')
+                {
+                    // Reformat the input to Year format
+                    if (applicationCompletionDateFromDate != '' & applicationCompletionDateFromDate.length >= 4)
+                    {
+                        $('#applicationCompletionDateFromDate').val(applicationCompletionDateFromDate.substring(applicationCompletionDateFromDate.length - 4, applicationCompletionDateFromDate.length));
+                    }
+                    if (applicationCompletionDateToDate != ''  & applicationCompletionDateToDate.length >= 4)
+                    {
+                        $('#applicationCompletionDateToDate').val(applicationCompletionDateToDate.substring(applicationCompletionDateToDate.length - 4, applicationCompletionDateToDate.length));
+                    }
+                }
+
+            }
+
+            $('#engSalute').on('change', function (e) {
+                $engDDB = $('#engSalute');
+                var value = $engDDB.val();
+                $chiDDB = $('#chiSalute');
+                $chiDDB.select2('val', value);
+            });
+
+            $('#btnSearch').on('click', function (e) {
+                var $form = $('#pspSearchForm');
+                $grid = $('#pspSearchGridTable');
+
+                // Reformat the inputted ApplicationCompletion Year to Date format
+                //initApplicationCompletionDate('ToDate');
+
+                resetPostData($form, $grid);
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, queryStringToJson($form.serialize()))
+                if (clearFilter)
+                    $.extend(postData, { filters: "" });
+
+                // Post
+                $grid.jqGrid('setGridParam', {
+                    url: listPspSearchUrl,
+                    datatype: 'json',
+                    postData: postData,
+                    search: !clearFilter
+                });
+
+                if (clearFilter) {
+                    var filters = $form.buildFilters();
+                    res = JSON.stringify(filters);
+                    $grid.jqGridFilter(res);
+                } else {
+                    $grid.trigger("reloadGrid", [{ current: true }]);
+                }
+
+                // Store back the inputted value
+                //initApplicationCompletionDate('ToYear');
+
+            });
+            $('#registration1').on('change', function (e) {
+                $reg = $('#registration1');
+                readOnlyForOtr($(this), "05", $('#registrationOtherName1'))
+                $('#registrationOtherName1').val("");
+            });
+            $('#registration2').on('change', function (e) {
+                $reg = $('#registration2');
+                readOnlyForOtr($(this), "05", $('#registrationOtherName2'))
+                $('#registrationOtherName2').val("");
+            });
+            $('#btnOrganSearch').click(function (e) {
+                $('#orgModal').modal({ backdrop: 'static', show: true,
+                    keyboard: false });
+                varBenOrOrg = "Org";
+                initOrganisationGrid();
+            });
+            $('#btnBebeficiaryOrganSearch').click(function (e) {
+                $('#orgModal').modal({ backdrop: 'static', show: true,
+                    keyboard: false });
+                varBenOrOrg = "Ben";
+                initOrganisationGrid();
+            });
+            $('#btnCreatePsp').click(function () {
+                var $form = $("#createPspForm");
+
+                if ($form.valid()) {
+
+                    var actionUrl = createPspUrl;
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#createModal').modal('hide');
+                             $("#pspSearchGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+            $('#specialRemark').on('change', function (e) {
+                var arrSpeRem = $(this).val();
+                if (jQuery.inArray("4", arrSpeRem) !== -1) {
+                    $('#otherSpecialRemark').prop('readonly', false);
+                }
+                else $('#otherSpecialRemark').prop('readonly', true);
+            });
+            $('#rejectReasonId').on('change', function (e) {
+                readOnlyForOtr($(this), "06", $('#otherRejectReason'))
+            });
+            $('#pspNotRequireReasonId').on('change', function (e) {
+                readOnlyForOtr($(this), "06", $('#otherPspNotRequireReason'))
+            });
+            $('#caseCloseReasonId').on('change', function (e) {
+                readOnlyForOtr($(this), "4", $('#otherCaseCloseReason'))
+            });
+            function readOnlyForOtr($dropDownList, otrLkpCode, $readOnlyCtl) {
+                var otrReason = $dropDownList.val();
+                if (otrReason == otrLkpCode) {
+                    $readOnlyCtl.prop('readonly', false);
+                }
+                else $readOnlyCtl.prop('readonly', true);
+            };
+            $('#btnClear').on('click', function (e) {
+                clearForm($('#pspSearchForm'));
+                readOnlyForOtr($('#registration1'), "05", $('#registrationOtherName1'));
+                readOnlyForOtr($('#registration2'), "05", $('#registrationOtherName2'));
+            });
+
+            $('#btnImpModal').on('click', function (e) {
+                $('#importFile').val('');
+                $('#importPspFileModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            });
+
+            $('#btnImport').on('click', function (e) {
+                $form = $('#pspImportForm');
+                if ($form.valid()) {
+                    var actionUrl = insertPspMasterByImportXls;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             if (response.data) {
+                                 window.location.href = response.data;
+                                 notifSuccess('Update unsuccessful, see log file');
+                                 $('#importFile').replaceWith($('#importFile').clone(true))
+                             }
+                             else {
+                                 $("#pspSearchGridTable").trigger("reloadGrid", [{ current: true }]);
+                                 notifSuccess(response.message);
+                                 $('#importFile').replaceWith($('#importFile').clone(true))
+                                 $('#importPspFileModal').modal('hide');
+                             }
+                         }
+
+                    );
+
+                }
+            })
+
+            $('#btnExportRec').on('click', function (e) {
+                var grid = $('#pspSearchGridTable');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifError('No record');
+                    return;
+                }
+
+                grid.exportGrid(exportPspUrl,
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+
+            });
+
+            initSearchForm();
+
+            var filters = $('#pspSearchForm').buildFilters();
+        });
+
+        var clearFilter = true;
+        function initSearchForm() {
+            var isFirst = @Html.Raw(Json.Encode(@Model.isFirstSearch));
+
+            if(!isFirst){
+                        $('#pspSearchGridTable').jqGrid('setGridParam',  { search: false, postData: { "filters": localStorage.getItem('pspSearchGridTable')} });
+                        clearFilter = false || (localStorage.getItem('pspSearchGridTable') == "" || localStorage.getItem('pspSearchGridTable') == undefined);
+                        $('#btnSearch').click();
+                        clearFilter = true;
+                    }
+                    else{
+                        $('#subvented','#section88','#orgStatus','#registration').select2('val', '');
+                    }
+                }
+
+        function initGrid() {
+            var $grid = $('#pspSearchGridTable');
+            var pager_selector = '#pspSearchGridPager';
+            //var actionUrl = getActing.replace('-1', $('#postId').val());
+            $grid.jqGrid({
+                pager: pager_selector,
+                url: listPspSearchUrl,
+                datatype: "local",
+                sortname: 'sortPspRef',
+                sortorder: 'desc',
+                colNames: [
+                    'Org. Ref.',
+                    '@Html.DisplayNameFor(m => m.OrgName)',
+                    '@Html.DisplayNameFor(m => m.Subvented)',
+                    '@Html.DisplayNameFor(m => m.Section88)',
+                    'Registration 1',
+                    'Registration 2',
+                    '@Html.DisplayNameFor(m => m.ProcessingOfficerPost)',
+                    '@Html.DisplayNameFor(m => m.PSPRef)',
+                    '@Html.DisplayNameFor(m => m.PreviousPspRef)',
+                    'Date of Application',
+                    '@Html.DisplayNameFor(m => m.DateofReceivingApplication)',
+                    '@Html.DisplayNameFor(m => m.DateofApplicationDisposal)',                    
+                    '@Html.DisplayNameFor(m => m.DateofCompletingApplication)',
+                    'New Applicant',
+                    'Beneficiary Organisation',
+                    '@Html.DisplayNameFor(m => m.DisasterNames)',
+                    'Is SSAF',
+                    'Application Result',
+                    'Reason(s) for Reject',
+                    'Reject Remarks',
+                    '@Html.DisplayNameFor(m => m.PermitNo)',
+                    'Event Start Date',
+                    'Event End Date',
+                    '@Html.DisplayNameFor(m => m.TotalLocation)',
+                    '@Html.DisplayNameFor(m => m.TotEvent)',
+                    'No. of Event Approved',
+                    'No. of Event Held',
+                    'No. of Event Cancelled',
+                    '% of Event Held',
+                    'Overdue / Late A/C',
+                    'Late A/C',
+                    'Name of Organisation in English',
+                    'Name of Organisation in Chinese',
+                    'Mailing Address in English',
+                    'Mailing Address in Chinese',
+                    'Contact Person',
+                    'Contact Person’s Email',
+                    'Organisation’s Email Address',                    
+                    'Organisation Status',
+                    '@Html.DisplayNameFor(m => m.ContactPersonName)',
+                    '@Html.DisplayNameFor(m => m.ContactPersonChiName)',
+                    'Other Registration Name 1',
+                    'Other Registration Name 2',                    
+                    'pspMasterId',
+                    'pspApprovalHistoryId',
+                    'sortPspRef',
+                    'Special Remarks',
+                    'Details of the Qualified Opinion'
+                ],
+                colModel: [{
+                    name: 'orgRef',
+                    width: '3'
+                }, {
+                    name: 'orgName',
+                    index: 'engOrgNameSorting',
+                    search: false,
+                    width: '6'
+                }, {
+                    name: 'subventedIndicator',                    
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    },
+                    template: yesNoTemplate
+                }, {
+                    name: 'section88Indicator',
+                    width: '4',
+                    template: yesNoTemplate
+                }, {
+                    name: 'regType1',
+                    width: '3',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.Registrations))
+                        }
+                }, {
+                    name: 'regType2',
+                    width: '3',
+                    hidden: true,
+                    exporthidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.Registrations))
+                        }
+                }, {
+                    name: 'processingOfficerPost',                    
+                    width: '3'
+                }, {
+                    name: 'pspRef',
+                    sortindex: 'pspYear asc, pspRef',
+                    sorttype: 'desc',
+                    width: '3'
+                }, {
+                    name: 'previousPspRef',
+                    sorttype: 'desc',
+                    width: '3'
+                }, {
+                    name: 'applicationDate',
+                    template: dateTemplate,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'applicationReceiveDate',
+                    template: dateTemplate,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                },{
+                    name: 'applicationDisposalDate',
+                    template: dateTemplate,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'applicationCompletionDate',
+                    template: dateTemplate,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: null,
+                    index: 'newApplicantIndicator',
+                    hidden: true,
+                    searchoptions : {
+                        searchhidden: true
+                    },
+                    template: yesNoTemplate
+                }, {
+                    name: 'beneficiaryOrg',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'disasterId',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.DisasterNames))
+                        }
+                }, {
+                    name: 'isSsaf',
+                    width: '3',
+                    template: yesNoTemplate,
+                    align: 'center'
+                }, {
+                    name: 'approvalStatus',
+                    width: '3',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.PspApplicationResults))
+                        }
+                }, {
+                    name: 'rejectReason',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'rejectRemark',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'permitNum',
+                    width: '3'
+                }, {
+                    name: 'eventStartDate',
+                    template: dateTemplate,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                },{
+                    name: 'eventEndDate',
+                    template: dateTemplate,
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'totalLocation',
+                    template:numTemplate,
+                    width: '3'
+                }, {
+                    name: 'totEvent',
+                    template:numTemplate,
+                    width: '3'
+                }, {
+                    name: 'eventApprovedNum',
+                    template:numTemplate,
+                    width: '3'
+                }, {
+                    name: 'eventHeldNum',
+                    template:numTemplate,
+                    width: '3'
+                }, {
+                    name: 'eventCancelledNum',
+                    template:numTemplate,
+                    width: '3'
+                }, {
+                    name: 'eventHeldPercent',
+                    template:numTemplate,
+                    width: '3'
+                }, {
+                    name: 'overdueIndicator',
+                    width: '3',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (true === rowObject.overdueIndicator) {
+                            return "Overdue";
+                        } else if (true === rowObject.lateIndicator) {
+                            return "Late";
+                        } else {
+                            return "";
+                        }
+                    },
+                    unformat: jqGridUnformatYesNo,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: "true:Yes;false:No" ,
+                    }
+                }, {
+                    name: 'lateIndicator',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: "true:Yes;false:No",
+                        searchhidden: true
+                    },
+                    exporthidden: true
+                }, {
+                    name: 'engOrgName',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'chiOrgName',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'engRegisteredAddress',
+                    index: 'engRegisteredAddress1',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'chiRegisteredAddress',
+                    index:'chiRegisteredAddress1',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'contactPerson',
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'contactPersonEmailAddress',                    
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'orgEmailAddress',                    
+                    hidden: true,
+                    exporthidden: true
+                }, {
+                    name: 'disableIndicator',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        searchhidden: true,
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.OrgStatus))
+                        }
+                }, {
+                    name: 'contactPersonName',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'contactPersonChiName',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'regOtherName1',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'regOtherName2',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }, {
+                    name: 'pspMasterId',
+                    hidden: true
+                }, {
+                    name: 'pspApprovalHistoryId',
+                    hidden: true
+                }, {
+                    name: 'sortPspRef',
+                    hidden: true
+                }, {
+                    name: 'specialRemark',
+                    hidden: true,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne', 'cn'],
+                        value: @Html.Raw(Json.Encode(@Model.SpecialRemarks)),
+                        searchhidden: true
+                    }
+                },{
+                    name: 'QualityOpinionDetail',
+                    hidden: true,
+                    searchoptions: {
+                        searchhidden: true
+                    }
+                }],
+                loadComplete: function(grid) {
+                    defaultGridLoadComplete(grid);
+                    $(this).setGridParam({ datatype: "json" });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    openEditPage(data.pspMasterId, data.pspApprovalHistoryId);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+                beforeRefresh: function() { resetPostData($('#pspSearchForm'), $(this)) }
+            }, {}, {}, {}, {
+                //search form
+                recreateFilter: true,
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function displayInput() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                $('#createModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function doNewRecord() {
+                window.location.href = newPspMasterUrl.replace("placeholder", "new");
+            };
+
+            function openEditPage(pspMasterId, pspApprovalHistoryId) {
+                var url = EditPspUrl.replace('-1', pspMasterId).replace(-2, pspApprovalHistoryId);
+                window.location.href = url;
+            };
+
+            function onExportRecord() {
+                var grid = $('#pspSearchGridTable');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifSuccess("Psp Search Result has no Record");
+                    return;
+                }
+
+                grid.exportGrid(exportPspGridDataUrl,
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+            };
+        };
+
+        function initOrganisationGrid() {
+            var $organisationGrid = $("#orgIdGridTable");
+            var pager_selector = "#orgIdGridPager";
+
+            if ($organisationGrid.hasClass('ui-jqgrid-btable')) {
+                $organisationGrid.trigger("reloadGrid", [{ current: true }]);
+                return;
+            }
+
+            $organisationGrid.jqGrid({
+                pager: pager_selector,
+                sortname: 'orgRef',
+                sortorder: 'asc',
+                datatype: "json",
+                url: listOrganisationUrl,
+                colNames: [
+                '@Html.DisplayNameFor(m => m.OrgRef)',
+                    '@Html.DisplayNameFor(m => m.OrgName)',
+                    '@Html.DisplayNameFor(m => m.Subvented)',
+                    ''
+                ],
+                colModel: [{
+                    name: 'orgRef',
+                    width: 100,
+                }, {
+                    name: 'orgName',
+                    width: 650,
+                }, {
+                    name: 'subventedIndicator',
+                    width: 100,
+                    template: yesNoTemplate,
+                    align: 'center'
+                },
+                {
+                    name: 'orgEngName',
+                    hidden: true
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $organisationGrid.jqGrid('getRowData', rowId);
+                    if (varBenOrOrg == "Org") {
+                        $('#orgId').val(data.orgRef);
+                        $('#createModelOrgName').text(data.orgEngName);
+                    }
+
+                    $('#orgModal').modal('hide');
+                },
+            });
+
+            //navButtons
+            $organisationGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {})
+        };
+
+    </script>
+}

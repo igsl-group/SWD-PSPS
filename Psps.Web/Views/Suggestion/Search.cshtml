@@ -1,0 +1,501 @@
+﻿@model Psps.Web.ViewModels.Suggestion.SuggestionMasterViewModel
+@using Psps.Resources;
+@{
+    ViewBag.Title = Labels.Suggestion_Search;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form action="" id="suggestionMasterform" name="suggestionMasterform" class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(m => m.SuggestionRefNum, new { @class = "col-xs-3 control-label" })
+        <div class="col-xs-6">
+            <div style="float: left">
+                @Html.TextBoxFor(m => m.SuggestionRefNumPR, true, htmlAttributes: new { @id = "searchSuggestionRefNumPR", @class = "form-control jqgrid-colmodel", @maxlength = 5, @style = "width: 90px" })
+            </div>
+            <div style="float: left">
+                <label style="padding: 10px 0px 0px 10px; font-weight: bold;">S</label>
+            </div>
+            <div style="float: left; margin-left: 10px">
+                @Html.TextBoxFor(m => m.SuggestionRefNum, true, htmlAttributes: new { @id = "searchSuggestionRefNum", @class = "form-control jqgrid-colmodel", @maxlength = 2, @style = "width: 150px" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.SuggestionDateEnd, new { @class = "col-xs-3 control-label" })
+        <div class="col-xs-2" style="width: 130px;">
+            @Html.TextBoxFor(m => m.SuggestionDateStart, true, htmlAttributes: new { @id = "searchSuggestionDateStart", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @maxlength = 10 })
+        </div>
+        <div class="col-xs-1" style="width: 30px;">
+            <label style="padding: 10px 0px 0px 10px;">to</label>
+        </div>
+        <div class="col-xs-2" style="width: 130px;">
+            @Html.TextBoxFor(m => m.SuggestionDateEnd, true, htmlAttributes: new { @id = "searchSuggestionDateEnd", @class = "form-control jqgrid-colmodel", @data_provide = "datepicker", @maxlength = 10 })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.SuggestionSources, new { @class = "col-xs-3 control-label" })
+        <div class="col-xs-9">
+            <div class="input-group">
+                @Html.DropDownListFor(m => m.SuggestionSourceId, true, new SelectList(Model.SuggestionSources, "Key", "Value", Model.SuggestionSourceId), htmlAttributes: new { @id = "searchSuggestionSources", @class = "form-control jqgrid-colmodel", @data_provide = "select2", @style = "width: 230px" })
+                @Html.TextBoxFor(m => m.SuggestionSourceOther, true, htmlAttributes: new { @id = "searchSuggestionSourceOther", @class = "form-control", @maxlength = 100, @disabled = "disabled", @style = "width: 350px" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ActivityConcerns, new { @class = "col-xs-3 control-label" })
+        <div class="col-xs-9">
+            <div class="input-group">
+                @Html.DropDownListFor(m => m.ActivityConcernId, true, new SelectList(Model.ActivityConcerns, "Key", "Value", Model.ActivityConcernId), htmlAttributes: new { @id = "searchActivityConcerns", @class = "form-control jqgrid-colmodel", @data_provide = "select2", @style = "width: 230px" })
+                @Html.TextBoxFor(m => m.SuggestionActivityConcernOther, true, htmlAttributes: new { @id = "searchActivityConcernOther", @class = "form-control", @maxlength = 100, @disabled = "disabled", @style = "width: 350px" })
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnSearch" type="button" class="btn btn-primary btn-sm">
+                    <span class="icon-search"></span>&nbsp;@Labels.Search</button>
+                <button id="btnClear" type="button" class="btn btn-sm btn-default">
+                    <span class="icon-eraser"></span>&nbsp;@Labels.Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+    <fieldset>
+        <legend>Suggestion Search Result</legend>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="grid-stretch-container">
+                    <table id="suggestionMasterGridTable" class="searchGrid"></table>
+                    <div id="suggestionMasterGridPager"></div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<form id="SuggestionEditFrom" class="form-horizontal">
+    <div id="edit-modal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="btnClose" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Suggestion Details</h4>
+                </div>
+
+                <fieldset>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SuggestionRefNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.SuggestionRefNum, true, htmlAttributes: new { @id = "suggestionRefNum", @class = "form-control", @maxlength = 20, @style = "width: 200px" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SuggestionSourceId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.DropDownListFor(m => m.SuggestionSourceId, true, new SelectList(Model.SuggestionSources, "Key", "Value", Model.SuggestionSourceId), htmlAttributes: new { @id = "suggestionSources", @class = "form-control", @data_provide = "select2" })
+
+                                @Html.TextBoxFor(m => m.SuggestionSourceOther, true, htmlAttributes: new { @id = "suggestionSourceOther", @class = "form-control", @maxlength = 100, @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ActivityConcernId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.DropDownListFor(m => m.ActivityConcernId, true, new SelectList(Model.ActivityConcerns, "Key", "Value", Model.ActivityConcernId), htmlAttributes: new { @id = "activityConcerns", @class = "form-control", @data_provide = "select2" })
+
+                                @Html.TextBoxFor(m => m.SuggestionActivityConcernOther, true, htmlAttributes: new { @id = "suggestionActivityConcernOther", @class = "form-control", @maxlength = 100, @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NatureId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.DropDownListFor(m => m.NatureId, true, new SelectList(Model.Natures, "Key", "Value", Model.NatureId), htmlAttributes: new { @id = "natures", @class = "form-control", @data_provide = "select2", style = "width: 200px;" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SuggestionDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.SuggestionDate, true, htmlAttributes: new { @id = "suggestionDate", @class = "form-control", @maxlength = 20, @style = "width: 200px", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SenderName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(m => m.SenderName, true, htmlAttributes: new { @id = "senderName", @class = "form-control", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SuggestionDescription, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextAreaFor(m => m.SuggestionDescription, true, 4, 100, htmlAttributes: new { @id = "suggestionDescription", @class = "form-control", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FileRefNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.PartNum, true, htmlAttributes: new { @id = "partNum", @class = "form-control", @maxlength = 20 })
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.EnclosureNum, true, htmlAttributes: new { @id = "enclosureNum", @class = "form-control", @maxlength = 50 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AcknowledgementSentDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.AcknowledgementSentDate, true, htmlAttributes: new { @id = "acknowledgementSentDate", @class = "form-control", @maxlength = 20, @style = "width: 200px", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Remark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(m => m.Remark, 4, 100, htmlAttributes: new { @id = "remark", @class = "form-control", @maxlength = 4000 })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="modal-footer">
+                    <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                        <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                    <button type="button" id="btnCreate" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button id="btnCancel" type="button" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listSuggestionMasterUrl = '@Url.RouteUrl("ListSuggestionMaster")';
+        var newSuggestionMasterUrl = '@Url.RouteUrl("NewSuggestionMaster", new { code = -1 })';
+        var createSuggestionMasterUrl = '@Url.RouteUrl("CreateSuggestionMaster")';
+        var editSuggestionMasterUrl = '@Url.RouteUrl("UpdateSuggestionMaster", new { code = "placeholder" })';
+        var getSuggestionMasterUrl = '@Url.RouteUrl("GetSuggestionMaster", new { code = -1 })';
+        var exportSuggestionMasterUrl = '@Url.RouteUrl("ExportSuggestionMaster")';
+        var getSearchDataFromSessionUrl = '@Url.RouteUrl("GetSearchDataFromSessionSug")';
+        var searchSuggestionRefNumPRDefault = $("#searchSuggestionRefNumPR").val();
+
+        $(function ($) {
+            initSuggestionMasterGrid();
+            initSearchForm();
+            //initHead('Suggestion', 'Search');
+
+            $('#btnCreate').click(function () {
+                var $form = $("#SuggestionEditFrom");
+                if ($form.valid()) {
+                    var actionUrl = createSuggestionMasterUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             //$('#edit-modal').modal('hide');
+                             //$("#suggestionMasterGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                             var actionUrl = newSuggestionMasterUrl.replace("-1", response.data);
+                             window.location = actionUrl;
+                         }
+                    );
+                }
+            });
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        clearForm("#SuggestionEditFrom");
+                        $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                        $('#edit-modal').modal('hide');
+                    }
+                });
+            });
+
+            $('#btnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        clearForm("#SuggestionEditFrom");
+                        $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                        $('#edit-modal').modal('hide');
+                    }
+                });
+            });
+
+            $('#btnSearch').on('click', function () {
+                var $form = $('#suggestionMasterform');
+                var $grid = $('#suggestionMasterGridTable');
+                $grid.jqGrid('clearGridData');
+
+                resetPostData($form, $grid);
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, queryStringToJson($form.serialize()))
+                if (clearFilter)
+                    $.extend(postData, { filters: "" });
+
+                $grid.jqGrid('setGridParam', {
+                    //url: listSuggestionMasterUrl + "?1=1&" + $('#suggestionMasterform').serialize(),
+                    url: listSuggestionMasterUrl,
+                    datatype: 'json',
+                    search: !clearFilter,
+                    postData: postData,
+                    mtype: "POST",
+                });
+                $grid.trigger("reloadGrid", [{ page: 1 }]);
+            });
+
+            initSearchForm();
+
+            $('#btnClear').click(function () {
+                clearForm("#suggestionMasterform");
+                $("#searchSuggestionSources").change();
+                $("#searchActivityConcerns").change();
+                $("#searchSuggestionRefNumPR").val(searchSuggestionRefNumPRDefault);
+
+            });
+
+            $("#suggestionSources").change(function () {
+                var suggestionSource = $("#suggestionSources option:selected").text();
+                if (suggestionSource.toLocaleLowerCase() == "Other Departments / Authorities".toLocaleLowerCase()) {
+                    $("#suggestionSourceOther").removeAttr("disabled");
+                } else {
+                    $("#suggestionSourceOther").val("");
+                    $("#suggestionSourceOther").attr("disabled", true);
+                }
+            });
+
+            $("#activityConcerns").change(function () {
+                var activityConcern = $("#activityConcerns option:selected").text();
+                if (activityConcern.toLocaleLowerCase() == "Others".toLocaleLowerCase()) {
+                    $("#suggestionActivityConcernOther").removeAttr("disabled");
+                } else {
+                    $("#suggestionActivityConcernOther").val("");
+                    $("#suggestionActivityConcernOther").attr("disabled", true);
+                }
+            });
+
+            $("#searchSuggestionSources").change(function () {
+                var suggestionSource = $("#searchSuggestionSources option:selected").text();
+                if (suggestionSource.toLocaleLowerCase() == "Other Departments / Authorities".toLocaleLowerCase()) {
+                    $("#searchSuggestionSourceOther").removeAttr("disabled");
+                } else {
+                    $("#searchSuggestionSourceOther").val("");
+                    $("#searchSuggestionSourceOther").attr("disabled", true);
+                }
+            });
+
+            $("#searchActivityConcerns").change(function () {
+                var activityConcern = $("#searchActivityConcerns option:selected").text();
+                if (activityConcern.toLocaleLowerCase() == "Others".toLocaleLowerCase()) {
+                    $("#searchActivityConcernOther").removeAttr("disabled");
+                } else {
+                    $("#searchActivityConcernOther").val("");
+                    $("#searchActivityConcernOther").attr("disabled", true);
+                }
+            });
+        });
+
+        var clearFilter = true;
+        function initSearchForm() {
+            var data = null;
+            //get session data via ajax
+            var actionUrl = getSearchDataFromSessionUrl;
+            //alert(getDesUrl);
+            ajaxGet(actionUrl,
+                function (response) {
+                    if (response.data == null) {
+                        $('#searchSuggestionSources,#searchActivityConcerns').select2("val", '');
+                    } else {
+                        $('#suggestionMasterGridTable').jqGrid('setGridParam',  { postData: { "filters": localStorage.getItem('suggestionMasterGridTable')} });
+                        //$('#searchSuggestionSources').select2("val", response.data.suggestionSourceId);
+                        //$('#searchActivityConcerns').select2("val", response.data.activityConcernId);
+                        //if (response.data.suggestionSourceOther!=null && response.data.suggestionSourceOther != "") {
+                        //    $("#searchSuggestionSourceOther").removeAttr("disabled");
+                        //}
+                        //if (response.data.suggestionActivityConcernOther!=null && response.data.suggestionActivityConcernOther != "") {
+                        //    $("#searchActivityConcernOther").removeAttr("disabled");
+                        //}
+                        clearFilter = false || (localStorage.getItem('suggestionMasterGridTable') == "" || localStorage.getItem('suggestionMasterGridTable') == undefined);
+                        $('#btnSearch').click();
+                        clearFilter = true;
+                    }
+
+                }
+            );
+
+        }
+
+        var suggestionMasterGridInited = false;
+        function initSuggestionMasterGrid() {
+            if (suggestionMasterGridInited)
+                return;
+            suggestionMasterGridInited = true;
+            var $suggestionMasterGrid = $("#suggestionMasterGridTable");
+            var pager_selector = "#suggestionMasterGridPager";
+
+            $suggestionMasterGrid.jqGrid({
+                pager: pager_selector,
+                url: listSuggestionMasterUrl,
+                datatype: "local",
+                mtype: 'post',
+                colNames: [
+                    'SuggestionMasterId',
+                    '@Html.DisplayNameFor(m => m.SuggestionRefNum)',
+                    '@Html.DisplayNameFor(m => m.SuggestionSourceId)',
+                    '@Html.DisplayNameFor(m => m.ActivityConcernId)',
+                    '@Html.DisplayNameFor(m => m.NatureId)',
+                    '@Html.DisplayNameFor(m => m.SuggestionDate)',
+                    'Part No.',
+                    'Encl.No.',
+                    'Description'
+                ],
+                colModel: [{
+                    name: 'suggestionMasterId',
+                    width: '1',
+                    hidden: true
+                }, {
+                    name: 'suggestionRefNum',
+                    width: '2',
+                }, {
+                    name: 'suggestionSource',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.SuggestionSources)),
+                    },
+                    width: '2',
+                }, {
+                    name: 'suggestionActivityConcern',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.ActivityConcerns)),
+                    },
+                    width: '2'
+                }, {
+                    name: 'suggestionNature',
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ['eq', 'ne'],
+                        value: @Html.Raw(Json.Encode(@Model.Natures)),
+                    },
+                    width: '2'
+                }, {
+                    name: 'suggestionDate',
+                    template: dateTemplate,
+                    width: '3',
+                }, {
+                    name: 'partNum',
+                    width: '1'
+                }, {
+                    name: 'enclosureNum',
+                    width: '1'
+                }, {
+                    name: 'suggestionDescription',
+                    width: '2'
+                }],
+                editurl: "/dummy.html", //nothing is saved
+                loadComplete: function(grid) {
+                    defaultGridLoadComplete(grid);
+                    $(this).setGridParam({ datatype: "json" });
+                },
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $suggestionMasterGrid.jqGrid('getRowData', rowId);
+                    onEditRecord(data);
+                },
+                onSelectRow: function (rowId) {
+                    $suggestionMasterGrid.setGridParam('editurl', 'system-disaster-maintenance.html?' + rowId);
+                }
+            });
+
+            //navButtons
+            $suggestionMasterGrid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+                beforeRefresh: function() { resetPostData($('#suggestionMasterform'), $(this)) }
+            }, {}, {}, {}, {
+                //search form
+                recreateFilter: true,
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: onNewRecord,
+                position: "first",
+                title: "New Record",
+                cursor: "pointer"
+            }).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-download-alt",
+                onClickButton: onExportRecord,
+                position: "first",
+                title: "Export Data",
+                cursor: "pointer"
+            });
+
+            $(window).on('resize', function () {
+                $suggestionMasterGrid.setGridWidth($('.page-content').width());
+            }).trigger('resize');
+
+            function displayInput() {
+                $('#edit-modal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            }
+
+            function onEditRecord(data) {
+                var actionUrl = newSuggestionMasterUrl.replace("-1", data.suggestionMasterId);
+                window.location = actionUrl;
+
+            };
+
+            function onNewRecord() {
+                displayInput();
+
+                $('#suggestionMasterId').val('');
+                $('#suggestionRefNum').prop('readonly', true).val('');
+                $('#suggestionSources').select2('val', '');
+                $('#activityConcerns').select2('val', '');
+                $('#suggestionRef').val('');
+                $('#natures').select2('val', '');
+                $('#suggestionDate').val('');
+                $('#senderName').val('');
+                $('#suggestionDescription').val('');
+                $('#partNum').val('');
+                $('#enclosureNum').val('');
+                $('#acknowledgementSentDate').val('');
+                $('#remark').val('');
+
+                clearForm('#edit-modal');
+            };
+
+            function onExportRecord() {
+                var grid = $('#suggestionMasterGridTable');
+                var data = grid.jqGrid('getRowData');
+
+                if (data.length == 0) {
+                    notifSuccess("Suggestion Search Result is no Record");
+                    return;
+                }
+
+                grid.exportGrid(exportSuggestionMasterUrl,
+                    function (response) {
+                        window.location.href = response.data;
+                    }
+                );
+            };
+        };
+
+        function initHead(module, action) {
+            $(".page-header").empty();
+            var head = "<h1>" + module + "<small><i class='icon-double-angle-right'></i>" + action + "</small></h1>";
+            $(".page-header").append(head);
+        }
+    </script>
+}

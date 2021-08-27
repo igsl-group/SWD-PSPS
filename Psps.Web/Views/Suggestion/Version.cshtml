@@ -1,0 +1,340 @@
+﻿@model Psps.Web.ViewModels.Suggestion.SuggestionDocViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Suggestion_Template_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="SuggestionVersionForm" class="form-horizontal" role="form" enctype="multipart/form-data">
+
+    <div class="form-group" id="div-Version">
+        <div class="col-xs-12">
+            <table id="suggestionGridTableVersion"></table>
+            <div id="suggestionGridPagerVersion"></div>
+        </div>
+    </div>
+    <div class="vspace-6"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnReturnCancel" type="button" class="btn btn-default btn-sm">
+                    <span class="icon-remove"></span>@Labels.Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@Labels.Letter_Details</h4>
+                </div>
+                @using (Html.BeginForm("New", "class", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-body">
+                        @Html.BootstrapValidationSummary()
+
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+                        @Html.HiddenFor(m => m.DocNum, htmlAttributes: new { @id = "docNum" })
+                        @Html.HiddenFor(m => m.SuggestionDocId, htmlAttributes: new { @id = "suggestionDocId" })
+                        <fieldset>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DocNum, new { @class = "col-xs-2 control-label" })
+                                <div class="col-xs-4">
+                                    @Html.TextBoxFor(m => m.DocNum, true, htmlAttributes: new { @id = "tname", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Version, new { @class = "col-xs-2 control-label" })
+                                <div class="col-xs-4">
+                                    @Html.TextBoxFor(m => m.Version, true, htmlAttributes: new { @id = "version", @class = "form-control", @maxlength = 10 })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Description, new { @class = "col-xs-2 control-label" })
+                                <div class="col-xs-8">
+                                    @Html.TextBoxFor(m => m.Description, true, htmlAttributes: new { @id = "description", @class = "form-control", @maxlength = 256 })
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="div-IsActive">
+                                @Html.LabelFor(m => m.IsActive, new { @class = "col-xs-2 control-label" })
+                                <div class="col-xs-2">
+                                    @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @id = "isActive" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Path, new { @class = "col-xs-2 control-label" })
+                                <div class="col-xs-10">
+                                    @Html.FileFor(m => m.File, htmlAttributes: new { @id = "file", @class = "form-control" })
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnCreateLetter" name="create" type="button" class="btn btn-sm btn-primary hide">
+                            <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                        <button id="btnUpdateLetter" type="button" class="btn btn-sm btn-primary hide">
+                            <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                        <button id="btnCancel" type="button" class="btn btn-sm btn-default" data-dismiss="modal">
+                            <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+
+        var ListSuggestionVersionUrl = '@Url.RouteUrl("ListSuggestionVersion", new { docNum = -1 })';
+        var newSuggestionDocUrl = '@Url.RouteUrl("NewVersionLetter")';
+        var editSuggestionDocUrl = '@Url.RouteUrl("versionEditSuggestion", new { suggestionDocId = -1 })';
+        var getLetterUrl = '@Url.RouteUrl("GetSuggestionTemplate", new { suggestionDocId = -1 })';
+        var deleteLetterUrl = '@Url.RouteUrl("DeteteSuggestion", new { suggestionDocId = -1 })';
+        var downloadFileUrl = '@Url.RouteUrl("DownloadFile", new { suggestionDocId = -1 })';
+        var indexUrl = '/Suggestion/Template';
+        $(function () {
+
+            initSuggestionGridVersion();
+            var $form = $("#SuggestionVersionForm");
+            $('#btnCreateLetter').click(function () {
+                if ($form.valid()) {
+                    var actionUrl = newSuggestionDocUrl
+                    $form.ajaxPostForm(newSuggestionDocUrl,
+                    function (response) {
+                        $form.resetForm();
+                        $('#editModal').modal('hide');
+                        $("#suggestionGridTableVersion").trigger("reloadGrid", [{ current: true }]);
+                        notifSuccess(response.message);
+                    }
+                    );
+
+                }
+            });
+
+            $('#btnUpdateLetter').click(function () {
+                if ($form.valid()) {
+
+                    var actionUrl = editSuggestionDocUrl.replace('-1', $('#suggestionDocId').val());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $form.resetForm();
+                             $('#editModal').modal('hide');
+                             $("#suggestionGridTableVersion").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnReturnCancel').click(function () {
+                window.location = indexUrl;
+            });
+        });
+
+        function initSuggestionGridVersion() {
+            var actionUrl = ListSuggestionVersionUrl.replace('-1', $('#docNum').val());
+            var $gridVersion = $('#suggestionGridTableVersion');
+            var pager_selector = '#suggestionGridPagerVersion';
+
+            $gridVersion.jqGrid({
+                pager: pager_selector,
+                sortname: 'versionNum',
+                sortorder: 'desc',
+                url: actionUrl,
+                datatype: 'json',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.Name)',
+                    '@Html.DisplayNameFor(m => m.Version)',
+                    '@Html.DisplayNameFor(m => m.Description)',
+                    '@Html.DisplayNameFor(m => m.IsActive)',
+                    '@Html.DisplayNameFor(m => m.RowVersion)',
+                    '@Html.DisplayNameFor(m => m.SuggestionDocId)',
+                    'Action'
+                ],
+                colModel: [{
+                    name: 'docNum',
+                    hidden: true
+                }, {
+                    name: 'versionNum',
+                    width: '25'
+                }, {
+                    name: 'docName',
+                    width: ''
+                }, {
+                    name: 'docStatus',
+                    template: yesNoTemplate,
+                    width: '25'
+                }, {
+                    name: 'rowVersion',
+                    hidden: true
+
+                }, {
+                    name: 'suggestionDocId',
+                    hidden: true
+                }, {
+                    name: 'rowAction',
+                    template: rowActionTemplate,
+                    delbutton: false
+                }],
+                loadComplete: function () {
+                    var table = this;
+                    setTimeout(function () {
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+
+                    var iCol = getColumnIndexByName($gridVersion, 'rowAction');
+                    $(this).find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            var $this = $(this);
+                            //delete document button
+                            $("<div>", {
+                                title: "Delete",
+                                mouseover: function () {
+                                    $this.addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $this.removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                    var data = $gridVersion.jqGrid('getRowData', rowId);
+                                    doDeleteRecord(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-trash red"></span>')
+                                .prependTo($this.children("div"));
+                            //download document button
+                            $("<div>", {
+                                title: "Download",
+                                mouseover: function () {
+                                    $(this).addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $(this).removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    var data = $gridVersion.jqGrid('getRowData', $(e.target).closest("tr.jqgrow").attr("id"));
+                                    var actionUrl = downloadFileUrl.replace('-1', data.suggestionDocId);
+                                    window.location = actionUrl;
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer"
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="ui-icon icon-download-alt red"></span>')
+                                .prependTo($(this).children("div"));
+                        });
+                },
+
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $gridVersion.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $gridVersion.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+            function doShowModal() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                $('#editModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+
+            };
+
+            function doEditRecord(data, tag) {
+                var actionUrl = getLetterUrl.replace("-1", data.suggestionDocId);
+
+                ajaxGet(actionUrl,
+                        function (response) {
+
+                            $('#rowVersion').val(response.data.rowVersion);
+                            $('#tname').prop('readonly', true).val(response.data.docNum);
+                            $('#version').val(response.data.version);
+                            $('#description').val(response.data.description);
+                            $('#file').val('');
+                            $('#suggestionDocId').val(response.data.suggestionDocId);
+                            $('#isActive').checkboxVal(response.data.isActive);
+                            $('#btnCreateLetter').addClass('hide');
+                            $('#btnUpdateLetter').removeClass('hide');
+
+                            doShowModal();
+                        }
+                );
+            };
+
+            function doNewRecord() {
+
+                $('#rowVersion').val('');
+                $('#tname').prop('readonly', true).val($('#docNum').val());
+                $('#file').val('');
+                $('#version').val('');
+                $('#description').val('');
+                $('#suggestionDocId').val('0');
+                $('#isActive').checkboxVal(true);
+                $('#btnCreateLetter').removeClass('hide');
+                $('#btnUpdateLetter').addClass('hide');
+
+                doShowModal();
+            };
+
+            function doDeleteRecord(data) {
+                var actionUrl = deleteLetterUrl.replace('-1', data.suggestionDocId);
+
+                confirmDelete(function (result) {
+                    if (result) {
+                        ajaxPost(actionUrl,
+                             data,
+                             function (response) {
+                                 $('#editModal').modal('hide');
+                                 $("#suggestionGridTableVersion").trigger("reloadGrid", [{ current: true }]);
+                                 notifSuccess(response.message);
+                             },
+                             function (response) {
+                                 notifError(response.message);
+                             }
+                        )
+                    }
+                });
+            };
+
+        };
+    </script>
+}

@@ -1,0 +1,214 @@
+﻿<div class="tab-pane" id="attachment">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="attachment-grid-table"></table>
+                <div id="attachment-grid-pager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var editEnquiryComplaintDetailUrl = '@Url.RouteUrl("EditEnquiryComplaintDetail")';
+    var listComplaintAttachmentUrl = '@Url.RouteUrl("ListComplaintAttachment", new { complaintMasterId = -1 })';
+    var downloadComplaintAttachmentUrl = '@Url.RouteUrl("DownloadComplaintAttachment", new { complaintAttachmentId = -1 })';
+    var deleteComplaintAttachmentUrl = '@Url.RouteUrl("DeleteComplaintAttachment", new { complaintAttachmentId = -1 })';
+
+    var attAchmentGridInited = false;
+    function initAttachmentGrid() {
+        var actionUrl = listComplaintAttachmentUrl.replace("-1", $("#complaintMasterId").val());
+        var $grid = $("#attachment-grid-table");
+        var attachment_pager_selector = "#attachment-grid-pager";
+
+        if ($grid.isJqGrid()) {
+            $grid.reloadJqGrid();
+            return;
+        }
+
+        $grid.jqGrid({
+            autowidth: true,
+            data: fileUploadData,
+            sortname: 'fileName',
+            sortorder: 'asc',
+            url: actionUrl,
+            datatype: 'json',
+            colNames: [
+                '',
+                'File Description',
+                'File Name',
+                'Uploaded By',
+                'Uploaded Date',
+                'Action'],
+            colModel: [{
+                name: 'complaintAttachmentId',
+                hidden: true,
+            }, {
+                name: 'fileDescription',
+                sorttype: 'text',
+                width: 400
+            }, {
+                name: 'fileName',
+                sorttype: 'text',
+                width: 350
+            }, {
+                name: 'createdById',
+                sorttype: 'text',
+                width: 100
+            }, {
+                name: 'createdOn',
+                template: dateTemplate,
+                width: 100
+            }, {
+                name: 'rowAction',
+                width: 80,
+                template: rowActionTemplate,
+                delbutton: false
+            }],
+            rownumbers: true,
+            viewrecords: true,
+            rowNum: 10,
+            rowList: [10, 20, 30],
+            pager: attachment_pager_selector,
+            altRows: true,
+            toppager: false,
+            multiselect: false,
+            //multikey: "ctrlKey",
+            multiboxonly: false,
+            caption: "",
+            autowidth: true,
+            editurl: "/dummy.html", //nothing is saved
+            loadComplete: function () {
+                var $grid = $(this);
+                setTimeout(function () {
+                    updateActionIcons(this);
+                    updatePagerIcons(this);
+                    enableTooltips(this);
+                }, 0);
+
+                var iCol = getColumnIndexByName($grid, 'rowAction');
+                $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                    .each(function () {
+                        var $this = $(this);
+
+                        //delete document button
+                        $("<div>", {
+                            title: "Delete",
+                            mouseover: function () {
+                                $this.addClass('ui-state-hover');
+                            },
+                            mouseout: function () {
+                                $this.removeClass('ui-state-hover');
+                            },
+                            click: function (e) {
+                                var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                var data = $grid.jqGrid('getRowData', rowId);
+                                doDeleteRecord(data);
+                            }
+                        }).css({
+                            "margin-right": "5px",
+                            float: "left",
+                            cursor: "pointer"
+                        }).addClass("ui-pg-div ui-inline-custom")
+                            .append('<span class="ui-icon icon-trash red"></span>')
+                            .prependTo($this.children("div"));
+
+                        //download document button
+                        $("<div>", {
+                            title: "Download",
+                            mouseover: function () {
+                                $this.addClass('ui-state-hover');
+                            },
+                            mouseout: function () {
+                                $this.removeClass('ui-state-hover');
+                            },
+                            click: function (e) {
+                                var rowId = $(e.target).closest("tr.jqgrow").attr("id");
+                                var data = $grid.jqGrid('getRowData', rowId);
+                                doDownloadRecord(data);
+                            }
+                        }).css({
+                            "margin-right": "5px",
+                            float: "left",
+                            cursor: "pointer"
+                        }).addClass("ui-pg-div ui-inline-custom")
+                            .append('<span class="ui-icon icon-download-alt red">&nbsp;Re-Submit</span>')
+                            .prependTo($this.children("div"));
+                    });
+            },
+            ondblClickRow: function (rowId, iRow, iCol, e) {
+                var data = $grid.jqGrid('getRowData', rowId);
+                doEditRecord(data);
+            }
+        });
+
+        //navButtons
+        $grid.jqGrid('navGrid', attachment_pager_selector, { //navbar options
+            search: true,
+            refresh: true,
+        }, {}, {}, {}, {
+            //search form
+            recreateForm: true,
+            afterShowSearch: defaultSearchFormAfterShowSearch,
+            afterRedraw: defaultSearchFormAfterRedraw
+        }, {}).jqGrid('navButtonAdd', attachment_pager_selector, {
+            caption: "",
+            buttonicon: "icon-plus",
+            onClickButton: doNewRecord,
+            position: "first",
+            title: "New Record",
+            cursor: "pointer"
+        });
+        function doShowModal() {
+            $('#attachmentModal').modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            });
+        };
+
+        function doEditRecord(data) {
+            clearForm('#attachmentForm');
+            $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+            $('#attBtnUpdate').removeClass('hide');
+            $('#attBtnCreate').addClass('hide');
+            $('#fileName').val(data.fileName);
+            $('#fileDescription').val(data.fileDescription);
+            $('#complaintAttachmentId').val(data.complaintAttachmentId);
+            $('#attachmentFile').val('');
+            doShowModal();
+        };
+
+        function doDownloadRecord(data) {
+            var actionUrl = downloadComplaintAttachmentUrl.replace('-1', data.complaintAttachmentId);
+            window.location = actionUrl;
+        };
+
+        function doNewRecord() {
+            clearForm('#attachmentForm');
+            $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+            $('#attBtnCreate').removeClass('hide');
+            $('#attBtnUpdate').addClass('hide');
+            $('#attachmentDocument').val('');
+            doShowModal();
+        };
+
+        function doDeleteRecord(data) {
+            var actionUrl = deleteComplaintAttachmentUrl.replace('-1', data.complaintAttachmentId);
+            confirmDelete(function (result) {
+                if (result) {
+                    ajaxPost(actionUrl,
+                         function (response) {
+                             $("#attachment-grid-table").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         },
+                         function (response) {
+                             notifError(response.message);
+                         }
+                    )
+                }
+            });
+
+        };
+    };
+</script>

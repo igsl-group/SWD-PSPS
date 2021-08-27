@@ -1,0 +1,307 @@
+﻿@model Psps.Web.ViewModels.Account.UserViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.User_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="userForm" class="form-horizontal" role="form">
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container">
+                <table id="userGridTable"></table>
+                <div id="userGridPager"></div>
+            </div>
+        </div>
+    </div>
+    <div id="editModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@Labels.User_Details</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.BootstrapValidationSummary()
+
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.UserId, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.UserId, true, htmlAttributes: new { @id = "userId", @class = "form-control", @maxlength = 20 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PostId, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-4">
+                                @Html.DropDownListFor(m => m.PostId, true, new SelectList(Model.Posts, "Key", "Value", Model.PostId), htmlAttributes: new { @id = "postId", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EngUserName, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(model => model.EngUserName, true, htmlAttributes: new { @id = "engUserName", @class = "form-control", @maxlength = 50 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ChiUserName, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(model => model.ChiUserName, true, htmlAttributes: new { @id = "chiUserName", @class = "form-control", @maxlength = 50 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.TelephoneNumber, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(model => model.TelephoneNumber, true, htmlAttributes: new { @id = "telephoneNumber", @class = "form-control", @maxlength = 15 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Email, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(model => model.Email, true, htmlAttributes: new { @id = "email", @class = "form-control", @maxlength = 50 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsSystemAdministrator, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-2">
+                                @Html.EditorFor(model => model.IsSystemAdministrator, new { htmlAttributes = new { @id = "isSystemAdministrator" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsActive, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-2">
+                                @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @id = "isActive" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Password, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(model => model.Password, htmlAttributes: new { @id = "password", @maxlength = 32 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCreateUser" name="create" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button id="btnUpdateUser" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button id="btnCancel" type="button" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listUserUrl = '@Url.RouteUrl("ListUser")';
+        var newUserUrl = '@Url.RouteUrl("NewUser")';
+        var editUserUrl = '@Url.RouteUrl("EditUser", new { userId = -1 })';
+        var getUserUrl = '@Url.RouteUrl("GetUser", new { UserId = -1 })';
+
+        $(function () {
+            initUserGrid();
+
+            $('#btnCreateUser').click(function () {
+                var $form = $("#userForm");
+                if ($form.valid()) {
+                    var actionUrl = newUserUrl;
+                    //alert($('#roleForm').serialize());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#editModal').modal('hide');
+                             $("#userGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+
+            });
+
+            $('#btnUpdateUser').click(function () {
+
+                var $form = $("#userForm");
+                if ($form.valid()) {
+                    var actionUrl = editUserUrl.replace('-1', $('#userId').val());
+                    //alert($('#roleForm').serialize());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#editModal').modal('hide');
+                             $("#userGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                    }
+                });
+            });
+
+            $('#btnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editModal').modal('hide');
+                    }
+                });
+            });
+        });
+
+        function initUserGrid() {
+            var actionUrl = listUserUrl;
+            var $grid = $('#userGridTable');
+            var pager_selector = '#userGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                url: actionUrl,
+                //sortname: "IsActive desc, Post.Rank.RankLevel",
+                //sortorder: 'asc',
+                datatype: 'json',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.UserId)',
+                    '@Html.DisplayNameFor(m => m.PostId)',
+                    '@Html.DisplayNameFor(m => m.EngUserName)',
+                    '@Html.DisplayNameFor(m => m.ChiUserName)',
+                    '@Html.DisplayNameFor(m => m.TelephoneNumber)',
+                    '@Html.DisplayNameFor(m => m.Email)',
+                    'Role',
+                    '@Html.DisplayNameFor(m => m.IsSystemAdministrator)',
+                    '@Html.DisplayNameFor(m => m.IsActive)'
+                ],
+                colModel: [{
+                    name: 'userId',
+                    width: '1'
+                }, {
+                    name: 'post.PostId',
+                    jsonmap: 'postId',
+                    width: '1'
+                }, {
+                    name: 'engUserName',
+                    width: '2'
+                }, {
+                    name: 'chiUserName',
+                    width: '2'
+                }, {
+                    name: 'telephoneNumber',
+                    width: '1'
+                }, {
+                    name: 'email',
+                    width: '2'
+                }, {
+                    name: 'roleId',
+                    search: false,
+                    sortable: false,
+                    width: '2'
+                }, {
+                    name: 'isSystemAdministrator',
+                    template: yesNoTemplate,
+                    width: '1'
+                }, {
+                    name: 'isActive',
+                    template: yesNoTemplate,
+                    width: '1'
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function doShowModal() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                $('#editModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function doEditRecord(data) {
+                var actionUrl = getUserUrl.replace("-1", data.userId);
+
+                ajaxGet(actionUrl,
+                        function (response) {
+                            $('#rowVersion').val(response.data.rowVersion);
+                            $('#userId').prop('readonly', true).val(response.data.userId);
+                            $("#postId").select2("val", response.data.postId);
+                            $('#engUserName').val(response.data.engUserName);
+                            $('#chiUserName').val(response.data.chiUserName);
+                            $('#telephoneNumber').val(response.data.telephoneNumber);
+                            $('#email').val(response.data.email);
+                            $('#isSystemAdministrator').checkboxVal(response.data.isSystemAdministrator);
+                            $('#isActive').checkboxVal(response.data.isActive);
+                            $('#password').val('');
+                            $('#btnCreateUser').addClass('hide');
+                            $('#btnUpdateUser').removeClass('hide');
+
+                            removeRequired('#password');
+                            doShowModal();
+                        }
+                );
+            };
+
+            function doNewRecord() {
+                ajaxGet(newUserUrl,
+                       function (response) {
+                           $('#rowVersion').val('');
+                           $('#userId').prop('readonly', false).val('');
+                           $("#postId").select2("val", '');
+                           $('#engUserName').val('');
+                           $('#chiUserName').val('');
+                           $('#telephoneNumber').val('');
+                           $('#email').val('');
+                           $('#isSystemAdministrator').checkboxVal(false);
+                           $('#isActive').checkboxVal(true);
+                           $('#password').val(response.data);
+                           $('#btnCreateUser').removeClass('hide');
+                           $('#btnUpdateUser').addClass('hide');
+
+                           addRequired('#password');
+                           doShowModal();
+                       }
+                );
+            };
+        };
+    </script>
+}

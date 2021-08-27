@@ -1,0 +1,234 @@
+﻿@model Psps.Web.ViewModels.Organisation.OrganisationDocViewModel
+@using Psps.Resources;
+@{
+    ViewBag.Title = Labels.Organisation_Template_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form id="OrgDocForm" class="form-horizontal" role="form" enctype="multipart/form-data">
+    <div class="form-group">
+        <div class="col-xs-12">
+            <table id="OrgDocTable"></table>
+            <div id="orgDocGridPager"></div>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@Labels.Letter_Details</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.BootstrapValidationSummary()
+
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+                    @Html.HiddenFor(m => m.OrgDocId, htmlAttributes: new { @id = "orgDocId" })
+
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DocNum, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.DocNum, true, htmlAttributes: new { @id = "docNum", @class = "form-control", @maxlength = 6 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Version, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-4">
+                                @Html.TextBoxFor(m => m.Version, true, htmlAttributes: new { @id = "version", @class = "form-control", @maxlength = 10 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Description, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextBoxFor(m => m.Description, true, htmlAttributes: new { @id = "description", @class = "form-control", @maxlength = 256 })
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="div-IsActive" hidden="hidden">
+                            @Html.LabelFor(m => m.IsActive, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-2">
+                                @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @id = "isActive" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.File, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.FileFor(m => m.File, htmlAttributes: new { @id = "file", @class = "form-control" })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCreateOrgDoc" name="create" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button id="btnUpdateOrgDoc" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button id="btnCancel" type="button" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listLetterUrl = '@Url.RouteUrl("ListOrgTemplate")';
+        var newSuggesionDocUrl = '@Url.RouteUrl("NewOrgDoc")';
+        var getOrgDocUrl = '@Url.RouteUrl("GetOrgDoc", new { orgDocId = -1 })';
+        var editOrgDocUrl = '@Url.RouteUrl("EditOrgDoc", new { orgDocId = -1 })';
+        var OrgVersionUrl = '@Url.RouteUrl("OrgVersion", new { orgDocId = -1 })';
+
+        $(function () {
+            initOrgDocGrid();
+
+            $('#btnCreateOrgDoc').click(function () {
+                var $form = $("#OrgDocForm");
+                if ($form.valid()) {
+                    var actionUrl = newSuggesionDocUrl;
+                    $form.ajaxPostForm(actionUrl,
+                        function (response) {
+                            $form.resetForm();
+                            $('#editModal').modal('hide');
+                            $("#OrgDocTable").trigger("reloadGrid", [{ current: true }]);
+                            notifSuccess(response.message);
+                        }
+                    );
+                }
+            });
+
+            $('#btnUpdateOrgDoc').click(function () {
+                var $form = $("#OrgDocForm");
+                var actionUrl = editOrgDocUrl.replace('-1', $('#orgDocId').val());
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#editModal').modal('hide');
+                         $("#OrgDocTable").trigger("reloadGrid", [{ current: true }]);
+                         notifSuccess(response.message);
+                     }
+                );
+
+                if ($form.valid()) {
+
+                }
+            });
+
+        });
+
+        function initOrgDocGrid() {
+            var actionUrl = listLetterUrl;
+            var $grid = $('#OrgDocTable');
+            var pager_selector = '#orgDocGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                sortname: 'docNum',
+                sortorder: 'asc',
+                url: actionUrl,
+                datatype: 'json',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.DocNum)',
+                    '@Html.DisplayNameFor(m => m.Description)',
+                    '@Html.DisplayNameFor(m => m.Version)',
+                    'Enabled',
+                    '@Html.DisplayNameFor(m => m.RowVersion)',
+                    '@Html.DisplayNameFor(m => m.OrgDocId)'
+                ],
+                colModel: [{
+                    name: 'docNum',
+                    width: '25'
+                }, {
+                    name: 'docName',
+                    width: ''
+                }, {
+                    name: 'versionNum',
+                    width: '25'
+                }, {
+                    name: 'enabled',
+                    template: yesNoTemplate,
+                    width: '25'
+                }, {
+                    name: 'rowVersion',
+                    hidden: true
+
+                }, {
+                    name: 'orgDocId',
+                    hidden: true
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    var actionUrl = OrgVersionUrl.replace('-1', data.orgDocId);
+                    window.location = actionUrl;
+
+                }
+            });
+
+            function doEditRecord(data) {
+                var actionUrl = getOrgDocUrl.replace("-1", data.orgDocId);
+                ajaxGet(actionUrl,
+                    function (response) {
+                        $('#docNum').val(response.data.docNum);
+                        $('#description').val(response.data.description);
+                        $('#version').val(response.data.version);
+                        $('#orgDocId').val(response.data.orgDocId);
+                        $("#div-IsActive").show();
+                        $('#isActive').checkboxVal(response.data.isActive);
+                        $('#btnCreateOrgDoc').addClass('hide');
+                        $('#btnUpdateOrgDoc').removeClass('hide');
+
+                        doShowModal();
+                    }
+                );
+            };
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function doShowModal() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                $('#editModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+
+            };
+
+            function doNewRecord() {
+                $('#rowVersion').val('');
+                $('#name').prop('readonly', false).val('');
+                $('#path').val('');
+                $('#version').val('');
+                $('#description').val('');
+                $('#isActive').checkboxVal(true);
+                $('#btnCreateOrgDoc').removeClass('hide');
+                $('#btnUpdateOrgDoc').addClass('hide');
+                doShowModal();
+            };
+        };
+    </script>
+}

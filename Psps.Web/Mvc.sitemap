@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
+
+  <mvcSiteMapNode title="Home" controller="Home" action="Index" cssClass="icon-dashboard">
+    <mvcSiteMapNode title="Organisation" clickable="false" cssClass="icon-desktop">
+      <mvcSiteMapNode title="Search" controller="Organisation" action="Search" >        
+        <mvcSiteMapNode title="Edit" controller="Organisation" action="EditOrgMaster" preservedRouteParameters="code" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Search" controller="Organisation" action="ReturnSearchOrg" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="PSP A/C Summary" controller="Organisation" action="PSPSummary" />      
+      <mvcSiteMapNode title="PSP A/C Summary" controller="Organisation" action="ReturnPSPSummarySearch" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="FD A/C Summary" controller="Organisation" action="FDSummary">
+        <mvcSiteMapNode title="FD A/C Summary" controller="Organisation" action="ReturnFDSummarySearch" visibility="SiteMapPathHelper,!*" />      
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Good Practice Guide" controller="Organisation" action="ReferenceGuide">
+        <mvcSiteMapNode title="Return" controller="Organisation" action="ReturnSearchOrgGuide" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="New" controller="Organisation" action="NewReferenceGuide" preservedRouteParameters="orgId" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Promulgation of &quot;Good Practice Guide&quot;" controller="Organisation" action="Detail" preservedRouteParameters="orgRefGuidePromulgationId" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode> />
+      <mvcSiteMapNode title="Template" controller="Organisation" action="Template">
+        <mvcSiteMapNode title="Edit" controller="Organisation" action="Version" preservedRouteParameters="orgDocId" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Report" controller="Organisation" action="Report" />      
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="PSP" clickable="false" cssClass="icon-desktop">
+      <mvcSiteMapNode title="Search" controller="PSP" action="Search" />
+      <mvcSiteMapNode title="Approve" controller="PSP" action="Approve" />
+      <mvcSiteMapNode title="(FRAS)Re-submit" controller="PSP" action="Fras" />
+      <mvcSiteMapNode title="Template" controller="PSP" action="Template">
+        <mvcSiteMapNode title="Edit" controller="PSP" action="Version" preservedRouteParameters="pspDocId" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Report" controller="PSP" action="Report" />
+      <mvcSiteMapNode title="Edit" controller="PSP" action="Edit" preservedRouteParameters="pspMasterId" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="New" controller="PSP" action="New" preservedRouteParameters="createMode,pspMasterId" visibility="SiteMapPathHelper,!*" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Flag Day" clickable="false" cssClass="icon-desktop">
+      <mvcSiteMapNode title="Search" controller="FlagDay" action="Search" />
+      <mvcSiteMapNode title="Search" controller="FlagDay" action="ReturnSearch" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Approve" controller="FlagDay" action="Approve" />
+      <mvcSiteMapNode title="Template" controller="FlagDay" action="Template">
+        <mvcSiteMapNode title="Edit" controller="FlagDay" action="Version" preservedRouteParameters="flagDayDocId" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Report" controller="FlagDay" action="Report" />
+      <mvcSiteMapNode title="Edit" controller="FlagDay" action="Edit" preservedRouteParameters="fdMasterId" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Copy to New" controller="FlagDay" action="New" createMode="copyToNew" preservedRouteParameters="fdMasterId" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="New" controller="FlagDay" action="New" createMode="new" preservedRouteParameters="fdMasterId" visibility="SiteMapPathHelper,!*" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Enquiry and Complaint" clickable="false" cssClass="icon-desktop">
+      <mvcSiteMapNode title="Search" controller="Complaint" action="Search" />
+      <mvcSiteMapNode title="Search" controller="Complaint" action="ReturnSearch" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Disaster Statistics" controller="DisasterStatistics" action="Index" />
+      <mvcSiteMapNode title="Template" controller="Complaint" action="Template">
+        <mvcSiteMapNode title="Edit" controller="Complaint" action="Version" preservedRouteParameters="complaintDocId" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Report" controller="Enquiry" action="Report" />
+      <mvcSiteMapNode title="Edit" controller="Complaint" action="EditEnquiryComplaint" preservedRouteParameters="complaintId,ReturnUrl" visibility="SiteMapPathHelper,!*" />      
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Suggestion" clickable="false" cssClass="icon-desktop">
+      <mvcSiteMapNode title="Search" controller="Suggestion" action="Search" />
+      <mvcSiteMapNode title="Search" controller="Suggestion" action="ReturnSearchSug" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Template" controller="Suggestion" action="Template">
+        <mvcSiteMapNode title="Edit" controller="Suggestion" action="Version" preservedRouteParameters="suggestionDocId" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Report" controller="Suggestion" action="Report" />
+      <mvcSiteMapNode title="Edit" controller="Suggestion" action="Edit" preservedRouteParameters="code" visibility="SiteMapPathHelper,!*" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Legal Advice" clickable="false" cssClass="icon-desktop">
+      <mvcSiteMapNode title="Search" controller="LegalAdvice" action="Search" />
+      <mvcSiteMapNode title="Report" controller="LegalAdvice" action="Report" />
+      <mvcSiteMapNode title="Edit" controller="LegalAdvice" action="New" preservedRouteParameters="code" visibility="SiteMapPathHelper,!*" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Doc. Lib" controller="DocumentLibrary" action="Index" cssClass="icon-folder-open" />
+    <mvcSiteMapNode title="Admin Function" clickable="false" cssClass="icon-wrench">
+      <mvcSiteMapNode title="Lookup Table" controller="Lookup" action="Index" />
+      <mvcSiteMapNode title="Disaster Maintenance" controller="Disaster" action="Index" />
+      <mvcSiteMapNode title="Flag Day List" controller="FlagDayList" action="Index" />
+      <mvcSiteMapNode title="User Maintenance" controller="Account" action="Index" />
+      <mvcSiteMapNode title="Post Maintenance" controller="Post" action="Index">
+        <mvcSiteMapNode title="New" action="NewPost" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Details" action="Detail" preservedRouteParameters="postId" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Role Maintenance" controller="Role" action="Index" />
+      <mvcSiteMapNode title="Parameter Maintenance" controller="SystemParameter" action="Index" />
+      <mvcSiteMapNode title="Message Maintenance" controller="SystemMessage" action="Index" />
+      <mvcSiteMapNode title="User Log Report" controller="UserLog" action="Index" />
+      <mvcSiteMapNode title="Data Export" controller="DataExport" action="Index" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Change Password" controller="Account" action="ChangePassword" visibility="SiteMapPathHelper,!*" />
+    <mvcSiteMapNode title="My Profile" controller="Account" action="MyProfile" visibility="SiteMapPathHelper,!*" />
+  </mvcSiteMapNode>
+</mvcSiteMap>

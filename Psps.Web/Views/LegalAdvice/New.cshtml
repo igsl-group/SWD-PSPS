@@ -1,0 +1,385 @@
+﻿@model Psps.Web.ViewModels.LegalAdvice.LegalAdviceViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.LegalAdvice_Edit;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form id="legalAdviceEditForm" class="form-horizontal" role="form">
+    <div id="details" class="">
+        <a class="anchor" id="anchor-details"></a>
+
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a href="#legalAdvice" id="tab1" data-toggle="tab">Legal Advice </a>
+            </li>
+            <li class="read-mode-only">
+                <a href="#relatedLegalAdvice" onclick="onClickRelatedLegalAdvice()" data-toggle="tab">Related Legal Advice<span id="relatedLegalAdviceAmount" class="badge">0</span></a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            @Html.BootstrapValidationSummary()
+            @Html.AntiForgeryToken()
+            <div class="tab-pane active" id="legalAdvice">
+                <legend>Legal Advice Details</legend>
+
+                <div class="modal-body">
+
+                    <fieldset>
+                        @Html.HiddenFor(m => m.LegalAdviceMasterId, htmlAttributes: new { @id = "legalAdviceMasterId" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.LegalAdviceCode, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.LegalAdviceCode, true, htmlAttributes: new { @id = "dslegalAdviceCode", @class = "form-control", @maxlength = 8 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.LegalAdviceTypeHeadId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.DropDownListFor(m => m.LegalAdviceTypeHeadId, true, new SelectList(Model.LegalAdviceTypeHeads, "Key", "Value", Model.LegalAdviceTypeHeadId), htmlAttributes: new { @id = "legalAdviceTypeHeads", @class = "form-control", @data_provide = "select2", style = "width: 200px;" })
+                                @Html.DropDownListFor(m => m.LegalAdviceTypeId, true, new SelectList(Model.LegalAdviceTypes, "Key", "Value", Model.LegalAdviceTypeId), htmlAttributes: new { @id = "legalAdviceTypes", @class = "form-control", @data_provide = "select2", style = "width: 600px;" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.LegalAdviceDescription, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextAreaFor(model => model.LegalAdviceDescription, true, rows: 4, htmlAttributes: new { @id = "legalAdviceDescription", @class = "form-control", @maxlength = 4000 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(m => m.PartNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-1">
+                                @Html.TextBoxFor(m => m.PartNum, true, htmlAttributes: new { @id = "dspartNum", @class = "form-control", @maxlength = 20, style = "width: 150px;" })
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.EnclosureNum, true, htmlAttributes: new { @id = "dsenclosureNum", @class = "form-control", @maxlength = 50, style = "width: 80px;" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EffectiveDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.EffectiveDate, true, htmlAttributes: new { @id = "effectiveDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            @Html.LabelFor(m => m.PSPRequiredId, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.DropDownListFor(m => m.PSPRequiredId, true, new SelectList(Model.PSPRequireds, "Key", "Value", Model.PSPRequiredId), htmlAttributes: new { @id = "pSPRequireds", @class = "form-control", @data_provide = "select2", style = "width: 150px;" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Remarks, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-8">
+                                @Html.TextAreaFor(model => model.Remarks, true, rows: 4, htmlAttributes: new { @id = "remarks", @class = "form-control", @maxlength = 4000 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.RelatedLegalAdviceCode, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.RelatedLegalAdviceCode, true, htmlAttributes: new { @id = "relatedLegalAdviceCode", @class = "form-control", @style = "width: 100px", @disabled = "disabled" })
+                                    @Html.TextBoxFor(m => m.RelatedLegalAdviceId, true, htmlAttributes: new { @id = "relatedLegalAdviceId", @class = "form-control", @style = "display:none" })
+                                    <span class="input-group-btn pull-left">
+                                        <button type="button" id="btnRelatedLegalAdviceModal" class="btn btn-sm" data-toggle="modal" data-target="#related-legalAdvice-code-modal">
+                                            <i class="icon-search"></i>
+                                        </button>
+                                    </span>
+                                    <label id="relatedLegalAdviceName" class="control-label" style="padding-left: 50px;"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Active, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-1">
+                                @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @id = "active" } })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
+                            <button type="button" id="btnSpellCheck" class="btn btn-primary btn-sm">
+                                <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                            <button type="button" id="btnCreate" class="btn btn-sm btn-primary">
+                                <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                            <button type="button" id="btnUpdate" class="btn btn-sm btn-primary">
+                                <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                            <button type="button" id="btnCancel" class="btn btn-sm btn-default" data-dismiss="modal">
+                                <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @{Html.RenderAction("RenderRelatedLegalAdviceModal");}
+        </div>
+    </div>
+</form>
+<form class="form-horizontal">
+    <div id="related-legalAdvice-code-modal" class="modal fade" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search Legal Advice</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="grid-stretch-container">
+                                <table id="related-legalAdvice-code-grid-table"></table>
+                                <div id="related-legalAdvice-grid-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">
+                        <span class="icon-remove"></span>&nbsp;Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listRelatedLegalAdviceMaster = '@Url.RouteUrl("ListRelatedLegalAdviceMaster")';
+        var listLegalAdviceMasterUrl = '@Url.RouteUrl("ListLegalAdviceMaster")';
+        var newLegalAdviceMasterUrl = '@Url.RouteUrl("CreateLegalAdviceMaster")';
+        var editLegalAdviceMasterUrl = '@Url.RouteUrl("UpdateLegalAdviceMaster", new { code = "placeholder" })';
+        var getLegalAdviceMasterUrl = '@Url.RouteUrl("GetLegalAdviceMaster", new { code = -1 })';
+        var exportLegalAdviceMasterUrl = '@Url.RouteUrl("ExportLegalAdviceMaster", new { param = "placeholder" })';
+        var calRelevantRecordNumUrl = '@Url.RouteUrl("CalRelevantRecordNum", new { code = "placeholder" })';
+        var getDesUrl = '@Url.RouteUrl("getDesUrl", new { code = -1, code1 = -1 })';
+        var indexUrl = '@Url.RouteUrl("ReturnSearch")';
+
+        $(function () {
+            var $div = $('#details');
+            $div.removeClass('hide');
+            if ($('#legalAdviceMasterId').val() == "" || $('#legalAdviceMasterId').val() == "0")//new
+            {
+                $('#tab1').trigger("click");
+                $('#btnCreate').removeClass('hide');
+                $('#btnUpdate').addClass('hide');
+                doNewRecord();
+            }
+            else//edit
+            {
+
+                $('#tab1').trigger("click");
+                $('#btnUpdate').removeClass('hide');
+                $div.find('.read-mode-only').removeClass('hide');
+                $('#btnCreate').addClass('hide');
+
+                $('#legalAdviceTypeHeads,#legalAdviceTypes,#pSPRequireds,#relatedLegalAdviceTypes,#relatedVenueTypes,#relatedLegalAdvices').select2("val", '');
+                var $form = $("#legalAdviceEditForm");
+                var actionUrl = getLegalAdviceMasterUrl.replace(-1, $('#legalAdviceMasterId').val());
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         doEditRecord(response.data);
+                     }
+                );
+                calRelevantRecordsAmount();
+            }
+            //initrelatedLegalAdviceGrid();
+            initRelatedLegalAdviceGrid();
+            $('#btnCreate').click(function () {
+                var $form = $("#legalAdviceEditForm");
+                if ($form.valid()) {
+                    var actionUrl = newLegalAdviceMasterUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnUpdate').click(function () {
+                var $form = $("#legalAdviceEditForm");
+                if ($form.valid()) {
+                    var actionUrl = editLegalAdviceMasterUrl.replace("placeholder", $('#legalAdviceMasterId').val());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                             calRelevantRecordsAmount();
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnRelatedLegalAdviceModal').click(function () {
+                var actionUrl = listRelatedLegalAdviceMaster;
+                var $grid = $('#related-legalAdvice-code-grid-table');
+                $grid.jqGrid('clearGridData');
+                $grid.jqGrid('setGridParam', { search: false });
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, { filters: "" });
+                $grid.jqGrid('setGridParam', {
+                    url: actionUrl + "?1=1&" + $('#legalAdviceEditForm').serialize(),
+                    datatype: 'json',
+                    mtype: "POST",
+                });
+
+                $grid.trigger("reloadGrid", [{ page: 1 }]);
+
+            });
+
+            $('#btnCancel').click(function () {
+                confirm("Unsaved change will be discarded. Click OK to proceed.Click Cancel to resume editing.", function (result) {
+                    if (result) {
+                        window.location = indexUrl;
+                    }
+                });
+            });
+
+            $('#btnClear').click(function () {
+                clearForm("#legalAdviceForm");
+            });
+
+            $('#legalAdviceTypeHeads').change(function () {
+                ChangelegalAdviceType();
+            });
+
+        });
+
+        function calRelevantRecordsAmount() {
+            ajaxPost(calRelevantRecordNumUrl.replace("placeholder", $('#legalAdviceMasterId').val()),
+                function (response) {
+                    $('#relatedLegalAdviceAmount').html(response.data.legalAdviceMasterAmount);
+                }
+            );
+        }
+
+        function ChangelegalAdviceType() {
+            if ($('#legalAdviceTypeHeads').val() != "01") {
+
+                $('#legalAdviceTypes').select2("val", '');
+                $("#legalAdviceTypes").select2("enable", false);
+            } else {
+                $("#legalAdviceTypes").select2("enable", true);
+            }
+        }
+
+        function doEditRecord(data) {
+            $('#tab1').trigger("click");
+
+            $('#btnUpdate').removeClass('hide');
+            $('#btnCreate').addClass('hide');
+
+            $('#dslegalAdviceCode').prop('readonly', true).val(data.legalAdviceCode);
+
+            $('#legalAdviceTypeHeads').select2("val", data.legalAdviceTypeHeadId);
+            $('#legalAdviceTypes').select2("val", data.legalAdviceTypeId);
+            $('#legalAdviceDescription').val(data.legalAdviceDescription);
+            $('#dspartNum').val(data.partNum);
+            $('#dsenclosureNum').val(data.enclosureNum);
+            $('#effectiveDate').val(toDDMMYYYY(data.effectiveDate));
+
+            $('#pSPRequireds').select2("val", data.pspRequiredId);
+            $('#remarks').val(data.remarks);
+            $('#relatedLegalAdviceCode').val(data.relatedLegalAdviceCode);
+            $('#relatedLegalAdviceId').val(data.relatedLegalAdviceId);
+            $('#relatedLegalAdviceName').text(data.relatedLegalAdviceDescription);
+            $('#active').checkboxVal(data.active);
+
+            ChangelegalAdviceType();
+        };
+
+        function doNewRecord() {
+
+            $('#btnCreate').removeClass('hide');
+            $('#btnUpdate').addClass('hide');
+
+            $('#dslegalAdviceCode').prop('readonly', true);
+            $('#legalAdviceMasterId').val('');
+            $('#legalAdviceTypeHeads').select2("val", '');
+            $('#legalAdviceTypes').select2("val", '');
+            $('#legalAdviceDescription').val('');
+            $('#dspartNum').val('');
+            $('#dsenclosureNum').val('');
+            $('#effectiveDate').val('');
+
+            $('#pSPRequireds').select2("val", '');
+            $('#remarks').val('');
+            $('#relatedLegalAdviceName').text('');
+            $('#active').checkboxVal('');
+
+        };
+
+        var relatedLegalAdviceGridInited = false;
+
+        function initRelatedLegalAdviceGrid() {
+            if (relatedLegalAdviceGridInited)
+                return;
+            relatedLegalAdviceGridInited = true;
+
+            var $relatedLegalAdviceGrid = $("#related-legalAdvice-code-grid-table");
+            var relatedLegalAdvice_pager_selector = "#related-legalAdvice-grid-pager";
+
+            $relatedLegalAdviceGrid.jqGrid({
+                pager: relatedLegalAdvice_pager_selector,
+                sortname: 'legalAdviceCode',
+                sortorder: 'asc',
+                datatype: "local",
+                colNames: ['Legal Advice Code', 'Legal Advice Type', 'Legal Advice Description', 'legalAdviceId'],
+                colModel: [{
+                    name: 'legalAdviceCode',
+                    index: 'legalAdviceCode',
+                    width: 100
+                }, {
+                    name: 'legalAdviceType',
+                    index: 'legalAdviceType',
+                    width: 280,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'legalAdviceDescription',
+                    index: 'legalAdviceDescription',
+                    width: 450,
+                    classes: 'wrappedJqGridCell'
+                }, {
+                    name: 'legalAdviceId',
+                    hidden: true,
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $relatedLegalAdviceGrid.jqGrid('getRowData', rowId);
+                    onSelectRelatedLegalAdviceCode(data);
+                }
+            });
+
+            //navButtons
+            $relatedLegalAdviceGrid.jqGrid('navGrid', relatedLegalAdvice_pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {});
+
+            function onSelectRelatedLegalAdviceCode(data) {
+                $('#relatedLegalAdviceCode').val(data.legalAdviceCode);
+                $('#relatedLegalAdviceId').val(data.legalAdviceId);
+                $('#relatedLegalAdviceName').text(data.legalAdviceDescription);
+                $('#related-legalAdvice-code-modal').modal('hide');
+            }
+        };
+    </script>
+}

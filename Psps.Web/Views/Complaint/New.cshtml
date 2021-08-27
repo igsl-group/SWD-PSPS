@@ -1,0 +1,230 @@
+﻿@model Psps.Web.ViewModels.Account.ComplaintMasterViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.My_Profile;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form id="complaintMasterForm" name="complaintMasterForm" class="form-horizontal" role="form">
+    <fieldset>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintSource, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.ComplaintSourceId, true, new SelectList(Model.ComplaintSource, "Key", "Value", Model.ComplaintSourceId), htmlAttributes: new { @id = "complaintSource", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ReplyDueDate, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-8">
+                @Html.TextBoxFor(m => m.ReplyDueDate, true, htmlAttributes: new { @id = "replyDueDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ActivityConcern, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-8">
+                <div class="input-group col-xs-6" style="float: left">
+                    @Html.DropDownListFor(m => m.ActivityConcernId, true, new SelectList(Model.ActivityConcern, "Key", "Value", Model.ActivityConcernId), htmlAttributes: new { @id = "activityConcern", @class = "form-control", @data_provide = "select2" })
+                </div>
+                <div class="input-group" style="float: left">
+                    @Html.TextBoxFor(m => m.OtherActivityConcern, true, htmlAttributes: new { @id = "otherActivityConcern", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <fieldset>
+            <legend>Complaint Details</legend>
+        </fieldset>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintDate, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-8">
+                @Html.TextBoxFor(m => m.ComplaintDate, true, htmlAttributes: new { @id = "complaintDate", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintDate1stReceivedBySWD, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-8">
+                @Html.TextBoxFor(m => m.ComplaintDate1stReceivedBySWD, true, htmlAttributes: new { @id = "complaintDate1stReceivedBySWD", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Unit, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-8">
+                @Html.TextBoxFor(m => m.Unit, true, htmlAttributes: new { @id = "unit", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintDateReceivedByLFPS, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-8">
+                @Html.TextBoxFor(m => m.ComplaintDateReceivedByLFPS, true, htmlAttributes: new { @id = "complaintDateReceivedByLFPS", @class = "form-control", @data_provide = "datepicker" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.OrganisationConcerned, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-10">
+                <div class="input-group">
+                    <span style="float: left; width: 100px">
+                        @Html.TextBoxFor(m => m.OrganisationConcerned, true, htmlAttributes: new { @id = "organisationConcerned", @class = "form-control", @maxlength = 30 })
+                    </span><span class="input-group-btn pull-left">
+                        <button type="button" id="btnCentreUnitCodeModal" class="btn btn-sm" data-toggle="modal" data-target="#centre-unit-code-modal">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplainantName, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-10">
+                @Html.TextAreaFor(m => m.ComplainantName, true, htmlAttributes: new { @id = "complainantName", @class = "form-control", @maxlength = 1000 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ReferFrom1823Indicator, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-1">
+                @Html.EditorFor(model => model.ReferFrom1823Indicator, new { htmlAttributes = new { @id = "referFrom1823Indicator" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.PermitConcerned, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.PermitConcerned, true, htmlAttributes: new { @id = "permitConcerned", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.DcLcContent, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-10">
+                @Html.TextAreaFor(m => m.DcLcContent, true, htmlAttributes: new { @id = "dcLcContent", @class = "form-control", @maxlength = 1000 })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label"></label>
+            <div class="col-xs-8">
+                <div class="input-group col-xs-6" style="float: left">
+                    @Html.DropDownListFor(m => m.OtherNonComplianceNature1, true, new SelectList(Model.NonComplianceNature1, "Key", "Value", Model.OtherNonComplianceNature1), htmlAttributes: new { @id = "nonComplianceNature1", @class = "form-control", @data_provide = "select2" })
+                </div>
+                <div class="input-group" style="float: left">
+                    @Html.TextBoxFor(m => m.OtherNonComplianceNature1, true, htmlAttributes: new { @id = "otherNonComplianceNature1", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.NonComplianceNature1, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-8">
+                <div class="input-group col-xs-6" style="float: left">
+                    @Html.DropDownListFor(m => m.OtherNonComplianceNature2, true, new SelectList(Model.NonComplianceNature2, "Key", "Value", Model.OtherNonComplianceNature2), htmlAttributes: new { @id = "nonComplianceNature2", @class = "form-control", @data_provide = "select2" })
+                </div>
+                <div class="input-group" style="float: left">
+                    @Html.TextBoxFor(m => m.OtherNonComplianceNature2, true, htmlAttributes: new { @id = "otherNonComplianceNature2", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label"></label>
+            <div class="col-xs-8">
+                <div class="input-group col-xs-6" style="float: left">
+                    @Html.DropDownListFor(m => m.OtherNonComplianceNature3, true, new SelectList(Model.NonComplianceNature3, "Key", "Value", Model.OtherNonComplianceNature3), htmlAttributes: new { @id = "nonComplianceNature3", @class = "form-control", @data_provide = "select2" })
+                </div>
+                <div class="input-group" style="float: left">
+                    @Html.TextBoxFor(m => m.OtherNonComplianceNature3, true, htmlAttributes: new { @id = "otherNonComplianceNature3", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.EnclosureNum, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.EnclosureNum, true, htmlAttributes: new { @id = "enclosureNum", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ProcessingStatus, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.ProcessingStatusId, true, new SelectList(Model.ProcessingStatus, "Key", "Value", Model.ProcessingStatusId), htmlAttributes: new { @id = "processingStatus", @class = "form-control", @data_provide = "select2" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ActionFileEnclosureNum, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.ActionFileEnclosureNum, true, htmlAttributes: new { @id = "actionFileEnclosureNum", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.RelatedCase, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-10">
+                <div class="input-group">
+                    <span style="float: left; width: 100px">
+                        @Html.TextBoxFor(m => m.RelatedCase, true, htmlAttributes: new { @id = "relatedCase", @class = "form-control", @maxlength = 30 })
+                    </span><span class="input-group-btn pull-left">
+                        <button type="button" id="btnCentreUnitCodeModal" class="btn btn-sm" data-toggle="modal" data-target="#centre-unit-code-modal">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ComplaintRemarks, new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-10">
+                @Html.TextAreaFor(m => m.ComplaintRemarks, true, htmlAttributes: new { @id = "complaintRemarks", @class = "form-control", @maxlength = 1000 })
+            </div>
+        </div>
+    </fieldset>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button id="btnCreate" name="create" type="button" class="btn btn-sm btn-primary">
+                    <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                <button id="btnUpdate" name="create" type="button" class="btn btn-sm btn-primary">
+                    <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                <button id="btnCancel" type="button" class="btn btn-sm btn-default" data-dismiss="modal">
+                    <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="vspace-6"></div>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var createComplaintMasterUrl = '@Url.RouteUrl("CreateComplaintMaster")';
+        $(function () {
+            $('#btnCreate').click(function () {
+                var $form = $("#complaintMasterForm");
+                if ($form.valid()) {
+                    var actionUrl = createComplaintMasterUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnCancel').click(function () {
+                var $form = '#complaintMasterForm';
+                clearForm($form);
+                $('#complainantName').val('');
+                $('#dcLcContent').val('');
+                $('#complaintRemarks').val('');
+            });
+        });
+    </script>
+}

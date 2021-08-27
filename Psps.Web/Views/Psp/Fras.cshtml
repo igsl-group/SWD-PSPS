@@ -1,0 +1,159 @@
+﻿@model Psps.Web.ViewModels.PSP.PSPViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.PSP_Fras_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-xs-12">
+        <div class="grid-stretch-container">
+            <table id="pspSearchGridTable"></table>
+            <div id="pspSearchGridPager"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var listPspSearchUrl = '@Url.RouteUrl("ListPspFras")';
+        var submitFRASUrl = '@Url.RouteUrl("PspSubmitFRAS")';
+
+        $(function () {
+            initGrid();
+        });
+
+        function initGrid() {
+            var $grid = $('#pspSearchGridTable');
+            var pager_selector = '#pspSearchGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                url: listPspSearchUrl,
+                datatype: "json",
+                sortname: 'sortPspRef',
+                caption: '@Labels.Fras_PspGridTitle',
+                sortorder: 'desc',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.OrgRef)',
+                    '@Html.DisplayNameFor(m => m.OrgName)',
+                    '@Html.DisplayNameFor(m => m.PSPRef)',
+                    '@Html.DisplayNameFor(m => m.PreviousPspRef)',
+                    'Application Result',
+                    '@Html.DisplayNameFor(m => m.PermitNo)',
+                    'Processing Officer',
+                    '@Html.DisplayNameFor(m => m.TotEvent)',
+                    'No. of Event Approved',
+                    'No. of Event Held',
+                    'No. of Event Cancelled',
+                    'FRAS Status',
+                    'Action',
+                    'PspMasterId'
+                ],
+                colModel: [{
+                    name: 'orgRef',
+                    width: '100'
+                }, {
+                    name: 'orgName',
+                    width: '200'
+                }, {
+                    name: 'pspRef',
+                    sorttype: 'desc',
+                    width: '80'
+                }, {
+                    name: 'previousPspRef',
+                    sorttype: 'desc',
+                    width: '80'
+                }, {
+                    name: 'approvalStatus',
+                    width: '80'
+                }, {
+                    name: 'permitNum',
+                    width: '80'
+                }, {
+                    name: 'processingOfficerPost',
+                    width: '80'
+                }, {
+                    name: 'totEvent',
+                    template: numTemplate,
+                    width: '50'
+                }, {
+                    name: 'eventApprovedNum',
+                    template: numTemplate,
+                    width: '50'
+                }, {
+                    name: 'eventHeldNum',
+                    template: numTemplate,
+                    width: '50'
+                }, {
+                    name: 'eventCancelledNum',
+                    template: numTemplate,
+                    width: '50'
+                }, {
+                    name: 'reEvents',
+                    width: '100',
+                    search: 'false'
+                }, {
+                    name: 'rowAction',
+                    width: '120',
+                    template: rowActionTemplate,
+                    delbutton: false
+                }, {
+                    name: 'pspMasterId',
+                    hidden: 'true'
+                }],
+                loadComplete: function () {
+                    defaultGridLoadComplete();
+                    var iCol = getColumnIndexByName($grid, 'rowAction');
+                    $grid.find(">tbody>tr.jqgrow>td:nth-child(" + (iCol + 1) + ")")
+                        .each(function () {
+                            var $this = $(this);
+                            var rowId = $this.closest("tr.jqgrow").attr("id");
+                            var data = $grid.jqGrid('getRowData', rowId);
+
+                            $("<div>", {
+                                title: "Re-submit",
+                                mouseover: function () {
+                                    $this.addClass('ui-state-hover');
+                                },
+                                mouseout: function () {
+                                    $this.removeClass('ui-state-hover');
+                                },
+                                click: function (e) {
+                                    submitFRAS(data);
+                                }
+                            }).css({
+                                "margin-right": "5px",
+                                float: "left",
+                                cursor: "pointer",
+                            }).addClass("ui-pg-div ui-inline-custom")
+                                .append('<span class="btn btn-sm btn-primary">&nbsp;Re-Submit</span>')
+                                .prependTo($this.children("div"));
+
+                        });
+                }
+            });
+
+            //navButtons
+                $grid.jqGrid('navGrid', pager_selector, {
+                    //navbar options
+                    search: false,
+                    refresh: true
+                }, {}, {}, {}, {}, {});
+            };
+
+            function submitFRAS(data) {
+                confirm("@Html.Raw(ViewData["SUBMIT_GOV_HK"])", function (result) {
+                    if (result) {
+                        ajaxPost(submitFRASUrl, { pspMasterId: data.pspMasterId }, function (response) {
+                            $("#pspSearchGridTable").trigger("reloadGrid", [{ current: true }]);
+                            notifSuccess(response.message);
+                        });
+                    };
+                });
+            }
+    </script>
+}

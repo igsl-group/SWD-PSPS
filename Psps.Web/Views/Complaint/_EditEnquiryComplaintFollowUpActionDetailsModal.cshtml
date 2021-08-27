@@ -1,0 +1,482 @@
+﻿@model Psps.Web.ViewModels.Complaint.ComplaintFollowUpActionViewModel
+@using Psps.Resources;
+
+<form id="followUpActionForm" class="form-horizontal">
+    <div id="edit-followUpAction-modal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="btnCloseFollowUp" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Follow-up Action Details</h4>
+                </div>
+                <fieldset></fieldset>
+                @Html.TextBoxFor(m => m.ComplaintFollowUpActionId, true, htmlAttributes: new { @id = "complaintFollowUpActionId", @class = "form-control", @style = "display:none" })
+                @Html.TextBoxFor(m => m.ComplaintMasterId, true, htmlAttributes: new { @id = "followUpComplaintMasterId", @class = "form-control", @style = "display:none" })
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FollowUpEnclosureNum, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(m => m.FollowUpEnclosureNum, true, htmlAttributes: new { @id = "followUpEnclosureNum", @class = "form-control", @disabled = "disabled", @maxlength = 20 })
+                        </div>
+                    </div>
+                    <div id="orgFollowUpDiv">
+                        <h4><u>Follow up with Organisation</u></h4>
+                        <!-- Follow-up with Organisation -->
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpIndicator, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-1">
+                                @Html.EditorFor(model => model.FollowUpIndicator, new { htmlAttributes = new { @id = "followUpIndicator" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpContactOrgName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpContactOrgName, true, htmlAttributes: new { @id = "followUpContactOrgName", @class = "form-control", @disabled = "disabled", @maxlength = 300 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpContactPersonName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpContactPersonName, true, htmlAttributes: new { @id = "followUpContactPersonName", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpContactDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FollowUpContactDate, true, htmlAttributes: new { @id = "followUpContactDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpOrgRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.FollowUpOrgRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "followUpOrgRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "followUpOrgRemark" })
+                                @Html.HiddenFor(model => model.FollowUpOrgRemark, htmlAttributes: new { @id = "followUpOrgRemark", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpFollowUpLetterType, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                <div class="input-group">
+                                    @Html.DropDownListFor(m => m.FollowUpFollowUpLetterType, true, new SelectList(Model.FollowUpFollowUpLetterTypes, "Key", "Value", Model.FollowUpFollowUpLetterType), htmlAttributes: new { @id = "followUpFollowUpLetterType", @class = "form-control", @data_provide = "select2", @style = "width: 250px;", @disabled = "disabled" })
+                                </div>
+                            </div>
+                            @Html.LabelFor(m => m.FollowUpLetterIssueDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FollowUpLetterIssueDate, true, htmlAttributes: new { @id = "followUpLetterIssueDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterReceiver, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpLetterReceiver, true, htmlAttributes: new { @id = "followUpLetterReceiver", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.FollowUpLetterRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "followUpLetterRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "followUpLetterRemark" })
+                                @Html.HiddenFor(model => model.FollowUpLetterRemark, htmlAttributes: new { @id = "followUpLetterRemark", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionFileRefEnclosureNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.FollowUpLetterActionFileRefEnclosureNum, true, htmlAttributes: new { @id = "followUpLetterActionFileRefEnclosureNum", @class = "form-control", @disabled = "disabled", @maxlength = 50, @style = "width: 200px;", @placeholder = "E" })
+                                    @Html.TextBoxFor(m => m.FollowUpLetterActionFileRefPartNum, true, htmlAttributes: new { @id = "followUpLetterActionFileRefPartNum", @class = "form-control", @disabled = "disabled", @maxlength = 20, @style = "width: 100px;", @placeholder = "File" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionFileRefRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.FollowUpLetterActionFileRefRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "followUpLetterActionFileRefRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "followUpLetterActionFileRefRemark" })
+                                @Html.HiddenFor(model => model.FollowUpLetterActionFileRefRemark, htmlAttributes: new { @id = "followUpLetterActionFileRefRemark", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionFollowUpOrgReply, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">               
+                                @Html.TextAreaFor(model => model.FollowUpLetterActionFollowUpOrgReplyHtml, true, rows: 4, htmlAttributes: new { @id = "followUpLetterActionFollowUpOrgReplyHtml", @class = "form-control wysiwyg-editor", @owner = "followUpLetterActionFollowUpOrgReply" })
+                                @Html.HiddenFor(model => model.FollowUpLetterActionFollowUpOrgReply, htmlAttributes: new { @id = "followUpLetterActionFollowUpOrgReply", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionFollowUpOrgReplyDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionFollowUpOrgReplyDate, true, htmlAttributes: new { @id = "followUpLetterActionFollowUpOrgReplyDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionFollowUpOfficerName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionFollowUpOfficerName, true, htmlAttributes: new { @id = "followUpLetterActionFollowUpOfficerName", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionFollowUpOfficerPosition, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionFollowUpOfficerPosition, true, htmlAttributes: new { @id = "followUpLetterActionFollowUpOfficerPosition", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                    </div>
+                    <div id="rptPoliceDiv">
+                        <h4><u>Report to Police</u></h4>
+                        <!-- Report to Police -->
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpReportPoliceIndicator, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-1">
+                                @Html.EditorFor(model => model.FollowUpReportPoliceIndicator, new { htmlAttributes = new { @id = "followUpReportPoliceIndicator" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpVerbalReportDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FollowUpVerbalReportDate, true, htmlAttributes: new { @id = "followUpVerbalReportDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpPoliceStation, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpPoliceStation, true, htmlAttributes: new { @id = "followUpPoliceStation", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpPoliceOfficerName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpPoliceOfficerName, true, htmlAttributes: new { @id = "followUpPoliceOfficerName", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpRnNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpRnNum, true, htmlAttributes: new { @id = "followUpRnNum", @class = "form-control", @disabled = "disabled", @maxlength = 50 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpRnRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.FollowUpRnRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "followUpRnRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "followUpRnRemark" })
+                                @Html.HiddenFor(model => model.FollowUpRnRemark, htmlAttributes: new { @id = "followUpRnRemark", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpWrittenReferralDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FollowUpWrittenReferralDate, true, htmlAttributes: new { @id = "followUpWrittenReferralDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpReferralPoliceStation, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpReferralPoliceStation, true, htmlAttributes: new { @id = "followUpReferralPoliceStation", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpActionFileRefEnclosureNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.FollowUpActionFileRefEnclosureNum, true, htmlAttributes: new { @id = "followUpActionFileRefEnclosureNum", @class = "form-control", @disabled = "disabled", @maxlength = 50, @style = "width: 200px;", @placeholder = "E" })
+                                    @Html.TextBoxFor(m => m.FollowUpActionFileRefPartNum, true, htmlAttributes: new { @id = "followUpActionFileRefPartNum", @class = "form-control", @disabled = "disabled", @maxlength = 20, @style = "width: 100px;", @placeholder = "File" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionPoliceInvestigation, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    @Html.DropDownListFor(m => m.FollowUpLetterActionPoliceInvestigation, true, new SelectList(Model.PoliceCaseInvestigationResults, "Key", "Value", Model.FollowUpLetterActionPoliceInvestigation), htmlAttributes: new { @id = "followUpLetterActionPoliceInvestigation", @class = "form-control", @data_provide = "select2", @style = "width: 250px;" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionPoliceInvestigationResult, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.FollowUpLetterActionPoliceInvestigationResultHtml, true, rows: 4, htmlAttributes: new { @id = "followUpLetterActionPoliceInvestigationResultHtml", @class = "form-control wysiwyg-editor", @owner = "followUpLetterActionPoliceInvestigationResult" })
+                                @Html.HiddenFor(model => model.FollowUpLetterActionPoliceInvestigationResult, htmlAttributes: new { @id = "followUpLetterActionPoliceInvestigationResult", @maxlength = 4000 })                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionPoliceReplyDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionPoliceReplyDate, true, htmlAttributes: new { @id = "followUpLetterActionPoliceReplyDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpConvictedPersonName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpConvictedPersonName, true, htmlAttributes: new { @id = "followUpConvictedPersonName", @class = "form-control", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpConvictedPersonPosition, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpConvictedPersonPosition, true, htmlAttributes: new { @id = "followUpConvictedPersonPosition", @class = "form-control", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpOffenceDetail, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.FollowUpOffenceDetailHtml, true, rows: 4, htmlAttributes: new { @id = "followUpOffenceDetailHtml", @class = "form-control wysiwyg-editor", @owner = "followUpOffenceDetail" })
+                                @Html.HiddenFor(model => model.FollowUpOffenceDetail, htmlAttributes: new { @id = "followUpOffenceDetail", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpSentenceDetail, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.FollowUpSentenceDetailHtml, true, rows: 4, htmlAttributes: new { @id = "followUpSentenceDetailHtml", @class = "form-control wysiwyg-editor", @owner = "followUpSentenceDetail" })
+                                @Html.HiddenFor(model => model.FollowUpSentenceDetail, htmlAttributes: new { @id = "followUpSentenceDetail", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpCourtRefNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpCourtRefNum, true, htmlAttributes: new { @id = "followUpCourtRefNum", @class = "form-control", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpCourtHearingDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FollowUpCourtHearingDate, true, htmlAttributes: new { @id = "followUpCourtHearingDate", @class = "form-control", @data_provide = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpPoliceRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.FollowUpPoliceRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "followUpPoliceRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "followUpPoliceRemark" })
+                                @Html.HiddenFor(model => model.FollowUpPoliceRemark, htmlAttributes: new { @id = "followUpPoliceRemark", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionReferralPoliceOfficerName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionReferralPoliceOfficerName, true, htmlAttributes: new { @id = "followUpLetterActionReferralPoliceOfficerName", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionReferralPoliceOfficerPosition, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionReferralPoliceOfficerPosition, true, htmlAttributes: new { @id = "followUpLetterActionReferralPoliceOfficerPosition", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                    </div>
+                    <div id="otherFollowUpDiv">
+                        <h4><u>Follow-up with other Parties</u></h4>
+                        <!-- Follow-up with other Parties -->
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionOtherFollowUpIndicator, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-1">
+                                @Html.EditorFor(model => model.FollowUpLetterActionOtherFollowUpIndicator, new { htmlAttributes = new { @id = "followUpLetterActionOtherFollowUpIndicator" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionOtherFollowUpPartyName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionOtherFollowUpPartyName, true, htmlAttributes: new { @id = "followUpLetterActionOtherFollowUpPartyName", @class = "form-control", @disabled = "disabled", @maxlength = 500 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionOtherFollowUpContactDate, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-3">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionOtherFollowUpContactDate, true, htmlAttributes: new { @id = "followUpLetterActionOtherFollowUpContactDate", @class = "form-control", @data_provide = "datepicker", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionOtherFollowUpRemark, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextAreaFor(model => model.FollowUpLetterActionOtherFollowUpRemarkHtml, true, rows: 4, htmlAttributes: new { @id = "followUpLetterActionOtherFollowUpRemarkHtml", @class = "form-control wysiwyg-editor", @owner = "followUpLetterActionOtherFollowUpRemark" })
+                                @Html.HiddenFor(model => model.FollowUpLetterActionOtherFollowUpRemark, htmlAttributes: new { @id = "followUpLetterActionOtherFollowUpRemark", @maxlength = 4000 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionOtherFollowUpFileRefEnclosureNum, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.FollowUpLetterActionOtherFollowUpFileRefEnclosureNum, true, htmlAttributes: new { @id = "followUpLetterActionOtherFollowUpFileRefEnclosureNum", @class = "form-control", @disabled = "disabled", @maxlength = 50, @style = "width: 200px;", @placeholder = "E" })
+                                    @Html.TextBoxFor(m => m.FollowUpLetterActionOtherFollowUpFileRefPartNum, true, htmlAttributes: new { @id = "followUpLetterActionOtherFollowUpFileRefPartNum", @class = "form-control", @disabled = "disabled", @maxlength = 20, @style = "width: 100px;", @placeholder = "File" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionOtherFollowUpOfficerName, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionOtherFollowUpOfficerName, true, htmlAttributes: new { @id = "followUpLetterActionOtherFollowUpOfficerName", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FollowUpLetterActionOtherFollowUpOfficerPosition, new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.TextBoxFor(m => m.FollowUpLetterActionOtherFollowUpOfficerPosition, true, htmlAttributes: new { @id = "followUpLetterActionOtherFollowUpOfficerPosition", @class = "form-control", @disabled = "disabled", @maxlength = 100 })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSpellCheckFollowUp" class="btn btn-primary btn-sm">
+                        <span class=""></span>&nbsp;@Labels.SpellCheck</button>
+                    <button type="button" id="btnSaveFollowUp" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Save</button>
+                    <button type="button" id="btnUpdateFollowUp" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button type="button" id="btnDeleteFollowUp" class="btn btn-sm btn-primary">
+                        <span class="icon-trash"></span>&nbsp;@Labels.Delete</button>
+                    <button type="button" id="btnCancelFollowUp" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var createFollowUpUrl = '@Url.RouteUrl("CreateFollowUp")';
+    var updateFollowUpUrl = '@Url.RouteUrl("UpdateFollowUp")';
+    var deleteFollowUpUrl = '@Url.RouteUrl("DeleteFollowUp")';
+
+    $(function () {
+        setEnabledSection();
+        initEditFollowUpForm();
+
+        $('#btnSaveFollowUp').click(function () {
+            var $form = $("#followUpActionForm");
+            if ($form.valid()) {
+                var actionUrl = createFollowUpUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#edit-followUpAction-modal').modal('hide');
+                         $("#followUpAction-grid-table").trigger("reloadGrid", [{ current: true }]);
+                         calRelevantRecordsAmount();
+                         notifSuccess(response.message);
+                         initEditFollowUpForm();
+                     }
+                );
+            }
+        });
+
+        $('#btnUpdateFollowUp').click(function () {
+            var $form = $("#followUpActionForm");
+            if ($form.valid()) {
+                var actionUrl = updateFollowUpUrl;
+                $form.ajaxPostForm(actionUrl,
+                     function (response) {
+                         $('#edit-followUpAction-modal').modal('hide');
+                         $("#followUpAction-grid-table").trigger("reloadGrid", [{ current: true }]);
+                         notifSuccess(response.message);
+                         initEditFollowUpForm();
+                     }
+                );
+            }
+        });
+
+        $('#btnDeleteFollowUp').click(function () {
+            var $form = $("#followUpActionForm");
+            confirmDelete(function (result) {
+                if (result) {
+                    var actionUrl = deleteFollowUpUrl;
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#edit-followUpAction-modal').modal('hide');
+                             $("#followUpAction-grid-table").trigger("reloadGrid", [{ current: true }]);
+                             calRelevantRecordsAmount();
+                             notifSuccess(response.message);
+                             initEditFollowUpForm();
+                         }
+                    );
+                }
+            });
+        });
+
+        $('#btnCancelFollowUp').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    initEditFollowUpForm();
+                    $('#edit-followUpAction-modal').modal('hide');
+                }
+            });
+        });
+        $('#btnCloseFollowUp').click(function () {
+            confirm('@Labels.Cancel_Msg', function (result) {
+                if (result) {
+                    initEditFollowUpForm();
+                    $('#edit-followUpAction-modal').modal('hide');
+                }
+            });
+        });
+    });
+
+    function setEnabledSection() {
+        $("#followUpIndicator").next('input[type=checkbox]').bind("click", function () {
+            var followUpIndicator = $("#followUpIndicator").val();
+            var $div = $("#orgFollowUpDiv");
+            if (followUpIndicator == "true") {
+                $div.find('input').attr("disabled", false);
+                $div.find('textarea').attr("disabled", false);
+                $div.find('.wysiwyg-editor').each(function () { $(this).summernote('enable'); 
+                    $('#' + $(this).attr('owner')).attr("disabled", false); });
+                $("#followUpFollowUpLetterType").attr("disabled", false);
+            } else {
+                $div.find('input').attr("disabled", true);
+                $div.find('textarea').attr("disabled", true);
+                $div.find('.wysiwyg-editor').each(function () {  $(this).summernote('disable');
+                    $('#' + $(this).attr('owner')).attr("disabled", true); });
+                $("#followUpFollowUpLetterType").attr("disabled", true);
+              }
+              $("#followUpIndicator").next('input[type=checkbox]').attr("disabled", false);
+            });
+
+            $("#followUpReportPoliceIndicator").next('input[type=checkbox]').bind("click", function () {
+                var followUpReportPoliceIndicator = $("#followUpReportPoliceIndicator").val();
+                var $div = $("#rptPoliceDiv");
+                if (followUpReportPoliceIndicator == "true") {
+                    $div.find('input').attr("disabled", false);
+                    $div.find('textarea').attr("disabled", false);
+                    $div.find('.wysiwyg-editor').each(function () { $(this).summernote('enable'); 
+                        $('#' + $(this).attr('owner')).attr("disabled", false); });
+                    $("#followUpLetterActionPoliceInvestigation").attr("disabled", false);
+                } else {
+                    $div.find('input').attr("disabled", true);
+                    $div.find('textarea').attr("disabled", true);
+                    $div.find('.wysiwyg-editor').each(function () {  $(this).summernote('disable');
+                        $('#' + $(this).attr('owner')).attr("disabled", true); });
+                    $("#followUpLetterActionPoliceInvestigation").attr("disabled", true);
+                }
+                $("#followUpReportPoliceIndicator").next('input[type=checkbox]').attr("disabled", false);
+            });
+
+            $("#followUpLetterActionOtherFollowUpIndicator").next('input[type=checkbox]').bind("click", function () {
+                var followUpLetterActionOtherFollowUpIndicator = $("#followUpLetterActionOtherFollowUpIndicator").val();
+                var $div = $("#otherFollowUpDiv");
+                if (followUpLetterActionOtherFollowUpIndicator == "true") {
+                    $div.find('input').attr("disabled", false);
+                    $div.find('textarea').attr("disabled", false);
+                    $div.find('.wysiwyg-editor').each(function () { $(this).summernote('enable'); 
+                        $('#' + $(this).attr('owner')).attr("disabled", false); });
+                } else {
+                    $div.find('input').attr("disabled", true);
+                    $div.find('textarea').attr("disabled", true);
+                    $div.find('.wysiwyg-editor').each(function () { $(this).summernote('disable'); 
+                        $('#' + $(this).attr('owner')).attr("disabled", true); });
+                }
+                $("#followUpLetterActionOtherFollowUpIndicator").next('input[type=checkbox]').attr("disabled", false);
+            });
+        }
+
+    function initEditFollowUpForm() {
+        $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+        clearForm('#followUpActionForm');
+        $("#orgFollowUpDiv").find('input').attr("disabled", true);
+        $("#orgFollowUpDiv").find('textarea').attr("disabled", true);
+        $("#rptPoliceDiv").find('input').attr("disabled", true);
+        $("#rptPoliceDiv").find('textarea').attr("disabled", true);
+        $("#otherFollowUpDiv").find('input').attr("disabled", true);
+        $("#otherFollowUpDiv").find('textarea').attr("disabled", true);
+        $("#followUpIndicator").next('input[type=checkbox]').attr("disabled", false);
+        $("#followUpReportPoliceIndicator").next('input[type=checkbox]').attr("disabled", false);
+        $("#followUpLetterActionOtherFollowUpIndicator").next('input[type=checkbox]').attr("disabled", false);
+        $("#followUpFollowUpLetterType").attr("disabled", true);
+        $("#followUpLetterActionPoliceInvestigation").attr("disabled", true);
+        $("#btnSaveFollowUp").show();
+        $("#btnDeleteFollowUp").hide();
+        $("#btnUpdateFollowUp").hide();
+        $('#followUpActionForm').find('.wysiwyg-editor').each(function () { $(this).summernote('disable'); });
+    }
+</script>

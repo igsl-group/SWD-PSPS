@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="x-ua-compatible" content="IE=Edge" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psps - @ViewBag.Title</title>
+    @Styles.Render("~/bundles/css")
+    @Scripts.Render("~/bundles/js")
+    <!--[if lt IE 9]>
+    @Styles.Render("~/bundles/css-ie8")
+    @Scripts.Render("~/bundles/js-ie8")
+    <![endif]-->
+</head>
+<body class="orange-skin">
+    <div class="navbar navbar-default navbar-fixed-top" id="navbar">
+        <div class="navbar-container" id="navbar-container">
+            @Html.Partial("_Header")
+        </div>
+    </div>
+
+    <div class="main-container" id="main-container">
+        <div class="main-container-inner">
+            <a class="menu-toggler" id="menu-toggler" href="#">
+                <span class="menu-text"></span>
+            </a>
+
+            <div class="sidebar" id="sidebar">
+                @Html.MvcSiteMap().Menu("BootstrapMenuHelperModel", false, true, true)
+            </div>
+
+            <div class="main-content">
+                <div class="page-content">
+                    <div class="page-header">
+                        @RenderSection("pageHeader", required: false)
+                        @Html.MvcSiteMap().SiteMapPath("BootstrapSiteMapPathHelperModel")
+                    </div>
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

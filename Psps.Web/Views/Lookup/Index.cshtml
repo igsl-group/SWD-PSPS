@@ -1,0 +1,348 @@
+﻿@model Psps.Web.ViewModels.Lookup.LookupViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Lookup_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="lookupForm" class="form-horizontal" role="form">
+    <div class="form-group">
+        <div class="col-xs-4">
+            @Html.EnumDropDownListFor(m => m.SelectedType, true, "", htmlAttributes: new { @id = "selectedType", @class = "form-control", @data_provide = "select2" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="grid-stretch-container" id="lookupGridTableDiv">
+                <table id="lookupGridTable"></table>
+                <div id="lookupGridPager"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lookupEditModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@Labels.Lookup_Details</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.BootstrapValidationSummary()
+
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.LookupId, htmlAttributes: new { @id = "lookupId" })
+                    @Html.HiddenFor(m => m.RowVersion, htmlAttributes: new { @id = "rowVersion" })
+
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Type, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-4">
+                                @Html.EnumDropDownListFor(m => m.Type, true, htmlAttributes: new { @id = "type", @class = "form-control", @data_provide = "select2" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Code, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(m => m.Code, true, htmlAttributes: new { @id = "code", @class = "form-control", @maxlength = 20 })
+                                <div id="noSolicitationDateContainer">
+                                    @Html.TextBoxFor(m => m.Code, true, htmlAttributes: new { @id = "noSolicitationDate", @class = "form-control", @data_provide = "datepicker"})
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EngDescription, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.TextBoxFor(model => model.EngDescription, true, htmlAttributes: new { @id = "engDescription", @class = "form-control", @maxlength = 200 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ChiDescription, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-10">
+                                @Html.TextBoxFor(model => model.ChiDescription, true, htmlAttributes: new { @id = "chiDescription", @class = "form-control", @maxlength = 200 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DisplayOrder, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(model => model.DisplayOrder, true, htmlAttributes: new { @id = "displayOrder", @class = "form-control", @maxlength = 3 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsActive, new { @class = "col-xs-2 control-label" })
+                            <div class="col-xs-2">
+                                @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @id = "isActive" } })
+                            </div>
+                        </div>
+                        <div id="extraInformation" class="hide">
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCreateLookup" name="create" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                    <button id="btnUpdateLookup" type="button" class="btn btn-sm btn-primary hide">
+                        <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                    <button id="btnCancel" type="button" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var withExtraInformation = false;
+        var listLookupUrl = '@Url.RouteUrl("ListLookup", new { lookupType = "placeholder" })';
+        var newLookupUrl = '@Url.RouteUrl("NewLookup", new { lookupType = "placeholder" })';
+        var editLookupUrl = '@Url.RouteUrl("EditLookup", new { lookupId = -1 })';
+        var getLookupUrl = '@Url.RouteUrl("GetLookup", new { lookupId = -1 })';
+        var isPspApprover = @Html.Raw(Json.Encode(@Model.IsPspApprover));
+
+        $(function () {
+            $('#lookupGridTableDiv').addClass('hide');
+
+            initLookupGrid();
+
+            $('#noSolicitationDate').datepicker().on('changeDate', function () {
+                if ($('#selectedType').val() == 'NoSolicitationDate') 
+                    $('#code').val($(this).val());
+            });
+
+            $('#selectedType').on('change', function (e) {
+                var $selected = $(':selected', this),
+                    $grid = $('#lookupGridTable');
+
+                $grid.jqGrid('clearGridData');
+                $grid.jqGrid('setGridParam', { search: false });
+
+                var postData = $grid.jqGrid('getGridParam', 'postData');
+                $.extend(postData, { filters: "" });
+
+                if ($selected.val()) {
+                    $('#lookupGridTableDiv').removeClass('hide');
+
+                    //PIR #099: 20161118
+                    /*
+                    if ($selected.val() == 'NoSolicitationDate' && !isPspApprover)
+                        $('#navAddNewBtn').addClass('hide');
+                    else
+                        $('#navAddNewBtn').removeClass('hide');
+                    */
+
+                    $grid.jqGrid('setGridParam', {
+                        url: listLookupUrl.replace('placeholder', $selected.val()),
+                        datatype: 'json'
+                    });
+                } else {
+                    $('#lookupGridTableDiv').addClass('hide');
+                    $grid.jqGrid('setGridParam', {
+                        datatype: 'local'
+                    });
+                };
+
+                if ($selected.val() == 'NoSolicitationDate')
+                    $grid.sortGrid("code", true, "desc");
+                else
+                    $grid.sortGrid("displayOrder", true, "asc");
+
+                $grid.trigger("reloadGrid", [{ page: 1 }]);
+            });
+
+            $('#type').on('change', function (e) {
+                var $this = $(this);
+                var actionUrl = newLookupUrl.replace("placeholder", $this.select2('val'));
+
+                ajaxGet(actionUrl,
+                        function (response) {
+                            $('#displayOrder').val(response.data.displayOrder);
+                        }
+                );
+            });
+
+            $('#btnCreateLookup').click(function () {
+                var $form = $("#lookupForm");
+                if ($form.valid()) {
+                    var actionUrl = newLookupUrl.replace('placeholder', $('#type').select2('val'));
+                    //alert($('#roleForm').serialize());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#lookupEditModal').modal('hide');
+                             $("#lookupGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+
+            });
+
+            $('#btnUpdateLookup').click(function () {
+                var $form = $("#lookupForm");
+                if ($form.valid()) {
+                    var actionUrl = editLookupUrl.replace('-1', $('#lookupId').val());
+                    //alert($('#roleForm').serialize());
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#lookupEditModal').modal('hide');
+                             $("#lookupGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+
+            });
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#lookupEditModal').modal('hide');
+                    }
+                });
+            });
+            $('#btnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#lookupEditModal').modal('hide');
+                    }
+                });
+            });
+        });
+
+        function initLookupGrid() {
+            var $grid = $('#lookupGridTable');
+            var pager_selector = '#lookupGridPager';
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                sortname: 'displayOrder',
+                sortorder: 'asc',
+                datatype: 'local',
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.Code)',
+                    '@Html.DisplayNameFor(m => m.EngDescription)',
+                    '@Html.DisplayNameFor(m => m.ChiDescription)',
+                    '@Html.DisplayNameFor(m => m.LookupId)',
+                    '@Html.DisplayNameFor(m => m.DisplayOrder)'
+                ],
+                colModel: [{
+                    name: 'code',
+                    sorttype: 'integer',
+                    width: '100'
+                }, {
+                    name: 'engDescription',
+                    width: '400'
+                }, {
+                    name: 'chiDescription',
+                    width: '400'
+                }, {
+                    name: 'lookupId',
+                    hidden: true
+                }, {
+                    name: 'displayOrder',
+                    template: numTemplate,
+                    width: '100'
+                }],
+                loadComplete: defaultGridLoadComplete,
+                ondblClickRow: function (rowId, iRow, iCol, e) {
+                    var data = $grid.jqGrid('getRowData', rowId);
+                    doEditRecord(data);
+                }
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: '',
+                id: 'navAddNewBtn',
+                buttonicon: 'icon-plus',
+                onClickButton: doNewRecord,
+                position: 'first',
+                title: '@Labels.NewRecord',
+                cursor: 'pointer'
+            });
+
+            function doShowModal() {
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+                if (withExtraInformation)
+                    $('#extraInformation').removeClass('hide');
+                else
+                    $('#extraInformation').addClass('hide');
+
+                $('#lookupEditModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+
+                if ($('#selectedType').val() == 'NoSolicitationDate')
+                {
+                    $('#code').addClass('hide');
+                    $('#noSolicitationDateContainer').removeClass('hide');
+                    $('#noSolicitationDate').datepicker('update', $('#code').val());                   
+                } else {
+                    $('#code').removeClass('hide');
+                    $('#noSolicitationDateContainer').addClass('hide');
+                }
+            };
+
+            function doEditRecord(data) {
+                if ($('#selectedType').val() == 'NoSolicitationDate' && !isPspApprover)
+                    return;
+
+                var actionUrl = getLookupUrl.replace("-1", data.lookupId);
+
+                ajaxGet(actionUrl,
+                    function (response) {
+                        var $type = $('#type');
+
+                        $('#rowVersion').val(response.data.rowVersion);
+                        $('#lookupId').val(response.data.lookupId);
+                        $('#code').prop('readonly', true).val(response.data.code);
+                        $type.select2("readonly", true).select2("val", response.data.type);
+                        $('#engDescription').val(response.data.engDescription);
+                        $('#chiDescription').val(response.data.chiDescription);
+                        $('#displayOrder').val(response.data.displayOrder);
+                        $('#isActive').checkboxVal(response.data.isActive);
+                        $('#btnCreateLookup').addClass('hide');
+                        $('#btnUpdateLookup').removeClass('hide');
+
+                        doShowModal();
+                    }
+                );
+            };
+
+            function doNewRecord() {
+                var $type = $('#type'),
+                    $selectedType = $('#selectedType');
+
+                $('#rowVersion').val('');
+                $('#lookupId').val('');
+                $('#code').prop('readonly', false).val('');
+                $type.select2("readonly", true).select2("val", $selectedType.val()).trigger('change');
+                $('#engDescription').val('');
+                $('#chiDescription').val('');
+                $('#displayOrder').val('');
+                $('#btnCreateLookup').removeClass('hide');
+                $('#btnUpdateLookup').addClass('hide');
+                $('#isActive').checkboxVal(true);
+                doShowModal();
+            };
+        };
+    </script>
+}

@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EBDF4286-98C8-4AF8-A307-DCB7E9EB6FCB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Psps.Models</RootNamespace>
+    <AssemblyName>Psps.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Envers, Version=2.0.0.500, Culture=neutral, PublicKeyToken=e2c5b946037fb7f8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.Envers.2.0.0\lib\Net40\NHibernate.Envers.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\Acting.cs" />
+    <Compile Include="Domain\ActivityLog.cs" />
+    <Compile Include="Domain\ComplaintMasterSearchView.cs" />
+    <Compile Include="Domain\ComplaintResult.cs" />
+    <Compile Include="Domain\ComplaintTelRecord.cs" />
+    <Compile Include="Domain\ComplaintFollowUpAction.cs" />
+    <Compile Include="Domain\ComplaintPoliceCase.cs" />
+    <Compile Include="Domain\ComplaintOtherDepartmentEnquiry.cs" />
+    <Compile Include="Domain\ComplaintBringUpSummaryView.cs" />
+    <Compile Include="Domain\FdApproveApplicationListGridView.cs" />
+    <Compile Include="Domain\FdExportView.cs" />
+    <Compile Include="Domain\FdMasterComputeView.cs" />
+    <Compile Include="Domain\OrgFdTabGridView.cs" />
+    <Compile Include="Domain\OrgAfsTrView.cs" />
+    <Compile Include="Domain\OrgEditLatestPspFdView.cs" />
+    <Compile Include="Domain\SsafApplicationStatusView.cs" />
+    <Compile Include="Domain\PspApprovedEvents.cs" />
+    <Compile Include="Domain\PspBringUpSummaryView.cs" />
+    <Compile Include="Domain\PspApplicationStatusView.cs" />
+    <Compile Include="Domain\PspRecommendEventsView.cs" />
+    <Compile Include="Domain\PspSearchView.cs" />
+    <Compile Include="Domain\FdAcSummaryView.cs" />
+    <Compile Include="Domain\PspAcSummaryView.cs" />
+    <Compile Include="Domain\ReferenceGuideSearchView.cs" />
+    <Compile Include="Domain\OrgEditEnquiryView.cs" />
+    <Compile Include="Domain\OrgMasterSearchView.cs" />
+    <Compile Include="Domain\PspEventsToProforma.cs" />
+    <Compile Include="Domain\RevChange.cs" />
+    <Compile Include="Domain\SuggestionDocView.cs" />
+    <Compile Include="Domain\OrgDocView.cs" />
+    <Compile Include="Domain\FdDocView.cs" />
+    <Compile Include="Domain\PspDocView.cs" />
+    <Compile Include="Domain\OrgEditComplaintView.cs" />
+    <Compile Include="Domain\OrgEditPspView.cs" />
+    <Compile Include="Domain\ComplaintFdPermitNumSearchView.cs" />
+    <Compile Include="Domain\OrgDocSummaryView.cs" />
+    <Compile Include="Domain\FdList.cs" />
+    <Compile Include="Domain\ComplaintAttachment.cs" />
+    <Compile Include="Domain\ComplaintDoc.cs" />
+    <Compile Include="Domain\ComplaintMaster.cs" />
+    <Compile Include="Domain\DisasterMaster.cs" />
+    <Compile Include="Domain\DisasterStatistics.cs" />
+    <Compile Include="Domain\Document.cs" />
+    <Compile Include="Domain\DocumentLibrary.cs" />
+    <Compile Include="Domain\FdApprovalHistory.cs" />
+    <Compile Include="Domain\FdAttachment.cs" />
+    <Compile Include="Domain\FdDoc.cs" />
+    <Compile Include="Domain\FdEvent.cs" />
+    <Compile Include="Domain\FdMaster.cs" />
+    <Compile Include="Domain\LegalAdviceDoc.cs" />
+    <Compile Include="Domain\LegalAdviceMaster.cs" />
+    <Compile Include="Domain\Letter.cs" />
+    <Compile Include="Domain\OrgAttachment.cs" />
+    <Compile Include="Domain\OrgDoc.cs" />
+    <Compile Include="Domain\OrgMaster.cs" />
+    <Compile Include="Domain\OrgNameChangeHistory.cs" />
+    <Compile Include="Domain\OrgProvisionNotAdopt.cs" />
+    <Compile Include="Domain\OrgRefGuidePromulgation.cs" />
+    <Compile Include="Domain\PspApprovalHistory.cs" />
+    <Compile Include="Domain\PspAttachment.cs" />
+    <Compile Include="Domain\PspCountEvents.cs" />
+    <Compile Include="Domain\PspDoc.cs" />
+    <Compile Include="Domain\PspEvent.cs" />
+    <Compile Include="Domain\PspMaster.cs" />
+    <Compile Include="Domain\PublicHoliday.cs" />
+    <Compile Include="Domain\SuggestionAttachment.cs" />
+    <Compile Include="Domain\SuggestionDoc.cs" />
+    <Compile Include="Domain\SuggestionMaster.cs" />
+    <Compile Include="Domain\SystemParameter.cs" />
+    <Compile Include="Domain\SuggestionDocSummaryView.cs" />
+    <Compile Include="Domain\ComplaintDocSummaryView.cs" />
+    <Compile Include="Domain\FdDocSummaryView.cs" />
+    <Compile Include="Domain\PspDocSummaryView.cs" />
+    <Compile Include="Domain\PspReportR14View.cs" />
+    <Compile Include="Domain\WithholdingHistory.cs" />
+    <Compile Include="Dto\Accounts\UserInfoDto.cs" />
+    <Compile Include="Dto\BaseDto.cs" />
+    <Compile Include="Dto\BaseSearchResult.cs" />
+    <Compile Include="Dto\Complaint\CompEnqDto.cs" />
+    <Compile Include="Dto\Complaint\ComplaintBringUpDto.cs" />
+    <Compile Include="Dto\Complaint\ComplaintFdMasterDto.cs" />
+    <Compile Include="Dto\Complaint\ComplaintMasterDto.cs" />
+    <Compile Include="Dto\Complaint\ComplaintPspMasterDto.cs" />
+    <Compile Include="Dto\Complaint\ComplaintMasterSearchDto.cs" />
+    <Compile Include="Dto\Disaster\DisasterInfoDto.cs" />
+    <Compile Include="Dto\FdMaster\FdApplicationListDto.cs" />
+    <Compile Include="Dto\FdMaster\FdBringUpDto.cs" />
+    <Compile Include="Dto\FdMaster\FdEventApproveSummaryDto.cs" />
+    <Compile Include="Dto\FdMaster\FdReadEventDto.cs" />
+    <Compile Include="Dto\FdMaster\FlagDaySearchDto.cs" />
+    <Compile Include="Dto\FdStatus\FdStatusSummaryDto.cs" />
+    <Compile Include="Dto\FdStatus\FdStatusDto.cs" />
+    <Compile Include="Dto\OGCIO\Activity.cs" />
+    <Compile Include="Dto\OGCIO\ActivitySendParam.cs" />
+    <Compile Include="Dto\OGCIO\Organisation.cs" />
+    <Compile Include="Dto\OGCIO\ListOrganisationResult.cs" />
+    <Compile Include="Dto\OGCIO\Result.cs" />
+    <Compile Include="Dto\OGCIO\Schedule.cs" />
+    <Compile Include="Dto\LegalAdvice\LegalAdviceMasterDto.cs" />
+    <Compile Include="Dto\Lookups\LookupType.cs" />
+    <Compile Include="Dto\Organisation\OrgRefGuidePromulgationXlsFileDto.cs" />
+    <Compile Include="Dto\Organisation\OrgFlagDaySearchDto.cs" />
+    <Compile Include="Dto\PspMaster\PspMasterDto.cs" />
+    <Compile Include="Dto\Organisation\WithHoldingDate.cs" />
+    <Compile Include="Dto\Psp\PspApprovalHistorySummaryDto.cs" />
+    <Compile Include="Dto\Psp\PspApproveEventDto.cs" />
+    <Compile Include="Dto\Psp\PspEventApprovalOrCancelDto.cs" />
+    <Compile Include="Dto\Psp\PspEventScheduleDto.cs" />
+    <Compile Include="Dto\Psp\PspReadEventDto.cs" />
+    <Compile Include="Dto\Psp\PspRecommendEventsDto.cs" />
+    <Compile Include="Dto\Reports\R27SummaryDto.cs" />
+    <Compile Include="Dto\Reports\R01SummaryDto.cs" />
+    <Compile Include="Dto\Reports\R27SummaryFinDto.cs" />
+    <Compile Include="Dto\Reports\R14Dto.cs" />
+    <Compile Include="Dto\Reports\R17FromOthersDto.cs" />
+    <Compile Include="Dto\Reports\R17PoliceCaseDto.cs" />
+    <Compile Include="Dto\Reports\R17TelDto.cs" />
+    <Compile Include="Dto\Reports\R6MonthlyDto.cs" />
+    <Compile Include="Dto\Reports\R16ComplaintDto.cs" />
+    <Compile Include="Dto\Reports\R17FollowUpLetterDto.cs" />
+    <Compile Include="Dto\Reports\R17FollowUpOtherDto.cs" />
+    <Compile Include="Dto\Reports\R17ResultDto.cs" />
+    <Compile Include="Dto\Reports\R01RawDto.cs" />
+    <Compile Include="Dto\Reports\R13Dto.cs" />
+    <Compile Include="Dto\Reports\R17FollowUpDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Dto\Reports\R17MainDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Dto\Reports\R17FollowUpPoliceDto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Dto\Reports\R19Dto.cs" />
+    <Compile Include="Dto\Reports\R24Dto.cs" />
+    <Compile Include="Dto\Reports\R25SummaryDto.cs" />
+    <Compile Include="Dto\Reports\R2SummaryComplaintDto.cs" />
+    <Compile Include="Dto\Reports\R2SummaryDisasterDto.cs" />
+    <Compile Include="Dto\Reports\R2SummaryDto.cs" />
+    <Compile Include="Dto\Reports\R3BreakdownDto.cs" />
+    <Compile Include="Dto\Reports\R3SummaryDto.cs" />
+    <Compile Include="Dto\Reports\R4MainDto.cs" />
+    <Compile Include="Dto\Reports\R5Dto.cs" />
+    <Compile Include="Dto\Reports\R7Dto.cs" />
+    <Compile Include="Dto\Reports\R25AllDto.cs" />
+    <Compile Include="Dto\Reports\R25SubNGOs.cs" />
+    <Compile Include="Dto\Reports\R26Dto.cs" />
+    <Compile Include="Dto\Psp\PspSearchDto.cs" />
+    <Compile Include="Dto\Reports\ReportResultDto.cs" />
+    <Compile Include="Dto\Reports\R20Dto.cs" />
+    <Compile Include="Dto\Reports\R15Dto.cs" />
+    <Compile Include="Dto\Reports\R23Dto.cs" />
+    <Compile Include="Dto\Reports\R16FdDto.cs" />
+    <Compile Include="Dto\Reports\R16PspDto.cs" />
+    <Compile Include="Dto\Reports\R6SummaryDto.cs" />
+    <Compile Include="Dto\Reports\R8Dto.cs" />
+    <Compile Include="Dto\Reports\R9Dto.cs" />
+    <Compile Include="Dto\Reports\R10Dto.cs" />
+    <Compile Include="Dto\Reports\R11Dto.cs" />
+    <Compile Include="Dto\Reports\R12Dto.cs" />
+    <Compile Include="Dto\Reports\R21SummaryDto.cs" />
+    <Compile Include="Dto\Reports\R21ARDto.cs" />
+    <Compile Include="Dto\Reports\R18Dto.cs" />
+    <Compile Include="Dto\Reports\R22Dto.cs" />
+    <Compile Include="Dto\Security\FunctionDto.cs" />
+    <Compile Include="Dto\Security\FunctionsInRolesDto.cs" />
+    <Compile Include="Dto\Security\PspsUser.cs" />
+    <Compile Include="Dto\Security\RoleInfoDto.cs" />
+    <Compile Include="Dto\Security\UserInfo.cs" />
+    <Compile Include="Dto\Security\UserLoginResults.cs" />
+    <Compile Include="Domain\Rank.cs" />
+    <Compile Include="Domain\Function.cs" />
+    <Compile Include="Domain\FunctionsInRoles.cs" />
+    <Compile Include="Domain\Lookup.cs" />
+    <Compile Include="Domain\Post.cs" />
+    <Compile Include="Domain\PostsInRoles.cs" />
+    <Compile Include="Domain\RevInfo.cs" />
+    <Compile Include="Domain\Role.cs" />
+    <Compile Include="Domain\SystemMessage.cs" />
+    <Compile Include="Domain\User.cs" />
+    <Compile Include="Dto\SuggestionMaster\SuggestDto.cs" />
+    <Compile Include="Dto\BaseReportDto.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Psps.Core\Psps.Core.csproj">
+      <Project>{54748c7e-20c2-401d-bbdf-9793aa8e1117}</Project>
+      <Name>Psps.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psps.Resources\Psps.Resources.csproj">
+      <Project>{9f4d9a8d-2959-4309-a9c5-2e9b83cf1dcd}</Project>
+      <Name>Psps.Resources</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\SystemMessage.partial.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <Compile Include="Dto\Reports\R25NonSubNGOs.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

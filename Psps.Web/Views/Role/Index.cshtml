@@ -1,0 +1,407 @@
+﻿@model Psps.Web.ViewModels.Role.RoleViewModel
+@using Psps.Resources;
+
+@{
+    ViewBag.Title = Labels.Role_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form id="roleForm" name="roleForm" class="form-horizontal" role="form">
+    <div class="form-group">
+
+        @Html.LabelFor(m => m.RoleId, new { @class = "col-xs-1 control-label align-left" })
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.RoleId, true, new SelectList(Model.Roles, "Key", "Value", Model.RoleId), htmlAttributes: new { @id = "roles", @class = "form-control", @data_provide = "select2" })
+        </div>
+
+        <button id="btnNewRole" type="button" class="btn btn-primary btn-sm">
+            <span class="icon-plus"></span>&nbsp;@Labels.New</button>
+    </div>
+
+    <div id="addModal" class="bootbox modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="btnClose" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@Labels.Role_NewRoleName</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        @Html.BootstrapValidationSummary()
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                @Html.TextBoxFor(m => m.RoleName, true, htmlAttributes: new { @id = "roleName", @class = "form-control", @maxlength = 30 })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCreateRole" name="create" type="button" class="btn btn-sm btn-primary">
+                        <span class="icon-ok"></span>&nbsp;@Labels.OK</button>
+                    <button id="btnCancel" type="button" class="btn btn-sm btn-default">
+                        <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="vspace-6"></div>
+
+<div id="roleDetails" class="hide">
+    <form id="accessRightsForm" name="accessRightsForm" class="form-horizontal" role="form">
+        <fieldset>
+            <legend>@Labels.Role_AccessRights</legend>
+
+            <div id="functions">
+                <table id="funcTable" class="table table-bordered table-hover data-table">
+                    <thead>
+                        <tr id="tableHead">
+                            <th width="120px">@Labels.Role_Module</th>
+                            <th>@Labels.Role_Description</th>
+                            <th width="50px">@Labels.Role_Enabled
+                                <label class="checkbox-inline" for="isEnabled2">
+                                    <input type="checkbox" onclick="javascript: $('#isAllCheck').val(this.checked);" id="isAllCheck">
+                                    <span class="lbl">&nbsp;</span>
+                                </label>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+    </form>
+
+    <div class="vspace-6"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button type="button" id="btnUpdate" class="btn btn-primary btn-sm">
+                    <span class="icon-ok"></span>&nbsp;@Labels.Update</button>
+                <button type="button" id="btnDeleteRole" class="btn btn-primary btn-sm" data-dismiss="modal">
+                    <span class="icon-trash"></span>&nbsp;@Labels.Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="vspace-6"></div>
+
+    <fieldset>
+        <legend>@Labels.Role_Members</legend>
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="roleMemberGridTable"></table>
+                <div id="roleMemberGridPager"></div>
+            </div>
+
+            <div id="editRoleMemberModal" class="modal fade">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Role Members Details</h4>
+                        </div>
+                        <form id="rolePostForm" name="rolePostForm" role="form">
+                            <div class="modal-body">
+                                <fieldset>
+                                    @Html.HiddenFor(m => m.RoleId, htmlAttributes: new { @id = "roleId" })
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.RolePostId, new { @class = "col-xs-2 control-label" })
+                                        <div class="col-xs-4">
+                                            @Html.DropDownListFor(m => m.RolePostId, true, new SelectList(Model.Posts, "Key", "Value", Model.RolePostId), htmlAttributes: new { @id = "rolePosts", @class = "form-control", @data_provide = "select2" })
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" id="btnCreateRoleMember" class="btn btn-sm btn-primary">
+                                    <span class="icon-ok"></span>&nbsp;@Labels.Create</button>
+                                <button type="button" id="btnCancelRoleMember" class="btn btn-sm btn-default">
+                                    <span class="icon-remove"></span>&nbsp;@Labels.Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+@section scripts {
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        var newRoleUrl = '@Url.RouteUrl("NewRole")';
+        var listFunctionsUrl = '@Url.RouteUrl("ListFunctions", new { roleId = "roleId" })';
+        var updateAccessRightsUrl = '@Url.RouteUrl("UpdateAccessRights", new { roleId = "roleId" })';
+        var deleteRoleUrl = '@Url.RouteUrl("DeleteRole", new { roleId = "roleId" })';
+        var listRoleMembersUrl = '@Url.RouteUrl("ListRoleMembers", new { roleId = "roleId" })';
+        var createRoleMemberUrl = '@Url.RouteUrl("CreateRoleMember")';
+        var deletePostsInRolesUrl = '@Url.RouteUrl("DeletePostsInRoles", new { postsInRolesId = -1 })';
+
+        var addFuncIds;
+        var delFuncIds
+
+        var encodedRoleId;
+
+        $(function ($) {
+            $('#btnNewRole').click(function () {
+                doNewRecord();
+            });
+
+            $('#isAllCheck').change(function () {
+                var isAllCheck = $('#isAllCheck').val();
+                if (isAllCheck == 'true') {
+                    $('#funcTable :checkbox').prop('checked', true);
+                } else {
+                    $('#funcTable :checkbox').prop('checked', false);
+                }
+            });
+
+            $('#btnCreateRole').click(function () {
+                var $form = $("#roleForm");
+                if ($form.valid()) {
+                    var actionUrl = newRoleUrl;
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#addModal').modal('hide');
+                             reloadSelect2($("#roles"), response.data, true);
+                             $("#roles").select2("val", '');
+                             $('#roleDetails').addClass('hide');
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnCancel').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#addModal').modal('hide');
+                    }
+                });
+            });
+
+            $('#btnClose').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#addModal').modal('hide');
+                    }
+                });
+            });
+
+            $('#btnUpdate').click(function () {
+                var accessRights = $("#funcTable").find("input[type='hidden']");
+
+                var $form = $("#accessRightsForm");
+                if ($form.valid()) {
+                    var actionUrl = updateAccessRightsUrl.replace('roleId', encodedRoleId);
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+            });
+
+            $('#btnDeleteRole').click(function () {
+                var actionUrl = deleteRoleUrl.replace('roleId', $('#roleId').val());
+
+                if ($("#roleForm").valid()) {
+                    confirmDelete(function (result) {
+                        if (result) {
+                            ajaxPost(actionUrl,
+                                function (response) {
+                                    reloadSelect2($("#roles"), response.data, true);
+                                    $("#roles").select2("val", '');
+                                    $('#roleDetails').addClass('hide');
+                                    notifSuccess(response.message);
+                                })
+                        }
+                    })
+
+                }
+            });
+
+            $('#btnCreateRoleMember').click(function () {
+                var $form = $("#rolePostForm");
+                if ($form.valid()) {
+                    var actionUrl = createRoleMemberUrl;
+
+                    $form.ajaxPostForm(actionUrl,
+                         function (response) {
+                             $('#editRoleMemberModal').modal('hide');
+                             $("#roleMemberGridTable").trigger("reloadGrid", [{ current: true }]);
+                             notifSuccess(response.message);
+                         }
+                    );
+                }
+
+            });
+
+            $('#btnCancelRoleMember').click(function () {
+                confirm('@Labels.Cancel_Msg', function (result) {
+                    if (result) {
+                        $('#editRoleMemberModal').modal('hide');
+                    }
+                });
+            });
+
+            $('#roles').on('change', function (e) {
+                var $selected = $(':selected', this),
+                        $grid = $('#roleMemberGridTable');
+
+                if ($selected.val()) {
+                    $('#roleId').val($selected.val());
+                    encodedRoleId = encodeURIComponent($selected.val());
+
+                    $('#roleDetails').removeClass('hide');
+                    initFunctionsTable();
+                    $('#isAllCheck').prop('checked', false);
+                    initRoleMemberGrid(encodedRoleId);
+                } else {
+                    $('#roleId').val("");
+                    $('#roleDetails').addClass('hide');
+                };
+
+            });
+        });
+
+        function initFunctionsTable() {
+            var actionUrl = listFunctionsUrl.replace('roleId', encodedRoleId);
+            ajaxPost(actionUrl,
+
+                function (response) {
+                    $("#funcTable tr").not("#tableHead").remove();
+                    for (var i = 0; i < response.data.length; i++) {
+                        var f = response.data[i];
+                        var tr = createFuncTr(f);
+                        $("#funcTable").append(tr);
+                    }
+                }
+            );
+
+        };
+
+        function createFuncTr(func) {
+            var isChecked = func.isEnabled ? 'checked="checked"' : '';
+            var chbTd = '<td><label class="checkbox-inline" for="' + func.functionId + '"><input name="functionIds" type="hidden" value="' + func.functionId + '"><input id="' + func.functionId + '" name="isEnabled" type="hidden" value="' + func.isEnabled + '"><input type="checkbox" ' + isChecked + ' onclick="javascript:$(\'#' + func.functionId + '\').val(this.checked);" ><span class="lbl">&nbsp;</span></label></td></tr>';
+            var tr = '<tr><td>' + func.module + '</td>' + '<td>' + func.description + '</td>' + chbTd;
+            return tr;
+        }
+
+        function doNewRecord() {
+            $('#roleName').val('');
+            doShowModal();
+        }
+
+        function doShowModal() {
+            $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+
+            $('#addModal').modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            });
+        };
+
+        function initRoleMemberGrid(roleId) {
+            var $grid = $("#roleMemberGridTable");
+            var pager_selector = "#roleMemberGridPager";
+            var actionUrl = listRoleMembersUrl.replace('roleId', roleId);
+
+            if ($grid.isJqGrid()) {
+                $grid.resetJqGrid(actionUrl);
+                return;
+            }
+
+            $grid.jqGrid({
+                pager: pager_selector,
+                sortname: 'postId',
+                sortorder: 'asc',
+                datatype: 'json',
+                url: actionUrl,
+                colNames: [
+                    '@Html.DisplayNameFor(m => m.Posts)',
+                    '@Html.DisplayNameFor(m => m.RolePostId)',
+                    '@Html.DisplayNameFor(m => m.RoleAction)',
+                ],
+                colModel: [{
+                    name: 'postId',
+                    width: '990'
+                }, {
+                    name: 'postsInRolesId',
+                    hidden: true
+                }, {
+                    name: 'rowAction',
+                    index: '',
+                    width: '70',
+                    fixed: true,
+                    sortable: false,
+                    search: false,
+                    resize: false,
+                    formatter: 'actions',
+                    formatoptions: {
+                        keys: true,
+                        delOptions: {
+                            recreateForm: true,
+                            beforeShowForm: beforeDeleteCallback,
+                            onclickSubmit: function (options, rowId) {
+                                var data = $grid.jqGrid('getRowData', rowId);
+
+                                options.url = deletePostsInRolesUrl.replace('-1', data.postsInRolesId);
+                            },
+                            afterSubmit: function (response, postData) {
+                                notifSuccess(response.responseJSON.message);
+                                return [true, '', "response.message"];
+                            }
+                        },
+                        editbutton: false
+                    }
+                }],
+                //editurl: "system-role-maintenance.html", //nothing is saved
+                loadComplete: defaultGridLoadComplete
+            });
+
+            //navButtons
+            $grid.jqGrid('navGrid', pager_selector, {
+                //navbar options
+                search: true,
+                refresh: true,
+            }, {}, {}, {}, {
+                //search form
+                recreateForm: true,
+                afterShowSearch: defaultSearchFormAfterShowSearch,
+                afterRedraw: defaultSearchFormAfterRedraw
+            }, {}).jqGrid('navButtonAdd', pager_selector, {
+                caption: "",
+                buttonicon: "icon-plus",
+                onClickButton: onNewRecord,
+                position: "first",
+                title: "New Record",
+                cursor: "pointer"
+            });
+
+            function displayInput() {
+                $('#editRoleMemberModal').modal({
+                    backdrop: 'static',
+                    show: true,
+                    keyboard: false
+                });
+            };
+
+            function onNewRecord() {
+                $("#rolePosts").select2("val", '');
+                $('.alert.alert-block.alert-warning.validation-summary-errors').remove();
+                displayInput();
+            };
+
+        };
+    </script>
+}

@@ -1,0 +1,288 @@
+﻿@model Psps.Web.ViewModels.PSP.PspReportViewModel
+
+@using Psps.Resources;
+@{
+    ViewBag.Title = Labels.PSP_Report_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-inline .inline {
+        vertical-align: middle;
+    }
+</style>
+
+<form class="form-inline" id="reportForm">
+    <fieldset></fieldset>
+    <table id="reports-data-table" class="table table-bordered table-hover table-condensed data-table">
+        <thead>
+            <tr>
+                <th width="50px">File</th>
+                <th width="250px">Description</th>
+                <th>Parameters</th>
+                <th width="100px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>R01</td>
+                <td>PSP Statistical Summary (excluding FD)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R1_YearFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R1_YearFrom, true, htmlAttributes: new { @id = "R1_YearFrom", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                            @Html.LabelFor(m => m.R1_YearTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R1_YearTo, true, htmlAttributes: new { @id = "R1_YearTo", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 1)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>R02</td>
+                <td>Statistical Summary of Public Subscription Permit (Including Flag Day)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R2_YearFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R2_YearFrom, true, htmlAttributes: new { @id = "R2_YearFrom", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                            @Html.LabelFor(m => m.R2_YearTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R2_YearTo, true, htmlAttributes: new { @id = "R2_YearTo", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 2)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>R04</td>
+                <td>No. of Applications/ Enquiries/ Complaints in Public Place</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R4_YearFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R4_YearFrom, true, htmlAttributes: new { @id = "R4_YearFrom", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                            @Html.LabelFor(m => m.R4_YearTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R4_YearTo, true, htmlAttributes: new { @id = "R4_YearTo", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 4)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>R05</td>
+                <td>PSP & FD Statistics</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R5_Year, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R5_Year, true, htmlAttributes: new { @id = "r5_Year", @class = "form-control", @maxlength = 2, @size = 2 })
+                            <label class="control-label">year(s)</label>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 5)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>R06</td>
+                <td>PSP Statistics for Disaster</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R6_DisasterId, new { @class = "control-label" })
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.R6_DisasterId, true, new SelectList(Model.R6_Disaster, "Key", "Value", Model.R6_DisasterId), htmlAttributes: new { @id = "R6_Disaster", @class = "form-control", @data_provide = "select2", @style = "width: 350px;" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 6)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>R07</td>
+                <td>Comparison Summary of PSP Statistics for Disasters</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R7_YearFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R7_YearFrom, true, htmlAttributes: new { @id = "R7_YearFrom", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                            @Html.LabelFor(m => m.R7_YearTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R7_YearTo, true, htmlAttributes: new { @id = "R7_YearTo", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 7)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>R21</td>
+                <td>No. of Accounts Received with Proceed and Expenditure Statistics (PSP)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R21_Years, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R21_Years, true, htmlAttributes: new { @id = "R21_Years", @class = "form-control", @maxlength = 2, @style = "width:30px" })
+                            <label class="control-label" for="R21_Years">Year(s)</label>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 21)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>R22</td>
+                <td>No. of Fund-raising Day, Event & Permit (PSP)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R22_FromDate, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R22_FromDate, true, htmlAttributes: new { @id = "R22_FromDate", @class = "form-control", @maxlength = 10, @data_provide = "datepicker" })
+                            @Html.LabelFor(m => m.R22_ToDate, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R22_ToDate, true, htmlAttributes: new { @id = "R22_ToDate", @class = "form-control", @maxlength = 10, @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 22)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>R23</td>
+                <td>Annual Income of Organisation (PSP)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R23_YearFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R23_YearFrom, true, htmlAttributes: new { @id = "R23_YearFrom", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                            @Html.LabelFor(m => m.R23_YearTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R23_YearTo, true, htmlAttributes: new { @id = "R23_YearTo", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 23)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>R27</td>
+                <td>Summary Statistics of PSP of Solicitation of Signed Authorisation Form</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.R27_YearFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R27_YearFrom, true, htmlAttributes: new { @id = "R27_YearFrom", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                            @Html.LabelFor(m => m.R27_YearTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.R27_YearTo, true, htmlAttributes: new { @id = "R27_YearTo", @class = "form-control", @maxlength = 4, @data_provide = "datepicker", @data_date_format = "yyyy", @data_date_min_view_mode = "years" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 27)">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>RawData1</td>
+                <td>Raw Data of Organisation</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.Raw1_OrgRef, new { @class = "control-label" })
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Raw1_OrgRef, true, htmlAttributes: new { @id = "raw1_OrgRef", @class = "form-control", @maxlength = 8, @style = "width:600px" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 'awData1')">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>RawData2</td>
+                <td>Raw Data of PSP</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            @Html.LabelFor(m => m.Raw2_YearFrom, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Raw2_YearFrom, true, htmlAttributes: new { @id = "raw2_YearFrom", @class = "form-control", @data_provide = "datepicker" })
+                            @Html.LabelFor(m => m.Raw2_YearTo, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Raw2_YearTo, true, htmlAttributes: new { @id = "raw2_YearTo", @class = "form-control", @data_provide = "datepicker" })
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="Generate_Click(event, 'awData2')">
+                        <span class="icon-print"></span>&nbsp;Generate
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<script>
+    var searchOrganisationUrl = '@Url.RouteUrl("SearchOrganisation")';
+    var getOrganisationUrl = '@Url.RouteUrl("GetOrganisation", new { orgRef = "orgRef" })';
+    var pageSize = 10;
+
+    $(function () {
+        $('input.form-control').addClass("data-val-ignore");
+        $('select.form-control').addClass("data-val-ignore");
+
+        $("#raw1_OrgRef").initOrganisationCodeSearchBox(searchOrganisationUrl, getOrganisationUrl, pageSize);
+    });
+
+    function Generate_Click(e, moduleNum) {
+        var $inputs = $(e.target || e.srcElement).parents("tr").find('input.form-control, select.form-control');
+        $inputs.removeClass("data-val-ignore");
+
+        var $form = $("#reportForm");
+        if ($form.valid()) {
+            var actionUrl = '/api/report/r' + moduleNum + '/generate';
+            $form.ajaxPostForm(actionUrl,
+                function (response) {
+                    if (response.success)
+                        window.location.href = response.data;
+                    else
+                        notifError("No record found")
+                }
+            );
+        }
+
+        $inputs.addClass("data-val-ignore");
+    }
+</script>
