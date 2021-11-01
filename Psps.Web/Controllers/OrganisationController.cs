@@ -4693,7 +4693,7 @@ namespace Psps.Web.Controllers
             var pspMaster = _PSPService.GetPSPById(Convert.ToInt32(model.Id));
             //pspMaster.FundUsed
             Ensure.NotNull(pspMaster, "No PspMaster found with the specified Id");
-            pspMaster.FundUsed = model.FundUsed;
+            //pspMaster.FundUsed = model.FundUsed;
             pspMaster.DocSubmission = model.DocSubmission;
 
             //if (!String.IsNullOrEmpty(model.SubmissionDueDate))
