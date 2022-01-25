@@ -5,6 +5,8 @@ using Psps.Core.Infrastructure;
 using Psps.Data.Repositories;
 using Psps.Models.Domain;
 using Psps.Services.Events;
+using Psps.Services.Posts;
+using Psps.Services.SystemParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,17 +48,20 @@ namespace Psps.Services.UserLog
 
         private readonly IPostRepository _postRepository;
 
+        private readonly IParameterService _parameterService;
+
         #endregion Fields
 
         #region Ctor
 
         public UserLogService(IEventPublisher eventPublisher, IUserLogRepository UserLogRepository,
-            IUserRepository userRepository, IPostRepository postRepository)
+            IUserRepository userRepository, IPostRepository postRepository, IParameterService parameterService)
         {
             this._eventPublisher = eventPublisher;
             this._userlogRepository = UserLogRepository;
             this._userRepository = userRepository;
             this._postRepository = postRepository;
+            this._parameterService = parameterService;
         }
 
         #endregion Ctor
@@ -387,6 +392,53 @@ namespace Psps.Services.UserLog
             _eventPublisher.EntityInserted<ActivityLog>(log);
 
             return log;
+        }
+
+        public ActivityLog LogLoginWrongPassword(string UserId, string IPAddress)
+        {
+            /*
+                Please log those information related to:
+                1) User Login / Logout Information - Mode : 0 - Login; 1 - Logout
+             */
+
+            var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
+            var logBuilder = new StringBuilder();
+
+            var userID = _userRepository.GetById(UserId);            
+            var LogTime = DateTime.Now;
+            var LogType = "Wrong Password";
+
+            logBuilder.AppendFormat("User ID: {0}", UserId).AppendLine();
+            logBuilder.AppendFormat("IP Address: ({0})", IPAddress).AppendLine();
+            //logBuilder.AppendFormat("User ID: {0}; Time: {1}", currentUser.UserId, LogTime.ToString()).AppendLine();
+
+            
+            var log = new ActivityLog
+            {
+                Activity = "Login / Logout",
+                Action = LogType,
+                ActionedOn = LogTime,
+                User = userID,
+                
+                Post = _postRepository.Table.Where(p => p.Owner.UserId == UserId).ToList().First(),
+                Remark = logBuilder.ToString()
+            };
+
+            this._userlogRepository.Add(log);
+            _eventPublisher.EntityInserted<ActivityLog>(log);
+
+            return log;
+        }
+
+        public int GetInvalidLoginAttemps(string UserId) {
+            int result = 0;
+            int lookback_minute_range = Convert.ToInt32(_parameterService.GetParameterByCode("InvalidLoginAttempsMinuteRange").Value);
+            var user = _userRepository.GetById(UserId);
+            result  = _userlogRepository.Table.Where(l => 
+            l.Action.ToUpper().Contains("WRONG PASSWORD") &&
+            l.User == user &&
+            l.ActionedOn >= DateTime.Now.AddMinutes(lookback_minute_range * -1)).Count();
+            return result;
         }
 
         public ActivityLog GetUserLogById(int userLogId)
