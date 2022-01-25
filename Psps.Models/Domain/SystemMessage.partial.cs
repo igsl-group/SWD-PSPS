@@ -34,6 +34,7 @@
                 public static readonly string WrongCredentials = "Error.User.WrongCredentials";
                 public static readonly string NotActive = "Error.User.NotActive";
                 public static readonly string PasswordExpire = "Error.User.PasswordExpire";
+                public static readonly string TooManyLoginAttemps = "Error.User.TooManyLoginAttemps";
             }
 
             public static class Lookup
