@@ -85,6 +85,7 @@ namespace Psps.Core.Common
             public const string DEFAULT_PASSWORD = "DefaultPassword";
             public const string FRAS_URL = "FrasUrl";
             public const string FRAS_ENABLED = "FrasEnabled";
+            public const string DEFAULT_SYSTEM_USER_ID = "DefaultSystemUserId";
         }
     }
 }
