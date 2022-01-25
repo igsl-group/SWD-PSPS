@@ -25,6 +25,10 @@ namespace Psps.Services.UserLog
 
         ActivityLog LogLoginInformation(int Mode);
 
+        ActivityLog LogLoginWrongPassword(string UserId,string IPAddress);
+
+        int GetInvalidLoginAttemps(string UserId);
+
         /// <summary>
         /// Get system message by id
         /// </summary>
