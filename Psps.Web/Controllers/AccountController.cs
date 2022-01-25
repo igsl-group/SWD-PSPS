@@ -1,4 +1,5 @@
-﻿using FluentValidation.Internal;
+﻿using AutoMapper;
+using FluentValidation.Internal;
 using FluentValidation.Mvc;
 using FluentValidation.Results;
 using Psps.Core;
@@ -7,6 +8,7 @@ using Psps.Core.Helper;
 using Psps.Core.Infrastructure;
 using Psps.Core.JqGrid.Models;
 using Psps.Data.Infrastructure;
+using Psps.Data.Repositories;
 using Psps.Models.Domain;
 using Psps.Models.Dto.Accounts;
 using Psps.Models.Dto.Security;
@@ -44,6 +46,7 @@ namespace Psps.Web.Controllers
         private readonly IActingService _actingService;
         private readonly IUserLogService _userLogService;
         private readonly IParameterService _parameterService;
+        private readonly IUserRepository _userRepository;
 
         public AccountController(IUnitOfWork unitOfWork,
             IMessageService messageService,
@@ -53,7 +56,8 @@ namespace Psps.Web.Controllers
             IRoleService roleService,
             IActingService actingService,
             IUserLogService userLogService,
-            IParameterService parameterService)
+            IParameterService parameterService,
+            IUserRepository userRepository)
         {
             this._unitOfWork = unitOfWork;
             this._messageService = messageService;
@@ -64,6 +68,7 @@ namespace Psps.Web.Controllers
             this._actingService = actingService;
             this._userLogService = userLogService;
             this._parameterService = parameterService;
+            this._userRepository = userRepository;
         }
 
         #region Login / Logout
@@ -129,7 +134,13 @@ namespace Psps.Web.Controllers
 
                     case UserLoginResults.WrongPassword:
                         {
-                            ModelState.AddModelError("", _messageService.GetMessage(SystemMessage.Error.User.WrongCredentials));
+                            _userLogService.LogLoginWrongPassword(model.UserId,this.Request.UserHostAddress);
+                            if (AccountLockOut(model.UserId))
+                            {
+                                ModelState.AddModelError("", _messageService.GetMessage(SystemMessage.Error.User.TooManyLoginAttemps));
+                                break;
+                            }
+                            ModelState.AddModelError("", _messageService.GetMessage(SystemMessage.Error.User.WrongCredentials));                            
                             break;
                         }
 
@@ -150,6 +161,37 @@ namespace Psps.Web.Controllers
             _userLogService.LogLoginInformation(1);
             _authenticationService.SignOut();
             return RedirectToRoute("Home");
+        }
+
+
+        public bool AccountLockOut(string user_id) {
+            bool locked_out = false;
+            //Accordance to OGCIO IT Security Guidelines [G3]
+            //Lock out account after 5 invalid logins
+            var user = _userService.GetUserById(user_id);
+            if (user != null) {
+                string default_system_user_id = _parameterService.GetParameterByCode(Constant.SystemParameter.DEFAULT_SYSTEM_USER_ID).Value;
+                int max_attempts = Convert.ToInt32(_parameterService.GetParameterByCode("MaxInvalidLoginAttemps").Value);
+                int attemps = _userLogService.GetInvalidLoginAttemps(user_id);
+                if (attemps >= max_attempts) {
+                    locked_out = true;
+                    //Set User Account to InActive
+                    user.IsActive = false;
+                    user.UpdatedById = default_system_user_id;
+                    user.UpdatedByPost = _postService.GetPostByOwnerUserId(default_system_user_id).First().PostId;
+                    user.UpdatedOn = DateTime.Now;                    
+                    //Sign In System Account
+                    //Logout Immediately After
+                    _authenticationService.SignIn(default_system_user_id);                    
+                    using (_unitOfWork.BeginTransaction())
+                    {
+                        _userService.Update(user);
+                        _unitOfWork.Commit();
+                    }                    
+                    _authenticationService.SignOut();
+                }
+            }
+            return locked_out;
         }
 
         #endregion Login / Logout
