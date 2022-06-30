@@ -160,6 +160,11 @@ namespace Psps.Services.Accounts
             var hashedPassword = string.IsNullOrEmpty(password) ? user.Password : Encryptor.Hash(password);
 
             //Update Prev Password
+            user.PrevPassword8 = user.PrevPassword7;
+            user.PrevPassword7 = user.PrevPassword6;
+            user.PrevPassword6 = user.PrevPassword5;
+            user.PrevPassword5 = user.PrevPassword4;
+
             user.PrevPassword4 = user.PrevPassword3;
             user.PrevPassword3 = user.PrevPassword2;
             user.PrevPassword2 = user.PrevPassword1;
@@ -176,7 +181,19 @@ namespace Psps.Services.Accounts
             if (string.IsNullOrEmpty(password)) return false;
             password = Encryptor.Hash(password);
             var result = _userRepository.Table
-                .Where(i => i.UserId == userId && (password.Equals(i.Password) || password.Equals(i.PrevPassword1) || password.Equals(i.PrevPassword2) || password.Equals(i.PrevPassword3) || password.Equals(i.PrevPassword4))).Any();
+                .Where(i => i.UserId == userId && 
+                        (
+                            password.Equals(i.Password) || 
+                            password.Equals(i.PrevPassword1) || 
+                            password.Equals(i.PrevPassword2) || 
+                            password.Equals(i.PrevPassword3) || 
+                            password.Equals(i.PrevPassword4) ||
+                            password.Equals(i.PrevPassword5) ||
+                            password.Equals(i.PrevPassword6) ||
+                            password.Equals(i.PrevPassword7) ||
+                            password.Equals(i.PrevPassword8)
+                        ))
+                .Any();
 
             return result;
         }
