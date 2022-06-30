@@ -115,14 +115,14 @@ namespace Psps.Core.Helper
         /// </summary>
         /// <param name="length">Length</param>
         /// <returns>Result string</returns>
-        public static string GenerateRandomDigitCode(int length)
-        {
-            var random = new Random();
-            string str = "";
-            for (int i = 0; i < length; i++)
-                str = String.Concat(str, random.Next(10).ToString());
-            return str;
-        }
+        //public static string GenerateRandomDigitCode(int length)
+        //{
+        //    var random = new Random();
+        //    string str = "";
+        //    for (int i = 0; i < length; i++)
+        //        str = String.Concat(str, random.Next(10).ToString());
+        //    return str;
+        //}
 
         /// <summary>
         /// Returns an random interger number within a specified rage
@@ -130,12 +130,12 @@ namespace Psps.Core.Helper
         /// <param name="min">Minimum number</param>
         /// <param name="max">Maximum number</param>
         /// <returns>Result</returns>
-        public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
-        {
-            var randomNumberBuffer = new byte[10];
-            new RNGCryptoServiceProvider().GetBytes(randomNumberBuffer);
-            return new Random(BitConverter.ToInt32(randomNumberBuffer, 0)).Next(min, max);
-        }
+        //public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
+        //{
+        //    var randomNumberBuffer = new byte[10];
+        //    new RNGCryptoServiceProvider().GetBytes(randomNumberBuffer);
+        //    return new Random(BitConverter.ToInt32(randomNumberBuffer, 0)).Next(min, max);
+        //}
 
         /// <summary>
         /// Verifies that a string is in valid e-mail format
