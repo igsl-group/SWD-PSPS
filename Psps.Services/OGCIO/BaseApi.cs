@@ -77,12 +77,15 @@ namespace Psps.Services.OGCIO
                     var client = new RestClient();
                     client.BaseUrl = new Uri(_baseUrls[i]);
                     client.Authenticator = new OGCIOHttpAuthenticator();
-
+                    _logger.Info(client.BaseUrl);
                     _logger.Info(request.Parameters);
+                    _logger.Info("82");
 
                     var response = client.Execute(request);
-
+                    _logger.Info(response.StatusCode);
                     _logger.Info(response.Content);
+                    _logger.Info(response.ErrorMessage);
+                    _logger.Info("87");
 
                     if (response.ErrorException != null)
                     {
