@@ -417,3 +417,24 @@ span.menu-text {
     line-height: 24px;
     padding: 6px 0px;
 }
+
+/******IGSL CSS Update 2022Mar28*******/
+/******Gabriel Yip*******/
+.ogcio_pwd_guide_header {
+    width:60%;
+    cursor: pointer;
+    margin:0;
+    padding:10px;
+    
+}
+
+.ogcio_pwd_guide_contain {
+   /* display: none;*/
+    list-style:none;
+    margin:0;
+}
+.ogcio_pwd_guide_table {
+    width: 60%;    
+    background:#f9f9f9;
+}
+

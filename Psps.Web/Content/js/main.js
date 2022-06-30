@@ -520,7 +520,7 @@ function setFocus(ele) {
 	$(ele).focus();
 };
 
-function notifError(message, callback) {
+function notifError(message, callback) {	
 	notif({
 		type: "error",
 		msg: message,
@@ -609,7 +609,7 @@ function resetPostData($form, $grid) {
 	});
 }
 
-$.fn.ajaxPostForm = function (url, success, fail) {
+$.fn.ajaxPostForm = function (url, success, fail, callback) {
 	if (!this.length) {
 		log('ajaxPostForm: skipping submit process - no element selected');
 		return this;
@@ -626,10 +626,13 @@ $.fn.ajaxPostForm = function (url, success, fail) {
 				success(data);
 			} else if ($.isFunction(fail)) {
 				fail(data);
+				if (typeof callback == "function") { callback(); }
 			} else if (data.tag === "ValidationError") {
 				processServerSideValidationError(data, $form);
+				if (typeof callback == "function") { callback(); }
 			} else {
 				notifError(data.message);
+				if (typeof callback == "function") { callback(); }
 			}
 		},
 		error: defaultAjaxErrorHandler
