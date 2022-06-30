@@ -432,12 +432,38 @@ namespace Psps.Services.UserLog
 
         public int GetInvalidLoginAttemps(string UserId) {
             int result = 0;
-            int lookback_minute_range = Convert.ToInt32(_parameterService.GetParameterByCode("InvalidLoginAttempsMinuteRange").Value);
+
+            int check_range_day = Convert.ToInt32(_parameterService.GetParameterByCode("InvalidLoginAttempsCheckRangeDay").Value);
+            int check_range_hour = Convert.ToInt32(_parameterService.GetParameterByCode("InvalidLoginAttempsCheckRangeHour").Value);
+            int check_range_min = Convert.ToInt32(_parameterService.GetParameterByCode("InvalidLoginAttempsCheckRangeMinute").Value);
+
             var user = _userRepository.GetById(UserId);
-            result  = _userlogRepository.Table.Where(l => 
-            l.Action.ToUpper().Contains("WRONG PASSWORD") &&
-            l.User == user &&
-            l.ActionedOn >= DateTime.Now.AddMinutes(lookback_minute_range * -1)).Count();
+            result  = _userlogRepository.Table.Where(
+                l => 
+                l.Action.ToUpper().Contains("WRONG PASSWORD") &&
+                l.User == user &&
+                l.ActionedOn >= GetInvalidLoginAttempsStartDate(user)
+                                .AddDays(check_range_day * -1)
+                                .AddHours(check_range_hour * -1)
+                                .AddMinutes(check_range_min * -1)
+            ).Count();
+            return result;
+        }
+
+        private DateTime GetInvalidLoginAttempsStartDate(User user)
+        {
+            DateTime result = new DateTime();
+            var last_login_result = _userlogRepository.Table.Where(
+                l =>
+                l.User == user &&
+                l.Action.ToUpper().Contains("LOGIN")
+            ).OrderByDescending(l => l.ActionedOn);
+
+
+            DateTime last_login_date = (last_login_result != null && last_login_result.Count() > 0) ?
+                last_login_result.FirstOrDefault().ActionedOn : new DateTime();
+            DateTime today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            result = (last_login_date > today) ? last_login_date : today;
             return result;
         }
 
