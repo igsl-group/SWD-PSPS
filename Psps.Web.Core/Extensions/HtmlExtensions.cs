@@ -19,7 +19,7 @@ namespace Psps.Web.Core.Extensions
             var sb = new StringBuilder();
 
             var anyErrors = !htmlHelper.ViewData.ModelState.IsValid;
-            var divBeginTag = @"<div class=""alert alert-block alert-warning alert-dismissable validation-summary-errors"">";
+            var divBeginTag = @"<div class=""alert alert-block alert-warning alert-dismissable validation-summary-errors"" onload=""AddLink(this)"">";
             var closeBtn = @"<button type=""button"" class=""close"" data-dismiss=""alert"">&times;</button>";
             var divEndTag = @"</div>";
 
@@ -29,8 +29,9 @@ namespace Psps.Web.Core.Extensions
                 sb.AppendLine(closeBtn);
                 foreach (var key in htmlHelper.ViewData.ModelState.Keys)
                 {
-                    foreach (var err in htmlHelper.ViewData.ModelState[key].Errors)
-                        sb.Append("<p>").Append(htmlHelper.Encode(err.ErrorMessage)).AppendLine("</p>");
+                    foreach (var err in htmlHelper.ViewData.ModelState[key].Errors) { 
+                        sb.Append("<p>").Append(htmlHelper.Encode(err.ErrorMessage)).AppendLine("</p>");                       
+                    }
                 }
                 sb.AppendLine(divEndTag);
                 return new MvcHtmlString(sb.ToString());
