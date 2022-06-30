@@ -19,6 +19,10 @@ namespace Psps.Data.Mappings
             Map(x => x.PrevPassword2).Column("PrevPassword2").Length(40);
             Map(x => x.PrevPassword3).Column("PrevPassword3").Length(40);
             Map(x => x.PrevPassword4).Column("PrevPassword4").Length(40);
+            Map(x => x.PrevPassword5).Column("PrevPassword5").Length(40);
+            Map(x => x.PrevPassword6).Column("PrevPassword6").Length(40);
+            Map(x => x.PrevPassword7).Column("PrevPassword7").Length(40);
+            Map(x => x.PrevPassword8).Column("PrevPassword8").Length(40);
             Map(x => x.PasswordChangedDate).Column("PasswordChangedDate");
             Map(x => x.TelephoneNumber).Column("Tel").Length(15);
             Map(x => x.Email).Column("Email").Length(50);

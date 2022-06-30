@@ -21,6 +21,14 @@ namespace Psps.Models.Domain
 
         public virtual string PrevPassword4 { get; set; }
 
+        public virtual string PrevPassword5 { get; set; }
+
+        public virtual string PrevPassword6 { get; set; }
+
+        public virtual string PrevPassword7 { get; set; }
+
+        public virtual string PrevPassword8 { get; set; }
+
         public virtual DateTime? PasswordChangedDate { get; set; }
 
         public virtual string EngUserName { get; set; }
