@@ -21,11 +21,15 @@ namespace Psps.Web.Validators
             currentUserId = workContext.CurrentUser != null ? workContext.CurrentUser.UserId : null;
 
             var mandatoryMessage = messageService.GetMessage(SystemMessage.Error.Mandatory);
-            var lengthMsg = messageService.GetMessage(SystemMessage.Error.Length);
+            //var lengthMsg = messageService.GetMessage(SystemMessage.Error.Length);
             var passwordCompositionInvalidMsg = messageService.GetMessage(SystemMessage.Error.User.PasswordCompositionInvalid);
+            
             var passwordHistoryCrashMsg = messageService.GetMessage(SystemMessage.Error.User.PasswordHistoryCrash);
 
-            string regexLetterNumber = @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{0,}$";
+            //string regexLetterNumber = @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{0,}$";
+            string regexStrongPassword_08 = @"(?=.*[A-Z])(?=.*[!@#$%^&*_+-\/?><;:])(?=.*[0-9])(?=.*[a-z]).{8,}";
+            string regexStrongPassword_10 = @"(?=.*[A-Z])((?=.*[!@#$%^&*_+-\/?><;:])|(?=.*[0-9]))(?=.*[a-z]).{10,}";
+            string regexStrongPassword = $@"^({regexStrongPassword_08}|{regexStrongPassword_10})$";
 
             RuleSet("ChangePassword", () =>
             {
@@ -39,8 +43,8 @@ namespace Psps.Web.Validators
                 var oldPasswordIncorrectMsg = messageService.GetMessage(SystemMessage.Error.User.OldPasswordIncorrect);
                 RuleFor(x => x.OldPassword).Must(ValidateOldPassword).When(x => !string.IsNullOrEmpty(x.OldPassword)).WithMessage(oldPasswordIncorrectMsg);
 
-                RuleFor(x => x.NewPassword).Length(8, 20).WithMessage(lengthMsg);
-                RuleFor(x => x.NewPassword).Matches(regexLetterNumber).WithMessage(passwordCompositionInvalidMsg);
+                //RuleFor(x => x.NewPassword).Length(8, 20).WithMessage(lengthMsg);
+                RuleFor(x => x.NewPassword).Matches(regexStrongPassword).WithMessage(passwordCompositionInvalidMsg);
                 RuleFor(x => x.NewPassword).Must(NotExistsInPasswordHistory).WithMessage(passwordHistoryCrashMsg);
             });
         }
