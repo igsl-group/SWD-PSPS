@@ -81,6 +81,7 @@ namespace Psps.Web
 
             // Setup global sitemap loader (required)
             MvcSiteMapProvider.SiteMaps.Loader = EngineContext.Current.Resolve<ISiteMapLoader>();
+            MvcHandler.DisableMvcResponseHeader = true;
         }
 
         protected void Application_Error(Object sender, EventArgs e)
