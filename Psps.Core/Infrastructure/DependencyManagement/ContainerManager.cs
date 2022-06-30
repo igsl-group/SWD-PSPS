@@ -5,6 +5,7 @@ using Psps.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 
 namespace Psps.Core.Infrastructure.DependencyManagement
@@ -12,7 +13,6 @@ namespace Psps.Core.Infrastructure.DependencyManagement
     public class ContainerManager
     {
         private readonly IContainer _container;
-
         public ContainerManager(IContainer container)
         {
             _container = container;
@@ -88,8 +88,9 @@ namespace Psps.Core.Infrastructure.DependencyManagement
                     }
                     return Activator.CreateInstance(type, parameterInstances.ToArray());
                 }
-                catch (PspsException)
+                catch (PspsException ex)
                 {
+                    Console.WriteLine(ex.Message);
                 }
             }
             throw new PspsException("No contructor was found that had all the dependencies satisfied.");
