@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Psps.Web</RootNamespace>
     <AssemblyName>Psps.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
@@ -270,11 +270,11 @@
     <Compile Include="Controllers\FileDownloadControllerController.cs" />
     <Compile Include="Controllers\FlagDayListController.cs" />
     <Compile Include="Controllers\LegalAdviceController.cs" />
+    <Compile Include="Controllers\PSPController.cs" />
     <Compile Include="Controllers\SuggestionController.cs" />
     <Compile Include="Controllers\EnquiryController.cs" />
     <Compile Include="Controllers\FlagDayController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
-    <Compile Include="Controllers\PSPController.cs" />
     <Compile Include="Controllers\DisasterController.cs" />
     <Compile Include="Controllers\DocumentLibraryController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
@@ -603,6 +603,8 @@
     <Content Include="Views\PSP\Fras.cshtml" />
     <Content Include="Views\PSP\_SplitPspEventModal.cshtml" />
     <Content Include="Reports\R27.xlsx" />
+    <Content Include="Views\Account\_PasswordPolicyModal.cshtml" />
+    <Content Include="Views\Shared\_Layout_Popup.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
