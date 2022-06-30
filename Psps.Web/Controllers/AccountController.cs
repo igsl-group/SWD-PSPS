@@ -163,6 +163,11 @@ namespace Psps.Web.Controllers
             return RedirectToRoute("Home");
         }
 
+        [AllowAnonymous]
+        [Route("~/PasswordPolicy", Name = "PasswordPolicy")]
+        public ActionResult PasswordPolicy() {
+            return PartialView("_PasswordPolicyModal");
+        }
 
         public bool AccountLockOut(string user_id) {
             bool locked_out = false;
@@ -172,6 +177,7 @@ namespace Psps.Web.Controllers
             if (user != null) {
                 string default_system_user_id = _parameterService.GetParameterByCode(Constant.SystemParameter.DEFAULT_SYSTEM_USER_ID).Value;
                 int max_attempts = Convert.ToInt32(_parameterService.GetParameterByCode("MaxInvalidLoginAttemps").Value);
+                
                 int attemps = _userLogService.GetInvalidLoginAttemps(user_id);
                 if (attemps >= max_attempts) {
                     locked_out = true;
