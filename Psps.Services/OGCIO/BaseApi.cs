@@ -125,6 +125,7 @@ namespace Psps.Services.OGCIO
         {
             // trust all certificates
             ServicePointManager.ServerCertificateValidationCallback = ((sender, cert, chain, sslPolicyErrors) => true);
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             /*// trust sender
             ServicePointManager.ServerCertificateValidationCallback = ((sender, cert, chain, errors) => true);
