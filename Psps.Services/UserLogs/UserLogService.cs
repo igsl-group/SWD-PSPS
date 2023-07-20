@@ -436,16 +436,16 @@ namespace Psps.Services.UserLog
             int check_range_day = Convert.ToInt32(_parameterService.GetParameterByCode("InvalidLoginAttempsCheckRangeDay").Value);
             int check_range_hour = Convert.ToInt32(_parameterService.GetParameterByCode("InvalidLoginAttempsCheckRangeHour").Value);
             int check_range_min = Convert.ToInt32(_parameterService.GetParameterByCode("InvalidLoginAttempsCheckRangeMinute").Value);
-
+            var lookBackDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0)
+                    .AddDays(check_range_day * -1)
+                    .AddHours(check_range_hour * -1)
+                    .AddMinutes(check_range_min * -1);
             var user = _userRepository.GetById(UserId);
             result  = _userlogRepository.Table.Where(
                 l => 
                 l.Action.ToUpper().Contains("WRONG PASSWORD") &&
                 l.User == user &&
-                l.ActionedOn >= GetInvalidLoginAttempsStartDate(user)
-                                .AddDays(check_range_day * -1)
-                                .AddHours(check_range_hour * -1)
-                                .AddMinutes(check_range_min * -1)
+                l.ActionedOn >= lookBackDate
             ).Count();
             return result;
         }
