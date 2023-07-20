@@ -14,8 +14,8 @@ namespace Psps.Core.Common
             Ensure.Argument.NotNullOrEmpty(data, "data");
 
             byte[] bytes = System.Text.Encoding.ASCII.GetBytes(data);
-            byte[] hashBytes = SHA1.Create().ComputeHash(bytes);
-
+            //byte[] hashBytes = SHA1.Create().ComputeHash(bytes);
+            byte[] hashBytes = SHA256.Create().ComputeHash(bytes);
             // Convert the byte array to hexadecimal string
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < hashBytes.Length; i++)
