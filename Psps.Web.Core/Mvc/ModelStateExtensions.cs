@@ -13,6 +13,13 @@ namespace Psps.Web.Core.Mvc
                 .ToDictionary<KeyValuePair<string, ModelState>, string, Dictionary<string, object>>(entry => entry.Key, entry => SerializeModelState(entry.Value));
         }
 
+        public static Dictionary<string,string> SerializeErrorsToStringDictionary(this ModelStateDictionary modelState)
+        {
+            return modelState
+                .Where<KeyValuePair<string, ModelState>>(entry => entry.Value.Errors.Any<ModelError>())
+                .ToDictionary(entry=>entry.Key,entry => SerializeErrorsToStringDictionary(entry.Value)["errors"]);
+        }
+
         public static object ToDataSourceResult(this ModelStateDictionary modelState)
         {
             if (!modelState.IsValid)
@@ -40,6 +47,14 @@ namespace Psps.Web.Core.Mvc
         {
             var dictionary = new Dictionary<string, object>();
             dictionary["errors"] = modelState.Errors.Select<ModelError, string>(x => GetErrorMessage(x, modelState)).ToArray<string>();
+            return dictionary;
+        }
+
+
+        public static Dictionary<string, string> SerializeErrorsToStringDictionary(this ModelState modelState)
+        {
+            var dictionary = new Dictionary<string, string>();
+            dictionary["errors"] = string.Join(",",modelState.Errors.Select<ModelError, string>(x => GetErrorMessage(x, modelState)).ToArray<string>());
             return dictionary;
         }
     }
