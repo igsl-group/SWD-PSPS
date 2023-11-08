@@ -1,5 +1,6 @@
 ﻿using DocxGenerator.Library;
 using FluentValidation.Mvc;
+using log4net;
 using Psps.Core;
 using Psps.Core.Common;
 using Psps.Core.Helper;
@@ -43,6 +44,8 @@ namespace Psps.Web.Controllers
     [RoutePrefix("PSP"), Route("{action=index}")]
     public class PSPController : BaseController
     {
+        private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         #region Field & Construtor
 
         private readonly string PSP_SEARCH_SESSION = Constant.PSP_SEARCH_SESSION;
@@ -465,10 +468,8 @@ namespace Psps.Web.Controllers
         {
             this.HttpContext.Session[PSP_SEARCH_SESSION] = null;
             PSPViewModel model = new PSPViewModel();
-            model.isFirstSearch = true;
-
+            model.isFirstSearch = true;            
             initPspViewModel(model, true);
-
             return View(model);
         }
 
@@ -1304,7 +1305,7 @@ namespace Psps.Web.Controllers
 
             var sysParam = _parameterService.GetParameterByCode("PspTemplatePath");
             var inputFilePath = Path.Combine(@sysParam.Value, template.FileLocation);
-
+            _logger.Debug($"[1309]-{inputFilePath}");
             if (!System.IO.File.Exists(inputFilePath))
                 throw new HttpException((int)System.Net.HttpStatusCode.NotFound, "Template not found");
 
@@ -2015,7 +2016,6 @@ namespace Psps.Web.Controllers
         public JsonResult ListPspEventsByPspMasterId(GridSettings grid, int pspMasterId)
         {
             Ensure.Argument.NotNull(grid);
-
             var pspEvent = _pspEventService.GetPageByPspMasterId(grid, pspMasterId);
 
             bool defaultSearch = Session[PSP_DEFAULT_SEARCH_SESSION] == null ? true : (bool)Session[PSP_DEFAULT_SEARCH_SESSION];
@@ -2032,6 +2032,7 @@ namespace Psps.Web.Controllers
                 Session[PSP_DEFAULT_EXPORT_SESSION] = false;
             }
 
+
             var result = from u in pspEvent
                          orderby (defaultSearch ? "u.EventStartDate, u.EventEndDate, u.EventStartTime, u.EventEndTime, u.Location" : sord)
                          select new PspReadEventDto
@@ -2046,6 +2047,7 @@ namespace Psps.Web.Controllers
                              Location = u.Location,
                              ChiLocation = u.ChiLocation,
                              CollectionMethod = string.IsNullOrEmpty(u.CollectionMethod) ? "" : u.CollectionMethod,
+                             PublicPlaceIndicator = u.PublicPlaceIndicator,
                              EventStatus = u.EventStatus,
                              Remarks = string.IsNullOrEmpty(u.Remarks) ? "" : u.Remarks.Replace("S", pspEventRemarks["S"]),
                              ValidationMessage = u.ValidationMessage,

@@ -56,6 +56,9 @@ namespace Psps.Web.ViewModels.PSP
         [Display(ResourceType = typeof(Psps.Resources.Labels), Name = "PspRead_SimpChiLocation")]
         public string SimpChiLocation { get; set; }
 
+        [Display(ResourceType = typeof(Psps.Resources.Labels), Name = "PspRead_PublicPlaceIndicator")]
+        public bool PublicPlaceIndicator { get; set; }
+
         [Display(ResourceType = typeof(Psps.Resources.Labels), Name = "PspRead_CharitySalesItem")]
         public string CharitySalesItem { get; set; }
 
