@@ -706,7 +706,7 @@
         var varBenOrOrg = "";
         var selectedRows = [];
         var arrEventIds;
-        
+
         var onWithHolding = false;
 
         $(function () {
@@ -1053,7 +1053,7 @@
                         if (result) {
                             confirm('The permit number previously assigned to this application will be relinquished.', function(result) {
                                 if (result) {
-                                    
+
                                     var $form = $("#pspEditForm");
                                     var actionUrl = releasePermitUrl;
                                     $form.ajaxPostForm(actionUrl,
@@ -1165,7 +1165,7 @@
                 $('#btnCancelSplit, #btnCloseSplitEvent').click(function () {
                     confirm('@Labels.Cancel_Msg', function (result) {
                         if (result) {
-                            $('#splitEventModal').modal('hide');                            
+                            $('#splitEventModal').modal('hide');
                         }
                     });
                 });
@@ -1185,12 +1185,12 @@
                         }
                     });
                 });
-                
+
                 $('#btnUpdateEvent').click(function () {
                     var $form = $("#pspEditEventForm");
                     $('#editEvePspMasterId').val(currPspMasterId);
                     $('#editEventPspMasterRowVersion').val($("#rowVersion").val());
-                    
+
                     if ($form.valid()) {
                         var actionUrl = updatePspEventUrl;
 
@@ -1210,7 +1210,7 @@
                                      $("#eventsGridTable").resetJqGrid(listPspEventUrl.replace("-1", currPspMasterId));
 
                                      //CR-005 01
-                                     
+
                                  }
                              }
                         );
@@ -1221,7 +1221,7 @@
                     $('#editEvePspMasterId').val(currPspMasterId);
                     $('#editEventPspMasterRowVersion').val($('#rowVersion').val());
                     //$('#editEventBypassValidation').val($('#bypassValidation').val());
-                    
+
                     var $form = $("#pspEditEventForm");
                     if ($form.valid()) {
                         var actionUrl = createPspEventUrl.replace('-1', currPspMasterId);
@@ -1293,7 +1293,7 @@
                         if (disabled || withhold) {
                             confirm("@Html.Raw(ViewData["OrgDisabledOrWithheld"])", function (result) {
                                 if (result) {
-                                    recommendApproveCancel(btnId);                                    
+                                    recommendApproveCancel(btnId);
                                 }
                              });
                         }
@@ -1327,7 +1327,7 @@
                         $form.ajaxPostForm(actionUrl,
                              function (response) {
                                  if (response.success) {
-                                     // window.location.href = seachPspMasterUrl;                                     
+                                     // window.location.href = seachPspMasterUrl;
                                      onWithHolding = response.data.withholdingListIndicator;
                                      $('#rowVersion').val(response.data.rowVersion);
 
@@ -1343,7 +1343,7 @@
                                      $("#lblFdContactPersonName").text(response.data.lblFdContactPersonName || "");
                                      $("#lblFdContactPersonEmailAddress").text(response.data.lblFdContactPersonEmailAddress || "");
 
-                                     updateWithholdinglbl(response.data.lblWithholdingBeginDate, response.data.lblWithholdingEndDate);                                     
+                                     updateWithholdinglbl(response.data.lblWithholdingBeginDate, response.data.lblWithholdingEndDate);
                                  }
                                  notifSuccess(response.message);
                              }
@@ -1459,8 +1459,8 @@
                 headertitles: true,
                 multiselect: true,
                 //sortname: 'pspEventId',
-                sortname: 'eventStartDate',
-                sortorder: 'asc',
+                //sortname: 'eventStartDate',
+                //sortorder: 'asc',
                 url: actionUrl,
                 datatype: "json",
                 colNames: [
@@ -1472,7 +1472,9 @@
                     '@Html.DisplayNameFor(m => m.PspEventViewModel.District)',
                     'Location(in English)',
                     '@Html.DisplayNameFor(m => m.PspEventViewModel.ChiLocation)',
+                    'Public Location',
                     '@Html.DisplayNameFor(m => m.PspEventViewModel.MethodOfCollection)',
+                    
                     '@Html.DisplayNameFor(m => m.PspEventViewModel.EventStatus)',
                     'Last Update',
                     '@Html.DisplayNameFor(m => m.PspEventViewModel.Remarks)',
@@ -1483,7 +1485,7 @@
                     sorttype: 'int',
                     hidden: true
                 }, {
-                    name: 'eventStartDate',                    
+                    name: 'eventStartDate',
                     template: dateTemplate,
                     width: 15
                 }, {
@@ -1519,15 +1521,32 @@
                     formatter: function (cellvalue, options, rowObject) {
                         return '<div style="height:40px; max-height:40px">' + (cellvalue || "") + '</div>';
                     }
-                }, {
+                    },
+                    {
+                        name: 'publicPlaceIndicator',
+                        formatter: function (cellvalue, options, rowObject) {
+                            if (cellvalue == null) {
+                                return "";
+                            } else
+                                if (cellvalue == true) {
+                                    return "Public";
+                                } else
+                                    if (cellvalue == false) {
+                                        return "Non-Public";
+                                    }
+                        },
+                        width: 10
+                    },
+                    {
                     name: 'collectionMethod',
                     stype: 'select',
                     searchoptions: {
                         sopt: ['eq', 'ne'],
                         value: @Html.Raw(Json.Encode(Model.PspEventViewModel.MethodOfCollections))
                         },
-                    width: 15
-                }, {
+                    width: 10
+                    },                    
+                    {
                     name: 'eventStatus',
                     formatter: function (cellvalue, options, rowObject) {
                         switch (cellvalue) {
@@ -1611,7 +1630,7 @@
                             }
                             else { remainingApprove = remainingApprove + 1; }
                         });
-                    
+
 
                 },
                 ondblClickRow: function (rowId, iRow, iCol, e) {
@@ -1867,7 +1886,7 @@
                         pageChecked = false;
                 }
 
-                if (pageChecked) {                    
+                if (pageChecked) {
                     setSelectBtn('page', true);
                 } else {
                     setSelectBtn('page', false);
@@ -2024,7 +2043,7 @@
             if (btn == "all" || btn == "both") {
                 selectedAll = status;
                 $('#btnSelectAllCanRecs').text(status ? "De-select All" : "Select All");
-            } 
+            }
             if (btn == "page" || btn =="both") {
                 selectedAllinPage = status;
                 $('#btnSelectAllInPage').text(status ? "De-select All in page" : "Select All in page");
@@ -2047,7 +2066,7 @@
         function selectAllLogic2($grid) {
             ids = $grid.jqGrid('getDataIDs');
 
-            if (!selectedAllinPage) {                
+            if (!selectedAllinPage) {
                 setSelectBtn('page', true);
 
                 for (var key in ids) {
@@ -2061,21 +2080,21 @@
                 checkSelectAllBtn();
 
                 gridToggleCheckbox($grid, true);
-            } else {                
+            } else {
                 setSelectBtn('both', false);
 
                 for (var key in ids) {
                     delete selectedRows[ids[key]];
                 }
-                
+
                 gridToggleCheckbox($grid, false);
             }
         }
 
         function selectAllLogic($grid) {
-            if (!selectedAll) {                
+            if (!selectedAll) {
                 setSelectBtn('both', true);
-                
+
                 for (var key in arrEventIds) {
                     if (!hasRecomRecsFlag || (hasRecomRecsFlag && arrEventIds[key] == "AP")) {
                         selectedRows[key] = true;
@@ -2092,7 +2111,7 @@
                 for (var key in arrEventIds) {
                     delete selectedRows[key];
                 }
-                
+
                 gridToggleCheckbox($grid, false);
             }
         }
@@ -2228,7 +2247,7 @@
                         }
                     },
                     stype: 'select',
-                    searchoptions: {                        
+                    searchoptions: {
                         sopt: ['eq', 'ne'],
                         value: {"CE":"Cancel","TW":"Two-Batch Execrised","AM":"Amendment","NM":"Normal"}
                     },
@@ -2274,7 +2293,7 @@
                         }
                     },
                     stype: 'select',
-                    searchoptions: {                        
+                    searchoptions: {
                         sopt: ['eq', 'ne'],
                         value: {"AP":"Approved","CA":"Cancelled","RA":"Ready for approval","RC":"Ready to cancelled"}
                     },
@@ -2283,7 +2302,7 @@
                     name: 'totalEventsToBeApprove',
                     label: 'Total',
                     width: '70',
-                    searchoptions: {                        
+                    searchoptions: {
                         sopt: ['eq', 'le', 'ge']
                     }
                 }, {
