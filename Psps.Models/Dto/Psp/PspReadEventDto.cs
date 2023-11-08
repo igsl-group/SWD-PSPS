@@ -45,6 +45,8 @@ namespace Psps.Models.Dto.Psp
 
         public string CollectionMethod { get; set; }
 
+        public bool? PublicPlaceIndicator { get; set; }
+
         public string EventStatus { get; set; }
 
         public string EventType { get; set; }

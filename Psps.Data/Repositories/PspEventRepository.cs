@@ -154,12 +154,13 @@ namespace Psps.Data.Repositories
                             Location = u.Location,
                             ChiLocation = u.ChiLocation,
                             CollectionMethod = u.CollectionMethod,
+                            PublicPlaceIndicator = u.PublicPlaceIndicator,
                             EventStatus = u.EventStatus,
                             Remarks = u.Remarks,
                             UpdatedOn = u.UpdatedOn,
                             ValidationMessage = u.ValidationMessage,
                             EventCount = u.EventCount,
-                            Time = u.Time
+                            Time = u.Time,
                         };
 
             //filtring

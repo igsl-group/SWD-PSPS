@@ -2,6 +2,7 @@
 using FluentValidation.Internal;
 using FluentValidation.Mvc;
 using FluentValidation.Results;
+using Newtonsoft.Json;
 using Psps.Core;
 using Psps.Core.Common;
 using Psps.Core.Helper;
@@ -195,6 +196,7 @@ namespace Psps.Web.Controllers
                         _unitOfWork.Commit();
                     }                    
                     _authenticationService.SignOut();
+                    _userLogService.LogAccountLockedByInvalidAttemps(this.Request.UserHostAddress, attemps, max_attempts);
                 }
             }
             return locked_out;
@@ -342,7 +344,11 @@ namespace Psps.Web.Controllers
             var userId = EngineContext.Current.Resolve<IWorkContext>().CurrentUser.UserId;
             model.UserId = userId;
 
-            if (!ModelState.IsValid) return Json(JsonResponseFactory.ErrorResponse(ModelState), JsonRequestBehavior.DenyGet);
+            if (!ModelState.IsValid) {
+                var errorDict = ModelState.SerializeErrorsToStringDictionary();
+                _userLogService.LogChangePasswordAttempt(this.Request.UserHostAddress, string.Join(",", errorDict.Select(x => x.Value).ToArray()));
+                return Json(JsonResponseFactory.ErrorResponse(ModelState), JsonRequestBehavior.DenyGet);
+            }                       
 
             var loginResult = _userService.ValidateUser(userId, model.OldPassword);
 
@@ -357,6 +363,8 @@ namespace Psps.Web.Controllers
                     _userService.ChangePassword(userId, model.NewPassword);
                     _unitOfWork.Commit();
                 }
+
+                _userLogService.LogChangePasswordAttempt(this.Request.UserHostAddress,"",true);
 
                 return Json(new JsonResponse(true)
                 {
@@ -493,6 +501,7 @@ namespace Psps.Web.Controllers
                 _userService.CreateUser(userInfo);
                 _unitOfWork.Commit();
             }
+            _userLogService.LogCRUDUser("Admin Create",model.UserId, this.Request.UserHostAddress);
 
             return Json(new JsonResponse(true)
             {
@@ -520,6 +529,7 @@ namespace Psps.Web.Controllers
                 _userService.UpdateUser(userInfo);
                 _unitOfWork.Commit();
             }
+            _userLogService.LogCRUDUser("Admin Update",model.UserId, this.Request.UserHostAddress);
 
             return Json(new JsonResponse(true)
             {
@@ -560,6 +570,8 @@ namespace Psps.Web.Controllers
                 _unitOfWork.Commit();
             }
 
+            _userLogService.LogCRUDActing("Create",this.Request.UserHostAddress, acting.ActingId.ToString(),acting.User.UserId, acting.Post.PostId);
+
             return Json(new JsonResponse(true)
             {
                 Message = _messageService.GetMessage(SystemMessage.Info.RecordCreated)
@@ -593,6 +605,8 @@ namespace Psps.Web.Controllers
                 this._actingService.UpdateActing(acting);
                 _unitOfWork.Commit();
             }
+
+            _userLogService.LogCRUDActing("Update",this.Request.UserHostAddress, acting.ActingId.ToString());
 
             return Json(new JsonResponse(true)
             {
@@ -665,6 +679,8 @@ namespace Psps.Web.Controllers
                 _unitOfWork.Commit();
             }
 
+            _userLogService.LogCRUDUser("Update",user.UserId,this.Request.UserHostAddress);
+
             return Json(new JsonResponse(true)
             {
                 Message = _messageService.GetMessage(SystemMessage.Info.RecordUpdated)
@@ -690,6 +706,8 @@ namespace Psps.Web.Controllers
                 _actingService.DeleteActing(acting);
                 _unitOfWork.Commit();
             }
+
+            _userLogService.LogCRUDActing("Delete", this.Request.UserHostAddress, acting.ActingId.ToString());
 
             return Json(new JsonResponse(true)
             {
