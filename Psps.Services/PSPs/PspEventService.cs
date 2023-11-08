@@ -374,11 +374,13 @@ namespace Psps.Services.PSPs
             var end = workSheet.Dimension.End;
             var endCol = 0;
 
+            var headerStartRow = 1;
+
             for (int i = 1; i <= end.Column; i++) //use the column header to locate end of cloumns
             {
-                if (!workSheet.Cells[start.Row, i].Text.Equals(""))
+                if (!workSheet.Cells[headerStartRow, i].Text.Equals(""))
                 {
-                    endCol = 9;
+                    endCol = i;
                 }
                 else break;
             }
@@ -711,7 +713,8 @@ namespace Psps.Services.PSPs
             if (rec[8].Contains("3"))
             { pspEvent.CharitySalesItem = collectionMethod["3"]; }
             pspEvent.CollectionMethod = (rec[8].Equals("6") ? "Others" : rec[8]);
-            pspEvent.ProformaRowNum = rec.Count() > 9 ? Convert.ToInt32(rec[9]) : rowIdx;
+            pspEvent.PublicPlaceIndicator = rec[9].ToUpper().Trim().Contains("NP") ? false : true;
+            pspEvent.ProformaRowNum = rec.Count() > 10 ? Convert.ToInt32(rec[10]) : rowIdx;
             return pspEvent;
         }
 

@@ -937,7 +937,7 @@ namespace Psps.Services.Report
 
                     ws.Cells[5, 1].Value = GeneratedBy();
                     ws.Cells[8, 1].Value = ws.Cells[8, 1].Text.FormatWith(DateFromTo(fromYear, toYear));
-                    ws.Cells[10, 2].Value = "Statistical Summary of Public Subscription Permit (Including Flag Day) {2} ({0} to {1})".FormatWith(fromYear, toYear, Environment.NewLine);
+                    ws.Cells[10, 2].Value = "Statistical Summary of Public Subscription Permit {2} ({0} to {1})".FormatWith(fromYear, toYear, Environment.NewLine);
 
                     int summaryColumnCnt = 5;
                     if (summary.Count > summaryColumnCnt)
