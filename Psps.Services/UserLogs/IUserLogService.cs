@@ -27,6 +27,18 @@ namespace Psps.Services.UserLog
 
         ActivityLog LogLoginWrongPassword(string UserId,string IPAddress);
 
+        ActivityLog LogAccountLockedByInvalidAttemps(string IPAddress, int Attempts, int AttemptsLimit);
+
+        ActivityLog LogChangePasswordAttempt(string IPAddress, string Message = "", bool Changed = false);
+
+        ActivityLog LogCRUDUser(string Mode, string UserId, string IPAddress, string Message = "");
+
+        ActivityLog LogCRUDActing(string Mode, string IPAddress, string ActingId, string AssignTo = "", string AssignedPost = "");
+
+        //ActivityLog LogCRUDDisasterMaster(string Mode, string IPAddress, string Id);
+
+        ActivityLog LogCRUDDisasterMaster(string Mode, string DisasterMasterId, string IPAddress);
+
         int GetInvalidLoginAttemps(string UserId);
 
         /// <summary>

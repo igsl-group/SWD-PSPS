@@ -17,6 +17,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Psps.Services.UserLog;
 
 namespace Psps.Web.Controllers
 {
@@ -32,6 +33,7 @@ namespace Psps.Web.Controllers
         private readonly IDisasterStatisticsService _disasterStatisticsService;
         private readonly IPostService _postService;
         private readonly IDisasterMasterService _disasterMasterService;
+        private readonly IUserLogService _userLogService;
 
         #endregion Var
 
@@ -43,7 +45,8 @@ namespace Psps.Web.Controllers
             IDisasterStatisticsService DisasterStatisticsService,
             IPostService PostService,
             IDisasterMasterService DisasterMasterService,
-            IUnitOfWork unitOfWork
+            IUnitOfWork unitOfWork,
+            IUserLogService userLogService
             )
         {
             this._unitOfWork = unitOfWork;
@@ -51,6 +54,7 @@ namespace Psps.Web.Controllers
             this._disasterStatisticsService = DisasterStatisticsService;
             this._postService = PostService;
             this._disasterMasterService = DisasterMasterService;
+            this._userLogService = userLogService;
         }
 
         #endregion Ctor

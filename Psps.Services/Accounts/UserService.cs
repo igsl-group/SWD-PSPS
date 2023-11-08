@@ -11,6 +11,7 @@ using Psps.Models.Dto.Accounts;
 using Psps.Models.Dto.Security;
 using Psps.Services.Accounts;
 using Psps.Services.Events;
+using Psps.Services.UserLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,15 +47,19 @@ namespace Psps.Services.Accounts
 
         private readonly IPostRepository _postRepository;
 
+        private readonly IUserLogService _userLogService;
+
         public UserService(ICacheManager cacheManager,
             IEventPublisher eventPublisher,
             IUserRepository userRepository,
-            IPostRepository postRepository)
+            IPostRepository postRepository,
+            IUserLogService userLogService)
         {
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
             this._userRepository = userRepository;
             this._postRepository = postRepository;
+            this._userLogService = userLogService;
         }
 
         #region Users
