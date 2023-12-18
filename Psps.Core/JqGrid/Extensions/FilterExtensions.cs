@@ -13,6 +13,7 @@ namespace Psps.Core.JqGrid.Extensions
 {
     public static class FilterExtensions
     {
+        private static List<string> _ALLOW_NULL_SEARCH_COLUMNS = new List<string> { "publicPlaceIndicator" };
         public static Expression<Func<T, bool>> BuildExpression<T>(this Filter filter) where T : class
         {
             GroupOp groupOp = filter.groupOp.ToEnum<GroupOp>();
@@ -139,8 +140,12 @@ namespace Psps.Core.JqGrid.Extensions
 
             if (leftExpr.Type.IsGenericType && leftExpr.Type.GetGenericTypeDefinition() == typeof(Nullable<>) && Nullable.GetUnderlyingType(leftExpr.Type) == typeof(bool))
             {
-                var notNull = Expression.NotEqual(leftExpr, Expression.Constant(null, leftExpr.Type));
-                expression = Expression.AndAlso(expression, notNull);
+                bool addNotNull = !_ALLOW_NULL_SEARCH_COLUMNS.Contains(column) || !string.IsNullOrEmpty(value);
+                if (addNotNull)
+                {
+                    var notNull = Expression.NotEqual(leftExpr, Expression.Constant(null, leftExpr.Type));
+                    expression = Expression.AndAlso(expression, notNull);
+                }               
             }
 
             return expression;
@@ -170,8 +175,10 @@ namespace Psps.Core.JqGrid.Extensions
             {
                 if (value.Trim() == "0")
                     value = "FALSE";
-                else if(value.Trim() == "1")
+                else if (value.Trim() == "1")
                     value = "TRUE";
+                else if (value.Trim() == "-1")
+                    value = null;
             }
             //if (propertyType.Name.ToUpper().Contains("BOOL") && value.Trim() == "0")
             //{
