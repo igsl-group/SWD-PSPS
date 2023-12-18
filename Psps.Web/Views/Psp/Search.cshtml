@@ -564,6 +564,7 @@
                     '@Html.DisplayNameFor(m => m.OrgName)',
                     '@Html.DisplayNameFor(m => m.Subvented)',
                     '@Html.DisplayNameFor(m => m.Section88)',
+                    'Organisation eligibility',
                     'Registration 1',
                     'Registration 2',
                     '@Html.DisplayNameFor(m => m.ProcessingOfficerPost)',
@@ -571,7 +572,7 @@
                     '@Html.DisplayNameFor(m => m.PreviousPspRef)',
                     'Date of Application',
                     '@Html.DisplayNameFor(m => m.DateofReceivingApplication)',
-                    '@Html.DisplayNameFor(m => m.DateofApplicationDisposal)',                    
+                    '@Html.DisplayNameFor(m => m.DateofApplicationDisposal)',
                     '@Html.DisplayNameFor(m => m.DateofCompletingApplication)',
                     'New Applicant',
                     'Beneficiary Organisation',
@@ -597,12 +598,12 @@
                     'Mailing Address in Chinese',
                     'Contact Person',
                     'Contact Person’s Email',
-                    'Organisation’s Email Address',                    
+                    'Organisation’s Email Address',
                     'Organisation Status',
                     '@Html.DisplayNameFor(m => m.ContactPersonName)',
                     '@Html.DisplayNameFor(m => m.ContactPersonChiName)',
                     'Other Registration Name 1',
-                    'Other Registration Name 2',                    
+                    'Other Registration Name 2',
                     'pspMasterId',
                     'pspApprovalHistoryId',
                     'sortPspRef',
@@ -618,7 +619,7 @@
                     search: false,
                     width: '6'
                 }, {
-                    name: 'subventedIndicator',                    
+                    name: 'subventedIndicator',
                     hidden: true,
                     searchoptions: {
                         searchhidden: true
@@ -628,7 +629,22 @@
                     name: 'section88Indicator',
                     width: '4',
                     template: yesNoTemplate
-                }, {
+                    },
+                {
+                    name: 'orgValidTo_Month',
+                    formatter: function (cellvalue, options, rowObject) {
+                        let result = "";
+                        if (rowObject['orgValidTo_Month'] && rowObject['orgValidTo_Year'] && rowObject['ivp'])
+                        {
+                            result = `${rowObject['orgValidTo_Month'].toString()}/${rowObject['orgValidTo_Year'].toString()} (${rowObject['ivp'].toString()})`;
+                        }
+                        return result;
+                    },
+                    search: false,
+                    width: 4
+                    },
+
+                {
                     name: 'regType1',
                     width: '3',
                     stype: 'select',
@@ -648,7 +664,7 @@
                         value: @Html.Raw(Json.Encode(@Model.Registrations))
                         }
                 }, {
-                    name: 'processingOfficerPost',                    
+                    name: 'processingOfficerPost',
                     width: '3'
                 }, {
                     name: 'pspRef',
@@ -823,11 +839,11 @@
                     hidden: true,
                     exporthidden: true
                 }, {
-                    name: 'contactPersonEmailAddress',                    
+                    name: 'contactPersonEmailAddress',
                     hidden: true,
                     exporthidden: true
                 }, {
-                    name: 'orgEmailAddress',                    
+                    name: 'orgEmailAddress',
                     hidden: true,
                     exporthidden: true
                 }, {

@@ -1458,7 +1458,7 @@
                 rownumbers: true,
                 headertitles: true,
                 multiselect: true,
-                //sortname: 'pspEventId',
+                sortname: 'pspEventId',
                 //sortname: 'eventStartDate',
                 //sortorder: 'asc',
                 url: actionUrl,
@@ -1474,7 +1474,7 @@
                     '@Html.DisplayNameFor(m => m.PspEventViewModel.ChiLocation)',
                     'Public Location',
                     '@Html.DisplayNameFor(m => m.PspEventViewModel.MethodOfCollection)',
-                    
+
                     '@Html.DisplayNameFor(m => m.PspEventViewModel.EventStatus)',
                     'Last Update',
                     '@Html.DisplayNameFor(m => m.PspEventViewModel.Remarks)',
@@ -1535,7 +1535,16 @@
                                         return "Non-Public";
                                     }
                         },
-                        width: 10
+                        width: 10,
+                        stype: 'select',
+                        searchoptions: {
+                            sopt: ['eq', 'ne'],
+                            defaultValue: '1' ,
+                            value: '@Html.Raw(string.Join(";", Model.PspEventViewModel.PublicPlaceIndicatorSearchDict).Replace("[", "").Replace("]", "").Replace(" ","").Replace(",", ":"))',
+                            dataInit: function (elem) {
+                                $(elem).val('1');
+                            }
+                        }
                     },
                     {
                     name: 'collectionMethod',
@@ -1545,7 +1554,7 @@
                         value: @Html.Raw(Json.Encode(Model.PspEventViewModel.MethodOfCollections))
                         },
                     width: 10
-                    },                    
+                    },
                     {
                     name: 'eventStatus',
                     formatter: function (cellvalue, options, rowObject) {
@@ -1904,7 +1913,8 @@
                 $('#editEventBypassValidation').checkboxVal($('#bypassValidation').val() == "true" ? true : false);
 
                 ajaxGet(actionUrl,
-                            function (response) {
+                    function (response) {
+                       
                                 $('#pspEventId').val(rowId);
                                 $('#pspMasterId').val(currPspMasterId);
                                 $('#eveRowVersion').val(response.data.pspEventViewModel.rowVersion);
@@ -1921,6 +1931,10 @@
                                 $('#charitySalesItem').val(response.data.pspEventViewModel.charitySalesItem);
                                 $('#editEventRemark').select2('val', response.data.pspEventViewModel.editEventRemark);
                                 $('#validationMessage').val(response.data.pspEventViewModel.validationMessage);
+
+                                if (response.data.pspEventViewModel.publicPlaceIndicator) {
+                                    $('#publicPlaceIndicator').select2('val', response.data.pspEventViewModel.publicPlaceIndicator.toString());
+                                }                                
 
                                 if (!response.data.pspEventViewModel.eventStatus || response.data.pspEventViewModel.eventStatus != '') {
                                     $('#btnEventDelete').addClass('hide');

@@ -197,6 +197,21 @@
                 @Html.DropDownListFor(m => m.WithholdingInd, true, new SelectList(Model.WithholdingInds, "Key", "Value", Model.WithholdingInd), htmlAttributes: new { @id = "withholdingInd", @class = "form-control", @data_provide = "select2" })
             </div>
         </div>
+
+        <div class="form-group">
+            @Html.Label("Organisation eligibility for PSP(GCFA/SSAF)", new { @class = "col-xs-2 control-label" })
+            <div class="col-xs-4">
+                @Html.Label("Valid up to", new { @style = "display:inline-block;" })
+                @*@Html.TextBoxFor(m => m.OrgValidTo_Month, true, htmlAttributes: new { @id = "searchOrgValidToMonth", @class = "form-control", @style = "width: 85px; display:inline-block;" })*@
+                @Html.DropDownListFor(m => m.OrgValidTo_Month, true, new SelectList(Model.OrgValidTo_Month_List, "Key", "Value", Model.OrgValidTo_Month), htmlAttributes: new { @id = "searchOrgValidToMonth", @class = "form-control", @style = "width: 85px; display:inline-block;", @data_provide = "select2" })
+                @Html.Label("/", new { @style = "display:inline-block;" })
+                @Html.TextBoxFor(m => m.OrgValidTo_Year, true, htmlAttributes: new { @id = "searchOrgValidToYear", @class = "form-control", @data_provide = "yearpicker", @style = "width: 85px;display:inline-block;", @autocomplete = "off" })
+                @Html.Label("in", new { @style = "display:inline-block;" })
+                @Html.TextBoxFor(m => m.IVP, true, "0000", htmlAttributes: new { @type = "number", @max = "999", @min = "1", @id = "searchIVP", @class = "form-control", @style = "width: 85px;display:inline-block;", @autocomplete = "off" })
+                <label>IVP</label>
+            </div>
+        </div>
+        @*######*@
     </fieldset>
     <div class="vspace-6"></div>
     <div class="row">
@@ -237,6 +252,19 @@
                             @Html.LabelFor(m => m.OrganisationReference, new { @class = "col-xs-3 control-label" })
                             <div class="col-xs-3">
                                 @Html.TextBoxFor(m => m.OrganisationReference, true, htmlAttributes: new { @id = "organisationReference", @class = "form-control", @maxlength = 8, @disabled = "disabled" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Organisation eligibility for PSP(GCFA/SSAF)", new { @class = "col-xs-3 control-label" })
+                            <div class="col-xs-9">
+                                @Html.Label("Valid up to", new { @style = "display:inline-block;" })
+                                @Html.TextBoxFor(m => m.OrgValidTo_Month, true, htmlAttributes: new { @id = "searchOrgValidToMonth", @class = "form-control", @style = "width: 85px; display:inline-block;" })
+                                @Html.Label("/", new { @style = "display:inline-block;" })
+                                @Html.TextBoxFor(m => m.OrgValidTo_Year, true, htmlAttributes: new { @id = "searchOrgValidToYear", @class = "form-control", @data_provide = "yearpicker", @style = "width: 85px;display:inline-block;" })
+                                @Html.Label("in", new { @style = "display:inline-block;" })
+                                @Html.TextBoxFor(m => m.IVP, true, htmlAttributes: new { @id = "searchIVP", @class = "form-control", @style = "width: 85px;display:inline-block;" })
+                                <label>IVP</label>
                             </div>
                         </div>
 
@@ -643,7 +671,7 @@
                     $('#searchToSsafApplicationDate').prop('readonly', true);
                 }
             });
-            
+
             if (!$('#pspIssuedBeforeId').select2('val')) {
                 $('#searchFromPspPermitIssueDate').prop('readonly', true);
                 $('#searchToPspPermitIssueDate').prop('readonly', true);
@@ -747,13 +775,13 @@
 
             $('#btnSearch').on('click', function () {
                 var $form = $('#orgMasterform');
-                
+
                 var $grid = $('#orgMasterGridTable');
                 var postData = $grid.jqGrid('getGridParam', 'postData');
 
                 resetPostData($form, $grid);
 
-                $grid.jqGrid('clearGridData');                
+                $grid.jqGrid('clearGridData');
                 $.extend(postData, queryStringToJson($form.serialize()))
                 if (clearFilter)
                     $.extend(postData, { filters: "" });
@@ -940,35 +968,94 @@
                 sortname: 'orgRef',
                 sortorder: 'asc',
                 colNames: [
-                       'Org. Ref.', 'Name of Organisation (Eng & Chi)', 'Subvented', 'Section 88', 'Section 88 Start Date',
-                       'Registration Type 1', 'Registration Other Name 1 ', 'Registration Date 1', 'Registration Type 2', 'Registration Other Name 2', 'Registration Date 2',
-                       'No. of PSP Issued', 'No. of FD Permit Issued', 'No. of SSAF Permit Issued', 'No. of Enquiry / Complaint Received', "History of Withholding",
-                       'Name of Organisation (in English)', 'Name of Organisation (in Chinese)', 'Mailing Address in English','Mailing Address in Chinese','Contact Person','Contact Person’s Email','Org.’s Email Address', 'Address Proof',
-                       'Organisation Master ID','Organisation Status', 'Name of Organisation (in Simplified Chinese)',
-                       'Name of Organisation (in English)(For sorting)',
-                       'Other Name of Organisation (in English)', 'Other Name of Organisation (in Chinese)', 'Other Name of Organisation (in Simplified Chinese)', 'Registered Address of Organisation 1', 'Registered Address of Organisation 2', 'Registered Address of Organisation 3',
-                       'Registered Address of Organisation 4', 'Registered Address of Organisation 5', 'Registered Address of Organisation (in Chinese) 1',
-                       'Registered Address of Organisation (in Chinese) 2', 'Registered Address of Organisation (in Chinese) 3', 'Registered Address of Organisation (in Chinese) 4',
-                       'Registered Address of Organisation (in Chinese) 5', 'Mailing Address of Organisation 1', 'Mailing Address of Organisation 2', 'Mailing Address of Organisation 3',
-                       'Mailing Address of Organisation 4', 'Mailing Address of Organisation 5', 'Mailing Address of Organisation (in Chinese) 1', 'Mailing Address of Organisation (in Chinese) 2',
-                       'Mailing Address of Organisation (in Chinese) 3', 'Mailing Address of Organisation (in Chinese) 4', 'Mailing Address of Organisation (in Chinese) 5', 'URL',
-                       'Tel. No. of Organisation', 'Fax No. of Organisation', 'Email Address of Organisation', 'Applicant Salute', 'Applicant First Name', 'Applicant Last Name', 'Applicant Position',
-                       'Applicant Telephone Number', 'President Name', 'Secretary Name', 'Treasurer Name', 'Organisation Objective',
-                       'Address Proof Indicator', 'Address Proof Date',
-                        'MAA Constitution Indicator', 'Qualified Opinion Indicator', 'Qualified Opinion Remark',
-                       'Other Support Document Indicator', 'Remarks','Overall Remark'
+                    'Org. Ref.',
+                    'Name of Organisation (Eng & Chi)',
+                    'Subvented',
+                    'Section 88',
+                    'Section 88 Start Date',
+                    'Organisation eligibility',
+                    'Org valid Month',
+                    'Org valid Year',
+                    'IVP',
+                    'Registration Type 1',
+                    'Registration Other Name 1 ',
+                    'Registration Date 1',
+                    'Registration Type 2',
+                    'Registration Other Name 2',
+                    'Registration Date 2',
+                    'No. of PSP Issued',
+                    'No. of FD Permit Issued',
+                    'No. of SSAF Permit Issued',
+                    'No. of Enquiry / Complaint Received',
+                    "History of Withholding",
+                    'Name of Organisation (in English)',
+                    'Name of Organisation (in Chinese)',
+                    'Mailing Address in English',
+                    'Mailing Address in Chinese',
+                    'Contact Person',
+                    'Contact Person’s Email',
+                    'Org.’s Email Address',
+                    'Address Proof',
+                    'Organisation Master ID',
+                    'Organisation Status',
+                    'Name of Organisation (in Simplified Chinese)',
+                    'Name of Organisation (in English)(For sorting)',
+                    'Other Name of Organisation (in English)',
+                    'Other Name of Organisation (in Chinese)',
+                    'Other Name of Organisation (in Simplified Chinese)',
+                    'Registered Address of Organisation 1',
+                    'Registered Address of Organisation 2',
+                    'Registered Address of Organisation 3',
+                    'Registered Address of Organisation 4',
+                    'Registered Address of Organisation 5',
+                    'Registered Address of Organisation (in Chinese) 1',
+                    'Registered Address of Organisation (in Chinese) 2',
+                    'Registered Address of Organisation (in Chinese) 3',
+                    'Registered Address of Organisation (in Chinese) 4',
+                    'Registered Address of Organisation (in Chinese) 5',
+                    'Mailing Address of Organisation 1',
+                    'Mailing Address of Organisation 2',
+                    'Mailing Address of Organisation 3',
+                    'Mailing Address of Organisation 4',
+                    'Mailing Address of Organisation 5',
+                    'Mailing Address of Organisation (in Chinese) 1',
+                    'Mailing Address of Organisation (in Chinese) 2',
+                    'Mailing Address of Organisation (in Chinese) 3',
+                    'Mailing Address of Organisation (in Chinese) 4',
+                    'Mailing Address of Organisation (in Chinese) 5',
+                    'URL',
+                    'Tel. No. of Organisation',
+                    'Fax No. of Organisation',
+                    'Email Address of Organisation',
+                    'Applicant Salute',
+                    'Applicant First Name',
+                    'Applicant Last Name',
+                    'Applicant Position',
+                    'Applicant Telephone Number',
+                    'President Name',
+                    'Secretary Name',
+                    'Treasurer Name',
+                    'Organisation Objective',
+                    'Address Proof Indicator',
+                    'Address Proof Date',
+                    'MAA Constitution Indicator',
+                    'Qualified Opinion Indicator',
+                    'Qualified Opinion Remark',
+                    'Other Support Document Indicator',
+                    'Remarks',
+                    'Overall Remark'
                 ],
                 colModel: [{
                     name: 'orgRef',
                     width: 7,
                     classes: 'wrappedJqGridCell'
                 }, {
-                    name: 'engChiOrgNameSorting',                    
+                    name: 'engChiOrgNameSorting',
                     search: false,
                     width: 20,
                     classes: 'wrappedJqGridCell'
                 }, {
-                    name: 'subventedIndicator',                    
+                    name: 'subventedIndicator',
                     template: yesNoTemplate,
                     width: 7,
                     classes: 'wrappedJqGridCell'
@@ -980,7 +1067,47 @@
                     name: 'section88StartDate',
                     template: dateTemplate,
                     hidden: true
-                }, {
+                },
+                {
+                    //name: 'orgValidTo_Month',
+                    formatter: function (cellvalue, options, rowObject) {
+                        let result = "";
+                        if (rowObject['orgValidTo_Month'] && rowObject['orgValidTo_Year'] && rowObject['ivp'])
+                        {
+                            result = `${rowObject['orgValidTo_Month'].toString()}/${rowObject['orgValidTo_Year'].toString()} (${rowObject['ivp'].toString()})`;
+                        }
+                        return result;
+                    },
+                    search: false,
+
+                    width: 10
+                    },
+                    {
+                        name: 'orgValidTo_Month',
+                        stype: 'select',
+                        hidden: true,
+                        searchoptions: {
+                            sopt: ['eq', 'ne'],
+                            value: @Html.Raw(Json.Encode(@Model.OrgValidTo_Month_List)),
+                            searchhidden: true,
+                        },
+                    },
+                    {
+                        name: 'orgValidTo_Year',                        
+                        hidden: true,
+                        searchoptions: {
+                            sopt: ['eq', 'ne'],
+                            searchhidden: true,
+                        },
+                    },
+                    {
+                        name: 'ivp',
+                        hidden: true,
+                        searchoptions: {
+                            searchhidden: true,
+                        },
+                    },
+                    {
                     name: 'registrationType',
                     index: 'registrationType1',
                     stype: 'select',
@@ -989,7 +1116,7 @@
                         sopt: ['eq', 'ne'],
                         value: @Html.Raw(Json.Encode(@Model.RegistrationTitles))
                         },
-                    width: 10,                    
+                    width: 10,
                     classes: 'wrappedJqGridCell'
                 }, {
                     name: 'registrationOtherName1',

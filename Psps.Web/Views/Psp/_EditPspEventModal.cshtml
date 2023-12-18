@@ -100,6 +100,14 @@
                             @Html.TextBoxFor(m => m.PspEventViewModel.ValidationMessage, htmlAttributes: new { @id = "validationMessage", @class = "form-control", @maxlength = 200, @readOnly = true })
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PspEventViewModel.PublicPlaceIndicator, new { @class = "col-xs-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.DropDownListFor(m => m.PspEventViewModel.PublicPlaceIndicator, true, new SelectList(Model.PspEventViewModel.PublicPlaceIndicatorDict, "Key", "Value", Model.PspEventViewModel.PublicPlaceIndicatorDict),
+                                                                                   htmlAttributes: new { @id = "publicPlaceIndicator", @class = "form-control", @data_provide = "select2" })
+                        </div>
+                    </div>
                 </fieldset>
             </div>
             <div class="modal-footer">

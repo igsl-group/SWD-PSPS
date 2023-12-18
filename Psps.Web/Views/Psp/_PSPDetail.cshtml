@@ -31,6 +31,17 @@
         @Html.DropDownListFor(m => m.YearofPsp, true, new SelectList(Model.YearofPspList, "Key", "Value", Model.YearofPsp),
                                               htmlAttributes: new { @id = "yearofPsp", @class = "form-control", @data_provide = "select2" })
     </div>
+    @Html.Label("Organisation eligibility for PSP(GCFA/SSAF)", new { @class = "col-xs-2 control-label" })
+<div class="col-xs-4">
+    @Html.Label("Valid up to", new { @style = "display:inline-block;" })
+    @Html.TextBoxFor(m => m.OrgValidTo_Month, true, htmlAttributes: new { @id = "searchOrgValidToMonth", @class = "form-control", @style = "width: 85px; display:inline-block;", @readonly = "readonly" })
+    @*@Html.DropDownListFor(m => m.OrgValidTo_Month, true, null, htmlAttributes: new { @id = "searchOrgValidToMonth", @class = "form-control", @style = "width: 85px; display:inline-block;", @data_provide = "select2" })*@
+    @Html.Label("/", new { @style = "display:inline-block;" })
+    @Html.TextBoxFor(m => m.OrgValidTo_Year, true, htmlAttributes: new { @id = "searchOrgValidToYear", @class = "form-control", @data_provide = "yearpicker", @style = "width: 85px;display:inline-block;", @readonly = "readonly", @autocomplete = "off" })
+    @Html.Label("in", new { @style = "display:inline-block;" })
+    @Html.TextBoxFor(m => m.IVP, true, htmlAttributes: new { @type = "number", @max = "999", @min = "1", @id = "searchIVP", @class = "form-control", @style = "width: 85px;display:inline-block;", @readonly = "readonly", @autocomplete = "off" })
+    <label>IVP</label>
+</div>
 </div>
 <div class="form-group" id="divCreateModelNewApplicant">
     @Html.LabelFor(m => m.NewApplicant, new { @class = "col-xs-3 control-label" })
