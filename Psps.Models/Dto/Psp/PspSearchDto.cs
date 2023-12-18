@@ -28,6 +28,10 @@ namespace Psps.Models.Dto.Psp
 
         public string ChiOrgName { get; set; }
 
+        public int? OrgValidTo_Month { get; set; }
+        public int? OrgValidTo_Year { get; set; }
+        public int? IVP { get; set; }
+
         public string PspRef { get; set; }
 
         public DateTime? ApplicationReceiveDate { get; set; }

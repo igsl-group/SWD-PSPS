@@ -165,11 +165,20 @@ namespace Psps.Web.ViewModels.Organisation
         public bool withholdingIndicator { get; set; }
 
         [Display(ResourceType = typeof(Psps.Resources.Labels), Name = "Search_WithHoldInd")]
-        public string WithholdingInd { get; set; }
+        public string WithholdingInd { get; set; }       
 
         public IDictionary<string, string> WithholdingInds { get; set; }
 
         public IDictionary<string, string> FollowUpLetterTypes { get; set; }
+
+        
+        public int? OrgValidTo_Month { get; set; }
+
+        
+        public int? OrgValidTo_Year { get; set; }
+
+        
+        public int? IVP { get; set; }
 
         [Display(ResourceType = typeof(Psps.Resources.Labels), Name = "Search_FlagYear")]
         public string FlagYear { get; set; }
@@ -501,6 +510,8 @@ namespace Psps.Web.ViewModels.Organisation
         public IDictionary<string, string> TWRs { get; set; }
 
         public IDictionary<string, string> CheckIndicator { get; set; }
+
+        public IDictionary<string,string> OrgValidTo_Month_List { get; set; }
 
         #endregion searchoptions
 

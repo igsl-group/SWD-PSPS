@@ -433,6 +433,10 @@ namespace Psps.Web.Controllers
             model.ApplicantSalutes = salute;
             model.ApplicantChiSalutes = chiSalute;
 
+            var OrgValidTo_Month_List = new Dictionary<string, string>();
+            for (int i = 1; i <= 12; i++) { OrgValidTo_Month_List.Add(i.ToString(), i.ToString()); }
+            model.OrgValidTo_Month_List = OrgValidTo_Month_List;
+
             if (Mode == 0)
             {
                 model.OrganisationStatus = _lookupService.getAllLkpInCodec(LookupType.OrgStatus);
@@ -618,7 +622,10 @@ namespace Psps.Web.Controllers
                             ContactPerson = p.ContactPerson,
                             ContactPersonEmail = p.EmailAddress,
                             OrgEmailAddress = p.EmailAddress,
-                            WithHoldingInd = p.WithholdingInd
+                            WithHoldingInd = p.WithholdingInd,
+                            OrgValidTo_Month = p.OrgValidTo_Month,
+                            OrgValidTo_Year = p.OrgValidTo_Year,
+                            IVP = p.IVP,
                         }).ToArray()
             };
 
@@ -936,6 +943,36 @@ namespace Psps.Web.Controllers
                     op = WhereOperation.Equal.ToEnumValue()
                 });
             }
+
+            if (model.OrgValidTo_Month != null && model.OrgValidTo_Month.HasValue) 
+            {
+                grid.AddDefaultRule(new Rule()
+                {
+                    field = "OrgValidTo_Month",
+                    data = model.OrgValidTo_Month.ToString(),
+                    op = WhereOperation.Equal.ToEnumValue()
+                });
+            }
+
+            if (model.OrgValidTo_Year != null && model.OrgValidTo_Year.HasValue)
+            {
+                grid.AddDefaultRule(new Rule()
+                {
+                    field = "OrgValidTo_Year",
+                    data = model.OrgValidTo_Year.ToString(),
+                    op = WhereOperation.Equal.ToEnumValue()
+                });
+            }
+
+            if (model.IVP != null && model.IVP.HasValue)
+            {
+                grid.AddDefaultRule(new Rule()
+                {
+                    field = "IVP",
+                    data = model.IVP.ToString(),
+                    op = WhereOperation.Equal.ToEnumValue()
+                });
+            }
             return grid;
         }
 
@@ -982,7 +1019,10 @@ namespace Psps.Web.Controllers
                                 contactPersonEmail = o.EmailAddress,
                                 orgEmailAddress = o.EmailAddress,
                                 orgId = o.OrgId,
-                                withHoldingInd = o.WithholdingInd
+                                withHoldingInd = o.WithholdingInd,
+                                OrgValidTo_Month = o.OrgValidTo_Month,
+                                OrgValidTo_Year = o.OrgValidTo_Year,
+                                IVP = o.IVP,
                             }).ToArray();
 
             //------------------------------------------------------------------------Get Filtering List-----------------------------------------------------------------
@@ -2417,6 +2457,10 @@ namespace Psps.Web.Controllers
             orgMaster.OtherSupportDocRemark = model.OtherSupportDocRemark;
             orgMaster.OverallRemark = model.OverallRemark;
 
+            orgMaster.OrgValidTo_Month = model.OrgValidTo_Month;
+            orgMaster.OrgValidTo_Year = model.OrgValidTo_Year;
+            orgMaster.IVP = model.IVP;
+
             using (_unitOfWork.BeginTransaction())
             {
                 _organisationService.CreateOrgMaster(orgMaster);
@@ -2545,6 +2589,10 @@ namespace Psps.Web.Controllers
             orgMaster.OtherSupportDocRemark = model.OtherSupportDocRemark;
             orgMaster.OverallRemark = model.OverallRemark;
             orgMaster.RowVersion = model.RowVersion;
+
+            orgMaster.OrgValidTo_Month = model.OrgValidTo_Month;
+            orgMaster.OrgValidTo_Year = model.OrgValidTo_Year;
+            orgMaster.IVP = model.IVP;
 
             using (_unitOfWork.BeginTransaction())
             {
@@ -2706,7 +2754,11 @@ namespace Psps.Web.Controllers
                     OtherSupportDocRemark = orgMaster.OtherSupportDocRemark,
                     OverallRemark = orgMaster.OverallRemark,
                     withholdingIndicator = this._withholdingHistoryService.GetWithHoldBySysDt(orgMaster.OrgId),
-                    RowVersion = orgMaster.RowVersion
+                    RowVersion = orgMaster.RowVersion,
+
+                    OrgValidTo_Month = orgMaster.OrgValidTo_Month,
+                    OrgValidTo_Year = orgMaster.OrgValidTo_Year,
+                    IVP = orgMaster.IVP,
                 }
             }, JsonRequestBehavior.AllowGet);
         }

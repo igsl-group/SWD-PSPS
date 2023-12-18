@@ -84,6 +84,9 @@ namespace Psps.Data.Mappings
             Map(x => x.OverallRemark).Column("OverallRemark").Length(4000);
             Map(x => x.FrasOrganisationId).Column("FrasOrganisationId");
             Map(x => x.OrgNameEngChi).Formula("EngOrgName + CHAR(10) + CHAR(13) + ChiOrgName").ReadOnly();
+            Map(x => x.OrgValidTo_Month).Column("OrgValidTo_Month");
+            Map(x => x.OrgValidTo_Year).Column("OrgValidTo_Year");
+            Map(x => x.IVP).Column("IVP");
 
             HasMany(x => x.ComplaintMaster).KeyColumn("OrgId").Inverse();
             HasMany(x => x.FdMaster).KeyColumn("OrgId").Inverse();

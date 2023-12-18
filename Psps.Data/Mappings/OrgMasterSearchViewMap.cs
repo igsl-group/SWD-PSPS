@@ -91,6 +91,10 @@ namespace Psps.Data.Mappings
             Map(x => x.ContactPerson).Column("ContactPerson");
 
             Map(x => x.WithholdingInd).Column("WithholdingInd");
+
+            Map(x => x.OrgValidTo_Month).Column("OrgValidTo_Month");
+            Map(x => x.OrgValidTo_Year).Column("OrgValidTo_Year");
+            Map(x => x.IVP).Column("IVP");
             //Map(x => x.ComplaintRecordType).Column("ComplaintRecordType");
 
             HasMany(x => x.PspMasters).KeyColumn("OrgId").Inverse();

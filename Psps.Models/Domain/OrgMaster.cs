@@ -174,6 +174,12 @@ namespace Psps.Models.Domain
 
         public virtual string OrgNameEngChi { get; set; }
 
+        public virtual int? OrgValidTo_Month { get; set; }
+
+        public virtual int? OrgValidTo_Year { get; set; }
+
+        public virtual int? IVP { get; set; }
+
         public override int Id
         {
             get

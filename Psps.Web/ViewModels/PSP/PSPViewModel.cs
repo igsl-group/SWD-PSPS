@@ -750,7 +750,12 @@ namespace Psps.Web.ViewModels.PSP
         public int TotalLocation { get; set; }
 
         #endregion CR-005
-        
+
+        public int? OrgValidTo_Month { get; set; }
+        public int? OrgValidTo_Year { get; set; }
+        public int? IVP { get; set; }
+
+
         #region edit table
 
         public string LblWithholdingBeginDate { get; set; }

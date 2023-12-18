@@ -178,6 +178,12 @@ namespace Psps.Models.Domain
         public virtual IList<ComplaintMaster> ComplaintMaster { get; set; }
 
         public virtual IList<OrgNameChangeHistory> OrgNameChangeHistory { get; set; }
+        
+
+        public virtual int? OrgValidTo_Month { get; set; }
+        public virtual int? OrgValidTo_Year { get; set; }
+
+        public virtual int? IVP { get; set; }
 
         public override int Id
         {
