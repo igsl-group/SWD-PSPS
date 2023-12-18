@@ -2382,7 +2382,7 @@
   <data name="PspRead_ChiLocation" xml:space="preserve">
     <value>Location (in Chinese)</value>
   </data>
-  <data name="PspRead_PublicPlace" xml:space="preserve">
+  <data name="PspRead_PublicPlaceIndicator" xml:space="preserve">
     <value>Public Place</value>
   </data>
   <data name="PspRead_SimpChiLocation" xml:space="preserve">

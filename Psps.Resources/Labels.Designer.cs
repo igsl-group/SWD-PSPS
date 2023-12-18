@@ -7677,9 +7677,9 @@ namespace Psps.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Public Place.
         /// </summary>
-        public static string PspRead_PublicPlace {
+        public static string PspRead_PublicPlaceIndicator {
             get {
-                return ResourceManager.GetString("PspRead_PublicPlace", resourceCulture);
+                return ResourceManager.GetString("PspRead_PublicPlaceIndicator", resourceCulture);
             }
         }
         
@@ -7718,18 +7718,7 @@ namespace Psps.Resources {
                 return ResourceManager.GetString("PspRead_SimpChiLocation", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Public Place Indicator.
-        /// </summary>
-        public static string PspRead_PublicPlaceIndicator
-        {
-            get
-            {
-                return ResourceManager.GetString("PspRead_PublicPlaceIndicator", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Time.
         /// </summary>
