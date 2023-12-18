@@ -34,7 +34,6 @@ namespace Psps.Web.Controllers
         private readonly IDisasterMasterService _disasterMasterService;
         private readonly IDisasterStatisticsService _DisasterStatisticsService;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IUserLogService _userLogService;
             
 
         #endregion Var
@@ -46,8 +45,7 @@ namespace Psps.Web.Controllers
             IAuthenticationService authenticationService,
             IDisasterMasterService DisasterMasterService,
             IDisasterStatisticsService DisasterStatisticsService,
-            IUnitOfWork unitOfWork,
-            IUserLogService userLogService
+            IUnitOfWork unitOfWork
             )
         {
             this._unitOfWork = unitOfWork;
@@ -55,7 +53,6 @@ namespace Psps.Web.Controllers
             this._disasterMasterService = DisasterMasterService;
             this._DisasterStatisticsService = DisasterStatisticsService;
             this._authenticationService = authenticationService;
-            this._userLogService = userLogService;
         }
 
         #endregion Ctor
@@ -197,7 +194,6 @@ namespace Psps.Web.Controllers
                 _unitOfWork.Commit();
             }
 
-            _userLogService.LogCRUDDisasterMaster("Create", model.DisasterMasterId.ToString(), this.Request.UserHostAddress);
 
             return Json(new JsonResponse(true)
             {
@@ -225,8 +221,6 @@ namespace Psps.Web.Controllers
                 _disasterMasterService.delete(disasterMaster);
                 _unitOfWork.Commit();
             }
-
-            _userLogService.LogCRUDDisasterMaster("Delete", disasterMaster.DisasterMasterId.ToString(), this.Request.UserHostAddress);
 
             return Json(new JsonResponse(true)
             {
@@ -276,8 +270,6 @@ namespace Psps.Web.Controllers
                 _disasterMasterService.UpdateDisasterMaster(disasterMaster);
                 _unitOfWork.Commit();
             }
-
-            _userLogService.LogCRUDDisasterMaster("Update", disasterMaster.DisasterMasterId.ToString(), this.Request.UserHostAddress);
 
             return Json(new JsonResponse(true)
             {
