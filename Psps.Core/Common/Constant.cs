@@ -86,6 +86,50 @@ namespace Psps.Core.Common
             public const string FRAS_URL = "FrasUrl";
             public const string FRAS_ENABLED = "FrasEnabled";
             public const string DEFAULT_SYSTEM_USER_ID = "DefaultSystemUserId";
+
+
+            public const string LOG_CODE_LOGIN_FAIL = "LogCodeLoginFail";
+            public const string LOG_CODE_LOGIN_SUCCESS = "LogCodeLoginSuccess";
+            public const string LOG_CODE_LOGOUT = "LogCodeLogout";
+            public const string LOG_CODE_LOGIN_LOCK = "LogCodeLoginLock";
+
+            public const string LOG_CODE_PASSWORD_CHANGE_FAIL = "LogCodePasswordChangeFail";
+            public const string LOG_CODE_PASSWORD_CHANGE_SUCCESS = "LogCodePasswordChangeSuccess";
+
+            public const string LOG_CODE_CREATE_ROLE = "LogCodeCreateRole";
+            public const string LOG_CODE_UPDATE_ROLE = "LogCodeUpdateRole";
+
+            public const string LOG_CODE_UPDATE_ROLE_MEMBER = "LogCodeUpdateRoleMember";
+            public const string LOG_CODE_DELETE_ROLE = "LogCodeDeleteRole";
+
+            public const string LOG_CODE_CREATE_POST = "LogCodeCreatePost";
+            public const string LOG_CODE_UPDATE_POST = "LogCodeUpdatePost";
+
+            public const string LOG_CODE_UPDATE_POST_OWNER = "LogCodeUpdatePostOwner";
+            public const string LOG_CODE_UPDATE_POST_RANK = "LogCodeUpdatePostRank";
+            public const string LOG_CODE_UPDATE_POST_SUPERVISOR = "LogCodeUpdatePostSupervisor";
+            public const string LOG_CODE_UPDATE_POST_ROLE = "LogCodeUpdatePostRole";
+
+            public const string LOG_CODE_CREATE_USER = "LogCodeCreateUser";
+            public const string LOG_CODE_UPDATE_USER_POST = "LogCodeUpdateUserPost";
+            public const string LOG_CODE_UPDATE_USER_PASSWORD = "LogCodeUpdateUserPassword";
+            
+            public const string LOG_CODE_USER_ADMIN_ON = "LogCodeUserAdminOn";
+            public const string LOG_CODE_USER_ADMIN_OFF = "LogCodeUserAdminOff";
+
+            public const string LOG_CODE_USER_ACTIVE_ON = "LogCodeUserActiveOn";
+            public const string LOG_CODE_USER_ACTIVE_OFF = "LogCodeUserActiveOff";
+
+            public const string LOG_CODE_USER_UPDATE_GENERAL = "LogCodeUserUpdateGeneral";
+
+
+
+
+            public const string LOG_CODE_UPDATE_ACTING_POST = "LogCodeUpdateActingPost";
+            public const string LOG_CODE_CREATE_ACTING = "LogCodeCreateActing";
+            public const string LOG_CODE_UPDATE_ACTING = "LogCodeUpdateActing";
+            public const string LOG_CODE_DELETE_ACTING = "LogCodeDeleteActing";
+
         }
     }
 }
