@@ -31,18 +31,16 @@ namespace Psps.Services.Suggestions
         private readonly IEventPublisher _eventPublisher;
         private readonly ISuggestionMasterRepository _suggestionMasterRepository;
 
-        private readonly IUserLogService _userLogService;
 
         #endregion Fields
 
         #region Ctor
 
-        public SuggestionMasterService(ICacheManager cacheManager, IEventPublisher eventPublisher, ISuggestionMasterRepository suggestionMasterRepository, IUserLogService userLogService)
+        public SuggestionMasterService(ICacheManager cacheManager, IEventPublisher eventPublisher, ISuggestionMasterRepository suggestionMasterRepository)
         {
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
             this._suggestionMasterRepository = suggestionMasterRepository;
-            this._userLogService = userLogService;
         }
 
         #endregion Ctor
@@ -69,9 +67,7 @@ namespace Psps.Services.Suggestions
         public void UpdateSuggestionMaster(SuggestionMaster oldSuggestionMaster, SuggestionMaster newSuggestionMaster)
         {
             Ensure.Argument.NotNull(oldSuggestionMaster, "Old Suggestion");
-            Ensure.Argument.NotNull(newSuggestionMaster, "New Suggestion");
-
-            _userLogService.LogSuggestionMasterInformation(oldSuggestionMaster, newSuggestionMaster);
+            Ensure.Argument.NotNull(newSuggestionMaster, "New Suggestion");           
 
             _suggestionMasterRepository.Update(newSuggestionMaster);
             _eventPublisher.EntityUpdated<SuggestionMaster>(newSuggestionMaster);

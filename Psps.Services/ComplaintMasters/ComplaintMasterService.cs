@@ -36,7 +36,6 @@ namespace Psps.Services.ComplaintMasters
         private readonly IOrgMasterRepository _orgMasterRepository;
         private readonly IComplaintMasterSearchViewRepository _complaintMasterSearchViewRepository;
 
-        private readonly IUserLogService _userLogService;
 
         #endregion Fields
 
@@ -48,7 +47,7 @@ namespace Psps.Services.ComplaintMasters
             IComplaintFollowUpActionRepository complaintFollowUpActionRepository, IComplaintPoliceCaseRepository complaintPoliceCaseRepository,
             IComplaintOtherDepartmentEnquiryRepository complaintOtherDepartmentEnquiryRepository, IOrgMasterRepository orgMasterRepository,
             IComplaintResultRepository complaintResultRepository,
-            IComplaintMasterSearchViewRepository complaintMasterSearchViewRepository, IUserLogService userLogService)
+            IComplaintMasterSearchViewRepository complaintMasterSearchViewRepository)
         {
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
@@ -62,7 +61,6 @@ namespace Psps.Services.ComplaintMasters
             this._complaintResultRepository = complaintResultRepository;
             this._orgMasterRepository = orgMasterRepository;
             this._complaintMasterSearchViewRepository = complaintMasterSearchViewRepository;
-            this._userLogService = userLogService;
         }
 
         #endregion Ctor
@@ -87,9 +85,7 @@ namespace Psps.Services.ComplaintMasters
         public virtual void Update(ComplaintMaster oldComplaintMaster, ComplaintMaster newComplaintMaster)
         {
             Ensure.Argument.NotNull(oldComplaintMaster, "Old Flag Day");
-            Ensure.Argument.NotNull(newComplaintMaster, "New Flag Day");
-
-            _userLogService.LogComplaintInformation(oldComplaintMaster, newComplaintMaster);
+            Ensure.Argument.NotNull(newComplaintMaster, "New Flag Day");            
 
             _complaintMasterRepository.Update(newComplaintMaster);
             _eventPublisher.EntityUpdated<ComplaintMaster>(newComplaintMaster);
