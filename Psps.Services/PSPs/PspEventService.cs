@@ -713,7 +713,12 @@ namespace Psps.Services.PSPs
             if (rec[8].Contains("3"))
             { pspEvent.CharitySalesItem = collectionMethod["3"]; }
             pspEvent.CollectionMethod = (rec[8].Equals("6") ? "Others" : rec[8]);
-            pspEvent.PublicPlaceIndicator = rec[9].ToUpper().Trim().Contains("NP") ? false : true;
+            pspEvent.PublicPlaceIndicator =
+                !string.IsNullOrEmpty(rec[9].ToUpper().Trim()) ?
+                    rec[9].ToUpper().Trim() == "P" ? true :
+                    rec[9].ToUpper().Trim() == "NP" ? false :
+                    (bool?)null
+                : (bool?)null;
             pspEvent.ProformaRowNum = rec.Count() > 10 ? Convert.ToInt32(rec[10]) : rowIdx;
             return pspEvent;
         }
