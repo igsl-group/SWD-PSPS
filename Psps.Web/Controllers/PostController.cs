@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Mvc;
 using Psps.Core;
 using Psps.Core.Caching;
+using Psps.Core.Common;
 using Psps.Core.Helper;
 using Psps.Core.Infrastructure;
 using Psps.Core.JqGrid.Models;
@@ -12,12 +13,14 @@ using Psps.Services.Posts;
 using Psps.Services.Ranks;
 using Psps.Services.Security;
 using Psps.Services.SystemMessages;
+using Psps.Services.UserLog;
 using Psps.Web.Core.ActionFilters;
 using Psps.Web.Core.Controllers;
 using Psps.Web.Core.Extensions;
 using Psps.Web.Core.Mvc;
 using Psps.Web.ViewModels.Posts;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -38,9 +41,11 @@ namespace Psps.Web.Controllers
         private readonly IRoleService _roleService;
         private readonly IActingService _actingService;
         private readonly IPostsInRolesService _postsInRolesService;
+        private readonly IUserLogService _userLogService;
+
 
         public PostController(ICacheManager cacheManager, IUnitOfWork unitOfWork,
-            IMessageService messageService, IPostService postService, IUserService userService, IRankService rankService, IRoleService roleService, IActingService actingService, IPostsInRolesService postsInRolesService)
+            IMessageService messageService, IPostService postService, IUserService userService, IRankService rankService, IRoleService roleService, IActingService actingService, IPostsInRolesService postsInRolesService,IUserLogService userLogService)
         {
             this._cacheManager = cacheManager;
             this._unitOfWork = unitOfWork;
@@ -51,6 +56,7 @@ namespace Psps.Web.Controllers
             this._roleService = roleService;
             this._actingService = actingService;
             this._postsInRolesService = postsInRolesService;
+            this._userLogService = userLogService;
         }
 
         [PspsAuthorize(Allow.AccessAdmin)]
@@ -219,12 +225,26 @@ namespace Psps.Web.Controllers
             using (_unitOfWork.BeginTransaction())
             {
                 _postService.CreatePost(post);
+
+                List<string> logPostList = new List<string>();
+                logPostList.Add($"PostId:{post.PostId}");
+                logPostList.Add(post.Owner != null ? $"Owner:{post.Owner.UserId}" : "");
+                logPostList.Add(post.Rank != null ? $"Rank:{post.Rank.RankId}" : "");
+                logPostList.Add(post.Rank != null ? $"RankLvl:{post.Rank.RankLevel}" : "");
+                logPostList.Add(post.Supervisor != null ? $"Supervisor:{post.Supervisor.PostId}" : "");
+
+
+                string dataStr = string.Join(",", logPostList.Where(x => (!string.IsNullOrEmpty(x))));
+                _userLogService.LogCRUDPost("Create", this.Request.UserHostAddress, post.PostId, dataStr, new List<string> { Constant.SystemParameter.LOG_CODE_CREATE_POST });
+
                 foreach (var pr in post.PostsInRole)
                 {
                     _postsInRolesService.CreatePostsInRoles(pr);
                 }
                 _unitOfWork.Commit();
             }
+
+            
 
             return Json(new JsonResponse(true)
             {
@@ -245,6 +265,42 @@ namespace Psps.Web.Controllers
             Ensure.NotNull(post, "No post found with the specified id");
 
             var rank = _rankService.GetRankById(model.Rank);
+            var oldPost = _postService.GetPostById(post.PostId);
+
+            List<string> postLogCode = new List<string>();
+            if (model.Owner != null)
+            {
+                if (oldPost.Owner != null && oldPost.Owner.UserId != model.Owner)
+                {
+                    postLogCode.Add(Constant.SystemParameter.LOG_CODE_UPDATE_POST_OWNER);
+                }
+            }
+
+            if (model.Rank != null)
+            {
+                if (oldPost.Rank != null && oldPost.Rank.RankId != model.Rank)
+                {
+                    postLogCode.Add(Constant.SystemParameter.LOG_CODE_UPDATE_POST_RANK);
+                }
+            }
+
+            if (model.Supervisor != null)
+            {
+                if (oldPost.Supervisor != null && oldPost.Supervisor.PostId != model.Supervisor)
+                {
+                    postLogCode.Add(Constant.SystemParameter.LOG_CODE_UPDATE_POST_SUPERVISOR);
+                }
+            }
+
+            
+            if (oldPost.Roles != null && model.Roles ==null 
+                || oldPost.Roles == null && model.Roles != null
+                || oldPost.Roles!=null && model.Roles!=null && oldPost.Roles.Count != model.Roles.Count
+                || oldPost.Roles!=null && oldPost.Roles.Count > 0 && model.Roles!=null && model.Roles.Count > 0 && oldPost.Roles.Select(x=>x.RoleId) != model.Roles)
+            {
+                postLogCode.Add(Constant.SystemParameter.LOG_CODE_UPDATE_POST_ROLE);
+            }
+            
 
             // if Owner is selected
             if (model.Owner != null)
@@ -291,7 +347,21 @@ namespace Psps.Web.Controllers
                 {
                     _postsInRolesService.DeletePostsInRoles(oldpr);
                 }
+
+               
+
                 _postService.UpdatePost(post);
+
+                List<string> logPostList = new List<string>();
+                logPostList.Add($"PostId:{post.PostId}");
+                logPostList.Add(post.Owner != null ? $"Owner:{post.Owner.UserId}" : "");
+                logPostList.Add(post.Rank != null ? $"Rank:{post.Rank.RankId}" : "");
+                logPostList.Add(post.Rank != null ? $"RankLvl:{post.Rank.RankLevel}" : "");
+                logPostList.Add(post.Supervisor != null ? $"Supervisor:{post.Supervisor.PostId}" : "");
+
+                string dataStr = string.Join(",", logPostList.Where(x => (!string.IsNullOrEmpty(x))));
+                _userLogService.LogCRUDPost("Update", this.Request.UserHostAddress, post.PostId , dataStr, postLogCode);
+
                 foreach (var newpr in post.PostsInRole)
                 {
                     _postsInRolesService.CreatePostsInRoles(newpr);
@@ -347,6 +417,9 @@ namespace Psps.Web.Controllers
             {
                 RowVersion = newpost.RowVersion
             };
+
+            _userLogService.LogCRUDActing("Create", this.Request.UserHostAddress, acting.ActingId.ToString(), acting.User.UserId, acting.Post.PostId);
+
             return Json(new JsonResponse(true)
             {
                 Message = _messageService.GetMessage(SystemMessage.Info.RecordCreated),
@@ -381,6 +454,10 @@ namespace Psps.Web.Controllers
             {
                 RowVersion = newpost.RowVersion
             };
+
+            _userLogService.LogCRUDActing("Update", this.Request.UserHostAddress, actingId.ToString(), acting.User.UserId, acting.Post.PostId);
+
+
             return Json(new JsonResponse(true)
             {
                 Message = _messageService.GetMessage(SystemMessage.Info.RecordUpdated),
@@ -442,6 +519,8 @@ namespace Psps.Web.Controllers
                 _actingService.DeleteActing(acting);
                 _unitOfWork.Commit();
             }
+
+            _userLogService.LogCRUDActing("Delete", this.Request.UserHostAddress, actingId.ToString());
 
             return Json(new JsonResponse(true)
             {

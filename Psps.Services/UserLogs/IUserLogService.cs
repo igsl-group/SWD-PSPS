@@ -19,9 +19,9 @@ namespace Psps.Services.UserLog
 
         ActivityLog LogPSPInformation(PspMaster oldPspMaster, PspMaster newPspMaster);
 
-        ActivityLog LogComplaintInformation(ComplaintMaster oldComplaintMaster, ComplaintMaster newComplaintMaster);
+      
 
-        ActivityLog LogSuggestionMasterInformation(SuggestionMaster oldSuggestionMaster, SuggestionMaster newSuggestionMaster);
+       
 
         ActivityLog LogLoginInformation(int Mode);
 
@@ -31,13 +31,19 @@ namespace Psps.Services.UserLog
 
         ActivityLog LogChangePasswordAttempt(string IPAddress, string Message = "", bool Changed = false);
 
-        ActivityLog LogCRUDUser(string Mode, string UserId, string IPAddress, string Message = "");
+        ActivityLog LogCRUDUser(string UserId, string IPAddress, List<string> LogCodeList);
 
         ActivityLog LogCRUDActing(string Mode, string IPAddress, string ActingId, string AssignTo = "", string AssignedPost = "");
 
-        //ActivityLog LogCRUDDisasterMaster(string Mode, string IPAddress, string Id);
+        ActivityLog LogCRUDPost(string Mode, string IPAddress, string PostId, string DataStr, List<string> LogCodeList);
 
-        ActivityLog LogCRUDDisasterMaster(string Mode, string DisasterMasterId, string IPAddress);
+        ActivityLog LogCRUDRole(string Mode, string IPAddress, string RoleId, string DataStr);
+
+        ActivityLog LogCRUDDocumentLibrary(string Mode, string DocumentLibraryId, string IPAddress);
+
+        ActivityLog LogCRUDDocument(string Mode, string DocumentId, string IPAddress);
+
+
 
         int GetInvalidLoginAttemps(string UserId);
 
@@ -54,5 +60,7 @@ namespace Psps.Services.UserLog
         /// <param name="grid">jqGrid parameters</param>
         /// <returns>Messages</returns>
         IPagedList<ActivityLog> GetPage(GridSettings grid);
+
+        void LogToFile(string msg);
     }
 }

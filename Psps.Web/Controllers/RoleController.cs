@@ -12,6 +12,7 @@ using Psps.Services.Lookups;
 using Psps.Services.Posts;
 using Psps.Services.Security;
 using Psps.Services.SystemMessages;
+using Psps.Services.UserLog;
 using Psps.Web.Core.ActionFilters;
 using Psps.Web.Core.Controllers;
 using Psps.Web.Core.Extensions;
@@ -41,10 +42,11 @@ namespace Psps.Web.Controllers
         private readonly IFunctionsInRolesService _functionsInRolesService;
         private readonly IPostsInRolesService _postsInRolesService;
         private readonly IPostService _postService;
+        private readonly IUserLogService _userLogService;
 
         public RoleController(IRoleService roleService, IUnitOfWork unitOfWork, IMessageService messageService,
             ICacheManager cacheManager, IFunctionService functionService, IFunctionsInRolesService functionsInRolesService,
-            IPostsInRolesService postsInRolesService, IPostService postService)
+            IPostsInRolesService postsInRolesService, IPostService postService,IUserLogService userLogService)
         {
             this._cacheManager = cacheManager;
             this._roleService = roleService;
@@ -55,6 +57,7 @@ namespace Psps.Web.Controllers
             this._functionsInRolesService = functionsInRolesService;
             this._postsInRolesService = postsInRolesService;
             this._postService = postService;
+            this._userLogService = userLogService;
         }
 
         [PspsAuthorize(Allow.AccessAdmin)]
@@ -100,6 +103,7 @@ namespace Psps.Web.Controllers
 
             var roles = _roleService.GetAllRolesForDropdown();
             //model.Roles = roles;
+            _userLogService.LogCRUDRole("CREATE", this.Request.UserHostAddress, roleInfo.RoleId, null);
 
             return Json(new JsonResponse(true)
             {
@@ -125,13 +129,20 @@ namespace Psps.Web.Controllers
         {
             IList<FunctionsInRolesDto> list = new List<FunctionsInRolesDto>();
 
+            var oldFunctionList = _functionsInRolesService.GetByRoleId(roleId);
             var currentDate = DateTime.Now;
+            List<string> added = new List<string>();
+            List<string> removed = new List<string>();
             for (var i = 0; i < functionIds.Length; i++)
             {
                 FunctionsInRolesDto funcInRoles = new FunctionsInRolesDto();
                 funcInRoles.RoleId = roleId;
                 funcInRoles.FunctionId = functionIds[i];
                 funcInRoles.IsEnabled = Convert.ToBoolean(isEnabled[i]);
+
+                var oldFind = oldFunctionList.FirstOrDefault(x => x.Function.FunctionId == functionIds[i]);
+                if (oldFind == null && funcInRoles.IsEnabled) { added.Add(funcInRoles.FunctionId); }
+                if (oldFind != null && !funcInRoles.IsEnabled) { removed.Add(funcInRoles.FunctionId); }
 
                 list.Add(funcInRoles);
             }
@@ -141,6 +152,10 @@ namespace Psps.Web.Controllers
                 _functionsInRolesService.CreateOrUpdateFunctionsInRoles(list);
                 _unitOfWork.Commit();
             }
+
+            var dataStr = $"Added Functions: {string.Join(",", added)} , Removed Functions : {string.Join(",", removed)}";      
+            _userLogService.LogCRUDRole("UPDATE", this.Request.UserHostAddress, roleId, dataStr);
+
 
             return Json(new JsonResponse(true)
             {
@@ -171,6 +186,8 @@ namespace Psps.Web.Controllers
                 }
 
                 var roles = _roleService.GetAllRolesForDropdown();
+                _userLogService.LogCRUDRole("DELETE", this.Request.UserHostAddress, roleId,null);
+
 
                 return Json(new JsonResponse(true)
                 {
@@ -235,6 +252,8 @@ namespace Psps.Web.Controllers
                 _unitOfWork.Commit();
             }
 
+            _userLogService.LogCRUDRole("UPDATE MEMBER", this.Request.UserHostAddress,model.RoleId ,$"Add User with Post: {model.RolePostId}");
+
             return Json(new JsonResponse(true)
             {
                 Message = _messageService.GetMessage(SystemMessage.Info.RecordCreated)
@@ -257,6 +276,8 @@ namespace Psps.Web.Controllers
                 _postsInRolesService.DeletePostsInRoles(postsInRoles);
                 _unitOfWork.Commit();
             }
+            _userLogService.LogCRUDRole("UPDATE MEMBER", this.Request.UserHostAddress, postsInRoles.RoleId, $"Removed User with Post: {postsInRoles.PostId}");
+
 
             return Json(new JsonResponse(true)
             {

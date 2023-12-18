@@ -253,6 +253,8 @@ namespace Psps.Web.Controllers
                         _unitOfWork.Commit();
                     }
 
+                    _userLogService.LogChangePasswordAttempt(this.Request.UserHostAddress, "Expired Password Changed", true);
+
                     if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         return Redirect(returnUrl);
                     else
@@ -501,7 +503,7 @@ namespace Psps.Web.Controllers
                 _userService.CreateUser(userInfo);
                 _unitOfWork.Commit();
             }
-            _userLogService.LogCRUDUser("Admin Create",model.UserId, this.Request.UserHostAddress);
+            _userLogService.LogCRUDUser(model.UserId, this.Request.UserHostAddress, new List<string>() { Constant.SystemParameter.LOG_CODE_CREATE_USER });
 
             return Json(new JsonResponse(true)
             {
@@ -522,14 +524,28 @@ namespace Psps.Web.Controllers
                 return Json(JsonResponseFactory.ErrorResponse(ModelState), JsonRequestBehavior.DenyGet);
             }
 
+            string Mode = "";
+
+            List<string> logCodeList = new List<string>();
             using (_unitOfWork.BeginTransaction())
             {
                 var userInfo = AutoMapper.Mapper.Map<UserViewModel, UserInfoDto>(model);
-
+                var oldUser = _userService.GetUserById(model.UserId);
+                
+               
+                if (oldUser.Post == null && userInfo.PostId != null || oldUser.Post != null && userInfo.PostId == null || oldUser.Post != null && oldUser.Post.Id != userInfo.PostId )
+                {
+                    logCodeList.Add(Constant.SystemParameter.LOG_CODE_UPDATE_USER_POST);
+                }
+                
+                if (oldUser.IsSystemAdministrator != userInfo.IsSystemAdministrator) { logCodeList.Add((userInfo.IsSystemAdministrator) ? Constant.SystemParameter.LOG_CODE_USER_ADMIN_ON : Constant.SystemParameter.LOG_CODE_USER_ADMIN_OFF); }
+                if (oldUser.IsActive != userInfo.IsActive) { logCodeList.Add((userInfo.IsActive) ? Constant.SystemParameter.LOG_CODE_USER_ACTIVE_ON : Constant.SystemParameter.LOG_CODE_USER_ACTIVE_OFF); }
+                if (!string.IsNullOrEmpty(userInfo.Password) && oldUser.Password != userInfo.Password) { logCodeList.Add(Constant.SystemParameter.LOG_CODE_UPDATE_USER_PASSWORD); }
                 _userService.UpdateUser(userInfo);
                 _unitOfWork.Commit();
             }
-            _userLogService.LogCRUDUser("Admin Update",model.UserId, this.Request.UserHostAddress);
+            
+            _userLogService.LogCRUDUser(model.UserId, this.Request.UserHostAddress, logCodeList);
 
             return Json(new JsonResponse(true)
             {
@@ -679,7 +695,7 @@ namespace Psps.Web.Controllers
                 _unitOfWork.Commit();
             }
 
-            _userLogService.LogCRUDUser("Update",user.UserId,this.Request.UserHostAddress);
+            _userLogService.LogCRUDUser(user.UserId,this.Request.UserHostAddress, new List<string>() { Constant.SystemParameter.LOG_CODE_USER_UPDATE_GENERAL });
 
             return Json(new JsonResponse(true)
             {

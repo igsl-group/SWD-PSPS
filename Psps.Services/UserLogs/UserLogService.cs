@@ -1,5 +1,6 @@
 ﻿using log4net;
 using Psps.Core;
+using Psps.Core.Common;
 using Psps.Core.Helper;
 
 using Psps.Core.Infrastructure;
@@ -38,7 +39,7 @@ namespace Psps.Services.UserLog
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string USERLOG_PATTERN_KEY = "Psps.userlog.";
+        private const string USERLOG_PATTERN_KEY = "Psps.userlog.";        
 
         #endregion Constants
 
@@ -56,6 +57,8 @@ namespace Psps.Services.UserLog
 
         #endregion Fields
 
+        private Dictionary<string, string> _logCodeDict;
+
         #region Ctor
 
         public UserLogService(IEventPublisher eventPublisher, IUserLogRepository UserLogRepository,
@@ -66,6 +69,7 @@ namespace Psps.Services.UserLog
             this._userRepository = userRepository;
             this._postRepository = postRepository;
             this._parameterService = parameterService;
+            _logCodeDict = LogCodeDictionary();
         }
 
         #endregion Ctor
@@ -112,7 +116,8 @@ namespace Psps.Services.UserLog
                     Post = _postRepository.GetById(currentUser.PostId),
                     Remark = logBuilder.ToString()
                 };
-                ActivityLogToApplicationLog(log);
+                //ActivityLogToApplicationLog(log);
+                //ActivityLogToApplicationLog2(log, )
                 this._userlogRepository.Add(log);
                 _eventPublisher.EntityInserted<ActivityLog>(log);
 
@@ -135,7 +140,9 @@ namespace Psps.Services.UserLog
                     Post = _postRepository.GetById(currentUser.PostId),
                     Remark = logBuilder.ToString()
                 };
-                ActivityLogToApplicationLog(log);
+                //ActivityLogToApplicationLog(log);
+
+
                 this._userlogRepository.Add(log);
                 _eventPublisher.EntityInserted<ActivityLog>(log);
 
@@ -173,7 +180,7 @@ namespace Psps.Services.UserLog
                     Post = _postRepository.GetById(currentUser.PostId),
                     Remark = logBuilder.ToString()
                 };
-                ActivityLogToApplicationLog(log);
+                //ActivityLogToApplicationLog(log);
                 this._userlogRepository.Add(log);
                 _eventPublisher.EntityInserted<ActivityLog>(log);
 
@@ -219,7 +226,7 @@ namespace Psps.Services.UserLog
                         Post = _postRepository.GetById(currentUser.PostId),
                         Remark = logBuilder.ToString()
                     };
-                    ActivityLogToApplicationLog(log);
+                    //ActivityLogToApplicationLog(log);
                     this._userlogRepository.Add(log);
                     _eventPublisher.EntityInserted<ActivityLog>(log);
 
@@ -242,7 +249,7 @@ namespace Psps.Services.UserLog
                         Post = _postRepository.GetById(currentUser.PostId),
                         Remark = logBuilder.ToString()
                     };
-                    ActivityLogToApplicationLog(log);
+                    //ActivityLogToApplicationLog(log);
                     this._userlogRepository.Add(log);
                     _eventPublisher.EntityInserted<ActivityLog>(log);
 
@@ -266,98 +273,8 @@ namespace Psps.Services.UserLog
                     Remark = logBuilder.ToString()
                 };
                 ActivityLogToApplicationLog(log);
-                this._userlogRepository.Add(log);
-                _eventPublisher.EntityInserted<ActivityLog>(log);
-
-                return log;
-            }
-
-            return null;
-        }
-
-        public ActivityLog LogComplaintInformation(ComplaintMaster oldComplaintMaster, ComplaintMaster newComplaintMaster)
-        {
-            /*
-                Please log those information related to:
-                1) Complaint Information
-             */
-
-            var result = ObjectComparer.Compare(oldComplaintMaster, newComplaintMaster, new CompareSettings
-            {
-                IgnoreProperties = new string[] { "ComplaintMaster", "PspApprovalHistory", "FdEvent", "OrgMaster", "RelatedComplaintMaster",
-                    "ComplaintAttachment", "ComplaintTelRecord", "ComplaintFollowUpAction", "ComplaintPoliceCase", "ComplaintOtherDepartmentEnquiry"}
-            });
-
-            var oldPspApprovalHistoryId = oldComplaintMaster.PspApprovalHistory == null ? 0 : oldComplaintMaster.PspApprovalHistory.PspApprovalHistoryId;
-            var newPspApprovalHistoryId = newComplaintMaster.PspApprovalHistory == null ? 0 : newComplaintMaster.PspApprovalHistory.PspApprovalHistoryId;
-            var oldFdEventId = oldComplaintMaster.FdEvent == null ? 0 : oldComplaintMaster.FdEvent.FdEventId;
-            var newFdEventId = newComplaintMaster.FdEvent == null ? 0 : newComplaintMaster.FdEvent.FdEventId;
-            var oldOrgId = oldComplaintMaster.OrgMaster == null ? 0 : oldComplaintMaster.OrgMaster.OrgId;
-            var newOrgId = newComplaintMaster.OrgMaster == null ? 0 : newComplaintMaster.OrgMaster.OrgId;
-            var oldComplaintMasterId = oldComplaintMaster.RelatedComplaintMaster == null ? 0 : oldComplaintMaster.RelatedComplaintMaster.ComplaintMasterId;
-            var newComplaintMasterId = newComplaintMaster.RelatedComplaintMaster == null ? 0 : newComplaintMaster.RelatedComplaintMaster.ComplaintMasterId;
-
-            if (CommonHelper.HasValueChanged(oldPspApprovalHistoryId, newPspApprovalHistoryId) ||
-                CommonHelper.HasValueChanged(oldFdEventId, newFdEventId) ||
-                CommonHelper.HasValueChanged(oldOrgId, newOrgId) ||
-                CommonHelper.HasValueChanged(oldComplaintMasterId, newComplaintMasterId) ||
-                !result.AreEqual)
-            {
-                var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
-                var logBuilder = new StringBuilder();
-                logBuilder.AppendFormat("Complaint Reference: {0}", oldComplaintMaster.ComplaintRef).AppendLine();
-
-                var log = new ActivityLog
-                {
-                    RecordKey = oldComplaintMaster.ComplaintMasterId.ToString(),
-                    Activity = "Complaint",
-                    Action = "Update",
-                    ActionedOn = DateTime.Now,
-                    User = _userRepository.GetById(currentUser.UserId),
-                    Post = _postRepository.GetById(currentUser.PostId),
-                    Remark = logBuilder.ToString()
-                };
-                ActivityLogToApplicationLog(log);
-                this._userlogRepository.Add(log);
-                _eventPublisher.EntityInserted<ActivityLog>(log);
-
-                return log;
-            }
-
-            return null;
-        }
-
-        public ActivityLog LogSuggestionMasterInformation(SuggestionMaster oldSuggestionMaster, SuggestionMaster newSuggestionMaster)
-        {
-            /*
-                Please log those information related to:
-                1) Suggestion Information
-             */
-
-            var result = ObjectComparer.Compare(oldSuggestionMaster, newSuggestionMaster, new CompareSettings
-            {
-                IgnoreProperties = new string[] { "SuggestionMaster", "SuggestionAttachment" }
-            });
-
-            if (!result.AreEqual)
-            {
-                var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
-                var logBuilder = new StringBuilder();
-                logBuilder.AppendFormat("Suggestion Reference: {0}", oldSuggestionMaster.SuggestionRefNum).AppendLine();
-
-                var log = new ActivityLog
-                {
-                    RecordKey = oldSuggestionMaster.SuggestionMasterId.ToString(),
-                    Activity = "Suggestion",
-                    Action = "Update",
-                    ActionedOn = DateTime.Now,
-                    User = _userRepository.GetById(currentUser.UserId),
-                    Post = _postRepository.GetById(currentUser.PostId),
-                    Remark = logBuilder.ToString()
-                };
-                ActivityLogToApplicationLog(log);
-                this._userlogRepository.Add(log);
-                _eventPublisher.EntityInserted<ActivityLog>(log);
+                //this._userlogRepository.Add(log);
+                //_eventPublisher.EntityInserted<ActivityLog>(log);
 
                 return log;
             }
@@ -378,6 +295,7 @@ namespace Psps.Services.UserLog
             var userID = _userRepository.GetById(currentUser.UserId);
             var LogTime = DateTime.Now;
             var LogType = Mode == 0 ? "Login" : "Logout";
+            var LogCode = Mode == 0 ? _logCodeDict[Constant.SystemParameter.LOG_CODE_LOGIN_SUCCESS] : _logCodeDict[Constant.SystemParameter.LOG_CODE_LOGOUT];
 
             logBuilder.AppendFormat("User ID: {0}", currentUser.UserId).AppendLine();
             //logBuilder.AppendFormat("User ID: {0}; Time: {1}", currentUser.UserId, LogTime.ToString()).AppendLine();
@@ -390,11 +308,12 @@ namespace Psps.Services.UserLog
                 User = userID,
                 Post = _postRepository.GetById(currentUser.PostId),
                 Remark = logBuilder.ToString()
-            };
-            ActivityLogToApplicationLog(log,true,true);
+            };            
+
             this._userlogRepository.Add(log);
             _eventPublisher.EntityInserted<ActivityLog>(log);
 
+            ActivityLogToApplicationLog2(log, LogCode);
             return log;
         }
 
@@ -410,12 +329,9 @@ namespace Psps.Services.UserLog
 
             var userID = _userRepository.GetById(UserId);            
             var LogTime = DateTime.Now;
-            var LogType = "Wrong Password";
-
-            logBuilder.AppendFormat("User ID: {0}", UserId).AppendLine();
+            var LogType = "Wrong Password";           
+                        
             logBuilder.AppendFormat("IP Address: ({0})", IPAddress).AppendLine();
-            //logBuilder.AppendFormat("User ID: {0}; Time: {1}", currentUser.UserId, LogTime.ToString()).AppendLine();
-
             
             var log = new ActivityLog
             {
@@ -427,19 +343,21 @@ namespace Psps.Services.UserLog
                 Post = _postRepository.Table.Where(p => p.Owner.UserId == UserId).ToList().First(),
                 Remark = logBuilder.ToString()
             };
-            ActivityLogToApplicationLog(log,true,true);
             this._userlogRepository.Add(log);
             _eventPublisher.EntityInserted<ActivityLog>(log);
 
+            string logCode = _logCodeDict[Constant.SystemParameter.LOG_CODE_LOGIN_FAIL];
+            string logMsg = $"User({log.User.UserId}) login failed, due to incorrect password.";
+            ActivityLogToApplicationLog3(log, logCode, logMsg, log.Remark);
             return log;
         }
 
         public ActivityLog LogAccountLockedByInvalidAttemps(string IPAddress, int Attempts, int AttemptsLimit) {
             var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
             var logBuilder = new StringBuilder();
-            var userID = _userRepository.GetById(currentUser.UserId);
+            var userID = _userRepository.GetById(currentUser.UserId);           
 
-            logBuilder.AppendFormat("User ID: {0}", currentUser.UserId).AppendLine();
+            //logBuilder.AppendFormat("User ID: {0}", currentUser.UserId).AppendLine();
             logBuilder.AppendFormat("IP Address: {0}", IPAddress).AppendLine();
             logBuilder.AppendFormat("Wrong Attemps: {0}", Attempts).AppendLine();
             logBuilder.AppendFormat("Attemps Limit: {0}", AttemptsLimit).AppendLine();
@@ -453,9 +371,13 @@ namespace Psps.Services.UserLog
                 Post = _postRepository.GetById(currentUser.PostId),
                 Remark = logBuilder.ToString(),
             };
-            ActivityLogToApplicationLog(log);
+
             this._userlogRepository.Add(log);
             _eventPublisher.EntityInserted<ActivityLog>(log);
+
+            string logCode = _logCodeDict[Constant.SystemParameter.LOG_CODE_LOGIN_LOCK];
+            string logMsg = $"User({log.User.UserId}) lockout due to wrong password inputted for {Attempts} times.";
+            ActivityLogToApplicationLog3(log, logCode, logMsg, log.Remark);
             return log;
         }
 
@@ -464,50 +386,62 @@ namespace Psps.Services.UserLog
             var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
             var logBuilder = new StringBuilder();
             var userID = _userRepository.GetById(currentUser.UserId);
+            var ActionStatus = "Fail";
+            var logCode = _logCodeDict[Constant.SystemParameter.LOG_CODE_PASSWORD_CHANGE_FAIL];
 
-            if (Changed) { logBuilder.AppendFormat("SUCCESS").AppendLine(); }
-            logBuilder.AppendFormat("User ID: {0}", currentUser.UserId).AppendLine();
-            logBuilder.AppendFormat("IP Address: {0}", IPAddress).AppendLine();
+            if (Changed) {
+                ActionStatus = "Success";
+                logCode = _logCodeDict[Constant.SystemParameter.LOG_CODE_PASSWORD_CHANGE_SUCCESS];
+                logBuilder.AppendFormat("SUCCESS").AppendLine(); 
+            }
+            
             if (!string.IsNullOrEmpty(Message)) { logBuilder.AppendFormat("Message: {0}", Message).AppendLine(); } 
 
             var log = new ActivityLog
             {
+                RecordKey = currentUser.UserId,
                 Activity = "User",
-                Action = "Change Password Attempt",
+                Action = $"Change Password Attempt ({ActionStatus})",
                 ActionedOn = DateTime.Now,
                 User = _userRepository.GetById(currentUser.UserId),
                 Post = _postRepository.GetById(currentUser.PostId),
                 Remark = logBuilder.ToString(),
             };
-            ActivityLogToApplicationLog(log,true,false);
-            this._userlogRepository.Add(log);
-            _eventPublisher.EntityInserted<ActivityLog>(log);
+            ActivityLogToApplicationLog2(log, logCode,log.Remark);           
             return log;
         }
 
-        public ActivityLog LogCRUDUser(string Mode, string UserId, string IPAddress, string Message = "")
+
+        public ActivityLog LogCRUDUser(string UserId, string IPAddress, List<string> LogCodeList)
         {
+            var Action = "";
+            var logCode = "";
             var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
             var logBuilder = new StringBuilder();
             var userID = _userRepository.GetById(currentUser.UserId);
-
+            
             logBuilder.AppendFormat("User ID: {0}", UserId).AppendLine();
             logBuilder.AppendFormat("IP Address: {0}", IPAddress).AppendLine();
-            if (!string.IsNullOrEmpty(Message)) { logBuilder.AppendFormat("Message: {0}", Message).AppendLine(); }
+
+            logCode = LogCodeList != null && LogCodeList.Count > 0 ? string.Join(",", LogCodeList.Select(x => _logCodeDict[x])) : _logCodeDict[Constant.SystemParameter.LOG_CODE_USER_UPDATE_GENERAL];
+
+            Action += LogCodeList.Any(x=> x.ToUpper().Contains("CREATE")) ?  $"Created User ({UserId})" : $"Updated User ({UserId}) - ";
+
+            if (Action.ToUpper().Contains("UPDATE")) {
+                Action += string.Join(",", LogCodeList).Replace("LogCodeUser", "").Replace("LogCodeUpdate", "");
+            }
 
             var log = new ActivityLog
             {
                 RecordKey = UserId,
                 Activity = "User",
-                Action = Mode,
+                Action = Action,
                 ActionedOn = DateTime.Now,
                 User = _userRepository.GetById(currentUser.UserId),
                 Post = _postRepository.GetById(currentUser.PostId),
                 Remark = logBuilder.ToString(),
             };
-            ActivityLogToApplicationLog(log);
-            this._userlogRepository.Add(log);
-            _eventPublisher.EntityInserted<ActivityLog>(log);
+            ActivityLogToApplicationLog2(log, logCode);
             return log;
         }
 
@@ -516,7 +450,7 @@ namespace Psps.Services.UserLog
             var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
             var logBuilder = new StringBuilder();
             var userID = _userRepository.GetById(currentUser.UserId);
-            
+
             logBuilder.AppendFormat("IP Address: {0}", IPAddress).AppendLine();
             if (Mode.ToUpper() == "CREATE") {
                 logBuilder.AppendFormat("Assigned To: {0}", AssignTo).AppendLine();
@@ -533,60 +467,142 @@ namespace Psps.Services.UserLog
                 Post = _postRepository.GetById(currentUser.PostId),
                 Remark = logBuilder.ToString(),
             };
-            ActivityLogToApplicationLog(log);
-            this._userlogRepository.Add(log);
-            _eventPublisher.EntityInserted<ActivityLog>(log);
+
+            //this._userlogRepository.Add(log);
+            //_eventPublisher.EntityInserted<ActivityLog>(log);
+
+            string logCode =
+                (Mode.ToUpper().Contains("CREATE")) ? _logCodeDict[Constant.SystemParameter.LOG_CODE_CREATE_ACTING] :
+                (Mode.ToUpper().Contains("UPDATE")) ? _logCodeDict[Constant.SystemParameter.LOG_CODE_UPDATE_ACTING] :
+                (Mode.ToUpper().Contains("DELETE")) ? _logCodeDict[Constant.SystemParameter.LOG_CODE_DELETE_ACTING] : "";
+            string logMsg = $"User({log.User.UserId}) {Mode} Acting - ";
+            logMsg += !string.IsNullOrEmpty(ActingId) ? $"Acting({ActingId}) " : "";
+            logMsg += !string.IsNullOrEmpty(AssignTo) ? $"assigned to ({AssignTo}) " : "";
+            logMsg += !string.IsNullOrEmpty(AssignedPost) ? $"with Post({AssignedPost})" : "";
+            ActivityLogToApplicationLog3(log, logCode,logMsg);
             return log;
         }
 
-        public ActivityLog LogCRUDDisasterMaster(string Mode, string DisasterMasterId, string IPAddress)
+        public ActivityLog LogCRUDPost(string Mode, string IPAddress, string PostId,string DataStr, List<string> LogCodeList)
         {
-
-            var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
-            var logBuilder = new StringBuilder();
-            var userID = _userRepository.GetById(currentUser.UserId);            
-            
-            logBuilder.AppendFormat("DisasterMaster: {0}", DisasterMasterId).AppendLine();
-
-            var log = new ActivityLog
-            {
-                RecordKey = DisasterMasterId,
-                Activity = "DisasterMaster",
-                Action = Mode,
-                ActionedOn = DateTime.Now,
-                User = _userRepository.GetById(currentUser.UserId),
-                Post = _postRepository.GetById(currentUser.PostId),
-                Remark = logBuilder.ToString(),
-            };
-            ActivityLogToApplicationLog(log);
-            this._userlogRepository.Add(log);
-            _eventPublisher.EntityInserted<ActivityLog>(log);
-            return log;
-        }
-
-        public ActivityLog LogCRUDDisasterStatistics(string Mode, string DisasterStatisticsId, string IPAddress)
-        {
-
             var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
             var logBuilder = new StringBuilder();
             var userID = _userRepository.GetById(currentUser.UserId);
 
-            logBuilder.AppendFormat("DisasterStatistics: {0}", DisasterStatisticsId).AppendLine();
+            //logBuilder.AppendFormat("IP Address: {0}", IPAddress).AppendLine();
+            if (!string.IsNullOrEmpty(DataStr))
+            {
+                logBuilder.Append(DataStr).AppendLine();
+            }
 
             var log = new ActivityLog
             {
-                RecordKey = DisasterStatisticsId,
-                Activity = "DisasterStatistics",
+                RecordKey = PostId,
+                Activity = "Post",
                 Action = Mode,
                 ActionedOn = DateTime.Now,
                 User = _userRepository.GetById(currentUser.UserId),
                 Post = _postRepository.GetById(currentUser.PostId),
                 Remark = logBuilder.ToString(),
             };
-            ActivityLogToApplicationLog(log);
-            this._userlogRepository.Add(log);
-            _eventPublisher.EntityInserted<ActivityLog>(log);
+
+            //this._userlogRepository.Add(log);
+            //_eventPublisher.EntityInserted<ActivityLog>(log);
+
+            string logCode = LogCodeList != null && LogCodeList.Count > 0 ? string.Join(",", LogCodeList.Select(x => _logCodeDict[x])) : "";
+            string logMsg = $"User({log.User.UserId}) {Mode} Post({PostId})";
+            logMsg += Mode.ToUpper().Contains("UPDATE") ? $" - {logCode.Replace("LogCodeUpdate", "")}" : "";
+            ActivityLogToApplicationLog3(log, logCode, logMsg, log.Remark);
             return log;
+        }
+
+        public ActivityLog LogCRUDRole(string Mode, string IPAddress, string RoleId,string DataStr)
+        {
+            var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
+            var logBuilder = new StringBuilder();
+            var userID = _userRepository.GetById(currentUser.UserId);
+
+            //logBuilder.AppendFormat("IP Address: {0}", IPAddress).AppendLine();
+            if (!string.IsNullOrEmpty(DataStr))
+            {
+                logBuilder.Append(DataStr).AppendLine();
+            }
+
+            var log = new ActivityLog
+            {
+                RecordKey = RoleId,
+                Activity = "Role",
+                Action = Mode,
+                ActionedOn = DateTime.Now,
+                User = _userRepository.GetById(currentUser.UserId),
+                Post = _postRepository.GetById(currentUser.PostId),
+                Remark = logBuilder.ToString(),
+            };
+
+            //this._userlogRepository.Add(log);
+            //_eventPublisher.EntityInserted<ActivityLog>(log);
+
+            string logCode = 
+                (Mode.ToUpper().Contains("CREATE")) ? _logCodeDict[Constant.SystemParameter.LOG_CODE_CREATE_ROLE] :
+                (Mode.ToUpper().Contains("MEMBER")) ? _logCodeDict[Constant.SystemParameter.LOG_CODE_UPDATE_ROLE_MEMBER] :
+                (Mode.ToUpper().Contains("UPDATE")) ? _logCodeDict[Constant.SystemParameter.LOG_CODE_UPDATE_ROLE] :
+                (Mode.ToUpper().Contains("DELETE")) ? _logCodeDict[Constant.SystemParameter.LOG_CODE_DELETE_ROLE] : "";
+            string logMsg = $"User({log.User.UserId}) {Mode} Role({RoleId})";
+            logMsg += Mode.ToUpper().Contains("UPDATE") ? $" - {_logCodeDict.FirstOrDefault(x=>x.Value == logCode).Key.Replace("LogCodeUpdate", "")}" : "";
+            ActivityLogToApplicationLog3(log, logCode, logMsg, log.Remark);
+            return log;
+        }
+
+        public ActivityLog LogCRUDDocumentLibrary(string Mode, string DocumentLibraryId, string IPAddress)
+        {
+
+            //var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
+            //var logBuilder = new StringBuilder();
+            //var userID = _userRepository.GetById(currentUser.UserId);
+
+            //logBuilder.AppendFormat("DocumentLibrary: {0}", DocumentLibraryId).AppendLine();
+
+            //var log = new ActivityLog
+            //{
+            //    RecordKey = DocumentLibraryId,
+            //    Activity = "DocumentLibrary",
+            //    Action = Mode,
+            //    ActionedOn = DateTime.Now,
+            //    User = _userRepository.GetById(currentUser.UserId),
+            //    Post = _postRepository.GetById(currentUser.PostId),
+            //    Remark = logBuilder.ToString(),
+            //};
+            //ActivityLogToApplicationLog(log);
+            //this._userlogRepository.Add(log);
+            //_eventPublisher.EntityInserted<ActivityLog>(log);
+            //return log;
+            return null;
+        }
+
+        public ActivityLog LogCRUDDocument(string Mode, string DocumentId, string IPAddress)
+        {
+
+            //var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
+            //var logBuilder = new StringBuilder();
+            //var userID = _userRepository.GetById(currentUser.UserId);
+
+            //logBuilder.AppendFormat("Document: {0}", DocumentId).AppendLine();
+
+            //var log = new ActivityLog
+            //{
+            //    RecordKey = DocumentId,
+            //    Activity = "Document",
+            //    Action = Mode,
+            //    ActionedOn = DateTime.Now,
+            //    User = _userRepository.GetById(currentUser.UserId),
+            //    Post = _postRepository.GetById(currentUser.PostId),
+            //    Remark = logBuilder.ToString(),
+            //};
+            //ActivityLogToApplicationLog(log);
+            ////this._userlogRepository.Add(log);
+            ////_eventPublisher.EntityInserted<ActivityLog>(log);
+            //return log;
+            return null;
         }
 
         public int GetInvalidLoginAttemps(string UserId) {
@@ -652,7 +668,92 @@ namespace Psps.Services.UserLog
             string Remark = (!noRemark) ? $" ({log.Remark.Replace("\n", " ").Replace("\r", " ")})" : "";
             msg = $"[{log.User.UserId}/{log.Post.PostId}] {log.Action}{Activity}{Remark}";
 
-            if (!string.IsNullOrEmpty(msg)) 
+            if (!string.IsNullOrEmpty(msg))
+            {
+                _logger.Info(msg);
+            }
+        }
+
+        private Dictionary<string, string> LogCodeDictionary() {
+            Dictionary<string, string> result = new Dictionary<string, string>()
+            {
+                {Constant.SystemParameter.LOG_CODE_LOGIN_FAIL, GetLogCode(Constant.SystemParameter.LOG_CODE_LOGIN_FAIL) },
+                {Constant.SystemParameter.LOG_CODE_LOGIN_SUCCESS ,GetLogCode(Constant.SystemParameter.LOG_CODE_LOGIN_SUCCESS)},
+                {Constant.SystemParameter.LOG_CODE_LOGOUT ,GetLogCode(Constant.SystemParameter.LOG_CODE_LOGOUT)},
+                {Constant.SystemParameter.LOG_CODE_LOGIN_LOCK ,GetLogCode(Constant.SystemParameter.LOG_CODE_LOGIN_LOCK)},
+                
+                {Constant.SystemParameter.LOG_CODE_PASSWORD_CHANGE_FAIL ,GetLogCode(Constant.SystemParameter.LOG_CODE_PASSWORD_CHANGE_FAIL)},
+                {Constant.SystemParameter.LOG_CODE_PASSWORD_CHANGE_SUCCESS ,GetLogCode(Constant.SystemParameter.LOG_CODE_PASSWORD_CHANGE_SUCCESS)},
+                
+                {Constant.SystemParameter.LOG_CODE_CREATE_ROLE ,GetLogCode(Constant.SystemParameter.LOG_CODE_CREATE_ROLE)},
+                {Constant.SystemParameter.LOG_CODE_UPDATE_ROLE ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_ROLE)},
+                
+                {Constant.SystemParameter.LOG_CODE_UPDATE_ROLE_MEMBER ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_ROLE_MEMBER)},
+                {Constant.SystemParameter.LOG_CODE_DELETE_ROLE ,GetLogCode(Constant.SystemParameter.LOG_CODE_DELETE_ROLE)},
+                
+                {Constant.SystemParameter.LOG_CODE_CREATE_POST ,GetLogCode(Constant.SystemParameter.LOG_CODE_CREATE_POST)},
+                {Constant.SystemParameter.LOG_CODE_UPDATE_POST ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_POST)},
+
+                {Constant.SystemParameter.LOG_CODE_UPDATE_POST_OWNER ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_POST_OWNER)},
+                {Constant.SystemParameter.LOG_CODE_UPDATE_POST_RANK ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_POST_RANK)},
+                {Constant.SystemParameter.LOG_CODE_UPDATE_POST_SUPERVISOR ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_POST_SUPERVISOR)},
+                {Constant.SystemParameter.LOG_CODE_UPDATE_POST_ROLE ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_POST_ROLE)},
+
+                {Constant.SystemParameter.LOG_CODE_CREATE_USER ,GetLogCode(Constant.SystemParameter.LOG_CODE_CREATE_USER)},
+                {Constant.SystemParameter.LOG_CODE_UPDATE_USER_POST ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_USER_POST)},
+                {Constant.SystemParameter.LOG_CODE_UPDATE_USER_PASSWORD ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_USER_PASSWORD)},
+
+                {Constant.SystemParameter.LOG_CODE_USER_ADMIN_ON ,GetLogCode(Constant.SystemParameter.LOG_CODE_USER_ADMIN_ON)},
+                {Constant.SystemParameter.LOG_CODE_USER_ADMIN_OFF ,GetLogCode(Constant.SystemParameter.LOG_CODE_USER_ADMIN_OFF)},
+                
+                {Constant.SystemParameter.LOG_CODE_USER_ACTIVE_ON ,GetLogCode(Constant.SystemParameter.LOG_CODE_USER_ACTIVE_ON)},
+                {Constant.SystemParameter.LOG_CODE_USER_ACTIVE_OFF ,GetLogCode(Constant.SystemParameter.LOG_CODE_USER_ACTIVE_OFF)},
+                
+                {Constant.SystemParameter.LOG_CODE_USER_UPDATE_GENERAL ,GetLogCode(Constant.SystemParameter.LOG_CODE_USER_UPDATE_GENERAL)},
+
+                {Constant.SystemParameter.LOG_CODE_UPDATE_ACTING_POST ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_ACTING_POST)},
+                {Constant.SystemParameter.LOG_CODE_CREATE_ACTING ,GetLogCode(Constant.SystemParameter.LOG_CODE_CREATE_ACTING)},
+                {Constant.SystemParameter.LOG_CODE_UPDATE_ACTING ,GetLogCode(Constant.SystemParameter.LOG_CODE_UPDATE_ACTING)},
+                {Constant.SystemParameter.LOG_CODE_DELETE_ACTING ,GetLogCode(Constant.SystemParameter.LOG_CODE_DELETE_ACTING)},
+
+
+            };
+            return result;
+        }
+
+        private string GetLogCode(string ConstantName) {
+            string LogCode = "";
+            var param = _parameterService.GetParameterByCode(ConstantName);
+            LogCode = (param != null) ? param.Value : ConstantName;
+            return LogCode;
+        }
+        private void ActivityLogToApplicationLog2(ActivityLog log, string LogCode, string InfoStr = null)
+        {            
+            string msg = "";
+            InfoStr = !string.IsNullOrEmpty(InfoStr) ? $"({InfoStr.Replace("\r\n"," ").Replace("\n", " ").Replace("\r", " ")})" : "";
+            msg = $"[{LogCode}];{log.User.UserId};{log.Action} by {log.User.UserId}{InfoStr}";
+
+            if (!string.IsNullOrEmpty(msg))
+            {
+                _logger.Info(msg);
+            }
+        }
+
+        private void ActivityLogToApplicationLog3(ActivityLog log, string LogCode, string Message, string InfoStr = null)
+        {
+            string msg = "";
+            InfoStr = !string.IsNullOrEmpty(InfoStr) ? $"({InfoStr.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")})" : "";
+            msg = $"[{LogCode}];{log.User.UserId};{Message}{InfoStr}";
+
+            if (!string.IsNullOrEmpty(msg))
+            {
+                _logger.Info(msg);
+            }
+        }
+
+        public void LogToFile(string msg)
+        {   
+            if (!string.IsNullOrEmpty(msg))
             {
                 _logger.Info(msg);
             }
