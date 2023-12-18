@@ -22,6 +22,7 @@ using Psps.Services.PSPs;
 using Psps.Services.Report;
 using Psps.Services.SystemMessages;
 using Psps.Services.SystemParameters;
+using Psps.Services.UserLog;
 using Psps.Web.Core.ActionFilters;
 using Psps.Web.Core.Controllers;
 using Psps.Web.Core.Extensions;
@@ -107,13 +108,17 @@ namespace Psps.Web.Controllers
         private readonly IDictionary<string, string> yesNo;
         private IDictionary<string, string> yearofPspList;
 
+        private readonly IDictionary<string, string> publicPlaceIndicatorDict;
+        private readonly IDictionary<string, string> publicPlaceIndicatorSearchDict;
+        private readonly IUserLogService _userLogService;
+
         public PSPController(IUnitOfWork unitOfWork, IMessageService messageService,
             ILookupService lookupService, IPspService pspService, IPspDocService pspDocService, IParameterService parameterService, IPspEventService pspEventService,
             IPspApprovalHistoryService pspApprovalHistoryService, IOrganisationService organisationService, IPostService PostService,
             IDisasterMasterService disasterMasterService, IPspCountEventsService pspCountEventsService,
             IReportService reportService, IPspAttachmentService pspAttachmentService, IWithholdingHistoryService withholdingHistoryService,
             IOrgEditLatestPspFdViewRepository orgEditLatestPspFdViewRepository, IPspRecommendEventsViewRepository pspRecommendEventsViewRepository, IPspEventsToProformaRepository pspEventsToProformaRepository,
-            IPspApprovedEventsRepository pspApprovedEventsRepository, IComplaintMasterService complaintMasterService)
+            IPspApprovedEventsRepository pspApprovedEventsRepository, IComplaintMasterService complaintMasterService, IUserLogService userLogService)
         {
             this._unitOfWork = unitOfWork;
             this._messageService = messageService;
@@ -135,6 +140,7 @@ namespace Psps.Web.Controllers
             this._pspEventsToProformaRepository = pspEventsToProformaRepository;
             this._pspApprovedEventsRepository = pspApprovedEventsRepository;
             this._complaintMasterService = complaintMasterService;
+            this._userLogService = userLogService;
 
             boolStringDict = new Dictionary<bool, string>();
             boolStringDict.Add(false, "No");
@@ -148,6 +154,18 @@ namespace Psps.Web.Controllers
             approvalStatusDict.Add("RJ", "Rejected");
             approvalStatusDict.Add("CA", "Cancelled");
             approvalStatusDict.Add("RC", "Ready for Cancel");
+
+
+            publicPlaceIndicatorSearchDict = new Dictionary<string, string>();
+            publicPlaceIndicatorSearchDict.Add("1", "Public");
+            publicPlaceIndicatorSearchDict.Add("0", "Non-Public");
+            publicPlaceIndicatorSearchDict.Add("", "(empty)");
+
+            publicPlaceIndicatorDict = new Dictionary<string, string>();
+            publicPlaceIndicatorDict.Add("true", "Public");
+            publicPlaceIndicatorDict.Add("false", "Non-Public");
+
+
 
             this.activityConcerned = _lookupService.getAllLkpInCodec(LookupType.ComplaintActivityConcern);
             if (activityConcerned.Count == 0) activityConcerned.Add("", "");
@@ -510,6 +528,9 @@ namespace Psps.Web.Controllers
                             PspMasterId = u.PspMasterId,
                             OrgRef = u.OrgRef,
                             OrgName = u.OrgName,
+                            OrgValidTo_Month = u.OrgValidTo_Month,
+                            OrgValidTo_Year = u.OrgValidTo_Year,
+                            IVP = u.IVP,
                             SubventedIndicator = u.SubventedIndicator,
                             PspRef = u.PspRef,
                             PreviousPspRef = u.PreviousPspRef,
@@ -625,6 +646,9 @@ namespace Psps.Web.Controllers
                                 OrgName = u.OrgName,
                                 EngOrgName = u.EngOrgName,
                                 ChiOrgName = u.ChiOrgName,
+                                OrgValidTo_Month = u.OrgValidTo_Month,
+                                OrgValidTo_Year = u.OrgValidTo_Year,
+                                IVP = u.IVP,
                                 SubventedIndicator = u.SubventedIndicator != null ? (u.SubventedIndicator.Value ? "Yes" : "No") : "",
                                 PspRef = u.PspRef,
                                 PreviousPspRef = u.PreviousPspRef,
@@ -892,6 +916,11 @@ namespace Psps.Web.Controllers
             model.RowVersion = pspMaster.RowVersion;
             model.OrgMasterId = pspMaster.OrgMaster == null ? "" : pspMaster.OrgMaster.OrgId.ToString();
             model.IsSsaf = pspMaster.IsSsaf.GetValueOrDefault(false);
+            
+            model.OrgValidTo_Month = pspMaster.OrgMaster.OrgValidTo_Month;
+            model.OrgValidTo_Year = pspMaster.OrgMaster.OrgValidTo_Year;
+            model.IVP = pspMaster.OrgMaster.IVP;
+
 
             if (pspMaster.PreviousPspMasterId != null)
             {
@@ -1240,17 +1269,18 @@ namespace Psps.Web.Controllers
         [HttpPost, Route("{id}/Template/{pspDocId}/Generate", Name = "GeneratePSPTemplate")]
         public ActionResult GeneratePSPTemplate(int pspDocId, int id)
         {
+           
             Ensure.Argument.NotNull(pspDocId);
             Ensure.Argument.NotNull(id);
 
             var template = _pspDocService.GetPspDocById(pspDocId);
             var psp = _pspDocService.GetPspDocViewById(id);
-
             //CR-005 01
             //Permit Number will be assigned b4 approval
             if (_pspApprovedEventsRepository.getListByPspMasterId(id).Count() > 0)
             {
                 psp.Proformas1 = _pspApprovedEventsRepository.getListByPspMasterId(id);
+                psp.Proformas1 = psp.Proformas1.OrderBy(x => x.PspEventId).ToList();
 
                 var filtered = _pspEventService.GetPspEventsByPspMasterId(id).Select(x => x.Value).Where(x => new string[] { "RA", "AP", "RC" }.Contains(x.EventStatus) && x.EventStartDate != x.EventEndDate && x.EventStartTime.Value.ToString("HH:mm") == "00:00" && x.EventEndTime.Value.ToString("HH:mm") == "23:59");
 
@@ -1258,54 +1288,66 @@ namespace Psps.Web.Controllers
                 bool approved = !psp.PermitIssueDate.IsNullOrDefault();
 
                 psp.Proformas2 = (from x in filtered
-                                  where (approved && !x.EventStatus.Equals("RA")) || !approved
-                                  orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
-                                  select x).ToList();
+                                    where (approved && !x.EventStatus.Equals("RA")) || !approved
+                                   
+                                    orderby x.PspEventId
+                                    select x).ToList();
+                //orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
 
                 filtered = _pspEventService.GetPspEventsByPspMasterId(id).Select(x => x.Value).Where(x => new string[] { "RA", "AP", "RC" }.Contains(x.EventStatus) && x.EventStartDate != x.EventEndDate && !(x.EventStartTime.Value.ToString("HH:mm") == "00:00" && x.EventEndTime.Value.ToString("HH:mm") == "23:59"));
-                
+
                 psp.Proformas3 = (from x in filtered
-                                  where (approved && !x.EventStatus.Equals("RA")) || !approved
-                                  orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
-                                  select x).ToList();
+                                    where (approved && !x.EventStatus.Equals("RA")) || !approved
+                                    
+                                    orderby x.PspEventId
+                                    select x).ToList();
+                //orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
             }
             else
             {
                 psp.Proformas1 = (from x in _pspEventsToProformaRepository.getListByPspMasterId(id)
-                                  orderby x.District, x.EventStartYear, x.EventStartMonth, x.EventDays, x.EventStartTime, x.EventEndTime, x.Location
-                                  select new PspApprovedEvents {
-                                      EventStartYear = x.EventStartYear,
-                                      EventStartMonth = x.EventStartMonth,
-                                      EventDays = x.EventDays,
-                                      EventStartTime = x.EventStartTime,
-                                      EventEndTime = x.EventEndTime,
-                                      Location = x.Location,
-                                      ChiLocation = x.ChiLocation,
-                                      District = x.District,
-                                      CollectionMethod = x.CollectionMethod
-                                  }).ToList();
+                                  orderby x.PspEventId
+                                  select new PspApprovedEvents
+                                    {
+                                        PspEventId = x.PspEventId,
+                                        EventStartYear = x.EventStartYear,
+                                        EventStartMonth = x.EventStartMonth,
+                                        EventDays = x.EventDays,
+                                        EventStartTime = x.EventStartTime,
+                                        EventEndTime = x.EventEndTime,
+                                        Location = x.Location,
+                                        ChiLocation = x.ChiLocation,
+                                        District = x.District,
+                                        CollectionMethod = x.CollectionMethod
+                                    }).ToList();
+                //orderby x.District, x.EventStartYear, x.EventStartMonth, x.EventDays, x.EventStartTime, x.EventEndTime, x.Location
+
 
                 var filtered = _pspEventService.GetPspEventsByPspMasterId(id).Select(x => x.Value).Where(x => x.EventStartDate != x.EventEndDate && x.EventStartTime.Value.ToString("HH:mm") == "00:00" && x.EventEndTime.Value.ToString("HH:mm") == "23:59");
 
                 psp.Proformas2 = (from x in filtered
-                                  orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
+                                  orderby x.PspEventId
                                   select x).ToList();
+                //orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
+
 
                 filtered = _pspEventService.GetPspEventsByPspMasterId(id).Select(x => x.Value).Where(x => x.EventStartDate != x.EventEndDate && !(x.EventStartTime.Value.ToString("HH:mm") == "00:00" && x.EventEndTime.Value.ToString("HH:mm") == "23:59"));
 
                 psp.Proformas3 = (from x in filtered
-                                  orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
+                                  orderby x.PspEventId
                                   select x).ToList();
+                //orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
+
             }
 
             psp.Proformas1.ForEach(x => x.EventDays = x.EventDays.Replace(",", ", "));
+
 
             //foreach (var proforma in psp.Proformas)
             //    proforma.Id = Guid.NewGuid();
 
             var sysParam = _parameterService.GetParameterByCode("PspTemplatePath");
             var inputFilePath = Path.Combine(@sysParam.Value, template.FileLocation);
-            _logger.Debug($"[1309]-{inputFilePath}");
             if (!System.IO.File.Exists(inputFilePath))
                 throw new HttpException((int)System.Net.HttpStatusCode.NotFound, "Template not found");
 
@@ -1321,7 +1363,8 @@ namespace Psps.Web.Controllers
                     message = _messageService.GetMessage(SystemMessage.Info.PrintProforma);
 
             MemoryStream ms = new MemoryStream(docGenerator.GenerateDocument());
-            return JsonFileResult(String.Format("{0}_{1:HHmmssFFFF}", template.DocNum, DateTime.Now), template.DocName + ".docx", ms, message: message);
+
+            return JsonFileResult(String.Format("{0}_{1:HHmmssFFFF}", template.DocNum, DateTime.Now), template.DocName + ".docx", ms, message: message);            
             //return File(docGenerator.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", template.DocName + ".docx");
         }
 
@@ -1487,7 +1530,12 @@ namespace Psps.Web.Controllers
             model.SpecialRemarks = specialRemarks;
             model.DocSubmissions = docSubmissions;
             model.YearofPspList = yearofPspList;
-           
+
+
+
+            model.PspEventViewModel.PublicPlaceIndicatorSearchDict = publicPlaceIndicatorSearchDict;
+            model.PspEventViewModel.PublicPlaceIndicatorDict = publicPlaceIndicatorDict;
+
             if (isSearch)
             {
                 // Reform the Dictionary of DisasterNames by adding the Sorting Index in the Key
@@ -2165,6 +2213,7 @@ namespace Psps.Web.Controllers
             model.PspEventViewModel.EventStatus = pspEvent.EventStatus;
             model.PspEventViewModel.ValidationMessage = pspEvent.ValidationMessage;
             model.PspEventViewModel.RowVersion = pspEvent.RowVersion;
+            model.PspEventViewModel.PublicPlaceIndicator = pspEvent.PublicPlaceIndicator;
 
             return Json(new JsonResponse(true)
             {
@@ -2231,6 +2280,7 @@ namespace Psps.Web.Controllers
                 pspEvent.CharitySalesItem = model.PspEventViewModel.CharitySalesItem;
                 pspEvent.Remarks = model.PspEventViewModel.EditEventRemark != null ? string.Join(",", model.PspEventViewModel.EditEventRemark) : string.Empty;
                 pspEvent.RowVersion = model.PspEventViewModel.RowVersion;
+                pspEvent.PublicPlaceIndicator = model.PspEventViewModel.PublicPlaceIndicator;
 
                 if (byPassedErrors.Count > 0)
                 {
@@ -2357,6 +2407,7 @@ namespace Psps.Web.Controllers
             pspEvent.OtherCollectionMethod = model.PspEventViewModel.OtherMethodOfCollection;
             pspEvent.CharitySalesItem = model.PspEventViewModel.CharitySalesItem;
             pspEvent.Remarks = model.PspEventViewModel.EditEventRemark != null ? string.Join(",", model.PspEventViewModel.EditEventRemark) : string.Empty;
+            pspEvent.PublicPlaceIndicator = model.PspEventViewModel.PublicPlaceIndicator;
 
             if (byPassedErrors.Count > 0)
             {
