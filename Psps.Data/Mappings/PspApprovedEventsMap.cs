@@ -17,6 +17,7 @@ namespace Psps.Data.Mappings
                          .KeyProperty(x => x.Location, "Location")
                          .KeyProperty(x => x.ChiLocation, "ChiLocation")
                          .KeyReference(x => x.PspMaster, "PspMasterId")
+                         .KeyProperty(x => x.PspEventId, "PspEventId")
                          ;
         }
 
@@ -33,6 +34,7 @@ namespace Psps.Data.Mappings
             Map(x => x.ChiLocation).Column("ChiLocation");
             Map(x => x.District).Column("District");
             Map(x => x.CollectionMethod).Column("CollectionMethod");
+            Map(x => x.PspEventId).Column("PspEventId");
         }
     }
 }
