@@ -29,6 +29,8 @@ namespace Psps.Models.Domain
 
         public virtual string CollectionMethod { get; set; }
 
+        public virtual int PspEventId { get; set; }
+
         public override string Id
         {
             get
