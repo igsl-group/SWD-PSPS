@@ -1225,12 +1225,21 @@ function queryStringToJson(qs) {
 	return JSON.parse(JSON.stringify(result));
 }
 
+function initYearPicker() {
+	$(`input[data-provide="yearpicker"]`).datepicker({
+		format: "yyyy",
+		viewMode: "years",
+		minViewMode: "years"
+	});
+}
+
 $(function () {
 	intiJqGridAutoResize();
 	initCustomDataApi();
 	addCalendarIcon(':input[data-provide="datepicker"]');
 	addCalendarIcon(':input[data-provide="datetimepicker"]');
 	addRequired(':input[data-rule-required]');
+	initYearPicker();
 	$('.read-mode-only').addClass('hide');
 	$("input").placeholder();
 
