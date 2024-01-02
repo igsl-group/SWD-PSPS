@@ -106,7 +106,7 @@ namespace Psps.Web.Controllers
             {
                 model.UserId = model.UserId.Trim();
 
-                var loginResult = _userService.ValidateUser(model.UserId, model.Password);
+                var loginResult = _userService.ValidateUser(model.UserId, model.Password); 
 
                 switch (loginResult)
                 {
@@ -116,7 +116,7 @@ namespace Psps.Web.Controllers
                             _authenticationService.SignIn(model.UserId);
 
                             //Log Login Information
-                            _userLogService.LogLoginInformation(0);
+                            _userLogService.LogLoginInformation(0, this.Request.UserHostAddress);
 
                             if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                             {
@@ -145,8 +145,8 @@ namespace Psps.Web.Controllers
                             break;
                         }
 
-                    default:
-                        ModelState.AddModelError("", _messageService.GetMessage(SystemMessage.Error.User.WrongCredentials));
+                    default:                        
+                        ModelState.AddModelError("", _messageService.GetMessage(SystemMessage.Error.User.NotActive));
                         break;
                 }
             }
@@ -159,7 +159,7 @@ namespace Psps.Web.Controllers
         [Route("~/Logout", Name = "Logout")]
         public ActionResult Logout()
         {
-            _userLogService.LogLoginInformation(1);
+            _userLogService.LogLoginInformation(1, this.Request.UserHostAddress);
             _authenticationService.SignOut();
             return RedirectToRoute("Home");
         }
@@ -179,7 +179,7 @@ namespace Psps.Web.Controllers
                 string default_system_user_id = _parameterService.GetParameterByCode(Constant.SystemParameter.DEFAULT_SYSTEM_USER_ID).Value;
                 int max_attempts = Convert.ToInt32(_parameterService.GetParameterByCode("MaxInvalidLoginAttemps").Value);
                 
-                int attemps = _userLogService.GetInvalidLoginAttemps(user_id);
+                int attemps = _userLogService.GetInvalidLoginAttempts(user_id);
                 if (attemps >= max_attempts) {
                     locked_out = true;
                     //Set User Account to InActive
@@ -196,7 +196,7 @@ namespace Psps.Web.Controllers
                         _unitOfWork.Commit();
                     }                    
                     _authenticationService.SignOut();
-                    _userLogService.LogAccountLockedByInvalidAttemps(this.Request.UserHostAddress, attemps, max_attempts);
+                    _userLogService.LogAccountLockedByInvalidAttempts(this.Request.UserHostAddress, user.UserId,attemps, max_attempts);
                 }
             }
             return locked_out;
@@ -524,7 +524,7 @@ namespace Psps.Web.Controllers
                 return Json(JsonResponseFactory.ErrorResponse(ModelState), JsonRequestBehavior.DenyGet);
             }
 
-            string Mode = "";
+            string PostId = "";
 
             List<string> logCodeList = new List<string>();
             using (_unitOfWork.BeginTransaction())
@@ -536,6 +536,7 @@ namespace Psps.Web.Controllers
                 if (oldUser.Post == null && userInfo.PostId != null || oldUser.Post != null && userInfo.PostId == null || oldUser.Post != null && oldUser.Post.Id != userInfo.PostId )
                 {
                     logCodeList.Add(Constant.SystemParameter.LOG_CODE_UPDATE_USER_POST);
+                    PostId = userInfo.PostId;
                 }
                 
                 if (oldUser.IsSystemAdministrator != userInfo.IsSystemAdministrator) { logCodeList.Add((userInfo.IsSystemAdministrator) ? Constant.SystemParameter.LOG_CODE_USER_ADMIN_ON : Constant.SystemParameter.LOG_CODE_USER_ADMIN_OFF); }
@@ -545,7 +546,7 @@ namespace Psps.Web.Controllers
                 _unitOfWork.Commit();
             }
             
-            _userLogService.LogCRUDUser(model.UserId, this.Request.UserHostAddress, logCodeList);
+            _userLogService.LogCRUDUser(model.UserId, this.Request.UserHostAddress, logCodeList , PostId);
 
             return Json(new JsonResponse(true)
             {

@@ -23,15 +23,15 @@ namespace Psps.Services.UserLog
 
        
 
-        ActivityLog LogLoginInformation(int Mode);
+        ActivityLog LogLoginInformation(int Mode, string IPAddress);
 
         ActivityLog LogLoginWrongPassword(string UserId,string IPAddress);
 
-        ActivityLog LogAccountLockedByInvalidAttemps(string IPAddress, int Attempts, int AttemptsLimit);
+        ActivityLog LogAccountLockedByInvalidAttempts(string IPAddress, string UserId ,int Attempts, int AttemptsLimit);
 
         ActivityLog LogChangePasswordAttempt(string IPAddress, string Message = "", bool Changed = false);
 
-        ActivityLog LogCRUDUser(string UserId, string IPAddress, List<string> LogCodeList);
+        ActivityLog LogCRUDUser(string UserId, string IPAddress, List<string> LogCodeList, string PostId = null);
 
         ActivityLog LogCRUDActing(string Mode, string IPAddress, string ActingId, string AssignTo = "", string AssignedPost = "");
 
@@ -39,13 +39,11 @@ namespace Psps.Services.UserLog
 
         ActivityLog LogCRUDRole(string Mode, string IPAddress, string RoleId, string DataStr);
 
-        ActivityLog LogCRUDDocumentLibrary(string Mode, string DocumentLibraryId, string IPAddress);
-
-        ActivityLog LogCRUDDocument(string Mode, string DocumentId, string IPAddress);
 
 
 
-        int GetInvalidLoginAttemps(string UserId);
+
+        int GetInvalidLoginAttempts(string UserId);
 
         /// <summary>
         /// Get system message by id
