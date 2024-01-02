@@ -1292,7 +1292,6 @@ namespace Psps.Web.Controllers
                                    
                                     orderby x.PspEventId
                                     select x).ToList();
-                //orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
 
                 filtered = _pspEventService.GetPspEventsByPspMasterId(id).Select(x => x.Value).Where(x => new string[] { "RA", "AP", "RC" }.Contains(x.EventStatus) && x.EventStartDate != x.EventEndDate && !(x.EventStartTime.Value.ToString("HH:mm") == "00:00" && x.EventEndTime.Value.ToString("HH:mm") == "23:59"));
 
@@ -1301,7 +1300,6 @@ namespace Psps.Web.Controllers
                                     
                                     orderby x.PspEventId
                                     select x).ToList();
-                //orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
             }
             else
             {
@@ -1320,7 +1318,6 @@ namespace Psps.Web.Controllers
                                         District = x.District,
                                         CollectionMethod = x.CollectionMethod
                                     }).ToList();
-                //orderby x.District, x.EventStartYear, x.EventStartMonth, x.EventDays, x.EventStartTime, x.EventEndTime, x.Location
 
 
                 var filtered = _pspEventService.GetPspEventsByPspMasterId(id).Select(x => x.Value).Where(x => x.EventStartDate != x.EventEndDate && x.EventStartTime.Value.ToString("HH:mm") == "00:00" && x.EventEndTime.Value.ToString("HH:mm") == "23:59");
@@ -1328,7 +1325,6 @@ namespace Psps.Web.Controllers
                 psp.Proformas2 = (from x in filtered
                                   orderby x.PspEventId
                                   select x).ToList();
-                //orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
 
 
                 filtered = _pspEventService.GetPspEventsByPspMasterId(id).Select(x => x.Value).Where(x => x.EventStartDate != x.EventEndDate && !(x.EventStartTime.Value.ToString("HH:mm") == "00:00" && x.EventEndTime.Value.ToString("HH:mm") == "23:59"));
@@ -1336,7 +1332,6 @@ namespace Psps.Web.Controllers
                 psp.Proformas3 = (from x in filtered
                                   orderby x.PspEventId
                                   select x).ToList();
-                //orderby x.District, x.EventStartDate, x.EventStartTime, x.EventEndDate, x.EventEndTime, x.Location
 
             }
 
